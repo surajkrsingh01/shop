@@ -1,0 +1,117 @@
+{
+  "project_info": {
+    "project_number": "495465217426",
+    "firebase_url": "https://dummychat-d7da3.firebaseio.com",
+    "project_id": "dummychat-d7da3",
+    "storage_bucket": "dummychat-d7da3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495465217426:android:1244c56be0518ae9",
+        "android_client_info": {
+          "package_name": "com.android.rivchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495465217426-ovek5hqfku5beu2ksqi58hmn3536d44d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIXK3II68r8BsoY7IiJirKrbNU9Wpsiow"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495465217426:android:df0e6f2d32e4ba67",
+        "android_client_info": {
+          "package_name": "com.demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495465217426-ovek5hqfku5beu2ksqi58hmn3536d44d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIXK3II68r8BsoY7IiJirKrbNU9Wpsiow"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495465217426:android:6f36e56ff848d149",
+        "android_client_info": {
+          "package_name": "com.dummychat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495465217426-f4512dl0hvoi9aorr8ddhao9am682avp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dummychat",
+            "certificate_hash": "b79af5fec65de8fa6596d83f53b0532bca7ab0f9"
+          }
+        },
+        {
+          "client_id": "495465217426-ovek5hqfku5beu2ksqi58hmn3536d44d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIXK3II68r8BsoY7IiJirKrbNU9Wpsiow"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495465217426-ovek5hqfku5beu2ksqi58hmn3536d44d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
