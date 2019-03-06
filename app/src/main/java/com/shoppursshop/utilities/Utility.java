@@ -27,6 +27,7 @@ public class Utility {
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 125;
     public static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 126;
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACT = 127;
+    public static final int MY_PERMISSIONS_REQUEST_PHONE_STATE = 128;
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static boolean verifyStoragePermissions(final Context context)
     {
@@ -58,6 +59,25 @@ public class Utility {
                     PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static boolean verifyReadPhoneStatePermissions(final Context context)
+    {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if(currentAPIVersion>= Build.VERSION_CODES.M)
+        {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_PHONE_STATE},
+                        MY_PERMISSIONS_REQUEST_PHONE_STATE);
                 return false;
             } else {
                 return true;
@@ -152,9 +172,20 @@ public class Utility {
         return timeStamp;
     }
 
+    public static String getTimeStamp(String format){
+        Calendar calendar = Calendar.getInstance(Locale.getDefault());
+        String timeStamp=new SimpleDateFormat(format).format(calendar.getTime());
+        return timeStamp;
+    }
+
     public static Typeface getSimpleLineIconsFont(Context context){
         Typeface custom_font = Typeface.createFromAsset(context.getAssets(), "fonts/Simple-Line-Icons.ttf");
         return custom_font;
+    }
+
+    public static String parseDate(Calendar cal,String format){
+        String timeStamp=new SimpleDateFormat(format).format(cal.getTime());
+        return timeStamp;
     }
 
 }

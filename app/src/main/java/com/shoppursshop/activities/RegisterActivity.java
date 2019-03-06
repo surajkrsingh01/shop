@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
+import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.fragments.BankFragment;
 import com.shoppursshop.fragments.CategoryFragment;
@@ -13,7 +15,15 @@ import com.shoppursshop.fragments.PersonalInfoFragment;
 import com.shoppursshop.fragments.ProductFragment;
 import com.shoppursshop.fragments.SubCatFragment;
 import com.shoppursshop.interfaces.OnFragmentInteraction;
+import com.shoppursshop.models.CatListItem;
+import com.shoppursshop.models.Category;
+import com.shoppursshop.models.MySimpleItem;
+import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.Utility;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class RegisterActivity extends NetworkBaseActivity implements OnFragmentInteraction {
@@ -28,6 +38,7 @@ public class RegisterActivity extends NetworkBaseActivity implements OnFragmentI
     private SubCatFragment subCatFragment;
     private ProductFragment productFragment;
     private String language;
+    private int initType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +52,44 @@ public class RegisterActivity extends NetworkBaseActivity implements OnFragmentI
         subCatFragment = SubCatFragment.newInstance("","");
         productFragment = ProductFragment.newInstance("","");
 
+        initType = getIntent().getIntExtra("type",0);
+
         FragmentTransaction trans = getSupportFragmentManager()
                 .beginTransaction();
         /*
          * IMPORTANT: We use the "root frame" defined in
          * "root_fragment.xml" as the reference to replace fragment
          */
-        trans.replace(R.id.container, languageFragment,"languageFragment");
-        fragmentTag = "languageFragment";
+        if(initType == BANK){
+            trans.replace(R.id.container, bankFragment,"bankFragment");
+            fragmentTag = "bankFragment";
+        }else if(initType == CATEGORY){
+            trans.replace(R.id.container, categoryFragment,"bankFragment");
+            fragmentTag = "categoryFragment";
+        }else if(initType == SUB_CATEGORY){
+            List<Object> selectedItemList = dbHelper.getCategories();
+            Log.i(TAG,"Size "+selectedItemList.size());
+            subCatFragment.setItemCatList(selectedItemList);
+            trans.replace(R.id.container, subCatFragment,"subCatFragment");
+            fragmentTag = "subCatFragment";
+        }else if(initType == PRODUCT){
+            /*List<Object> catList = dbHelper.getCategoriesForProduct();
+            CatListItem category = null;
+            List<Object> subCatList = null;
+            for(Object ob: catList){
+                category = (CatListItem)ob;
+                subCatList = dbHelper.getCatSubCategories(category.getId());
+                category.setItemList(subCatList);
+            }
+            Log.i(TAG,"Size "+catList.size());
+            productFragment.setItemCatList(catList);*/
+            trans.replace(R.id.container, productFragment,"productFragment");
+            fragmentTag = "productFragment";
+        }else{
+            trans.replace(R.id.container, languageFragment,"languageFragment");
+            fragmentTag = "languageFragment";
+        }
+
         /*
          * IMPORTANT: The following lines allow us to add the fragment
          * to the stack and return to it later, by pressing back
@@ -56,6 +97,8 @@ public class RegisterActivity extends NetworkBaseActivity implements OnFragmentI
         trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         //  trans.addToBackStack(null);
         trans.commit();
+
+        //testApi();
 
     }
 
@@ -65,6 +108,7 @@ public class RegisterActivity extends NetworkBaseActivity implements OnFragmentI
             language = (String)item;
             FragmentTransaction trans = getSupportFragmentManager()
                     .beginTransaction();
+            personalInfoFragment.setLanguage(language);
             trans.replace(R.id.container, personalInfoFragment,"personalInfoFragment");
             fragmentTag = "personalInfoFragment";
             trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -108,4 +152,18 @@ public class RegisterActivity extends NetworkBaseActivity implements OnFragmentI
             trans.commit();
         }
     }
+
+    private void testApi(){
+        String url = getResources().getString(R.string.url)+"/greeting";
+        Log.i(TAG, Utility.getTimeStamp("yyyy-MM-dd HH:mm:ss"));
+        jsonObjectApiRequest(Request.Method.GET,url,new JSONObject(),"greeting");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject jsonObject, String apiName) {
+        if(apiName.equals("greeting")){
+            Log.i(TAG, Utility.getTimeStamp("yyyy-MM-dd HH:mm:ss"));
+        }
+    }
+
 }

@@ -1,10 +1,20 @@
 package com.shoppursshop.database;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+import com.shoppursshop.models.CatListItem;
+import com.shoppursshop.models.Category;
+import com.shoppursshop.models.MyProduct;
+import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.models.MySimpleItem;
 import com.shoppursshop.utilities.Constants;
+
+import java.util.ArrayList;
 
 /**
  * Created by Shweta on 6/9/2016.
@@ -12,34 +22,244 @@ import com.shoppursshop.utilities.Constants;
 public class DbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = Constants.APP_NAME+".db";
-    public static final String EVENT_TABLE = "Event";
+    public static final String CAT_TABLE = "CATEGORY";
+    public static final String SUB_CAT_TABLE = "SUB_CATEGORY";
+    public static final String PRODUCT_TABLE = "PRODUCT_TABLE";
     public static final String ID = "id";
+    public static final String CAT_ID = "cat_id";
     public static final String NAME = "name";
+    public static final String IMAGE = "image";
+    public static final String PROD_SUB_CAT_ID = "PROD_SUB_CAT_ID";
+    public static final String PROD_NAME = "PROD_NAME";
+    public static final String PROD_BARCODE = "PROD_BARCODE";
+    public static final String PROD_DESC = "PROD_DESC";
+    public static final String PROD_MRP = "PROD_MRP";
+    public static final String PROD_SP = "PROD_SP";
+    public static final String PROD_REORDER_LEVEL = "PROD_REORDER_LEVEL";
+    public static final String PROD_QOH = "PROD_QOH";
+    public static final String PROD_HSN_CODE = "PROD_HSN_CODE";
+    public static final String PROD_CGST = "PROD_CGST";
+    public static final String PROD_IGST = "PROD_IGST";
+    public static final String PROD_SGST = "PROD_SGST";
+    public static final String PROD_WARRANTY = "PROD_WARRANTY";
+    public static final String PROD_MFG_DATE = "PROD_MFG_DATE";
+    public static final String PROD_EXPIRY_DATE = "PROD_EXPIRY_DATE";
+    public static final String PROD_MFG_BY = "PROD_MFG_BY";
+    public static final String PROD_IMAGE_1 = "PROD_IMAGE_1";
+    public static final String PROD_IMAGE_2 = "PROD_IMAGE_2";
+    public static final String PROD_IMAGE_3 = "PROD_IMAGE_3";
+    public static final String CREATED_BY = "CREATED_BY";
+    public static final String UPDATED_BY = "UPDATED_BY";
     public static final String UPDATED_AT = "updatedAt";
     public static final String CREATED_AT = "createdAt";
     private Context context;
 
-    public static final String CREATE_EVENT_TABLE = "create table "+EVENT_TABLE +
+    public static final String CREATE_CAT_TABLE = "create table "+CAT_TABLE +
             "("+ID+" TEXT NOT NULL, " +
             " "+NAME+" TEXT NOT NULL, " +
+            " "+IMAGE+" TEXT, " +
+            " "+CREATED_AT+" TEXT, " +
+            " "+UPDATED_AT+" TEXT)";
+
+    public static final String CREATE_SUB_CAT_TABLE = "create table "+SUB_CAT_TABLE +
+            "("+ID+" TEXT NOT NULL, " +
+            " "+CAT_ID+" TEXT NOT NULL, " +
+            " "+NAME+" TEXT NOT NULL, " +
+            " "+IMAGE+" TEXT, " +
+            " "+CREATED_AT+" TEXT, " +
+            " "+UPDATED_AT+" TEXT)";
+
+    public static final String CREATE_PRODUCT_TABLE = "create table "+PRODUCT_TABLE +
+            "("+ID+" TEXT NOT NULL, " +
+            " "+PROD_SUB_CAT_ID+" TEXT NOT NULL, " +
+            " "+PROD_NAME+" TEXT NOT NULL, " +
+            " "+PROD_BARCODE+" TEXT, " +
+            " "+PROD_DESC+" TEXT, " +
+            " "+PROD_MRP+" TEXT, " +
+            " "+PROD_SP+" TEXT, " +
+            " "+PROD_REORDER_LEVEL+" TEXT, " +
+            " "+PROD_QOH+" TEXT, " +
+            " "+PROD_HSN_CODE+" TEXT, " +
+            " "+PROD_CGST+" TEXT, " +
+            " "+PROD_IGST+" TEXT, " +
+            " "+PROD_SGST+" TEXT, " +
+            " "+PROD_WARRANTY+" TEXT, " +
+            " "+PROD_MFG_DATE+" TEXT, " +
+            " "+PROD_EXPIRY_DATE+" TEXT, " +
+            " "+PROD_MFG_BY+" TEXT, " +
+            " "+PROD_IMAGE_1+" TEXT, " +
+            " "+PROD_IMAGE_2+" TEXT, " +
+            " "+PROD_IMAGE_3+" TEXT, " +
+            " "+CREATED_BY+" TEXT, " +
+            " "+UPDATED_BY+" TEXT, " +
             " "+CREATED_AT+" TEXT, " +
             " "+UPDATED_AT+" TEXT)";
 
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 6);
         this.context=context;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_EVENT_TABLE);
+        db.execSQL(CREATE_CAT_TABLE);
+        db.execSQL(CREATE_SUB_CAT_TABLE);
+        db.execSQL(CREATE_PRODUCT_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+EVENT_TABLE);
-        onCreate(db);
+       // db.execSQL("DROP TABLE IF EXISTS "+CAT_TABLE);
+       // db.execSQL("DROP TABLE IF EXISTS "+SUB_CAT_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_TABLE);
+        db.execSQL(CREATE_PRODUCT_TABLE);
+       // onCreate(db);
+    }
+
+    public boolean addCategory(MySimpleItem item, String createdAt, String updatedAt){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID, item.getId());
+        contentValues.put(NAME, item.getName());
+        contentValues.put(IMAGE, item.getImage());
+        contentValues.put(CREATED_AT, createdAt);
+        contentValues.put(UPDATED_AT, updatedAt);
+        db.insert(CAT_TABLE, null, contentValues);
+        Log.i("DbHelper","Row is added");
+        return true;
+    }
+
+    public boolean addSubCategory(MySimpleItem item, String catId,String createdAt, String updatedAt){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID, item.getId());
+        contentValues.put(CAT_ID, catId);
+        contentValues.put(NAME, item.getName());
+        contentValues.put(IMAGE, item.getImage());
+        contentValues.put(CREATED_AT, createdAt);
+        contentValues.put(UPDATED_AT, updatedAt);
+        db.insert(SUB_CAT_TABLE, null, contentValues);
+        Log.i("DbHelper","Sub Cat Row is added "+item.getName());
+        return true;
+    }
+
+    public boolean addProduct(MyProductItem item, String createdAt, String updatedAt){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID, item.getProdId());
+        contentValues.put(PROD_SUB_CAT_ID, item.getProdCatId());
+        contentValues.put(PROD_BARCODE, item.getProdBarCode());
+        contentValues.put(PROD_NAME, item.getProdName());
+        contentValues.put(PROD_DESC, item.getProdDesc());
+        contentValues.put(PROD_MRP, item.getProdMrp());
+        contentValues.put(PROD_SP, item.getProdSp());
+        contentValues.put(PROD_REORDER_LEVEL, item.getProdReorderLevel());
+        contentValues.put(PROD_QOH, item.getProdQoh());
+        contentValues.put(PROD_HSN_CODE, item.getProdHsnCode());
+        contentValues.put(PROD_CGST, item.getProdCgst());
+        contentValues.put(PROD_IGST, item.getProdIgst());
+        contentValues.put(PROD_SGST, item.getProdSgst());
+        contentValues.put(PROD_WARRANTY, item.getProdWarranty());
+        contentValues.put(PROD_MFG_DATE, item.getProdMfgDate());
+        contentValues.put(PROD_EXPIRY_DATE, item.getProdExpiryDate());
+        contentValues.put(PROD_MFG_BY, item.getProdMfgBy());
+        contentValues.put(PROD_IMAGE_1, item.getProdImage1());
+        contentValues.put(PROD_IMAGE_2, item.getProdImage2());
+        contentValues.put(PROD_IMAGE_3, item.getProdImage3());
+        contentValues.put(CREATED_BY, item.getCreatedBy());
+        contentValues.put(UPDATED_BY, item.getUpdatedBy());
+        contentValues.put(CREATED_AT, createdAt);
+        contentValues.put(UPDATED_AT, updatedAt);
+        db.insert(PRODUCT_TABLE, null, contentValues);
+        Log.i("DbHelper","Sub Cat Row is added "+item.getProdName());
+        return true;
+    }
+
+    public String getCategoryName(String catId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select "+NAME+" from "+CAT_TABLE+" where "+ID+" =?";
+        Cursor res =  db.rawQuery(query, new String[]{catId});
+        String name = "";
+        if(res.moveToFirst()){
+            name = res.getString(res.getColumnIndex(NAME));
+        }
+        return name;
+    }
+
+    public ArrayList<Object> getCategories(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+CAT_TABLE;
+        Cursor res =  db.rawQuery(query, null);
+        // res.moveToFirst();
+        ArrayList<Object> itemList=new ArrayList<>();
+        MySimpleItem item = null;
+        if(res.moveToFirst()){
+            do{
+                item=new MySimpleItem();
+                item.setId(res.getInt(res.getColumnIndex(ID)));
+                item.setName(res.getString(res.getColumnIndex(NAME)));
+                itemList.add(item);
+            }while (res.moveToNext());
+        }
+
+
+        return itemList;
+    }
+
+    public ArrayList<Object> getCategoriesForProduct(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+CAT_TABLE;
+        Cursor res =  db.rawQuery(query, null);
+        // res.moveToFirst();
+        ArrayList<Object> itemList=new ArrayList<>();
+        CatListItem item = null;
+        if(res.moveToFirst()){
+            do{
+                item=new CatListItem();
+                item.setId(res.getInt(res.getColumnIndex(ID)));
+                item.setTitle(res.getString(res.getColumnIndex(NAME)));
+                itemList.add(item);
+            }while (res.moveToNext());
+        }
+        return itemList;
+    }
+
+    public ArrayList<Object> getSubCategories(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+SUB_CAT_TABLE;
+        Cursor res =  db.rawQuery(query, null);
+        // res.moveToFirst();
+        ArrayList<Object> itemList=new ArrayList<>();
+        MySimpleItem item = null;
+        if(res.moveToFirst()){
+            do{
+                item=new MySimpleItem();
+                item.setId(res.getInt(res.getColumnIndex(ID)));
+                item.setName(res.getString(res.getColumnIndex(NAME)));
+                itemList.add(item);
+            }while (res.moveToNext());
+        }
+
+        return itemList;
+    }
+
+    public ArrayList<Object> getCatSubCategories(String caId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+SUB_CAT_TABLE+" where "+CAT_ID+" = ?";
+        Cursor res =  db.rawQuery(query, new String[]{caId});
+        ArrayList<Object> itemList=new ArrayList<>();
+        MySimpleItem item = null;
+        if(res.moveToFirst()){
+            do{
+                item=new MySimpleItem();
+                item.setId(res.getInt(res.getColumnIndex(ID)));
+                item.setName(res.getString(res.getColumnIndex(NAME)));
+                itemList.add(item);
+            }while (res.moveToNext());
+        }
+
+        return itemList;
     }
 
   /*  public boolean insertBookingData(String level0Category,String level1Category,String level2Category,String receiptNumber,
@@ -110,9 +330,16 @@ public class DbHelper extends SQLiteOpenHelper {
         return true;
     }*/
 
+    public boolean deleteTable(String tableName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(tableName, null, null);
+        return true;
+    }
+
     public boolean dropAndCreateBookingTable(){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DROP TABLE IF EXISTS "+EVENT_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+CAT_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+SUB_CAT_TABLE);
         onCreate(db);
         return true;
     }

@@ -21,6 +21,13 @@ public class SplashActivity extends AppCompatActivity {
         sharedPreferences=getSharedPreferences(Constants.MYPREFERENCEKEY,MODE_PRIVATE);
 
         if(sharedPreferences.getBoolean(Constants.IS_LOGGED_IN,false)){
+           /* if(!sharedPreferences.getBoolean(Constants.IS_SUB_CAT_ADDED,false)){
+                intent=new Intent(SplashActivity.this,RegisterActivity.class);
+                intent.putExtra("type",RegisterActivity.SUB_CATEGORY);
+            }else{
+                intent=new Intent(SplashActivity.this,MainActivity.class);
+            }*/
+
             intent=new Intent(SplashActivity.this,MainActivity.class);
         }else {
             intent=new Intent(SplashActivity.this,LoginActivity.class);

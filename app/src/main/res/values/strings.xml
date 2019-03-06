@@ -3,7 +3,7 @@
     <!-- Common. -->
     <string name="app_name">Shoppurs Shop</string>
     <string name="action_settings">Settings</string>
-    <string name="url">http://expertmrp.techiesidentity.com</string>
+    <string name="url">http://49.50.77.154:8085/ShoppursApp</string>
     <string name="sign_up">Sign Up</string>
     <string name="submit">Submit</string>
 
@@ -12,6 +12,8 @@
     <string name="connection_error">There is some problem in connecting server.</string>
     <string name="json_parser_error">Json parsing errror.</string>
     <string name="full_name_required">Please enter full name.</string>
+    <string name="address_required">Please enter your address.</string>
+    <string name="pincode_required">Please enter your pincode.</string>
     <string name="email_required">Please enter Email Id.</string>
     <string name="mobile_required">Please enter Mobile.</string>
     <string name="mobile_valid">Please enter valid Mobile Number.</string>
@@ -77,7 +79,30 @@
 
     <!-- Product. -->
     <string name="mrp">MRP:</string>
+    <string name="add_product">Add Product</string>
+    <string name="product_name">Product Name</string>
+    <string name="product_barcode">Barcode</string>
+    <string name="product_desc">Description</string>
+    <string name="product_mrp">MRP</string>
+    <string name="product_sp">Selling Price</string>
+    <string name="product_reorder_level">Reorder Level</string>
+    <string name="product_qoh">Quantity</string>
+    <string name="product_hsn_code">Hsn Code</string>
+    <string name="product_manufacture_date">Manufacture Date</string>
+    <string name="product_expiry_date">Expiry Date</string>
+    <string name="product_manufacture_by">Manufacture By</string>
+    <string name="product_warranty">Warranty</string>
+    <string name="cgst">CGST</string>
+    <string name="igst">IGST</string>
+    <string name="sgst">SGST</string>
+    <string name="add">Add</string>
+    <string name="add_photo1">Add Photo 1</string>
+    <string name="add_photo2">Add Photo 2</string>
+    <string name="add_photo3">Add Photo 3</string>
 
+    <!-- Add customer. -->
+    <string name="add_customer">Add Customer</string>
+    <string name="add_photo">Add Photo</string>
 
     <!-- Settings. -->
     <string name="dark_mode">Dark Mode</string>
@@ -171,5 +196,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_product_detail">ProductDetailActivity</string>
     <string name="title_activity_customer_profile">CustomerProfileActivity</string>
+    <string name="title_activity_add_product">AddProductActivity</string>
+    <string name="title_activity_add_customer">AddCustomerActivity</string>
+    <string name="title_activity_scannar">ScannarActivity</string>
 
 </resources>

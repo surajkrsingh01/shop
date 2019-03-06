@@ -20,6 +20,7 @@ import com.shoppursshop.R;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyLevelItemClickListener;
 import com.shoppursshop.models.CatListItem;
+import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MySimpleItem;
 
 import java.util.List;
@@ -73,6 +74,15 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 notifyItemChanged(getAdapterPosition());
                // myLevelItemClickListener.onLevelItemClicked(getAdapterPosition(),item.getPosition());
+            }else if(type.equals("levelProductList")){
+                MyProductItem item = (MyProductItem)itemList.get(getAdapterPosition());
+                if(item.isSelected()){
+                    item.setSelected(false);
+                }else{
+                    item.setSelected(true);
+                }
+                notifyItemChanged(getAdapterPosition());
+                // myLevelItemClickListener.onLevelItemClicked(getAdapterPosition(),item.getPosition());
             }else{
                 myItemClickListener.onItemClicked(getAdapterPosition());
             }
@@ -130,7 +140,7 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if(type.equals("simpleList") || type.equals("levelSimpleList")){
+        if(type.equals("simpleList") || type.equals("levelSimpleList") || type.equals("levelProductList")){
             return 0;
         }else{
             return 1;
@@ -140,16 +150,30 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MyHomeHeaderViewHolder){
-            MySimpleItem item = (MySimpleItem) itemList.get(position);
-            MyHomeHeaderViewHolder myViewHolder = (MyHomeHeaderViewHolder)holder;
-            myViewHolder.textHeader.setText(item.getName());
-            if(item.isSelected()){
-               myViewHolder.imageViewSelected.setVisibility(View.VISIBLE);
-               myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.grey200));
+            if(type.equals("levelProductList")){
+                MyProductItem item = (MyProductItem) itemList.get(position);
+                MyHomeHeaderViewHolder myViewHolder = (MyHomeHeaderViewHolder)holder;
+                myViewHolder.textHeader.setText(item.getProdName());
+                if(item.isSelected()){
+                    myViewHolder.imageViewSelected.setVisibility(View.VISIBLE);
+                    myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.grey200));
+                }else{
+                    myViewHolder.imageViewSelected.setVisibility(View.GONE);
+                    myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.white));
+                }
             }else{
-                myViewHolder.imageViewSelected.setVisibility(View.GONE);
-                myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.white));
+                MySimpleItem item = (MySimpleItem) itemList.get(position);
+                MyHomeHeaderViewHolder myViewHolder = (MyHomeHeaderViewHolder)holder;
+                myViewHolder.textHeader.setText(item.getName());
+                if(item.isSelected()){
+                    myViewHolder.imageViewSelected.setVisibility(View.VISIBLE);
+                    myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.grey200));
+                }else{
+                    myViewHolder.imageViewSelected.setVisibility(View.GONE);
+                    myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.white));
+                }
             }
+
         }else if(holder instanceof MyHomeHeader1ViewHolder){
 
             CatListItem item = (CatListItem) itemList.get(position);
@@ -166,7 +190,14 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(context);
             myViewHolder.recyclerView.setLayoutManager(layoutManager);
             myViewHolder.recyclerView.setItemAnimator(new DefaultItemAnimator());
-            SimpleItemAdapter myItemAdapter = new SimpleItemAdapter(context,item.getItemList(),"levelSimpleList");
+            String flag = "";
+            if(type.equals("productList")){
+                flag = "levelProductList";
+            }else{
+                flag = "levelSimpleList";
+            }
+
+            SimpleItemAdapter myItemAdapter = new SimpleItemAdapter(context,item.getItemList(),flag);
             myItemAdapter.setMyLevelItemClickListener(myLevelItemClickListener);
             myViewHolder.recyclerView.setAdapter(myItemAdapter);
 

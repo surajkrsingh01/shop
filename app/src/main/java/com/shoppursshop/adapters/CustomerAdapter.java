@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
+import com.shoppursshop.activities.AddCustomerActivity;
 import com.shoppursshop.activities.CustomerProfileActivity;
 import com.shoppursshop.interfaces.MyItemTouchListener;
 import com.shoppursshop.models.MyCustomer;
@@ -71,14 +73,22 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public class MyHomeHeader1ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView textHeader;
+        private Button btnAdd;
 
         public MyHomeHeader1ViewHolder(View itemView) {
             super(itemView);
             textHeader=itemView.findViewById(R.id.text_title);
+            btnAdd=itemView.findViewById(R.id.btn_add);
+            btnAdd.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
+            if(view == btnAdd){
+                Intent intent = new Intent(context,AddCustomerActivity.class);
+                intent.putExtra("flag","manual");
+                context.startActivity(intent);
+            }
         }
     }
 

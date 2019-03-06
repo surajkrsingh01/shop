@@ -17,7 +17,7 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/parentContsraint"
+            android:id="@+id/relative_scan"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_weight="2"
@@ -55,7 +55,6 @@
 
             <TextView
                 android:id="@+id/text_add_title"
-                android:layout_marginTop="@dimen/view_vertical_margin"
                 android:text="Add Products"
                 android:gravity="center"
                 android:textColor="@color/white"

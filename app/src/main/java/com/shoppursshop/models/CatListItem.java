@@ -4,9 +4,17 @@ import java.util.List;
 
 public class CatListItem {
     private String title,desc;
-    private int type;
+    private int id,type,position;
     private boolean isSelectingAll;
     private List<Object> itemList;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getType() {
         return type;
@@ -46,5 +54,13 @@ public class CatListItem {
 
     public void setSelectingAll(boolean selectingAll) {
         isSelectingAll = selectingAll;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

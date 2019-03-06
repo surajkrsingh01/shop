@@ -82,7 +82,7 @@
 
     <!--product List. -->
     <dimen name="product_list_header_container_height">380dp</dimen>
-    <dimen name="product_list_back_accent_height">340dp</dimen>
+    <dimen name="product_list_back_accent_height">280dp</dimen>
     <dimen name="product_list_back_white_width">20dp</dimen>
     <dimen name="product_list_back_white_margin">-76dp</dimen>
     <dimen name="product_list_rotate_margin">-60dp</dimen>
@@ -103,6 +103,10 @@
     <!-- Setting. -->
     <dimen name="header_label_size">18sp</dimen>
     <dimen name="sub_header_label_size">16sp</dimen>
+
+    <!-- Scanner in. -->
+    <dimen name="scanner_width">300dp</dimen>
+    <dimen name="scanner_height">250dp</dimen>
 
     <!-- Footer. -->
     <dimen name="bottom_nav_icon_size">24dp</dimen>

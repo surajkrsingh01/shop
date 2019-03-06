@@ -59,7 +59,7 @@
 
     <!--product List. -->
     <dimen name="product_list_header_container_height">300dp</dimen>
-    <dimen name="product_list_back_accent_height">280dp</dimen>
+    <dimen name="product_list_back_accent_height">200dp</dimen>
     <dimen name="product_list_back_white_width">20dp</dimen>
     <dimen name="product_list_back_white_margin">-36dp</dimen>
     <dimen name="product_list_rotate_margin">-20dp</dimen>

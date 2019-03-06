@@ -1,9 +1,17 @@
 package com.shoppursshop.models;
 
 public class MySimpleItem {
-    private String name;
+    private String name,image;
     private boolean isSelected;
-    private int type,position;
+    private int id,type,position;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -35,5 +43,13 @@ public class MySimpleItem {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

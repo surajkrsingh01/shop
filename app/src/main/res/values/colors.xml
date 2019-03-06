@@ -25,6 +25,7 @@
     <color name="accent_color_3">@color/orange700</color>
     <color name="input_color_1">@color/orange700</color>
     <color name="hint_color_1">@color/orange500</color>
+    <color name="transparent_light_grey">#609e9e9e</color>
 
     <color name="bottom_nav_selected_color">@color/red_600</color>
     <color name="bottom_nav_fore_color">@color/grey600</color>

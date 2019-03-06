@@ -1,5 +1,6 @@
 package com.shoppursshop.activities;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,6 +20,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
+import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.utilities.Constants;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
@@ -27,6 +30,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private RelativeLayout relativeLayoutRed,relativeLayoutGreen,relativeLayoutBlue,relativeLayoutPink,
             relativeLayoutYellow,relativeLayoutAmber,
             relativeLayoutWhite,relativeLayoutGrey,relativeLayoutBlack;
+    private Button btnLogout;
 
     private TextView textViewDarkLabel,textViewEnableDarkLabel,textViewColorLabel;
 
@@ -57,6 +61,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         relativeLayoutContainer = findViewById(R.id.container);
         linearLayoutSetting2 = findViewById(R.id.linear_setting_2);
         relativeLayoutSetting1 = findViewById(R.id.relative_setting_1);
+
+        btnLogout = findViewById(R.id.btn_logout);
 
         relativeLayoutRed = findViewById(R.id.relative_red);
         relativeLayoutBlue= findViewById(R.id.relative_blue);
@@ -118,6 +124,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         relativeLayoutWhite.setOnClickListener(this);
         relativeLayoutGrey.setOnClickListener(this);
         relativeLayoutBlack.setOnClickListener(this);
+        btnLogout.setOnClickListener(this);
 
 
     }
@@ -243,6 +250,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             imageViewBlack.setImageResource(R.drawable.ic_check_black_24dp);
             imageViewTemp.setImageResource(0);
             imageViewTemp  = imageViewBlack;
+        }else if(view == btnLogout){
+            editor.clear();
+            editor.commit();
+            dbHelper.deleteTable(DbHelper.CAT_TABLE);
+            dbHelper.deleteTable(DbHelper.SUB_CAT_TABLE);
+            Intent intent = new Intent(SettingActivity.this,LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
 
         editor.commit();

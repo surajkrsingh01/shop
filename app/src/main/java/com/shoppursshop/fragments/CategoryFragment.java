@@ -12,13 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.RegisterActivity;
 import com.shoppursshop.adapters.SimpleItemAdapter;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.OnFragmentInteraction;
+import com.shoppursshop.models.Category;
 import com.shoppursshop.models.MySimpleItem;
+import com.shoppursshop.utilities.ConnectionDetector;
+import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
+import com.shoppursshop.utilities.Utility;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +40,7 @@ import java.util.List;
  * Use the {@link CategoryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CategoryFragment extends Fragment implements MyItemClickListener {
+public class CategoryFragment extends NetworkBaseFragment implements MyItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -97,12 +106,12 @@ public class CategoryFragment extends Fragment implements MyItemClickListener {
 
         itemList = new ArrayList<>();
         selectedItemList = new ArrayList<>();
-        MySimpleItem item = new MySimpleItem();
+       /* MySimpleItem item = new MySimpleItem();
         item.setName("Grocery");
         itemList.add(item);
         item = new MySimpleItem();
         item.setName("Stationary");
-        itemList.add(item);
+        itemList.add(item);*/
 
         recyclerView=rootView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -113,6 +122,10 @@ public class CategoryFragment extends Fragment implements MyItemClickListener {
         itemAdapter=new SimpleItemAdapter(getActivity(),itemList,"simpleList");
         itemAdapter.setMyItemClickListener(this);
         recyclerView.setAdapter(itemAdapter);
+
+        if(ConnectionDetector.isNetworkAvailable(getActivity())){
+            getCategories();
+        }
 
 
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +142,9 @@ public class CategoryFragment extends Fragment implements MyItemClickListener {
                     DialogAndToast.showDialog("Please select Category",getActivity());
                     return;
                 }
-                mListener.onFragmentInteraction(selectedItemList,RegisterActivity.CATEGORY);
+
+                createCategory();
+              //  mListener.onFragmentInteraction(selectedItemList,RegisterActivity.CATEGORY);
             }
         });
 
@@ -184,6 +199,81 @@ public class CategoryFragment extends Fragment implements MyItemClickListener {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+
+    private void getCategories(){
+        String url=getResources().getString(R.string.url)+"/api/categories";
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(),"categories");
+    }
+
+    private void createCategory(){
+        JSONArray dataArray = new JSONArray();
+        JSONObject dataObject = null;
+        MySimpleItem category = null;
+        for(Object ob: selectedItemList){
+            category = (MySimpleItem)ob;
+            dataObject = new JSONObject();
+            try {
+                dataObject.put("retId",sharedPreferences.getString(Constants.USER_ID,""));
+                dataObject.put("retCatId",""+category.getId());
+                dataObject.put("catName",category.getName());
+                dataObject.put("imageUrl",category.getImage());
+                dataObject.put("delStatus","N");
+                dataObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+                dataObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+                dataObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+                dataObject.put("createdBy","Vipin Dhama");
+                dataObject.put("updatedBy","Vipin Dhama");
+                dataArray.put(dataObject);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        String url=getResources().getString(R.string.url)+"/api/addCategoryRetailer";
+        showProgress(true);
+        jsonArrayV2ApiRequest(Request.Method.POST,url,dataArray,"addCategoryRetailer");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject response, String apiName) {
+
+            try {
+                if(apiName.equals("categories")){
+
+                    if(response.getBoolean("status")){
+                        JSONArray dataArray = response.getJSONArray("result");
+                        JSONObject jsonObject =null;
+                        MySimpleItem item = null;
+                        int len = dataArray.length();
+                        for(int i=0; i<len; i++){
+                            jsonObject = dataArray.getJSONObject(i);
+                            item = new MySimpleItem();
+                            item.setId(jsonObject.getInt("catId"));
+                            item.setName(jsonObject.getString("catName"));
+                            item.setImage(jsonObject.getString("imageUrl"));
+                            itemList.add(item);
+                        }
+
+                        itemAdapter.notifyDataSetChanged();
+                    }else{
+                        DialogAndToast.showDialog(response.getString("message"),getActivity());
+                    }
+                }else if(apiName.equals("addCategoryRetailer")){
+                    if(response.getBoolean("status")){
+                        MySimpleItem category = null;
+                        for(Object ob: selectedItemList){
+                            category = (MySimpleItem)ob;
+                            dbHelper.addCategory(category, Utility.getTimeStamp(),Utility.getTimeStamp());
+                        }
+                        mListener.onFragmentInteraction(selectedItemList,RegisterActivity.CATEGORY);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
     }
 
     @Override

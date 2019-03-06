@@ -58,6 +58,15 @@
         <item name="colorControlHighlight">@color/colorAccent</item>
     </style>
 
+    <style name="MyViewTheme">
+        <item name="colorAccent">@color/colorAccent</item>
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/grey400</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+    </style>
+
     <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

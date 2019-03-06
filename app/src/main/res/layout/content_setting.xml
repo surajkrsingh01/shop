@@ -249,6 +249,16 @@
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/btn_logout"
+            android:text="Log out"
+            android:layout_gravity="end"
+            android:textColor="@color/white"
+            android:background="@drawable/accent_2_solid_round_corner_background"
+            android:layout_marginTop="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
     <include layout="@layout/footer_layout"/>

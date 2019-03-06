@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.MainActivity;
 import com.shoppursshop.activities.RegisterActivity;
@@ -20,8 +21,16 @@ import com.shoppursshop.adapters.SimpleItemAdapter;
 import com.shoppursshop.interfaces.MyLevelItemClickListener;
 import com.shoppursshop.interfaces.OnFragmentInteraction;
 import com.shoppursshop.models.CatListItem;
+import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MySimpleItem;
+import com.shoppursshop.utilities.ConnectionDetector;
+import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
+import com.shoppursshop.utilities.Utility;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +43,7 @@ import java.util.List;
  * Use the {@link ProductFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProductFragment extends Fragment implements MyLevelItemClickListener {
+public class ProductFragment extends NetworkBaseFragment implements MyLevelItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -45,11 +54,13 @@ public class ProductFragment extends Fragment implements MyLevelItemClickListene
     private String mParam2;
 
     private List<Object> itemCatList,selectedItemList;
+    private List<MyProductItem> productList,selectedProductList;
     private View rootView;
     private RecyclerView recyclerView;
     private SimpleItemAdapter itemAdapter;
     private List<Object> itemList;
     private Button btnBack,btnNext,btnSkip;
+    private String subCats;
     private OnFragmentInteraction mListener;
 
     public void setItemCatList(List<Object> itemCatList) {
@@ -102,19 +113,29 @@ public class ProductFragment extends Fragment implements MyLevelItemClickListene
         btnSkip = rootView.findViewById(R.id.btn_skip);
 
         itemList = new ArrayList<>();
+        productList = new ArrayList<>();
+        selectedProductList = new ArrayList<>();
         selectedItemList = new ArrayList<>();
-        CatListItem item = null;
-        MySimpleItem mySimpleItem = null;
         int i=0;
-        for(Object ob : itemCatList){
-            item = (CatListItem) ob;
-            for(Object ob1 : item.getItemList()){
-                mySimpleItem = (MySimpleItem)ob1;
-                addProduct(mySimpleItem.getName(),i);
-
+        itemCatList = dbHelper.getCategoriesForProduct();
+        CatListItem category = null;
+        MySimpleItem subCat = null;
+        List<Object> subCatList = null;
+        for(Object ob: itemCatList){
+            category = (CatListItem)ob;
+            subCatList = dbHelper.getCatSubCategories(""+category.getId());
+            category.setItemList(subCatList);
+            for(Object ob1 : subCatList){
+                subCat = (MySimpleItem)ob1;
+                addSubCategory(subCat.getId(),subCat.getName(),itemList.size());
+                if(subCats == null){
+                    subCats = ""+subCat.getId();
+                }else{
+                    subCats = subCats+","+subCat.getId();
+                }
             }
-            i++;
         }
+
         recyclerView=rootView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(getActivity());
@@ -129,14 +150,42 @@ public class ProductFragment extends Fragment implements MyLevelItemClickListene
 
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),MainActivity.class);
+
+                CatListItem subCat = null,mySelectedCatItem = null;
+                List<Object> selectedList = null;
+                MyProductItem prod = null;
+                for(Object ob: itemList){
+                    subCat = (CatListItem)ob;
+                    selectedList = new ArrayList<>();
+                    mySelectedCatItem = new CatListItem();
+                    mySelectedCatItem.setId(subCat.getId());
+                    mySelectedCatItem.setTitle(subCat.getTitle());
+                    mySelectedCatItem.setDesc(subCat.getDesc());
+                    for(Object ob1 : subCat.getItemList()){
+                        prod = (MyProductItem) ob1;
+                        if(prod.isSelected())
+                            selectedList.add(ob1);
+                    }
+                    if(selectedList.size() > 0){
+                        mySelectedCatItem.setItemList(selectedList);
+                        selectedItemList.add(mySelectedCatItem);
+                    }
+                }
+
+                if(selectedItemList.size() == 0){
+                    DialogAndToast.showDialog("Please select Products",getActivity());
+                    return;
+                }
+                createProducts();
+
+              /*  Intent intent = new Intent(getActivity(),MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                startActivity(intent);*/
                /* if(selectedItemList.size() == 0){
                     DialogAndToast.showDialog("Please select Category",getActivity());
                     return;
                 }
-                mListener.onFragmentInteraction(selectedItemList,RegisterActivity.PRODUCT);*/
+                */
             }
         });
 
@@ -156,15 +205,145 @@ public class ProductFragment extends Fragment implements MyLevelItemClickListene
                 startActivity(intent);
             }
         });
+
+        if(ConnectionDetector.isNetworkAvailable(getActivity())){
+            getProducts();
+        }
     }
 
-    private void addProduct(String title,int position) {
+    private void getProducts(){
+        String url=getResources().getString(R.string.url)+"/api/productslist";
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(),"productslist");
+    }
+
+    private void createProducts(){
+        JSONArray dataArray = new JSONArray();
+        JSONObject dataObject = null;
+        CatListItem category = null;
+        MyProductItem subCat = null;
+        for(Object ob: selectedItemList){
+            category = (CatListItem)ob;
+            for(Object ob1 : category.getItemList()){
+                subCat = (MyProductItem) ob1;
+                dataObject = new JSONObject();
+                try {
+                    dataObject.put("retRetailerId",sharedPreferences.getString(Constants.USER_ID,""));
+                    dataObject.put("prodCatId",""+category.getId());
+                    dataObject.put("prodId",""+subCat.getProdId());
+                    dataObject.put("prodReorderLevel",""+subCat.getProdReorderLevel());
+                    dataObject.put("prodQoh",""+subCat.getProdQoh());
+                    dataObject.put("prodName",""+subCat.getProdName());
+                    dataObject.put("prodBarCode",""+subCat.getProdBarCode());
+                    dataObject.put("prodDesc",""+subCat.getProdDesc());
+                    dataObject.put("prodCgst",""+subCat.getProdCgst());
+                    dataObject.put("prodIgst",""+subCat.getProdIgst());
+                    dataObject.put("prodSgst",""+subCat.getProdSgst());
+                    dataObject.put("prodWarranty",""+subCat.getProdWarranty());
+                    dataObject.put("prodMrp",""+subCat.getProdMrp());
+                    dataObject.put("prodSp",""+subCat.getProdSp());
+                    dataObject.put("prodHsnCode",""+subCat.getProdHsnCode());
+                    dataObject.put("prodMfgDate",""+subCat.getProdMfgDate());
+                    dataObject.put("prodExpiryDate",""+subCat.getProdExpiryDate());
+                    dataObject.put("prodMfgBy",""+subCat.getProdMfgBy());
+                    dataObject.put("prodImage1",""+subCat.getProdImage1());
+                    dataObject.put("prodImage2",""+subCat.getProdImage2());
+                    dataObject.put("prodImage3",""+subCat.getProdImage3());
+                    dataObject.put("createdBy",""+subCat.getCreatedBy());
+                    dataObject.put("updatedBy",""+subCat.getUpdatedBy());
+                    dataObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+                    dataObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+                    dataObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+                    dataArray.put(dataObject);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        String url=getResources().getString(R.string.url)+"/api/addProduct";
+        showProgress(true);
+        jsonArrayV2ApiRequest(Request.Method.POST,url,dataArray,"addProduct");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject response, String apiName) {
+
+        try {
+            if(apiName.equals("productslist")){
+
+                if(response.getBoolean("status")){
+                    JSONArray dataArray = response.getJSONArray("result");
+                    JSONObject jsonObject =null;
+                    int len = dataArray.length();
+                    MyProductItem item = null;
+                    for(int i=0; i<len; i++){
+                        jsonObject = dataArray.getJSONObject(i);
+                        item = new MyProductItem();
+                        item.setProdId(jsonObject.getInt("prodId"));
+                        item.setProdCatId(jsonObject.getInt("prodCatId"));
+                        item.setProdName(jsonObject.getString("prodName"));
+                        item.setProdBarCode(jsonObject.getString("prodBarCode"));
+                        item.setProdDesc(jsonObject.getString("prodDesc"));
+                        item.setProdReorderLevel(jsonObject.getInt("prodReorderLevel"));
+                        item.setProdQoh(jsonObject.getInt("prodQoh"));
+                        item.setProdHsnCode(jsonObject.getString("prodHsnCode"));
+                        item.setProdCgst(Float.parseFloat(jsonObject.getString("prodCgst")));
+                        item.setProdIgst(Float.parseFloat(jsonObject.getString("prodIgst")));
+                        item.setProdSgst(Float.parseFloat(jsonObject.getString("prodSgst")));
+                        item.setProdWarranty(Float.parseFloat(jsonObject.getString("prodWarranty")));
+                        item.setProdMfgDate(jsonObject.getString("prodMfgDate"));
+                        item.setProdExpiryDate(jsonObject.getString("prodExpiryDate"));
+                        item.setProdMfgBy(jsonObject.getString("prodMfgBy"));
+                        item.setProdImage1(jsonObject.getString("prodImage1"));
+                        item.setProdImage2(jsonObject.getString("prodImage2"));
+                        item.setProdImage3(jsonObject.getString("prodImage3"));
+                        item.setProdMrp(Float.parseFloat(jsonObject.getString("prodMrp")));
+                        item.setProdSp(Float.parseFloat(jsonObject.getString("prodSp")));
+                        item.setCreatedBy(jsonObject.getString("createdBy"));
+                        item.setUpdatedBy(jsonObject.getString("updatedBy"));
+                        item.setCreatedDate(jsonObject.getString("createdDate"));
+                        item.setUpdatedDate(jsonObject.getString("updatedDate"));
+                        addProduct(item);
+                       // productList.add(item);
+                    }
+
+                    itemAdapter.notifyDataSetChanged();
+                }else{
+                    DialogAndToast.showDialog(response.getString("message"),getActivity());
+                }
+            }else if(apiName.equals("addProduct")){
+                if(response.getBoolean("status")){
+                    CatListItem subCat = null;
+                    MyProductItem productItem = null;
+                    for(Object ob: selectedItemList) {
+                        subCat = (CatListItem) ob;
+                        for (Object ob1 : subCat.getItemList()) {
+                            productItem = (MyProductItem) ob1;
+                            dbHelper.addProduct(productItem,Utility.getTimeStamp(),Utility.getTimeStamp());
+                        }
+                    }
+
+                    Intent intent = new Intent(getActivity(),MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addSubCategory(int subCatId,String title,int position) {
         CatListItem myItem = new CatListItem();
         myItem.setSelectingAll(true);
         myItem.setTitle(title);
         myItem.setType(1);
+        myItem.setId(subCatId);
+        myItem.setPosition(position);
         List<Object> subCatList = new ArrayList<>();
-        MySimpleItem mySimpleItem = null;
+        /*MySimpleItem mySimpleItem = null;
         int limit = 0;
         if(position == 0){
             limit = 5;
@@ -176,10 +355,28 @@ public class ProductFragment extends Fragment implements MyLevelItemClickListene
             mySimpleItem.setName("Item"+(i+1));
             mySimpleItem.setPosition(position);
             subCatList.add(mySimpleItem);
-        }
-
+        }*/
         myItem.setItemList(subCatList);
         itemList.add(myItem);
+    }
+
+    private void addProduct(MyProductItem item){
+        CatListItem subCat = null;
+        MySimpleItem mySimpleItem = null;
+        for(Object ob : itemList){
+            subCat = (CatListItem) ob;
+            if(subCat.getId() == item.getProdCatId()){
+               /* mySimpleItem = new MySimpleItem();
+                mySimpleItem.setId(item.getProdId());
+                mySimpleItem.setName(item.getProdName());
+                mySimpleItem.setPosition(subCat.getPosition());*/
+                subCat.getItemList().add(item);
+            }
+
+            itemAdapter.notifyItemChanged(subCat.getPosition());
+        }
+
+
     }
 
 
@@ -205,9 +402,9 @@ public class ProductFragment extends Fragment implements MyLevelItemClickListene
         if(level == -1){
             CatListItem item = (CatListItem) itemList.get(itemPosition);
             List<Object> simpleItemList = item.getItemList();
-            MySimpleItem item1 = null;
+            MyProductItem item1 = null;
             for(Object ob : simpleItemList){
-                item1 = (MySimpleItem)ob;
+                item1 = (MyProductItem)ob;
                 if(item.isSelectingAll()){
                     item1.setSelected(true);
                 }else{

@@ -49,6 +49,7 @@ public class BaseFragment extends Fragment {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(false);
         progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
         // Disable the back button
         DialogInterface.OnKeyListener keyListener = new DialogInterface.OnKeyListener() {
             @Override

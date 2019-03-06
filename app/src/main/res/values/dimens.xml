@@ -9,6 +9,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="drawable_padding">10dp</dimen>
     <dimen name="btn_size">45dp</dimen>
+    <dimen name="regular_btn_size">35dp</dimen>
     <dimen name="simple_list_text_view_horizontal_margin">10dp</dimen>
     <dimen name="simple_list_text_view_vertical_margin">8dp</dimen>
     <dimen name="simple_list_text_view_size">16sp</dimen>
@@ -93,7 +94,7 @@
 
     <!--product List. -->
     <dimen name="product_list_header_container_height">300dp</dimen>
-    <dimen name="product_list_back_accent_height">280dp</dimen>
+    <dimen name="product_list_back_accent_height">200dp</dimen>
     <dimen name="product_list_back_white_width">20dp</dimen>
     <dimen name="product_list_back_white_margin">-36dp</dimen>
     <dimen name="product_list_rotate_margin">-20dp</dimen>
@@ -125,6 +126,10 @@
 
     <!-- Profile. -->
     <dimen name="profile_graph_size">235dp</dimen>
+
+    <!-- Scanner in. -->
+    <dimen name="scanner_width">250dp</dimen>
+    <dimen name="scanner_height">200dp</dimen>
 
     <!-- Footer. -->
     <dimen name="bottom_nav_icon_size">24dp</dimen>

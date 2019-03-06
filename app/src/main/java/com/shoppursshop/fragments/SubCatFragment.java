@@ -7,11 +7,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.RegisterActivity;
 import com.shoppursshop.adapters.SimpleItemAdapter;
@@ -20,7 +22,13 @@ import com.shoppursshop.interfaces.OnFragmentInteraction;
 import com.shoppursshop.models.CatListItem;
 import com.shoppursshop.models.MySimpleItem;
 import com.shoppursshop.models.SubCategory;
+import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
+import com.shoppursshop.utilities.Utility;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +41,7 @@ import java.util.List;
  * Use the {@link SubCatFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SubCatFragment extends Fragment implements MyLevelItemClickListener {
+public class SubCatFragment extends NetworkBaseFragment implements MyLevelItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -42,6 +50,8 @@ public class SubCatFragment extends Fragment implements MyLevelItemClickListener
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String catIds;
+    private int tempCatId;
     private List<Object> itemCatList,selectedItemList;
     private View rootView;
     private RecyclerView recyclerView;
@@ -101,16 +111,19 @@ public class SubCatFragment extends Fragment implements MyLevelItemClickListener
         itemList = new ArrayList<>();
         selectedItemList = new ArrayList<>();
         MySimpleItem item = null;
+        itemCatList = dbHelper.getCategories();
         for(Object ob : itemCatList){
             item = (MySimpleItem) ob;
-            if(item.getName().equals("Grocery")){
-                addGrocery();
-            }
-
-            if(item.getName().equals("Stationary")){
-                addStationary();
+            Log.i(TAG,"Cat "+item.getName());
+            if(catIds == null){
+                catIds = ""+item.getId();
+            }else{
+                catIds = catIds+","+item.getId();
             }
         }
+        getSubCategories(catIds);
+        //addGrocery();
+       // addStationary();
         recyclerView=rootView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(getActivity());
@@ -132,6 +145,7 @@ public class SubCatFragment extends Fragment implements MyLevelItemClickListener
                     catListItem = (CatListItem) ob;
                     selectedList = new ArrayList<>();
                     mySelectedCatItem = new CatListItem();
+                    mySelectedCatItem.setId(catListItem.getId());
                     mySelectedCatItem.setTitle(catListItem.getTitle());
                     mySelectedCatItem.setDesc(catListItem.getDesc());
                     for(Object ob1 : catListItem.getItemList()){
@@ -149,7 +163,8 @@ public class SubCatFragment extends Fragment implements MyLevelItemClickListener
                     DialogAndToast.showDialog("Please select Category",getActivity());
                     return;
                 }
-                mListener.onFragmentInteraction(selectedItemList,RegisterActivity.SUB_CATEGORY);
+                createSubCategory();
+                //mListener.onFragmentInteraction(selectedItemList,RegisterActivity.SUB_CATEGORY);
             }
         });
 
@@ -161,6 +176,120 @@ public class SubCatFragment extends Fragment implements MyLevelItemClickListener
             }
         });
     }
+
+    private void getSubCategories(String catIds){
+        String url=getResources().getString(R.string.url)+"/api/subcategories?catIds="+catIds;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(),"sub_categories");
+    }
+
+    private void createSubCategory(){
+        JSONArray dataArray = new JSONArray();
+        JSONObject dataObject = null;
+        CatListItem category = null;
+        MySimpleItem subCat = null;
+        for(Object ob: selectedItemList){
+            category = (CatListItem)ob;
+            for(Object ob1 : category.getItemList()){
+                subCat = (MySimpleItem) ob1;
+                dataObject = new JSONObject();
+                try {
+                    dataObject.put("retId",sharedPreferences.getString(Constants.USER_ID,""));
+                    dataObject.put("retCatId",""+category.getId());
+                    dataObject.put("retSubCatId",""+subCat.getId());
+                    dataObject.put("catName",subCat.getName());
+                    dataObject.put("imageUrl",subCat.getImage());
+                    dataObject.put("delStatus","N");
+                    dataObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+                    dataObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+                    dataObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+                    dataObject.put("createdBy","Vipin Dhama");
+                    dataObject.put("updatedBy","Vipin Dhama");
+                    dataArray.put(dataObject);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        String url=getResources().getString(R.string.url)+"/api/addSubCategoryRetailer";
+        showProgress(true);
+        jsonArrayV2ApiRequest(Request.Method.POST,url,dataArray,"addSubCategoryRetailer");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject response, String apiName) {
+
+        try {
+            if(apiName.equals("sub_categories")){
+
+                if(response.getBoolean("status")){
+                    JSONArray dataArray = response.getJSONArray("result");
+                    JSONObject jsonObject =null;
+                    CatListItem myItem = null;
+                    MySimpleItem mySimpleItem = null;
+                    List<Object> subCatList = null;
+                    int len = dataArray.length();
+                    for(int i=0; i<len; i++){
+                        jsonObject = dataArray.getJSONObject(i);
+                        if(tempCatId == jsonObject.getInt("catId")){
+                            myItem = getItem(jsonObject.getInt("catId"));
+                            subCatList = myItem.getItemList();
+                        }else{
+                            myItem = new CatListItem();
+                            myItem.setSelectingAll(true);
+                            myItem.setType(1);
+                            subCatList = new ArrayList<>();
+                            tempCatId = jsonObject.getInt("catId");
+                            myItem.setId(jsonObject.getInt("catId"));
+                            myItem.setTitle(dbHelper.getCategoryName(""+jsonObject.getInt("catId")));
+                            myItem.setItemList(subCatList);
+                            itemList.add(myItem);
+                        }
+                        mySimpleItem = new MySimpleItem();
+                        mySimpleItem.setId(jsonObject.getInt("subCatId"));
+                        mySimpleItem.setName(jsonObject.getString("subCatName"));
+                        mySimpleItem.setImage(jsonObject.getString("imageUrl"));
+                        mySimpleItem.setPosition(itemList.size());
+                        subCatList.add(mySimpleItem);
+                    }
+
+                    itemAdapter.notifyDataSetChanged();
+                }else{
+                    DialogAndToast.showDialog(response.getString("message"),getActivity());
+                }
+            }else if(apiName.equals("addSubCategoryRetailer")){
+                if(response.getBoolean("status")){
+                    CatListItem category = null;
+                    MySimpleItem subCat = null;
+                    for(Object ob: selectedItemList){
+                        category = (CatListItem)ob;
+                        for(Object ob1 : category.getItemList()) {
+                            subCat = (MySimpleItem) ob1;
+                            dbHelper.addSubCategory(subCat,""+category.getId(),Utility.getTimeStamp(),Utility.getTimeStamp());
+                        }
+                    }
+                    mListener.onFragmentInteraction(selectedItemList,RegisterActivity.SUB_CATEGORY);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private CatListItem getItem(int id){
+        CatListItem item = null;
+        for(Object ob: itemList){
+            item = (CatListItem)ob;
+            if(item.getId() == id){
+                break;
+            }
+        }
+
+        return item;
+    }
+
 
     private void addGrocery(){
         CatListItem myItem = new CatListItem();

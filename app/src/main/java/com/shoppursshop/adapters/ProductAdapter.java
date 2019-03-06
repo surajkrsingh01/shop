@@ -18,14 +18,17 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
+import com.shoppursshop.activities.AddProductActivity;
 import com.shoppursshop.activities.ProductDetailActivity;
 import com.shoppursshop.activities.ProductListActivity;
+import com.shoppursshop.activities.ScannarActivity;
 import com.shoppursshop.activities.SubCatListActivity;
 import com.shoppursshop.interfaces.MyItemTouchListener;
 import com.shoppursshop.models.Category;
@@ -165,6 +168,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         private TextView textTitle;
         private ImageView imageView;
+        private RelativeLayout relativeLayoutScan,relativeLayoutAddManually;
         // private ConstraintLayout constraintLayout;
         private View rootView;
 
@@ -173,12 +177,26 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             rootView = itemView;
             textTitle=itemView.findViewById(R.id.text_title);
             imageView=itemView.findViewById(R.id.image_view);
+            relativeLayoutScan=itemView.findViewById(R.id.relative_scan);
+            relativeLayoutAddManually=itemView.findViewById(R.id.relative_add_manually);
             //constraintLayout=itemView.findViewById(R.id.parentContsraint);
             rootView.setOnTouchListener(this);
+            relativeLayoutScan.setOnClickListener(this);
+            relativeLayoutAddManually.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
+            if(view == relativeLayoutAddManually){
+                Intent intent = new Intent(context,AddProductActivity.class);
+                intent.putExtra("flag","manual");
+                context.startActivity(intent);
+            }else if(view == relativeLayoutScan){
+                Intent intent = new Intent(context,ScannarActivity.class);
+                intent.putExtra("flag","scan");
+                intent.putExtra("isProduct",true);
+                context.startActivity(intent);
+            }
         }
 
         @Override
@@ -349,7 +367,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public MyHomeHeader2ViewHolder(View itemView) {
             super(itemView);
             textHeader=itemView.findViewById(R.id.text_title);
-            buttonAdd=itemView.findViewById(R.id.btn_see_all);
+            buttonAdd=itemView.findViewById(R.id.btn_add);
             buttonAdd.setText("Add Product");
         }
 
