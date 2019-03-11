@@ -118,7 +118,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_personal_info, container, false);
         init();
-        getMacID();
+        IMEI = sharedPreferences.getString(Constants.IMEI_NO,"");
         return rootView;
     }
 
@@ -622,40 +622,6 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
         }
     }
 
-    /**
-     * Get MAC ID from real device
-     */
-    private void getMacID() {
-        // gets the current TelephonyManager
-        if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
-            TelephonyManager teleManager = (TelephonyManager) getActivity()
-                    .getSystemService(Context.TELEPHONY_SERVICE);
-
-            if (Utility.verifyReadPhoneStatePermissions(getActivity())) {
-                IMEI = teleManager.getDeviceId();
-                editor.putString(Constants.IMEI_NO,IMEI);
-                editor.commit();
-            }
-
-        }else{
-            IMEI = sharedPreferences.getString(Constants.IMEI_NO,"");
-        }
-        //      mMacId = "866700048591240";
-
-        Log.i(TAG,"Mac id "+IMEI);
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case Utility.MY_PERMISSIONS_REQUEST_PHONE_STATE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getMacID();
-                }
-                break;
-        }
-    }
 
     /**
      * This interface must be implemented by activities that contain this

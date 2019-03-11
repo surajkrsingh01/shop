@@ -82,7 +82,7 @@ public class Constants {
     public static String UPDATE_BANK_DETAILS="/api/user/updateBankDetails";
     public static String GET_CATEGORY="/api/categories/categories";
     public static String CREATE_CATEGORY="/api/categories/addCategoryRetailer";
-    public static String GET_SUB_CATEGORY="/api/subcategories?catIds=";
+    public static String GET_SUB_CATEGORY="/api/categories/subcategories?catIds=";
     public static String CREATE_SUB_CATEGORY="/api/categories/addSubCategoryRetailer";
     public static String GET_PRODUCTS="/api/products/productslist";
     public static String CREATE_PRODUCTS="/api/products/addProduct";
