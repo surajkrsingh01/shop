@@ -203,7 +203,7 @@ public class CategoryFragment extends NetworkBaseFragment implements MyItemClick
 
 
     private void getCategories(){
-        String url=getResources().getString(R.string.url)+"/api/categories";
+        String url=getResources().getString(R.string.url)+Constants.GET_CATEGORY;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(),"categories");
     }
@@ -232,7 +232,7 @@ public class CategoryFragment extends NetworkBaseFragment implements MyItemClick
                 e.printStackTrace();
             }
         }
-        String url=getResources().getString(R.string.url)+"/api/addCategoryRetailer";
+        String url=getResources().getString(R.string.url)+Constants.CREATE_CATEGORY;
         showProgress(true);
         jsonArrayV2ApiRequest(Request.Method.POST,url,dataArray,"addCategoryRetailer");
     }

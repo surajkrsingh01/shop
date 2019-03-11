@@ -70,4 +70,20 @@ public class Constants {
             ".LOCATION_DATA_EXTRA";
     public static final String STATUS = PACKAGE_NAME +
             ".STATUS";
+
+
+    //api
+    public static String LOGIN="/api/user/loginRetailer";
+    public static String SYNC="/api/syncdata";
+    public static String MANAGE_REGISTRATION="/api/user/manageRegistration";
+    public static String GET_COUNTRIES="/api/countries";
+    public static String GET_STATES="/api/states?countryId=";
+    public static String GET_CITIES="/api/cities?stateId=";
+    public static String UPDATE_BANK_DETAILS="/api/user/updateBankDetails";
+    public static String GET_CATEGORY="/api/categories/categories";
+    public static String CREATE_CATEGORY="/api/categories/addCategoryRetailer";
+    public static String GET_SUB_CATEGORY="/api/subcategories?catIds=";
+    public static String CREATE_SUB_CATEGORY="/api/categories/addSubCategoryRetailer";
+    public static String GET_PRODUCTS="/api/products/productslist";
+    public static String CREATE_PRODUCTS="/api/products/addProduct";
 }

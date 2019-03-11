@@ -36,6 +36,7 @@ import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.models.MyHeader;
 import com.shoppursshop.models.MyItem;
 import com.shoppursshop.models.MyProduct;
+import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.SubCategory;
 import com.shoppursshop.models.CatListItem;
 
@@ -48,12 +49,16 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private List<Object> itemList;
     private Context context;
-    private String type;
+    private String type,subCatName;
 
     private MyItemTouchListener myItemTouchListener;
 
     public void setMyItemTouchListener(MyItemTouchListener myItemTouchListener) {
         this.myItemTouchListener = myItemTouchListener;
+    }
+
+    public void setSubCatName(String subCatName) {
+        this.subCatName = subCatName;
     }
 
     private ConstraintSet constraintSet = new ConstraintSet();
@@ -102,6 +107,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if(view == btnSeeAll){
                 CatListItem myItem = (CatListItem) itemList.get(getAdapterPosition());
                 Intent intent = new Intent(context,SubCatListActivity.class);
+                intent.putExtra("catID",""+myItem.getId());
                 intent.putExtra("catName",myItem.getTitle());
                 context.startActivity(intent);
             }
@@ -151,6 +157,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }else{
                         Category myItem = (Category) itemList.get(getAdapterPosition());
                         Intent intent = new Intent(context,SubCatListActivity.class);
+                        intent.putExtra("catID",myItem.getId());
                         intent.putExtra("catName",myItem.getName());
                         context.startActivity(intent);
                     }
@@ -257,6 +264,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     zoomAnimation(false,rootView);
                     SubCategory myItem = (SubCategory) itemList.get(getAdapterPosition());
                     Intent intent = new Intent(context,ProductListActivity.class);
+                    intent.putExtra("subCatID",myItem.getId());
                     intent.putExtra("subCatName",myItem.getName());
                     context.startActivity(intent);
                     break;
@@ -319,15 +327,10 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 case MotionEvent.ACTION_UP:
                     // Log.i("Adapter","onPressUp");
-                    MyProduct item = (MyProduct) itemList.get(getAdapterPosition());
+                    MyProductItem item = (MyProductItem) itemList.get(getAdapterPosition());
                     Intent intent = new Intent(context,ProductDetailActivity.class);
-                    intent.putExtra("id",item.getId());
-                    intent.putExtra("subCatName",item.getSubCatName());
-                    intent.putExtra("productName",item.getName());
-                    intent.putExtra("productDesc",item.getDesc());
-                    intent.putExtra("productCode",item.getCode());
-                    intent.putExtra("productDesc",item.getDesc());
-                    intent.putExtra("productLocalImage",item.getLocalImage());
+                    intent.putExtra("id",item.getProdCatId());
+                    intent.putExtra("subCatName",subCatName);
                     context.startActivity(intent);
                     zoomAnimation(false,rootView);
                     break;
@@ -526,14 +529,15 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             myViewHolder.textTitle.setText(item.getName());
 
             RequestOptions requestOptions = new RequestOptions();
-            requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+            requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
+            requestOptions.skipMemoryCache(false);
             requestOptions.dontTransform();
             // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
             // requestOptions.centerCrop();
             requestOptions.skipMemoryCache(true);
 
             Glide.with(context)
-                    .load(item.getLocalImage())
+                    .load(context.getResources().getString(R.string.base_url)+"/"+item.getImage())
                     .apply(requestOptions)
                     .into(myViewHolder.imageView);
 
@@ -549,16 +553,17 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             myViewHolder.textTitle.setText(item.getName());
 
             RequestOptions requestOptions = new RequestOptions();
-            requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+            requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
+            requestOptions.skipMemoryCache(false);
             //requestOptions.dontTransform();
             // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
             // requestOptions.centerCrop();
-            requestOptions.skipMemoryCache(true);
 
             Glide.with(context)
-                    .load(item.getLocalImage())
+                    .load(context.getResources().getString(R.string.base_url)+"/"+item.getImage())
                     .apply(requestOptions)
                     .into(myViewHolder.imageView);
+
         }else if(holder instanceof MySubHomeHeaderViewHolder){
 
             HomeListItem item = (HomeListItem) itemList.get(position);
@@ -573,24 +578,24 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
         }else if(holder instanceof MyProductListType1ViewHolder){
-            MyProduct item = (MyProduct) itemList.get(position);
+            MyProductItem item = (MyProductItem) itemList.get(position);
             MyProductListType1ViewHolder myViewHolder = (MyProductListType1ViewHolder)holder;
 
-            myViewHolder.textCatName.setText(item.getSubCatName());
-            myViewHolder.textName.setText(item.getName()+", "+item.getCode());
+            myViewHolder.textCatName.setText(subCatName);
+            myViewHolder.textName.setText(item.getProdName()+", "+item.getProdBarCode());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
-            myViewHolder.textMrp.setText("MRP: Rs"+item.getMrp());
-            myViewHolder.textSellingPrice.setText("Selling Price: Rs"+item.getSellingPrice());
-            myViewHolder.textDesc.setText(item.getDesc());
+            myViewHolder.textMrp.setText("MRP: Rs"+item.getProdMrp());
+            myViewHolder.textSellingPrice.setText("Selling Price: Rs"+item.getProdSp());
+            myViewHolder.textDesc.setText(item.getProdDesc());
 
             RequestOptions requestOptions = new RequestOptions();
-            requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+            requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
             // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
             requestOptions.centerCrop();
-            requestOptions.skipMemoryCache(true);
+            requestOptions.skipMemoryCache(false);
 
             Glide.with(context)
-                    .load(item.getLocalImage())
+                    .load(context.getResources().getString(R.string.base_url)+"/"+item.getProdImage1())
                     .apply(requestOptions)
                     .into(myViewHolder.imageView);
 

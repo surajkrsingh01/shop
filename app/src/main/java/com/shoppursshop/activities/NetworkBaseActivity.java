@@ -11,6 +11,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.shoppursshop.utilities.AppController;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.JsonArrayRequest;
+import com.shoppursshop.utilities.JsonArrayRequestV2;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -89,6 +90,39 @@ public class NetworkBaseActivity extends BaseActivity {
                 showProgress(false);
                 onServerErrorResponse(error,apiName);
                 // DialogAndToast.showDialog(getResources().getString(R.string.connection_error),BaseActivity.this);
+            }
+        });
+
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(jsonObjectRequest);
+    }
+
+    protected void jsonArrayV2ApiRequest(int method,String url, JSONArray jsonObject, final String apiName){
+
+        Log.i(TAG,url);
+        Log.i(TAG,jsonObject.toString());
+
+        JsonArrayRequestV2 jsonObjectRequest=new JsonArrayRequestV2(method,url,jsonObject,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.i(TAG,response.toString());
+                AppController.getInstance().getRequestQueue().getCache().clear();
+                showProgress(false);
+                onJsonObjectResponse(response,apiName);
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // TODO Auto-generated method stub
+                Log.i(TAG,"Json Error "+error.toString());
+                AppController.getInstance().getRequestQueue().getCache().clear();
+                showProgress(false);
+                onServerErrorResponse(error,apiName);
+                //  DialogAndToast.showDialog(getResources().getString(R.string.connection_error),BaseActivity.this);
             }
         });
 

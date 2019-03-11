@@ -14,12 +14,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
 import com.shoppursshop.adapters.MonthlyGraphAdapter;
 import com.shoppursshop.adapters.MyItemAdapter;
 import com.shoppursshop.adapters.MyReviewAdapter;
 import com.shoppursshop.models.Bar;
 import com.shoppursshop.models.HomeListItem;
+import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MyReview;
 
 import java.util.ArrayList;
@@ -37,8 +41,10 @@ public class ProductDetailActivity extends BaseActivity {
     private MyItemAdapter myItemAdapter;
     private List<Object> itemList;
 
-    private TextView textViewSubCatName,textViewProductName,textViewDesc,textViewCode;
+    private TextView textViewSubCatName,textViewProductName,textViewDesc,textViewCode,
+                     textReorderLevel,textViewQoh;
     private ImageView imageView2,imageView3,imageView4;
+    private MyProductItem myProductItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,19 +64,42 @@ public class ProductDetailActivity extends BaseActivity {
         textViewProductName = findViewById(R.id.text_product_name);
         textViewDesc = findViewById(R.id.text_desc);
         textViewCode = findViewById(R.id.text_bar_code);
+        textReorderLevel = findViewById(R.id.text_reorder_level);
+        textViewQoh = findViewById(R.id.text_stock);
 
         imageView2 = findViewById(R.id.image_view_2);
         imageView3 = findViewById(R.id.image_view_3);
         imageView4 = findViewById(R.id.image_view_4);
 
-        textViewSubCatName.setText(intent.getStringExtra("subCatName"));
-        textViewProductName.setText(intent.getStringExtra("productName"));
-        textViewCode.setText(intent.getStringExtra("productCode"));
-        textViewDesc.setText(intent.getStringExtra("productDesc"));
+        myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
 
-        imageView2.setImageResource(intent.getIntExtra("productLocalImage",0));
-        imageView3.setImageResource(intent.getIntExtra("productLocalImage",0));
-        imageView4.setImageResource(intent.getIntExtra("productLocalImage",0));
+        textViewSubCatName.setText(intent.getStringExtra("subCatName"));
+        textViewProductName.setText(myProductItem.getProdName());
+        textViewCode.setText(myProductItem.getProdBarCode());
+        textViewDesc.setText(myProductItem.getProdDesc());
+        textReorderLevel.setText(""+myProductItem.getProdReorderLevel());
+        textViewQoh.setText(""+myProductItem.getProdQoh());
+
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
+        // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
+        requestOptions.centerCrop();
+        requestOptions.skipMemoryCache(false);
+
+        Glide.with(this)
+                .load(getResources().getString(R.string.base_url)+"/"+myProductItem.getProdImage1())
+                .apply(requestOptions)
+                .into(imageView2);
+
+        Glide.with(this)
+                .load(getResources().getString(R.string.base_url)+"/"+myProductItem.getProdImage2())
+                .apply(requestOptions)
+                .into(imageView3);
+
+        Glide.with(this)
+                .load(getResources().getString(R.string.base_url)+"/"+myProductItem.getProdImage3())
+                .apply(requestOptions)
+                .into(imageView4);
 
         barList = new ArrayList<>();
         recyclerViewMonthlyGraph=(RecyclerView)findViewById(R.id.recycler_view_monthly_graph);

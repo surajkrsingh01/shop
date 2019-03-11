@@ -4,6 +4,7 @@
     <string name="app_name">Shoppurs Shop</string>
     <string name="action_settings">Settings</string>
     <string name="url">http://49.50.77.154:8085/ShoppursApp</string>
+    <string name="base_url">http://49.50.77.154:8085</string>
     <string name="sign_up">Sign Up</string>
     <string name="submit">Submit</string>
 

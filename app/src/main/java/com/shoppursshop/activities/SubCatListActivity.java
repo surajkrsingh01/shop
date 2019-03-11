@@ -32,8 +32,7 @@ public class SubCatListActivity extends BaseActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
-    private String catName;
-
+    private String catName,catID;
     private float MIN_WIDTH = 200,MIN_HEIGHT = 230,MAX_WIDTH = 200,MAX_HEIGHT = 290;
 
     @Override
@@ -44,16 +43,24 @@ public class SubCatListActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         catName = getIntent().getStringExtra("catName");
+        catID = getIntent().getStringExtra("catID");
 
         Log.i(TAG,"catName "+catName);
+        Log.i(TAG,"catId "+catID);
 
-        itemList = new ArrayList<>();
+        itemList = dbHelper.getCatSubCategoriesForActivity(catID,limit,offset);
+        SubCategory s1 = (SubCategory) itemList.get(0);
+        s1.setWidth(MIN_WIDTH);
+        s1.setHeight(MIN_HEIGHT);
+        s1 = (SubCategory) itemList.get(itemList.size()-1);
+        s1.setWidth(MIN_WIDTH);
+        s1.setHeight(MIN_HEIGHT);
         HomeListItem myItem = new HomeListItem();
         myItem.setTitle(catName);
         myItem.setDesc(catName+" Products");
-        itemList.add(myItem);
+        itemList.add(0,myItem);
 
-        setItemList();
+       // setItemList();
 
         swipeRefreshLayout=findViewById(R.id.swipe_refresh);
         progressBar=findViewById(R.id.progress_bar);
@@ -70,6 +77,49 @@ public class SubCatListActivity extends BaseActivity {
         recyclerView.setLayoutAnimation(animation);*/
         myItemAdapter=new ProductAdapter(this,itemList,"subCatList");
         recyclerView.setAdapter(myItemAdapter);
+
+       // int[] posArray = ((StaggeredGridLayoutManager)staggeredGridLayoutManager).findLastCompletelyVisibleItemPositions(null);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(isScroll){
+                    visibleItemCount = staggeredGridLayoutManager.getChildCount();
+                    totalItemCount = staggeredGridLayoutManager.getItemCount();
+                    Log.i(TAG,"visible "+visibleItemCount+" total "+totalItemCount);
+                    int[] firstVisibleItems = null;
+                    firstVisibleItems = staggeredGridLayoutManager.findFirstVisibleItemPositions(firstVisibleItems);
+                    if(firstVisibleItems != null && firstVisibleItems.length > 0) {
+                        pastVisibleItems = firstVisibleItems[0];
+                    }
+                    if (loading) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            loading = false;
+                            offset = limit + offset;
+                            List<Object> nextItemList = dbHelper.getCatSubCategoriesForActivity(catID,limit,offset);
+                            for(Object ob : nextItemList){
+                                itemList.add(ob);
+                            }
+                            if(nextItemList.size() < limit){
+                                isScroll = false;
+                            }
+                            if(nextItemList.size() > 0){
+                                recyclerView.post(new Runnable() {
+                                    public void run() {
+                                        myItemAdapter.notifyItemRangeInserted(offset,limit);
+                                        loading = true;
+                                    }
+                                });
+                                Log.d(TAG, "NEXT ITEMS LOADED");
+                            }else{
+                                Log.d(TAG, "NO ITEMS FOUND");
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
         if(itemList.size() == 0){
             showNoData(true);

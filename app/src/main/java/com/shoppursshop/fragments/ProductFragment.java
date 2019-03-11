@@ -212,7 +212,7 @@ public class ProductFragment extends NetworkBaseFragment implements MyLevelItemC
     }
 
     private void getProducts(){
-        String url=getResources().getString(R.string.url)+"/api/productslist";
+        String url=getResources().getString(R.string.url)+Constants.GET_PRODUCTS;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(),"productslist");
     }
@@ -249,6 +249,7 @@ public class ProductFragment extends NetworkBaseFragment implements MyLevelItemC
                     dataObject.put("prodImage1",""+subCat.getProdImage1());
                     dataObject.put("prodImage2",""+subCat.getProdImage2());
                     dataObject.put("prodImage3",""+subCat.getProdImage3());
+                    dataObject.put("action","2");
                     dataObject.put("createdBy",""+subCat.getCreatedBy());
                     dataObject.put("updatedBy",""+subCat.getUpdatedBy());
                     dataObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
@@ -262,7 +263,7 @@ public class ProductFragment extends NetworkBaseFragment implements MyLevelItemC
             }
 
         }
-        String url=getResources().getString(R.string.url)+"/api/addProduct";
+        String url=getResources().getString(R.string.url)+Constants.CREATE_PRODUCTS;
         showProgress(true);
         jsonArrayV2ApiRequest(Request.Method.POST,url,dataArray,"addProduct");
     }

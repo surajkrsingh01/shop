@@ -9,6 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -31,7 +32,7 @@ public class ProductListActivity extends BaseActivity {
     private TextView textViewError;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
-    private String catName,subCatName;
+    private String catName,subCatName,subCatID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,106 +42,27 @@ public class ProductListActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         subCatName = getIntent().getStringExtra("subCatName");
+        subCatID = getIntent().getStringExtra("subCatID");
 
-        itemList = new ArrayList<>();
+        itemList = dbHelper.getProducts(subCatID,limit,offset);
         HomeListItem myItem = new HomeListItem();
         myItem.setTitle("Products");
       //  myItem.setDesc(subCatName+" Products");
         myItem.setDesc("Store Products");
         myItem.setType(0);
-        itemList.add(myItem);
+        itemList.add(0,myItem);
 
         MyHeader myHeader = new MyHeader();
         myHeader.setTitle(subCatName);
         myHeader.setType(1);
-        itemList.add(myHeader);
-
-        MyProduct myProduct = new MyProduct();
-        myProduct.setName("Item 1");
-        myProduct.setMrp("100");
-        myProduct.setSellingPrice("90");
-        myProduct.setCode("Code 1");
-        myProduct.setDesc("Item description");
-        myProduct.setLocalImage(R.drawable.thumb_16);
-        myProduct.setSubCatName(subCatName);
-        itemList.add(myProduct);
-
-        myProduct = new MyProduct();
-        myProduct.setName("Item 2");
-        myProduct.setMrp("200");
-        myProduct.setSellingPrice("190");
-        myProduct.setCode("Code 2");
-        myProduct.setDesc("Item description");
-        myProduct.setLocalImage(R.drawable.thumb_16);
-        myProduct.setSubCatName(subCatName);
-        itemList.add(myProduct);
-
-        myProduct = new MyProduct();
-        myProduct.setName("Item 3");
-        myProduct.setMrp("300");
-        myProduct.setSellingPrice("290");
-        myProduct.setCode("Code 3");
-        myProduct.setDesc("Item description");
-        myProduct.setLocalImage(R.drawable.thumb_16);
-        myProduct.setSubCatName(subCatName);
-        itemList.add(myProduct);
-
-        myProduct = new MyProduct();
-        myProduct.setName("Item 4");
-        myProduct.setMrp("400");
-        myProduct.setSellingPrice("390");
-        myProduct.setCode("Code 4");
-        myProduct.setDesc("Item description");
-        myProduct.setLocalImage(R.drawable.thumb_16);
-        myProduct.setSubCatName(subCatName);
-        itemList.add(myProduct);
-
-        myProduct = new MyProduct();
-        myProduct.setName("Item 5");
-        myProduct.setMrp("500");
-        myProduct.setSellingPrice("490");
-        myProduct.setCode("Code 5");
-        myProduct.setDesc("Item description");
-        myProduct.setLocalImage(R.drawable.thumb_16);
-        myProduct.setSubCatName(subCatName);
-        itemList.add(myProduct);
-
-        myProduct = new MyProduct();
-        myProduct.setName("Item 6");
-        myProduct.setMrp("600");
-        myProduct.setSellingPrice("590");
-        myProduct.setCode("Code 6");
-        myProduct.setDesc("Item description");
-        myProduct.setLocalImage(R.drawable.thumb_16);
-        myProduct.setSubCatName(subCatName);
-        itemList.add(myProduct);
-
-        myProduct = new MyProduct();
-        myProduct.setName("Item 7");
-        myProduct.setMrp("700");
-        myProduct.setSellingPrice("690");
-        myProduct.setCode("Code 7");
-        myProduct.setDesc("Item description");
-        myProduct.setLocalImage(R.drawable.thumb_16);
-        myProduct.setSubCatName(subCatName);
-        itemList.add(myProduct);
-
-        myProduct = new MyProduct();
-        myProduct.setName("Item 8");
-        myProduct.setMrp("800");
-        myProduct.setSellingPrice("790");
-        myProduct.setCode("Code 8");
-        myProduct.setDesc("Item description");
-        myProduct.setLocalImage(R.drawable.thumb_16);
-        myProduct.setSubCatName(subCatName);
-        itemList.add(myProduct);
+        itemList.add(1,myHeader);
 
         swipeRefreshLayout=findViewById(R.id.swipe_refresh);
         progressBar=findViewById(R.id.progress_bar);
         textViewError = findViewById(R.id.text_error);
         recyclerView=findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
+        final RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
         // staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -148,7 +70,48 @@ public class ProductListActivity extends BaseActivity {
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
         recyclerView.setLayoutAnimation(animation);*/
         myItemAdapter=new ProductAdapter(this,itemList,"productList");
+        myItemAdapter.setSubCatName(subCatName);
         recyclerView.setAdapter(myItemAdapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(isScroll){
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    Log.i(TAG,"visible "+visibleItemCount+" total "+totalItemCount);
+                    pastVisibleItems = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+                    Log.i(TAG,"total visible "+(visibleItemCount+pastVisibleItems));
+
+                    if (loading) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            loading = false;
+                            offset = limit + offset;
+                            List<Object> nextItemList = dbHelper.getProducts(subCatID,limit,offset);
+                            for(Object ob : nextItemList){
+                                itemList.add(ob);
+                            }
+                            if(nextItemList.size() < limit){
+                                isScroll = false;
+                            }
+                            if(nextItemList.size() > 0){
+                                recyclerView.post(new Runnable() {
+                                    public void run() {
+                                        myItemAdapter.notifyItemRangeInserted(offset,limit);
+                                        loading = true;
+                                    }
+                                });
+                                Log.d(TAG, "NEXT ITEMS LOADED");
+                            }else{
+                                Log.d(TAG, "NO ITEMS FOUND");
+                            }
+
+                        }
+                    }
+                }
+            }
+        });
 
         if(itemList.size() == 0){
             showNoData(true);

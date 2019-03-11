@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.CheckedOutputStream;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -178,7 +179,7 @@ public class SubCatFragment extends NetworkBaseFragment implements MyLevelItemCl
     }
 
     private void getSubCategories(String catIds){
-        String url=getResources().getString(R.string.url)+"/api/subcategories?catIds="+catIds;
+        String url=getResources().getString(R.string.url)+ Constants.GET_SUB_CATEGORY +catIds;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(),"sub_categories");
     }
@@ -200,6 +201,7 @@ public class SubCatFragment extends NetworkBaseFragment implements MyLevelItemCl
                     dataObject.put("catName",subCat.getName());
                     dataObject.put("imageUrl",subCat.getImage());
                     dataObject.put("delStatus","N");
+                    dataObject.put("retShopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
                     dataObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
                     dataObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
                     dataObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
@@ -213,7 +215,7 @@ public class SubCatFragment extends NetworkBaseFragment implements MyLevelItemCl
             }
 
         }
-        String url=getResources().getString(R.string.url)+"/api/addSubCategoryRetailer";
+        String url=getResources().getString(R.string.url)+Constants.CREATE_SUB_CATEGORY;
         showProgress(true);
         jsonArrayV2ApiRequest(Request.Method.POST,url,dataArray,"addSubCategoryRetailer");
     }

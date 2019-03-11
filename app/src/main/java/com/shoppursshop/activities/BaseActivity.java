@@ -9,7 +9,10 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,6 +22,8 @@ import android.widget.TextView;
 import com.shoppursshop.R;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.utilities.Constants;
+
+import java.util.List;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -31,6 +36,9 @@ public class BaseActivity extends AppCompatActivity {
     protected int colorTheme;
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
+    protected int limit = 30,offset = 0;
+    protected int visibleItemCount,pastVisibleItems,totalItemCount;
+    protected boolean loading=true,isScroll = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +61,7 @@ public class BaseActivity extends AppCompatActivity {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(false);
         progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
         // Disable the back button
         DialogInterface.OnKeyListener keyListener = new DialogInterface.OnKeyListener() {
             @Override

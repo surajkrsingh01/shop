@@ -33,7 +33,7 @@ public class CategoryListActivity extends BaseActivity {
     private ProgressBar progressBar;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
 
-    private float MIN_WIDTH = 200,MIN_HEIGHT = 230,MAX_WIDTH = 200,MAX_HEIGHT = 290;
+    public static float MIN_WIDTH = 200,MIN_HEIGHT = 230,MAX_WIDTH = 200,MAX_HEIGHT = 290;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,97 +47,34 @@ public class CategoryListActivity extends BaseActivity {
         myItem.setTitle("Products");
         myItem.setDesc("Store Category");
         myItem.setType(0);
-        List<Object> catList = new ArrayList<>();
+        List<Object> catList = dbHelper.getCategoriesForActivity(limit,offset);
 
         Category category = new Category();
         category.setName("Scan");
-        catList.add(category);
+        catList.add(0,category);
 
-        category = new Category();
-        category.setName("Grocery");
-        category.setLocalImage(R.drawable.thumb_14);
-        catList.add(category);
-
-        category = new Category();
-        category.setName("Stationary");
-        category.setLocalImage(R.drawable.thumb_15);
-        catList.add(category);
         myItem.setItemList(catList);
         itemList.add(myItem);
 
-        myItem = new CatListItem();
-        myItem.setTitle("Grocery");
-        myItem.setType(1);
-        List<Object> prodList = new ArrayList<>();
-        SubCategory subCategory = new SubCategory();
-        subCategory.setName("Breakfast & Dairy");
-        subCategory.setLocalImage(R.drawable.thumb_16);
-        subCategory.setWidth(MIN_WIDTH);
-        subCategory.setHeight(MIN_HEIGHT);
-        prodList.add(subCategory);
-        subCategory = new SubCategory();
-        subCategory.setName("Masala & Spices");
-        subCategory.setLocalImage(R.drawable.thumb_17);
-        subCategory.setWidth(MAX_WIDTH);
-        subCategory.setHeight(MAX_HEIGHT);
-        prodList.add(subCategory);
-        subCategory = new SubCategory();
-        subCategory.setName("Personal Care");
-        subCategory.setLocalImage(R.drawable.thumb_18);
-        subCategory.setWidth(MAX_WIDTH);
-        subCategory.setHeight(MAX_HEIGHT);
-        prodList.add(subCategory);
-        subCategory = new SubCategory();
-        subCategory.setName("Beverages");
-        subCategory.setLocalImage(R.drawable.thumb_19);
-        subCategory.setWidth(MIN_WIDTH);
-        subCategory.setHeight(MIN_HEIGHT);
-        prodList.add(subCategory);
-        myItem.setItemList(prodList);
-        itemList.add(myItem);
+        for(Object ob : catList){
+            Category cat = (Category)ob;
+            if(!cat.getName().equals("Scan")){
+                myItem = new CatListItem();
+                myItem.setTitle(cat.getName());
+                myItem.setId(Integer.parseInt(cat.getId()));
+                myItem.setType(1);
+                List<Object> subCatList = dbHelper.getCatSubCategoriesForActivity(cat.getId(),4,0);
+                SubCategory s1 = (SubCategory) subCatList.get(0);
+                s1.setWidth(MIN_WIDTH);
+                s1.setHeight(MIN_HEIGHT);
+                s1 = (SubCategory) subCatList.get(subCatList.size()-1);
+                s1.setWidth(MIN_WIDTH);
+                s1.setHeight(MIN_HEIGHT);
+                myItem.setItemList(subCatList);
+                itemList.add(myItem);
+            }
 
-        myItem = new CatListItem();
-        myItem.setTitle("Stationary");
-        myItem.setType(1);
-        prodList = new ArrayList<>();
-        subCategory = new SubCategory();
-        subCategory.setName("Pen & Pen Sets");
-        subCategory.setLocalImage(R.drawable.thumb_20);
-        subCategory.setWidth(MIN_WIDTH);
-        subCategory.setHeight(MIN_HEIGHT);
-        prodList.add(subCategory);
-        subCategory = new SubCategory();
-        subCategory.setName("Notebooks");
-        subCategory.setLocalImage(R.drawable.thumb_21);
-        subCategory.setWidth(MAX_WIDTH);
-        subCategory.setHeight(MAX_HEIGHT);
-        prodList.add(subCategory);
-        subCategory = new SubCategory();
-        subCategory.setName("Papers");
-        subCategory.setLocalImage(R.drawable.thumb_22);
-        subCategory.setWidth(MAX_WIDTH);
-        subCategory.setHeight(MAX_HEIGHT);
-        prodList.add(subCategory);
-        subCategory = new SubCategory();
-        subCategory.setName("Color & Paints");
-        subCategory.setLocalImage(R.drawable.thumb_23);
-        subCategory.setWidth(MAX_WIDTH);
-        subCategory.setHeight(MAX_HEIGHT);
-        prodList.add(subCategory);
-        subCategory = new SubCategory();
-        subCategory.setName("Desk Organizer");
-        subCategory.setLocalImage(R.drawable.thumb_24);
-        subCategory.setWidth(MAX_WIDTH);
-        subCategory.setHeight(MAX_HEIGHT);
-        prodList.add(subCategory);
-        subCategory = new SubCategory();
-        subCategory.setName("Markers");
-        subCategory.setLocalImage(R.drawable.thumb_25);
-        subCategory.setWidth(MIN_WIDTH);
-        subCategory.setHeight(MIN_HEIGHT);
-        prodList.add(subCategory);
-        myItem.setItemList(prodList);
-        itemList.add(myItem);
+        }
 
         swipeRefreshLayout=findViewById(R.id.swipe_refresh);
         progressBar=findViewById(R.id.progress_bar);

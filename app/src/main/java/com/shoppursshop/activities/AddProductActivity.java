@@ -6,27 +6,37 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.shoppursshop.R;
+import com.shoppursshop.fragments.NetworkBaseFragment;
 import com.shoppursshop.models.SpinnerItem;
+import com.shoppursshop.utilities.ConnectionDetector;
+import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class AddProductActivity extends BaseActivity {
+public class AddProductActivity extends NetworkBaseActivity {
 
     private EditText editTextName,editTextBarCode,editTextHSN,editTextDesc,editTextMRP,editTextSP,
             editTextRL,editTextQOH,editTextMfgBy,editTextWarranty,editTextCGST,editTextIGST,editTextSGST,editTextMfgDate,editTextExpiryDate;
@@ -41,6 +51,7 @@ public class AddProductActivity extends BaseActivity {
     private String flag;
     private JSONObject dataObject;
     private boolean scanSelection;
+    private Button btnAddProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,16 +80,20 @@ public class AddProductActivity extends BaseActivity {
         editTextSGST = findViewById(R.id.edit_product_sgst);
         editTextMfgDate = findViewById(R.id.edit_product_manufacture_date);
         editTextExpiryDate = findViewById(R.id.edit_product_expiry_date);
+        btnAddProduct = findViewById(R.id.btn_add);
         spinnerCategory = findViewById(R.id.spinner_category);
         spinnerSubCategory = findViewById(R.id.spinner_sub_category);
-        categoryListObject = new ArrayList<>();
+        categoryListObject = dbHelper.getCategoriesAddProduct();
         catList = new ArrayList<>();
         subCatListObject = new ArrayList<>();
         subCatList = new ArrayList<>();
 
+        for(SpinnerItem item : categoryListObject){
+            catList.add(item.getName());
+        }
         catList.add(0,"Select Category");
-        catList.add("Grocery");
-        catList.add("Stationary");
+       // categoryListObject.add(new SpinnerItem());
+
         //stateList.add("New Delhi");
         catAdapter = new ArrayAdapter<String>(this, R.layout.simple_dropdown_list_item, catList){
             @Override
@@ -121,7 +136,7 @@ public class AddProductActivity extends BaseActivity {
         spinnerCategory.setAdapter(catAdapter);
 
 
-        subCatList.add(0,"Select Product");
+        subCatList.add(0,"Select Sub Category");
         //stateList.add("New Delhi");
         subCatAdapter = new ArrayAdapter<String>(this, R.layout.simple_dropdown_list_item, subCatList){
             @Override
@@ -168,8 +183,8 @@ public class AddProductActivity extends BaseActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i > 0){
                     subCatList.clear();
-                    subCatList.add("Select Product");
-                    setProductItems(catList.get(i));
+                    subCatList.add("Select Sub Category");
+                    setProductItems(categoryListObject.get(i-1).getId());
                 }
             }
 
@@ -192,7 +207,7 @@ public class AddProductActivity extends BaseActivity {
                 cal.set(Calendar.YEAR,yr);
                 cal.set(Calendar.MONTH,mon);
                 cal.set(Calendar.DATE,dy);
-                editTextMfgDate.setText(Utility.parseDate(cal,"dd/MM/yyyy"));
+                editTextMfgDate.setText(Utility.parseDate(cal,"yyyy-MM-dd"));
             }
         },year,month,day);
         datePicker1.setCancelable(false);
@@ -206,7 +221,7 @@ public class AddProductActivity extends BaseActivity {
                 cal.set(Calendar.YEAR,yr);
                 cal.set(Calendar.MONTH,mon);
                 cal.set(Calendar.DATE,dy);
-                editTextExpiryDate.setText(Utility.parseDate(cal,"dd/MM/yyyy"));
+                editTextExpiryDate.setText(Utility.parseDate(cal,"yyyy-MM-dd"));
             }
         },year,month,day);
         datePicker2.setCancelable(false);
@@ -250,9 +265,162 @@ public class AddProductActivity extends BaseActivity {
             }
         }
 
+        btnAddProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(ConnectionDetector.isNetworkAvailable(AddProductActivity.this)){
+                    attemptAddProduct();
+                }
+            }
+        });
+
         initFooter(this,1);
 
     }
+
+    private void attemptAddProduct(){
+       String subCatId = null;
+       String prodName = editTextName.getText().toString();
+       String barCode = editTextBarCode.getText().toString();
+       String hsnCode = editTextHSN.getText().toString();
+       String desc = editTextDesc.getText().toString();
+       String mrp = editTextMRP.getText().toString();
+       String sp = editTextSP.getText().toString();
+       String reorderLevel = editTextRL.getText().toString();
+       String qoh = editTextQOH.getText().toString();
+       String mfgDate = editTextMfgDate.getText().toString();
+       String expiryDate  = editTextExpiryDate.getText().toString();
+       String mfgBy = editTextMfgBy.getText().toString();
+       String warranty = editTextWarranty.getText().toString();
+       String igst = editTextIGST.getText().toString();
+       String sgst = editTextSGST.getText().toString();
+       String cgst = editTextCGST.getText().toString();
+       boolean cancel = false;
+       View focus = null;
+
+       if(spinnerSubCategory.getSelectedItemPosition() == 0){
+           DialogAndToast.showDialog("Please select sub category",this);
+           return;
+       }else{
+           subCatId = subCatListObject.get(spinnerSubCategory.getSelectedItemPosition()-1).getId();
+       }
+
+       if(TextUtils.isEmpty(prodName)){
+           DialogAndToast.showDialog("Please enter product name",this);
+           return;
+       }
+
+        if(TextUtils.isEmpty(barCode)){
+            DialogAndToast.showDialog("Please enter barcode",this);
+            return;
+        }
+
+        if(TextUtils.isEmpty(hsnCode)){
+            DialogAndToast.showDialog("Please enter hsn code",this);
+            return;
+        }
+
+        if(TextUtils.isEmpty(desc)){
+            DialogAndToast.showDialog("Please enter description",this);
+            return;
+        }
+
+        if(TextUtils.isEmpty(mrp)){
+            DialogAndToast.showDialog("Please enter product mrp",this);
+            return;
+        }
+
+        if(TextUtils.isEmpty(sp)){
+            DialogAndToast.showDialog("Please enter product selling price",this);
+            return;
+        }
+
+        if(TextUtils.isEmpty(reorderLevel)){
+            DialogAndToast.showDialog("Please enter product reorder level",this);
+            return;
+        }
+
+        if(TextUtils.isEmpty(qoh)){
+            DialogAndToast.showDialog("Please enter product quantity",this);
+            return;
+        }
+
+        if(TextUtils.isEmpty(mfgDate)){
+            DialogAndToast.showDialog("Please enter product mfg date",this);
+            return;
+        }
+
+        if(TextUtils.isEmpty(expiryDate)){
+            DialogAndToast.showDialog("Please enter product expiry date",this);
+            return;
+        }
+
+        if(TextUtils.isEmpty(mfgBy)){
+            DialogAndToast.showDialog("Please enter product mfg company",this);
+            return;
+        }
+
+        if(TextUtils.isEmpty(warranty)){
+            DialogAndToast.showDialog("Please enter product warranty",this);
+            return;
+        }
+
+        if(TextUtils.isEmpty(cgst)){
+            DialogAndToast.showDialog("Please enter product cgst",this);
+            return;
+        }
+
+        if(TextUtils.isEmpty(igst)){
+            DialogAndToast.showDialog("Please enter product igst",this);
+            return;
+        }
+
+        if(TextUtils.isEmpty(sgst)){
+            DialogAndToast.showDialog("Please enter product sgst",this);
+            return;
+        }
+
+       if(cancel){
+           focus.requestFocus();
+           return;
+       }else{
+           Map<String,String> params=new HashMap<>();
+           params.put("prodCatId",subCatId);
+           params.put("prodReorderLevel",reorderLevel);
+           params.put("prodQoh",qoh);
+           params.put("prodName",prodName);
+           params.put("prodBarCode",barCode);
+           params.put("prodDesc",desc);
+           params.put("prodCgst",cgst);
+           params.put("prodIgst",igst);
+           params.put("prodSgst",sgst);
+           params.put("prodWarranty",warranty);
+           params.put("prodMrp",mrp);
+           params.put("prodSp",sp);
+           params.put("prodHsnCode",hsnCode);
+           params.put("prodMfgDate",mfgDate);
+           params.put("prodExpiryDate",expiryDate);
+           params.put("prodMfgBy",mfgBy);
+           params.put("action","3");
+           params.put("prodImage1","");
+           params.put("prodImage2","");
+           params.put("prodImage3","");
+           params.put("createdBy",sharedPreferences.getString(Constants.FULL_NAME,""));
+           params.put("updatedBy",sharedPreferences.getString(Constants.FULL_NAME,""));
+           params.put("retRetailerId",sharedPreferences.getString(Constants.USER_ID,""));
+           params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+           params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+           params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+           JSONArray dataArray = new JSONArray();
+           JSONObject dataObject = new JSONObject(params);
+           dataArray.put(dataObject);
+           String url=getResources().getString(R.string.url)+"/api/addProduct";
+           showProgress(true);
+           jsonArrayV2ApiRequest(Request.Method.POST,url,dataArray,"addProduct");
+       }
+    }
+
+
 
     private void setCatSelection(String catName){
         int i = 0;
@@ -267,20 +435,13 @@ public class AddProductActivity extends BaseActivity {
     }
 
 
-    private void setProductItems(String productName){
-        if(productName.equals("Grocery")){
-            subCatList.add("Breakfast & Dairy");
-            subCatList.add("Masala & Spices");
-            subCatList.add("Personal Care");
-            subCatList.add("Beverages");
-        }else{
-            subCatList.add("Pen & Pen Sets");
-            subCatList.add("Notebooks");
-            subCatList.add("Papers");
-            subCatList.add("Color & Paints");
-            subCatList.add("Desk Organizer");
-            subCatList.add("Markers");
+    private void setProductItems(String catId){
+        subCatListObject = dbHelper.getCatSubCategoriesAddProduct(catId);
+        for(SpinnerItem item : subCatListObject){
+            subCatList.add(item.getName());
         }
+
+        subCatAdapter.notifyDataSetChanged();
 
         if(scanSelection){
             int i = 0;

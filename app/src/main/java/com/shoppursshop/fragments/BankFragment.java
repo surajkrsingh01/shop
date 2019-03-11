@@ -183,7 +183,7 @@ public class BankFragment extends NetworkBaseFragment {
                // params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
                // params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
 
-                String url=getResources().getString(R.string.url)+"/api/updateBankDetails";
+                String url=getResources().getString(R.string.url)+Constants.UPDATE_BANK_DETAILS;
                 showProgress(true);
                 jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"updateBankDetails");
                    /* editor.putString(Constants.FULL_NAME,fullName);

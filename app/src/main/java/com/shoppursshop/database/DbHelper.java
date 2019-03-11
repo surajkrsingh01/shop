@@ -7,11 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.shoppursshop.activities.CategoryListActivity;
 import com.shoppursshop.models.CatListItem;
 import com.shoppursshop.models.Category;
 import com.shoppursshop.models.MyProduct;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MySimpleItem;
+import com.shoppursshop.models.SpinnerItem;
+import com.shoppursshop.models.SubCategory;
 import com.shoppursshop.utilities.Constants;
 
 import java.util.ArrayList;
@@ -199,6 +202,49 @@ public class DbHelper extends SQLiteOpenHelper {
                 item=new MySimpleItem();
                 item.setId(res.getInt(res.getColumnIndex(ID)));
                 item.setName(res.getString(res.getColumnIndex(NAME)));
+                item.setImage(res.getString(res.getColumnIndex(IMAGE)));
+                itemList.add(item);
+            }while (res.moveToNext());
+        }
+
+
+        return itemList;
+    }
+
+    public ArrayList<SpinnerItem> getCategoriesAddProduct(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+CAT_TABLE;
+        Cursor res =  db.rawQuery(query, null);
+        // res.moveToFirst();
+        ArrayList<SpinnerItem> itemList=new ArrayList<>();
+        SpinnerItem item = null;
+        if(res.moveToFirst()){
+            do{
+                item=new SpinnerItem();
+                item.setId(res.getString(res.getColumnIndex(ID)));
+                item.setName(res.getString(res.getColumnIndex(NAME)));
+                itemList.add(item);
+            }while (res.moveToNext());
+        }
+
+
+        return itemList;
+    }
+
+
+    public ArrayList<Object> getCategoriesForActivity(int limit,int offset){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+CAT_TABLE+" LIMIT ? OFFSET ?";
+        Cursor res =  db.rawQuery(query, new String[]{String.valueOf(limit),String.valueOf(offset)});
+        // res.moveToFirst();
+        ArrayList<Object> itemList=new ArrayList<>();
+        Category item = null;
+        if(res.moveToFirst()){
+            do{
+                item=new Category();
+                item.setId(""+res.getInt(res.getColumnIndex(ID)));
+                item.setName(res.getString(res.getColumnIndex(NAME)));
+                item.setImage(res.getString(res.getColumnIndex(IMAGE)));
                 itemList.add(item);
             }while (res.moveToNext());
         }
@@ -260,6 +306,113 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         return itemList;
+    }
+
+    public ArrayList<SpinnerItem> getCatSubCategoriesAddProduct(String caId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+SUB_CAT_TABLE+" where "+CAT_ID+" = ?";
+        Cursor res =  db.rawQuery(query, new String[]{caId});
+        ArrayList<SpinnerItem> itemList=new ArrayList<>();
+        SpinnerItem item = null;
+        if(res.moveToFirst()){
+            do{
+                item=new SpinnerItem();
+                item.setId(res.getString(res.getColumnIndex(ID)));
+                item.setName(res.getString(res.getColumnIndex(NAME)));
+                itemList.add(item);
+            }while (res.moveToNext());
+        }
+
+        return itemList;
+    }
+
+    public ArrayList<Object> getCatSubCategoriesForActivity(String caId,int limit,int offset){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+SUB_CAT_TABLE+" where "+CAT_ID+" = ? LIMIT ? OFFSET ?";
+        Cursor res =  db.rawQuery(query, new String[]{caId,String.valueOf(limit),String.valueOf(offset)});
+        ArrayList<Object> itemList=new ArrayList<>();
+        SubCategory item = null;
+        if(res.moveToFirst()){
+            do{
+                item=new SubCategory();
+                item.setId(""+res.getInt(res.getColumnIndex(ID)));
+                item.setName(res.getString(res.getColumnIndex(NAME)));
+                item.setImage(res.getString(res.getColumnIndex(IMAGE)));
+                item.setWidth(CategoryListActivity.MAX_WIDTH);
+                item.setHeight(CategoryListActivity.MAX_HEIGHT);
+                itemList.add(item);
+            }while (res.moveToNext());
+        }
+
+        return itemList;
+    }
+
+    public ArrayList<Object> getProducts(String subCatId,int limit,int offset){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+PRODUCT_TABLE+" where "+PROD_SUB_CAT_ID+" = ? LIMIT ? OFFSET ?";
+        Cursor res =  db.rawQuery(query, new String[]{subCatId,String.valueOf(limit),String.valueOf(offset)});
+        ArrayList<Object> itemList=new ArrayList<>();
+        MyProductItem productItem = null;
+        if(res.moveToFirst()){
+            do{
+                productItem=new MyProductItem();
+                productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
+                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+                productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
+                productItem.setProdBarCode(res.getString(res.getColumnIndex(PROD_BARCODE)));
+                productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
+                productItem.setProdReorderLevel(res.getInt(res.getColumnIndex(PROD_REORDER_LEVEL)));
+                productItem.setProdQoh(res.getInt(res.getColumnIndex(PROD_QOH)));
+                productItem.setProdHsnCode(res.getString(res.getColumnIndex(PROD_HSN_CODE)));
+                productItem.setProdCgst(res.getFloat(res.getColumnIndex(PROD_CGST)));
+                productItem.setProdIgst(res.getFloat(res.getColumnIndex(PROD_IGST)));
+                productItem.setProdSgst(res.getFloat(res.getColumnIndex(PROD_SGST)));
+                productItem.setProdWarranty(res.getFloat(res.getColumnIndex(PROD_WARRANTY)));
+                productItem.setProdMfgDate(res.getString(res.getColumnIndex(PROD_MFG_DATE)));
+                productItem.setProdExpiryDate(res.getString(res.getColumnIndex(PROD_EXPIRY_DATE)));
+                productItem.setProdMfgBy(res.getString(res.getColumnIndex(PROD_MFG_BY)));
+                productItem.setProdImage1(res.getString(res.getColumnIndex(PROD_IMAGE_1)));
+                productItem.setProdImage2(res.getString(res.getColumnIndex(PROD_IMAGE_2)));
+                productItem.setProdImage3(res.getString(res.getColumnIndex(PROD_IMAGE_3)));
+                productItem.setProdMrp(res.getFloat(res.getColumnIndex(PROD_MRP)));
+                productItem.setProdSp(res.getFloat(res.getColumnIndex(PROD_SP)));
+                itemList.add(productItem);
+            }while (res.moveToNext());
+        }
+
+        return itemList;
+    }
+
+    public MyProductItem getProductDetails(int prodId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+PRODUCT_TABLE+" where "+ID+" = ?";
+        Cursor res =  db.rawQuery(query, new String[]{String.valueOf(prodId)});
+        MyProductItem productItem = null;
+        if(res.moveToFirst()){
+            productItem=new MyProductItem();
+            productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
+            productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+            productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
+            productItem.setProdBarCode(res.getString(res.getColumnIndex(PROD_BARCODE)));
+            productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
+            productItem.setProdReorderLevel(res.getInt(res.getColumnIndex(PROD_REORDER_LEVEL)));
+            productItem.setProdQoh(res.getInt(res.getColumnIndex(PROD_QOH)));
+            productItem.setProdHsnCode(res.getString(res.getColumnIndex(PROD_HSN_CODE)));
+            productItem.setProdCgst(res.getFloat(res.getColumnIndex(PROD_CGST)));
+            productItem.setProdIgst(res.getFloat(res.getColumnIndex(PROD_IGST)));
+            productItem.setProdSgst(res.getFloat(res.getColumnIndex(PROD_SGST)));
+            productItem.setProdWarranty(res.getFloat(res.getColumnIndex(PROD_WARRANTY)));
+            productItem.setProdMfgDate(res.getString(res.getColumnIndex(PROD_MFG_DATE)));
+            productItem.setProdExpiryDate(res.getString(res.getColumnIndex(PROD_EXPIRY_DATE)));
+            productItem.setProdMfgBy(res.getString(res.getColumnIndex(PROD_MFG_BY)));
+            productItem.setProdImage1(res.getString(res.getColumnIndex(PROD_IMAGE_1)));
+            productItem.setProdImage2(res.getString(res.getColumnIndex(PROD_IMAGE_2)));
+            productItem.setProdImage3(res.getString(res.getColumnIndex(PROD_IMAGE_3)));
+            productItem.setProdMrp(res.getFloat(res.getColumnIndex(PROD_MRP)));
+            productItem.setProdSp(res.getFloat(res.getColumnIndex(PROD_SP)));
+        }
+
+        return productItem;
     }
 
   /*  public boolean insertBookingData(String level0Category,String level1Category,String level2Category,String receiptNumber,

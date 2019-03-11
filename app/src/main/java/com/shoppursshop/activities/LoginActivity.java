@@ -165,7 +165,7 @@ public class LoginActivity extends NetworkBaseActivity{
         Map<String,String> params=new HashMap<>();
         params.put("mobile",mobile);
         params.put("password",password);
-        String url=getResources().getString(R.string.url)+"/api/loginRetailer";
+        String url=getResources().getString(R.string.url)+Constants.LOGIN;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"login");
     }
@@ -176,7 +176,7 @@ public class LoginActivity extends NetworkBaseActivity{
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
-        String url=getResources().getString(R.string.url)+"/api/syncdata";
+        String url=getResources().getString(R.string.url)+Constants.SYNC;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"syncdata");
     }
@@ -239,6 +239,7 @@ public class LoginActivity extends NetworkBaseActivity{
                         item = new MySimpleItem();
                         item.setId(jsonObject.getInt("catId"));
                         item.setName(jsonObject.getString("catName"));
+                        item.setImage(jsonObject.getString("imageUrl"));
                         dbHelper.addCategory(item, Utility.getTimeStamp(),Utility.getTimeStamp());
                     }
 
@@ -248,6 +249,7 @@ public class LoginActivity extends NetworkBaseActivity{
                         item = new MySimpleItem();
                         item.setId(jsonObject.getInt("subCatId"));
                         item.setName(jsonObject.getString("subCatName"));
+                        item.setImage(jsonObject.getString("imageUrl"));
                         dbHelper.addSubCategory(item,""+jsonObject.getInt("catId"),Utility.getTimeStamp(),Utility.getTimeStamp());
                     }
 
@@ -300,12 +302,14 @@ public class LoginActivity extends NetworkBaseActivity{
 
     private void moveToActivities(){
         Intent intent=null;
-        if(!sharedPreferences.getBoolean(Constants.IS_SUB_CAT_ADDED,false)){
+       /* if(!sharedPreferences.getBoolean(Constants.IS_SUB_CAT_ADDED,false)){
             intent=new Intent(LoginActivity.this,RegisterActivity.class);
             intent.putExtra("type",RegisterActivity.SUB_CATEGORY);
         }else{
             intent=new Intent(LoginActivity.this,MainActivity.class);
-        }
+        }*/
+
+        intent=new Intent(LoginActivity.this,MainActivity.class);
 
         startActivity(intent);
         finish();
