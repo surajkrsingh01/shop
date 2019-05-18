@@ -20,6 +20,7 @@ import com.shoppursshop.models.InvoiceItem;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.EnglishNumberToWords;
+import com.shoppursshop.utilities.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -118,15 +119,15 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     tvCustomerName.setText(jsonObject.getString("invCustName"));
                     tvInvoiceNo.setText("Invoice No: "+jsonObject.getString("invNo"));
                     float subTotal = Float.parseFloat(""+(jsonObject.getDouble("invTotAmount") - jsonObject.getDouble("invTotTaxAmount")));
-                    tvSubTotAmt.setText(String.format("%.02f",subTotal));
-                    tvGrossTotAmt.setText(String.format("%.02f",subTotal));
-                    tvTotIgst.setText(String.format("%.02f",Float.parseFloat(jsonObject.getString("invTotIGST"))));
-                    tvShortExcess.setText(String.format("%.02f",Float.parseFloat(jsonObject.getString("invTotDisAmount"))));
+                    tvSubTotAmt.setText(Utility.numberFormat(subTotal));
+                    tvGrossTotAmt.setText(Utility.numberFormat(subTotal));
+                    tvTotIgst.setText(Utility.numberFormat(Float.parseFloat(jsonObject.getString("invTotIGST"))));
+                    tvShortExcess.setText(Utility.numberFormat(Float.parseFloat(jsonObject.getString("invTotDisAmount"))));
                     float netPayable = (float) Math.round(jsonObject.getDouble("invTotNetPayable"));
-                    tvNetPayableAmt.setText(String.format("%.02f",netPayable));
+                    tvNetPayableAmt.setText(Utility.numberFormat(netPayable));
                     tvCollectionMode.setText(jsonObject.getString("invPaymentMode"));
-                    tvCollectionAmt.setText(String.format("%.02f",netPayable));
-                    tvPaidAmt.setText(String.format("%.02f",netPayable));
+                    tvCollectionAmt.setText(Utility.numberFormat(netPayable));
+                    tvPaidAmt.setText(Utility.numberFormat(netPayable));
                     tvNetPayableWords.setText(EnglishNumberToWords.convert((int)netPayable)+" rupees");
 
                     int len = invoiceDetailsArray.length();

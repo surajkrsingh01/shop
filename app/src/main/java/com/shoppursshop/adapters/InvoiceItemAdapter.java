@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.shoppursshop.R;
 import com.shoppursshop.models.InvoiceItem;
+import com.shoppursshop.utilities.Utility;
 
 import java.util.List;
 
@@ -74,10 +75,10 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             myViewHolder.tvName.setText(item.getItemName());
             myViewHolder.tvHsn.setText(item.getHsn());
             myViewHolder.tvQty.setText(""+item.getQty());
-            myViewHolder.tvRate.setText(String.format("%.02f",item.getRate()));
-            myViewHolder.tvGst.setText(String.format("%.00f",item.getGst())+"%");
+            myViewHolder.tvRate.setText(Utility.numberFormat(item.getRate()));
+            myViewHolder.tvGst.setText(Utility.numberFormat(item.getGst())+"%");
             float amt = item.getQty() * item.getRate();
-            myViewHolder.tvAmt.setText(String.format("%.02f",amt));
+            myViewHolder.tvAmt.setText(Utility.numberFormat(amt));
         }
     }
 

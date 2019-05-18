@@ -42,6 +42,7 @@ import com.shoppursshop.models.MyProduct;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.SubCategory;
 import com.shoppursshop.models.CatListItem;
+import com.shoppursshop.utilities.Utility;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
@@ -716,7 +717,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             myViewHolder.textBarCode.setText(item.getProdBarCode());
             myViewHolder.textName.setText(item.getProdName());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
-            myViewHolder.textMrp.setText("MRP: Rs"+item.getProdMrp());
+            myViewHolder.textMrp.setText("MRP: Rs "+Utility.numberFormat(item.getProdSp()));
 
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
@@ -737,7 +738,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             myViewHolder.textName.setText(item.getProdName()+", "+item.getProdBarCode());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
-            myViewHolder.textMrp.setText("MRP: Rs"+item.getProdSp());
+            myViewHolder.textMrp.setText("MRP: Rs "+ Utility.numberFormat(item.getProdSp()));
             myViewHolder.textQty.setText("Qty: "+item.getQty());
 
             RequestOptions requestOptions = new RequestOptions();

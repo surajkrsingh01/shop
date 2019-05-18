@@ -163,7 +163,12 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
                     // Set the hint text color gray
                     tv.setTextColor(getResources().getColor(R.color.grey500));
                 } else {
-                    tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
+
                 }
                 return view;
             }
@@ -173,11 +178,20 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
                                         ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
+                if(isDarkTheme){
+                    view.setBackgroundColor(getResources().getColor(R.color.dark_color));
+                }else{
+                    view.setBackgroundColor(getResources().getColor(R.color.white));
+                }
                 if (position == 0) {
                     // Set the hint text color gray
                     tv.setTextColor(getResources().getColor(R.color.grey500));
                 } else {
-                    tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
                 }
                 tv.setPadding(20, 20, 20, 20);
                 return view;
@@ -208,7 +222,11 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
                     // Set the hint text color gray
                     tv.setTextColor(getResources().getColor(R.color.grey500));
                 } else {
-                    tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
                 }
                 return view;
             }
@@ -217,12 +235,21 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
+                if(isDarkTheme){
+                    view.setBackgroundColor(getResources().getColor(R.color.dark_color));
+                }else{
+                    view.setBackgroundColor(getResources().getColor(R.color.white));
+                }
                 TextView tv = (TextView) view;
                 if (position == 0) {
                     // Set the hint text color gray
                     tv.setTextColor(getResources().getColor(R.color.grey400));
                 } else {
-                    tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
                 }
                 tv.setPadding(20, 20, 20, 20);
                 return view;
@@ -253,7 +280,11 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
                     // Set the hint text color gray
                     tv.setTextColor(getResources().getColor(R.color.grey500));
                 } else {
-                    tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
                 }
                 return view;
             }
@@ -262,12 +293,21 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
+                if(isDarkTheme){
+                    view.setBackgroundColor(getResources().getColor(R.color.dark_color));
+                }else{
+                    view.setBackgroundColor(getResources().getColor(R.color.white));
+                }
                 TextView tv = (TextView) view;
                 if (position == 0) {
                     // Set the hint text color gray
                     tv.setTextColor(getResources().getColor(R.color.grey400));
                 } else {
-                    tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
                 }
                 tv.setPadding(20, 20, 20, 20);
                 return view;

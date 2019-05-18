@@ -5,6 +5,7 @@
 	</declare-styleable>
 
 	<attr name="backgroundColor" format="color"/>
+	<attr name="reversePrimaryTextColor" format="color"/>
 	<attr name="primaryTextColor" format="color"/>
 	<attr name="secondaryTextColor" format="color"/>
     <attr name="ternaryTextColor" format="color"/>
@@ -25,6 +26,7 @@
 	<attr name="navBarMenuBackgroundSelector" format="reference"/>
 	<attr name="editTextBackground" format="reference"/>
 	<attr name="borderBackground" format="reference"/>
+	<attr name="solidPrimaryStrokeBorderBackground" format="reference"/>
 	<attr name="solidBorderBackground" format="reference"/>
 	<attr name="summaryPrimaryBackground" format="reference"/>
 	<attr name="summarySecondaryBackground" format="reference"/>
