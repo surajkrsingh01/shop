@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -61,6 +62,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
     private TextView tvStarRatings,tvNumRatings,tvDiscount,tvMrp,tvReadMore,textTotalSale;
     private RelativeLayout relativeLayoutRating;
     private RelativeLayout relative_reorder;
+    private LinearLayout linear_amount_division;
     private ImageView imageView2,imageView3,imageView4;
     private Button btnLoadMoreReviews;
     private MyProductItem myProductItem;
@@ -109,6 +111,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
         checkBoxMultipleBarcode = findViewById(R.id.checkbox_multiple_barcode);
         tvMrp.setPaintFlags(tvMrp.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         relative_reorder = findViewById(R.id.relative_reorder);
+        linear_amount_division = findViewById(R.id.linear_amount_division);
         text_sale_trend_Label = findViewById(R.id.text_sale_trend_Label);
         text_reviews_Label = findViewById(R.id.text_reviews_Label);
 
@@ -127,6 +130,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                 textReorderLevel.setVisibility(View.GONE);
                 textReorderLevel.setVisibility(View.GONE);
                 relative_reorder.setVisibility(View.GONE);
+                linear_amount_division.setVisibility(View.GONE);
                 text_sale_trend_Label.setVisibility(View.GONE);
                 text_reviews_Label.setVisibility(View.GONE);
                 //myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
@@ -163,7 +167,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
             tvMrp.setVisibility(View.GONE);
         }
 
-        if(myProductItem.getIsBarCodeAvailable().equals("N")){
+        if(myProductItem.getIsBarCodeAvailable()!=null && myProductItem.getIsBarCodeAvailable().equals("N")){
             buttonAddMultipleBarcode.setVisibility(View.GONE);
         }
 
@@ -251,6 +255,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
             recyclerViewMonthlyGraph.setVisibility(View.GONE);
             // recyclerViewOffers.setVisibility(View.GONE);
             recyclerViewReview.setVisibility(View.GONE);
+            buttonAddMultipleBarcode.setVisibility(View.GONE);
         }
 
         setReviews();

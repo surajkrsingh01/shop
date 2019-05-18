@@ -120,7 +120,7 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
         if(schemeCode>=0){
             totalAmount = mschemeList.get(schemeCode).getProdMrp() * noOfUser;
         }
-        tvtotalAmount.setText(String.valueOf(totalAmount));
+        tvtotalAmount.setText(Utility.numberFormat(totalAmount));
     }
 
     @Override
