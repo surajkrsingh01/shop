@@ -28,6 +28,7 @@
         android:layout_height="wrap_content">
 
         <android.support.v4.widget.NestedScrollView
+            android:scrollbars="none"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -38,7 +39,6 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"
-                    android:scrollbars="vertical"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
                     android:layout_width="match_parent"
@@ -69,7 +69,6 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view_pre_orders"
-                    android:scrollbars="vertical"
                     android:visibility="gone"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"

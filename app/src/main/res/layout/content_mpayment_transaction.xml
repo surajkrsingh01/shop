@@ -34,7 +34,6 @@
                 android:background="#95000000"
                 android:cacheColorHint="#00000000"
                 android:fadingEdge="vertical"
-                android:scrollbars="vertical"
                 android:soundEffectsEnabled="true"
                 android:animateLayoutChanges="true"
                 android:visibility="gone" />
