@@ -146,11 +146,13 @@ public class MonthlyGraphAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             int amount = bar.getSaleValue();
             int currentBarHeight = (int) (((float) amount / (float) totalTarget) * barHeight);
 
-            Log.i("Sale Target","Sale "+amount+" totalTarget "+totalTarget+" barHeigth "+barHeight);
+            Log.i("Sale Target","Sale "+amount+" totalTarget "+totalTarget+" barHeigth "+currentBarHeight+" "+barHeight);
 
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)((MyViewOneHolder)holder).viewSale.getLayoutParams();
             params.height = currentBarHeight;
             ((MyViewOneHolder)holder).viewSale.setLayoutParams(params);
+
+            ((MyViewOneHolder)holder).viewSale.setBackgroundColor(bar.getBarColor());
 
         }else if(holder instanceof MyViewTwoHolder){
             Bar bar = rowItems.get(position);

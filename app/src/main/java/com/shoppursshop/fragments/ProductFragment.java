@@ -20,6 +20,7 @@ import com.shoppursshop.activities.RegisterActivity;
 import com.shoppursshop.adapters.SimpleItemAdapter;
 import com.shoppursshop.interfaces.MyLevelItemClickListener;
 import com.shoppursshop.interfaces.OnFragmentInteraction;
+import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.CatListItem;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MySimpleItem;
@@ -234,6 +235,7 @@ public class ProductFragment extends NetworkBaseFragment implements MyLevelItemC
                     dataObject.put("prodReorderLevel",""+subCat.getProdReorderLevel());
                     dataObject.put("prodQoh",""+subCat.getProdQoh());
                     dataObject.put("prodName",""+subCat.getProdName());
+                    dataObject.put("prodCode",""+subCat.getProdCode());
                     dataObject.put("prodBarCode",""+subCat.getProdBarCode());
                     dataObject.put("prodDesc",""+subCat.getProdDesc());
                     dataObject.put("prodCgst",""+subCat.getProdCgst());
@@ -249,6 +251,8 @@ public class ProductFragment extends NetworkBaseFragment implements MyLevelItemC
                     dataObject.put("prodImage1",""+subCat.getProdImage1());
                     dataObject.put("prodImage2",""+subCat.getProdImage2());
                     dataObject.put("prodImage3",""+subCat.getProdImage3());
+                    dataObject.put("isBarcodeAvailable",subCat.getIsBarCodeAvailable());
+                    dataObject.put("barcodeList",subCat.getBarcodeList());
                     dataObject.put("action","2");
                     dataObject.put("createdBy",""+subCat.getCreatedBy());
                     dataObject.put("updatedBy",""+subCat.getUpdatedBy());
@@ -279,6 +283,10 @@ public class ProductFragment extends NetworkBaseFragment implements MyLevelItemC
                     JSONObject jsonObject =null;
                     int len = dataArray.length();
                     MyProductItem item = null;
+                    List<Barcode> barCodeList = null;
+                    Barcode barcode = null;
+                    JSONArray barArray = null;
+                    int barLen = 0;
                     for(int i=0; i<len; i++){
                         jsonObject = dataArray.getJSONObject(i);
                         item = new MyProductItem();
@@ -300,12 +308,22 @@ public class ProductFragment extends NetworkBaseFragment implements MyLevelItemC
                         item.setProdImage1(jsonObject.getString("prodImage1"));
                         item.setProdImage2(jsonObject.getString("prodImage2"));
                         item.setProdImage3(jsonObject.getString("prodImage3"));
+                        item.setIsBarCodeAvailable(jsonObject.getString("isBarcodeAvailable"));
                         item.setProdMrp(Float.parseFloat(jsonObject.getString("prodMrp")));
                         item.setProdSp(Float.parseFloat(jsonObject.getString("prodSp")));
                         item.setCreatedBy(jsonObject.getString("createdBy"));
                         item.setUpdatedBy(jsonObject.getString("updatedBy"));
                         item.setCreatedDate(jsonObject.getString("createdDate"));
                         item.setUpdatedDate(jsonObject.getString("updatedDate"));
+                        barArray = jsonObject.getJSONArray("barcodeList");
+                        barLen = barArray.length();
+                        barCodeList = new ArrayList<>();
+                        for(int j = 0; j<barLen; j++){
+                            barcode = new Barcode();
+                            barcode.setBarcode(barArray.getJSONObject(j).getString("barcode"));
+                            barCodeList.add(barcode);
+                        }
+                        item.setBarcodeList(barCodeList);
                         addProduct(item);
                        // productList.add(item);
                     }

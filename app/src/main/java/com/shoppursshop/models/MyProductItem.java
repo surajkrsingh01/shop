@@ -1,14 +1,51 @@
 package com.shoppursshop.models;
 
-public class MyProductItem {
+import java.io.Serializable;
+import java.util.List;
 
-    private int prodId,prodCatId,prodReorderLevel,prodQoh;
-    private String prodName,prodBarCode,prodDesc,prodHsnCode,prodMfgDate,prodExpiryDate,prodMfgBy,prodImage1,prodImage2,prodImage3,
-            createdBy,updatedBy,createdDate,updatedDate;
+public class MyProductItem implements Serializable {
+
+    private int prodId,prodCatId,prodReorderLevel,prodQoh,qty;
+    private String prodName,prodCode,prodBarCode,prodDesc,prodHsnCode,prodMfgDate,prodExpiryDate,prodMfgBy,prodImage1,prodImage2,prodImage3,
+            createdBy,updatedBy,createdDate,updatedDate,status,isBarCodeAvailable;
     private String retRetailerId,dbName,dbUserName,dbPassword;
-    private float prodCgst,prodIgst,prodSgst,prodWarranty,prodMrp,prodSp;
+    private float prodCgst,prodIgst,prodSgst,prodWarranty,prodMrp,prodSp,totalAmount;
     private boolean isSelected;
     private int position;
+
+    private List<Barcode> barcodeList;
+
+    public List<Barcode> getBarcodeList() {
+        return barcodeList;
+    }
+
+    public void setBarcodeList(List<Barcode> barcodeList) {
+        this.barcodeList = barcodeList;
+    }
+
+    public String getIsBarCodeAvailable() {
+        return isBarCodeAvailable;
+    }
+
+    public void setIsBarCodeAvailable(String isBarCodeAvailable) {
+        this.isBarCodeAvailable = isBarCodeAvailable;
+    }
+
+    public float getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(float totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public String getProdCode() {
+        return prodCode;
+    }
+
+    public void setProdCode(String prodCode) {
+        this.prodCode = prodCode;
+    }
 
     public int getProdId() {
         return prodId;
@@ -194,5 +231,21 @@ public class MyProductItem {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public int getQty() {
+        return qty;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

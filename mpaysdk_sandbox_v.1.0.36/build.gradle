@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('mpaysdk_sandbox_v.1.0.36.jar'))

@@ -1,6 +1,5 @@
-package com.shoppursshop.activities;
+package com.shoppursshop.activities.settings;
 
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -8,10 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,17 +19,16 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
-import com.shoppursshop.database.DbHelper;
+import com.shoppursshop.activities.BaseActivity;
 import com.shoppursshop.utilities.Constants;
 
-public class SettingActivity extends BaseActivity implements View.OnClickListener {
+public class DisplaySettingsActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView imageViewRed,imageViewGreen,imageViewBlue,imageViewPink,imageViewYellow,imageViewAmber,
             imageViewWhite,imageViewGrey,imageViewBlack,imageViewTemp;
     private RelativeLayout relativeLayoutRed,relativeLayoutGreen,relativeLayoutBlue,relativeLayoutPink,
             relativeLayoutYellow,relativeLayoutAmber,
             relativeLayoutWhite,relativeLayoutGrey,relativeLayoutBlack;
-    private Button btnLogout;
 
     private TextView textViewDarkLabel,textViewEnableDarkLabel,textViewColorLabel;
 
@@ -44,13 +42,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
+        setContentView(R.layout.activity_display_settings);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         appBarLayout = findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         init();
         initFooter(this,4);
-
     }
 
     private void init(){
@@ -61,8 +61,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         relativeLayoutContainer = findViewById(R.id.container);
         linearLayoutSetting2 = findViewById(R.id.linear_setting_2);
         relativeLayoutSetting1 = findViewById(R.id.relative_setting_1);
-
-        btnLogout = findViewById(R.id.btn_logout);
 
         relativeLayoutRed = findViewById(R.id.relative_red);
         relativeLayoutBlue= findViewById(R.id.relative_blue);
@@ -124,7 +122,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         relativeLayoutWhite.setOnClickListener(this);
         relativeLayoutGrey.setOnClickListener(this);
         relativeLayoutBlack.setOnClickListener(this);
-        btnLogout.setOnClickListener(this);
 
 
     }
@@ -168,7 +165,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     }
 
-    private void changeColor(Drawable drawable,int color){
+    private void changeColor(Drawable drawable, int color){
         drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
     }
 
@@ -250,14 +247,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             imageViewBlack.setImageResource(R.drawable.ic_check_black_24dp);
             imageViewTemp.setImageResource(0);
             imageViewTemp  = imageViewBlack;
-        }else if(view == btnLogout){
-            editor.clear();
-            editor.commit();
-            dbHelper.deleteTable(DbHelper.CAT_TABLE);
-            dbHelper.deleteTable(DbHelper.SUB_CAT_TABLE);
-            Intent intent = new Intent(SettingActivity.this,LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
         }
 
         editor.commit();
@@ -270,4 +259,21 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         view5.setBackgroundColor(colorTheme);
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            super.onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

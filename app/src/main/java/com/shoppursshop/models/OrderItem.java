@@ -1,9 +1,18 @@
 package com.shoppursshop.models;
 
 public class OrderItem {
-    private String id,customerName,mobile,deliveryType,customerImage,status,dateTime;
+    private String id,custCode,customerName,mobile,deliveryType,customerImage,status,dateTime,orderImage,deliveryAddress,
+                   orderPayStatus;
     private int localImage,type;
     private float amount,rating;
+
+    public String getOrderPayStatus() {
+        return orderPayStatus;
+    }
+
+    public void setOrderPayStatus(String orderPayStatus) {
+        this.orderPayStatus = orderPayStatus;
+    }
 
     public String getId() {
         return id;
@@ -91,5 +100,29 @@ public class OrderItem {
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public String getOrderImage() {
+        return orderImage;
+    }
+
+    public void setOrderImage(String orderImage) {
+        this.orderImage = orderImage;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getCustCode() {
+        return custCode;
+    }
+
+    public void setCustCode(String custCode) {
+        this.custCode = custCode;
     }
 }

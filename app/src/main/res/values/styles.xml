@@ -91,4 +91,9 @@
         <item name="borderBottomSolidBackground">@drawable/grey_border_bottom_background</item>
     </style>
 
+    <style name="AppTheme.NoActionBar.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
 </resources>

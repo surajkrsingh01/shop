@@ -8,7 +8,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context=".fragments.BankFragment">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -16,90 +17,160 @@
         android:id="@+id/text_bank_info_label"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:textSize="@dimen/large_text_size"
+        android:visibility="visible"
         android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bank_info" />
 
-        <EditText
-            android:id="@+id/edit_business_name"
-            android:layout_below="@+id/text_bank_info_label"
-            android:hint="@string/business_name"
-            android:inputType="text"
-            android:imeOptions="actionNext"
-            android:theme="@style/MySelectViewTheme"
+        <RelativeLayout
+            android:id="@+id/relative_cheque"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/grey_border_small_round_background"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="@dimen/kyc_image_size"
+            android:layout_height="@dimen/kyc_image_size">
+
+            <ImageView
+                android:id="@+id/image_camera"
+                android:padding="10dp"
+                android:layout_centerInParent="true"
+                android:tint="@color/secondary_text_color"
+                android:src="@drawable/ic_photo_camera_black_24dp"
+                android:layout_marginTop="@dimen/register_container_margin_top"
+                android:layout_width="@dimen/camera_default_size"
+                android:layout_height="@dimen/camera_default_size" />
+
+            <ImageView
+                android:id="@+id/image_cheque"
+                android:scaleType="centerCrop"
+                android:layout_width="@dimen/kyc_image_size"
+                android:layout_height="@dimen/kyc_image_size" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/image_upload_label"
+            android:text="Upload Cheque Image"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <android.support.design.widget.TextInputLayout
             android:layout_marginTop="@dimen/register_container_margin_top"
-            android:textSize="@dimen/edit_text_small_text_size"
-            android:paddingBottom="@dimen/edit_text_small_vertical_padding"
-            android:paddingTop="@dimen/edit_text_small_vertical_padding"
-            android:paddingLeft="@dimen/edit_text_horizontal_padding"
-            android:paddingRight="@dimen/edit_text_horizontal_padding"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/edit_bank_name"
-            android:layout_below="@+id/edit_business_name"
-            android:hint="@string/bank_name"
-            android:inputType="text"
-            android:imeOptions="actionNext"
-            android:theme="@style/MySelectViewTheme"
-            android:layout_marginTop="@dimen/register_view_margin_top"
-            android:textSize="@dimen/edit_text_small_text_size"
-            android:paddingBottom="@dimen/edit_text_small_vertical_padding"
-            android:paddingTop="@dimen/edit_text_small_vertical_padding"
-            android:paddingLeft="@dimen/edit_text_horizontal_padding"
-            android:paddingRight="@dimen/edit_text_horizontal_padding"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/edit_business_name"
+                android:layout_below="@+id/text_bank_info_label"
+                android:hint="@string/business_name"
+                android:inputType="text"
+                android:imeOptions="actionNext"
+                android:theme="@style/MySelectViewTheme"
+                android:textSize="@dimen/edit_text_small_text_size"
+                android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                android:paddingRight="@dimen/edit_text_horizontal_padding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/edit_bank_account"
-            android:layout_below="@+id/edit_bank_name"
-            android:hint="@string/bank_account_no"
-            android:inputType="text"
-            android:imeOptions="actionNext"
-            android:theme="@style/MySelectViewTheme"
-            android:layout_marginTop="@dimen/register_view_margin_top"
-            android:textSize="@dimen/edit_text_small_text_size"
-            android:paddingBottom="@dimen/edit_text_small_vertical_padding"
-            android:paddingTop="@dimen/edit_text_small_vertical_padding"
-            android:paddingLeft="@dimen/edit_text_horizontal_padding"
-            android:paddingRight="@dimen/edit_text_horizontal_padding"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/edit_bank_address"
-            android:layout_below="@+id/edit_bank_account"
-            android:hint="@string/bank_address"
-            android:inputType="text"
-            android:imeOptions="actionNext"
-            android:theme="@style/MySelectViewTheme"
+        <android.support.design.widget.TextInputLayout
             android:layout_marginTop="@dimen/register_view_margin_top"
-            android:textSize="@dimen/edit_text_small_text_size"
-            android:paddingBottom="@dimen/edit_text_small_vertical_padding"
-            android:paddingTop="@dimen/edit_text_small_vertical_padding"
-            android:paddingLeft="@dimen/edit_text_horizontal_padding"
-            android:paddingRight="@dimen/edit_text_horizontal_padding"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/edit_bank_ifsc"
-            android:layout_below="@+id/edit_bank_address"
-            android:hint="@string/bank_ifsc"
-            android:inputType="text"
-            android:imeOptions="actionDone"
-            android:theme="@style/MySelectViewTheme"
+            <EditText
+                android:id="@+id/edit_bank_name"
+                android:layout_below="@+id/edit_business_name"
+                android:hint="@string/bank_name"
+                android:inputType="text"
+                android:imeOptions="actionNext"
+                android:theme="@style/MySelectViewTheme"
+                android:textSize="@dimen/edit_text_small_text_size"
+                android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                android:paddingRight="@dimen/edit_text_horizontal_padding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_marginTop="@dimen/register_view_margin_top"
-            android:textSize="@dimen/edit_text_small_text_size"
-            android:paddingBottom="@dimen/edit_text_small_vertical_padding"
-            android:paddingTop="@dimen/edit_text_small_vertical_padding"
-            android:paddingLeft="@dimen/edit_text_horizontal_padding"
-            android:paddingRight="@dimen/edit_text_horizontal_padding"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edit_bank_account"
+                android:layout_below="@+id/edit_bank_name"
+                android:hint="@string/bank_account_no"
+                android:inputType="text"
+                android:imeOptions="actionNext"
+                android:theme="@style/MySelectViewTheme"
+                android:textSize="@dimen/edit_text_small_text_size"
+                android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                android:paddingRight="@dimen/edit_text_horizontal_padding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_marginTop="@dimen/register_view_margin_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edit_bank_address"
+                android:layout_below="@+id/edit_bank_account"
+                android:hint="@string/bank_address"
+                android:inputType="text"
+                android:imeOptions="actionNext"
+                android:theme="@style/MySelectViewTheme"
+                android:textSize="@dimen/edit_text_small_text_size"
+                android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                android:paddingRight="@dimen/edit_text_horizontal_padding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_marginTop="@dimen/register_view_margin_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edit_bank_ifsc"
+                android:layout_below="@+id/edit_bank_address"
+                android:hint="@string/bank_ifsc"
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:theme="@style/MySelectViewTheme"
+                android:layout_marginTop="@dimen/register_view_margin_top"
+                android:textSize="@dimen/edit_text_small_text_size"
+                android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                android:paddingRight="@dimen/edit_text_horizontal_padding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
 
         <LinearLayout
             android:orientation="horizontal"
@@ -133,6 +204,6 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </ScrollView>

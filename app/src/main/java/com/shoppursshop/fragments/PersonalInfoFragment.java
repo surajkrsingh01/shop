@@ -117,8 +117,8 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_personal_info, container, false);
-        init();
         IMEI = sharedPreferences.getString(Constants.IMEI_NO,"");
+        init();
         return rootView;
     }
 
@@ -343,7 +343,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
         confPassword = editConfPassword.getText().toString();
         panNo = editPanCard.getText().toString();
         aadharNo = editAadharCard.getText().toString();
-        gstNo = editGstNo.getText().toString();
+        //gstNo = editGstNo.getText().toString();
         String country = countryList.get(spinnerCountry.getSelectedItemPosition());
         String state = stateList.get(spinnerState.getSelectedItemPosition());
         String city = cityList.get(spinnerCity.getSelectedItemPosition());
@@ -436,7 +436,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
                     params.put("idProof", idProof);
                     params.put("panNo", panNo);
                     params.put("aadharNo", aadharNo);
-                    params.put("gstNo", gstNo);
+                    params.put("gstNo", "");
                     params.put("userLat", "0.0");
                     params.put("userLong", "0.0");
                     params.put("createdBy", "Vipin Dhama");

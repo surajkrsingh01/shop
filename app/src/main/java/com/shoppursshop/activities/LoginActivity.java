@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 
 import com.shoppursshop.R;
+import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MySimpleItem;
 import com.shoppursshop.utilities.ConnectionDetector;
@@ -77,11 +78,6 @@ public class LoginActivity extends NetworkBaseActivity{
                 startActivity(intent);
             }
         });
-
-        //dbHelper.dropAndCreateAllTable();
-        //createDatabase();
-
-
 
         btnLogin=(Button)findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -203,8 +199,16 @@ public class LoginActivity extends NetworkBaseActivity{
                     editor.putString(Constants.ZIP,dataObject.getString("zip"));
                     editor.putString(Constants.ADDRESS,dataObject.getString("address"));
                     editor.putString(Constants.PHOTO,dataObject.getString("photo"));
+                    editor.putString(Constants.PROFILE_PIC,dataObject.getString("photo"));
                     //myUser.setIdProof(dataObject.getString("RET_CODE"));
+                    editor.putString(Constants.BANK_NAME,dataObject.getString("bankName"));
+                    editor.putString(Constants.ACCOUNT_NO,dataObject.getString("accountNo"));
+                    editor.putString(Constants.BRANCH_ADRESS,dataObject.getString("branchAddress"));
+                    editor.putString(Constants.IFSC_CODE,dataObject.getString("ifscCode"));
+                    editor.putString(Constants.CHEQUE_IMAGE,dataObject.getString("chequeImage"));
+
                     editor.putString(Constants.PAN_NO,dataObject.getString("panNo"));
+                   // editor.putString(Constants.KYC_DOC_IMAGE,dataObject.getString("panNo"));
                     editor.putString(Constants.AADHAR_NO,dataObject.getString("aadharNo"));
                     editor.putString(Constants.GST_NO,dataObject.getString("gstNo"));
                     editor.putString(Constants.USER_LAT,dataObject.getString("userLat"));
@@ -213,6 +217,14 @@ public class LoginActivity extends NetworkBaseActivity{
                     editor.putString(Constants.DB_USER_NAME,dataObject.getString("dbUserName"));
                     editor.putString(Constants.DB_PASSWORD,dataObject.getString("dbPassword"));
                     editor.putString(Constants.USER_TYPE,"Seller");
+                    editor.putString(Constants.TOKEN,dataObject.getString("token"));
+                    if(dataObject.getString("isDeliveryAvailable").equals("Y")){
+                        editor.putBoolean(Constants.IS_DELIVERY_AVAILABLE,true);
+                    }else{
+                        editor.putBoolean(Constants.IS_DELIVERY_AVAILABLE,false);
+                    }
+
+                    editor.putInt(Constants.MIN_DELIVERY_AMOUNT,dataObject.getInt("minDeliveryAmount"));
                    // editor.putBoolean(Constants.IS_LOGGED_IN,true);
                     editor.commit();
                     syncData();
@@ -230,6 +242,7 @@ public class LoginActivity extends NetworkBaseActivity{
                     JSONArray catArray = dataObject.getJSONArray("categories");
                     JSONArray subCatArray = dataObject.getJSONArray("sub_categories");
                     JSONArray productArray = dataObject.getJSONArray("products");
+                    JSONArray productBarCodeArray = dataObject.getJSONArray("products_barcodes");
                     JSONObject jsonObject =null;
                     MySimpleItem item = null;
                     MyProductItem productItem = null;
@@ -260,7 +273,8 @@ public class LoginActivity extends NetworkBaseActivity{
                         productItem.setProdId(jsonObject.getInt("prodId"));
                         productItem.setProdCatId(jsonObject.getInt("prodCatId"));
                         productItem.setProdName(jsonObject.getString("prodName"));
-                        productItem.setProdBarCode(jsonObject.getString("prodBarCode"));
+                        productItem.setProdCode(jsonObject.getString("prodCode"));
+                       // productItem.setProdBarCode(jsonObject.getString("prodBarCode"));
                         productItem.setProdDesc(jsonObject.getString("prodDesc"));
                         productItem.setProdReorderLevel(jsonObject.getInt("prodReorderLevel"));
                         productItem.setProdQoh(jsonObject.getInt("prodQoh"));
@@ -275,6 +289,7 @@ public class LoginActivity extends NetworkBaseActivity{
                         productItem.setProdImage1(jsonObject.getString("prodImage1"));
                         productItem.setProdImage2(jsonObject.getString("prodImage2"));
                         productItem.setProdImage3(jsonObject.getString("prodImage3"));
+                        productItem.setIsBarCodeAvailable(jsonObject.getString("isBarcodeAvailable"));
                         productItem.setProdMrp(Float.parseFloat(jsonObject.getString("prodMrp")));
                         productItem.setProdSp(Float.parseFloat(jsonObject.getString("prodSp")));
                         productItem.setCreatedBy(jsonObject.getString("createdBy"));
@@ -282,6 +297,13 @@ public class LoginActivity extends NetworkBaseActivity{
                         productItem.setCreatedDate(jsonObject.getString("createdDate"));
                         productItem.setUpdatedDate(jsonObject.getString("updatedDate"));
                         dbHelper.addProduct(productItem,Utility.getTimeStamp(),Utility.getTimeStamp());
+                     //   dbHelper.addProductBarcode(productItem.getProdCode(),jsonObject.getString("prodBarCode"));
+                    }
+
+                    len = productBarCodeArray.length();
+                    for(int i=0; i<len; i++) {
+                        jsonObject = productBarCodeArray.getJSONObject(i);
+                        dbHelper.addProductBarcode(jsonObject.getInt("prodId"),jsonObject.getString("prodBarCode"));
                     }
 
                     editor.putBoolean(Constants.IS_LOGGED_IN,true);

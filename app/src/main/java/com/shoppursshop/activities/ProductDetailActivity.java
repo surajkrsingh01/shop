@@ -1,6 +1,7 @@
 package com.shoppursshop.activities;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,10 +11,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -21,30 +28,51 @@ import com.shoppursshop.R;
 import com.shoppursshop.adapters.MonthlyGraphAdapter;
 import com.shoppursshop.adapters.MyItemAdapter;
 import com.shoppursshop.adapters.MyReviewAdapter;
+import com.shoppursshop.fragments.DescBottomFragment;
+import com.shoppursshop.fragments.MultipleBarcodeBottomFragment;
 import com.shoppursshop.models.Bar;
 import com.shoppursshop.models.HomeListItem;
+import com.shoppursshop.models.MyCustomer;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MyReview;
+import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.Utility;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ProductDetailActivity extends BaseActivity {
+public class ProductDetailActivity extends NetworkBaseActivity {
 
     private RecyclerView recyclerViewMonthlyGraph,recyclerViewReview,recyclerViewOffers;
     private RecyclerView.Adapter monthlyGraphAdapter;
     private MyReviewAdapter myReviewAdapter;
-    private List<Bar> barList;
+    private List<Bar> barList,productSaleList;
     private List<MyReview> myReviewList;
 
-    private MyItemAdapter myItemAdapter;
-    private List<Object> itemList;
-
-    private TextView textViewSubCatName,textViewProductName,textViewDesc,textViewCode,
-                     textReorderLevel,textViewQoh;
+    private TextView textViewSubCatName,textViewProductName,textViewMrp,textViewDesc,textViewCode,
+            textReorderLevel,textViewQoh,textViewNoReviews,text_sale_trend_Label, text_reviews_Label;
+    private TextView tvStarRatings,tvNumRatings,tvDiscount,tvMrp,tvReadMore,textTotalSale;
+    private RelativeLayout relativeLayoutRating;
+    private RelativeLayout relative_reorder;
     private ImageView imageView2,imageView3,imageView4;
+    private Button btnLoadMoreReviews;
     private MyProductItem myProductItem;
+
+    private CheckBox checkBoxMultipleBarcode;
+    private Button buttonAddMultipleBarcode;
+
+    private MultipleBarcodeBottomFragment multipleBarcodeBottomFragment;
+
+    private String flag ;
+
+    private int limit = 5,offset = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,25 +88,84 @@ public class ProductDetailActivity extends BaseActivity {
 
     private void init(){
         Intent intent = getIntent();
+        flag = intent.getStringExtra("flag");
         textViewSubCatName = findViewById(R.id.text_sub_cat);
         textViewProductName = findViewById(R.id.text_product_name);
+        tvStarRatings = findViewById(R.id.text_start_rating);
+        tvNumRatings = findViewById(R.id.text_rating_counter);
+        relativeLayoutRating = findViewById(R.id.relative_rating);
+        tvMrp = findViewById(R.id.text_off);
+        tvDiscount = findViewById(R.id.text_off_percentage);
+        textViewMrp = findViewById(R.id.text_mrp);
         textViewDesc = findViewById(R.id.text_desc);
         textViewCode = findViewById(R.id.text_bar_code);
         textReorderLevel = findViewById(R.id.text_reorder_level);
         textViewQoh = findViewById(R.id.text_stock);
+        textViewNoReviews = findViewById(R.id.text_no_reviews);
+        tvReadMore = findViewById(R.id.text_more);
+        textTotalSale = findViewById(R.id.text_total_sale);
+        btnLoadMoreReviews = findViewById(R.id.btn_load_more_review);
+        buttonAddMultipleBarcode = findViewById(R.id.btn_add_multiple_barcode);
+        checkBoxMultipleBarcode = findViewById(R.id.checkbox_multiple_barcode);
+        tvMrp.setPaintFlags(tvMrp.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        relative_reorder = findViewById(R.id.relative_reorder);
+        text_sale_trend_Label = findViewById(R.id.text_sale_trend_Label);
+        text_reviews_Label = findViewById(R.id.text_reviews_Label);
 
         imageView2 = findViewById(R.id.image_view_2);
         imageView3 = findViewById(R.id.image_view_3);
         imageView4 = findViewById(R.id.image_view_4);
 
-        myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
-
         textViewSubCatName.setText(intent.getStringExtra("subCatName"));
+
+        if(flag != null){
+            if(flag.equals("scan") || flag.equals("search")){
+                myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
+                textViewSubCatName.setText(dbHelper.getSubCatName(myProductItem.getProdId()));
+            }else if(flag.equals("shoppurs_product")){
+                buttonAddMultipleBarcode.setVisibility(View.GONE);
+                textReorderLevel.setVisibility(View.GONE);
+                textReorderLevel.setVisibility(View.GONE);
+                relative_reorder.setVisibility(View.GONE);
+                text_sale_trend_Label.setVisibility(View.GONE);
+                text_reviews_Label.setVisibility(View.GONE);
+                //myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
+                myProductItem = (MyProductItem) getIntent().getSerializableExtra("myProduct");
+            } else{
+                myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
+            }
+        }else{
+            myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
+        }
+
+
         textViewProductName.setText(myProductItem.getProdName());
+        textViewMrp.setText("Rs "+Utility.numberFormat(myProductItem.getProdSp()));
+        tvMrp.setText(Utility.numberFormat(myProductItem.getProdMrp()));
         textViewCode.setText(myProductItem.getProdBarCode());
-        textViewDesc.setText(myProductItem.getProdDesc());
+
+        if(myProductItem.getProdDesc().length() > 200){
+            textViewDesc.setText(myProductItem.getProdDesc().substring(0,200)+"...");
+            tvReadMore.setVisibility(View.VISIBLE);
+        }else{
+            textViewDesc.setText(myProductItem.getProdDesc());
+        }
+
         textReorderLevel.setText(""+myProductItem.getProdReorderLevel());
         textViewQoh.setText(""+myProductItem.getProdQoh());
+
+        float diff = myProductItem.getProdMrp() - myProductItem.getProdSp();
+        if(diff > 0f){
+            float percentage = diff * 100 /myProductItem.getProdMrp();
+            tvDiscount.setText(String.format("%.02f",percentage)+"% off");
+        }else{
+            tvDiscount.setVisibility(View.GONE);
+            tvMrp.setVisibility(View.GONE);
+        }
+
+        if(myProductItem.getIsBarCodeAvailable().equals("N")){
+            buttonAddMultipleBarcode.setVisibility(View.GONE);
+        }
 
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
@@ -87,30 +174,34 @@ public class ProductDetailActivity extends BaseActivity {
         requestOptions.skipMemoryCache(false);
 
         Glide.with(this)
-                .load(getResources().getString(R.string.base_url)+"/"+myProductItem.getProdImage1())
+                .load(myProductItem.getProdImage1())
                 .apply(requestOptions)
+                .error(R.drawable.ic_photo_black_192dp)
                 .into(imageView2);
 
         Glide.with(this)
-                .load(getResources().getString(R.string.base_url)+"/"+myProductItem.getProdImage2())
+                .load(myProductItem.getProdImage2())
                 .apply(requestOptions)
+                .error(R.drawable.ic_photo_black_192dp)
                 .into(imageView3);
 
         Glide.with(this)
-                .load(getResources().getString(R.string.base_url)+"/"+myProductItem.getProdImage3())
+                .load(myProductItem.getProdImage3())
                 .apply(requestOptions)
+                .error(R.drawable.ic_photo_black_192dp)
                 .into(imageView4);
 
         barList = new ArrayList<>();
+        productSaleList = new ArrayList<>();
+        initMonthlySaleList();
         recyclerViewMonthlyGraph=(RecyclerView)findViewById(R.id.recycler_view_monthly_graph);
         recyclerViewMonthlyGraph.setItemAnimator(new DefaultItemAnimator());
         recyclerViewMonthlyGraph.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManagerMonthlyGraph=new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
         recyclerViewMonthlyGraph.setLayoutManager(layoutManagerMonthlyGraph);
         monthlyGraphAdapter=new MonthlyGraphAdapter(this,barList,1);
-        ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget(10000);
+       ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget(25000);
         recyclerViewMonthlyGraph.setAdapter(monthlyGraphAdapter);
-        setMonthlyBar();
 
         myReviewList = new ArrayList<>();
         recyclerViewReview=(RecyclerView)findViewById(R.id.recycler_view_review);
@@ -121,43 +212,181 @@ public class ProductDetailActivity extends BaseActivity {
         myReviewAdapter=new MyReviewAdapter(this,myReviewList,"productReview");
         recyclerViewReview.setAdapter(myReviewAdapter);
         recyclerViewReview.setNestedScrollingEnabled(false);
+
+        checkBoxMultipleBarcode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+            }
+        });
+
+        buttonAddMultipleBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                multipleBarcodeBottomFragment = new MultipleBarcodeBottomFragment();
+                multipleBarcodeBottomFragment.setProdCode(myProductItem.getProdCode());
+                multipleBarcodeBottomFragment.show(getSupportFragmentManager(), "Multiple Barcode Bottom Sheet");
+            }
+        });
+
+        textViewDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DescBottomFragment descBottomFragment = new DescBottomFragment();
+                descBottomFragment.setDesc(myProductItem.getProdDesc());
+                descBottomFragment.show(getSupportFragmentManager(), "Description Bottom Sheet");
+            }
+        });
+
+        tvReadMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DescBottomFragment descBottomFragment = new DescBottomFragment();
+                descBottomFragment.setDesc(myProductItem.getProdDesc());
+                descBottomFragment.show(getSupportFragmentManager(), "Description Bottom Sheet");
+            }
+        });
+
+        if(flag!=null && flag.equals("shoppurs_product")){
+            recyclerViewMonthlyGraph.setVisibility(View.GONE);
+            // recyclerViewOffers.setVisibility(View.GONE);
+            recyclerViewReview.setVisibility(View.GONE);
+        }
+
         setReviews();
+        //getOffers();
+        getSaleData();
 
-        itemList = new ArrayList<>();
-        HomeListItem myItem = new HomeListItem();
-        myItem.setTitle("Big Discount in Titan Watches");
-        myItem.setDesc("Titan Stores");
-        myItem.setCategory("Watches");
-        myItem.setLocalImage(R.drawable.thumb_11);
-        myItem.setType(4);
-        itemList.add(myItem);
+        getRatingsData();
 
-        myItem = new HomeListItem();
-        myItem.setTitle("10% Discount on Camera And HandyCams");
-        myItem.setDesc("Sony Stores");
-        myItem.setCategory("Camera And HandyCams");
-        myItem.setLocalImage(R.drawable.thumb_12);
-        myItem.setType(4);
-        itemList.add(myItem);
+    }
 
-        myItem = new HomeListItem();
-        myItem.setTitle("Upto 30% discount in furnitures and other products");
-        myItem.setDesc("Home Town Stores");
-        myItem.setCategory("Home Furnishing");
-        myItem.setLocalImage(R.drawable.thumb_13);
-        myItem.setType(4);
-        itemList.add(myItem);
 
-        recyclerViewOffers=findViewById(R.id.recycler_view_offer);
-        recyclerViewOffers.setHasFixedSize(true);
-        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,
-                StaggeredGridLayoutManager.VERTICAL);
-        recyclerViewOffers.setLayoutManager(staggeredGridLayoutManager);
-        recyclerViewOffers.setItemAnimator(new DefaultItemAnimator());
-        myItemAdapter=new MyItemAdapter(this,itemList,"homeList");
-        recyclerViewOffers.setAdapter(myItemAdapter);
-        recyclerViewOffers.setNestedScrollingEnabled(false);
 
+    private void setReviews(){
+        Map<String,String> params=new HashMap<>();
+        params.put("shopId",sharedPreferences.getString(Constants.USER_ID,""));
+        params.put("prodId",""+myProductItem.getProdId());
+        params.put("limit",""+limit);
+        params.put("offset",""+offset);
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.REVIEW_LIST;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"reviewList");
+
+    }
+
+    private void getOffers(){
+
+    }
+
+    private void getSaleData(){
+        Map<String,String> params=new HashMap<>();
+        params.put("id",""+myProductItem.getProdId());
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.PRODUCT_SALE_DATA;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"productSaleData");
+    }
+
+    private void getRatingsData(){
+        Map<String,String> params=new HashMap<>();
+        params.put("code",""+myProductItem.getProdCode());
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.PRODUCT_RATINGS_DATA;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"productRatingsData");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject response, String apiName) {
+
+        try {
+            if (apiName.equals("reviewList")) {
+                if (response.getBoolean("status")) {
+                    JSONArray dataArray = response.getJSONArray("result");
+                    JSONObject jsonObject = null;
+                    int len = dataArray.length();
+                    MyReview myReview= null;
+                    myReviewList.clear();
+                    for (int i = 0; i < len; i++) {
+                        jsonObject = dataArray.getJSONObject(i);
+                        myReview = new MyReview();
+                        myReview.setUserName(jsonObject.getString("customerName"));
+                        myReview.setDateTime(jsonObject.getString("createdDate"));
+                        myReview.setRating(Float.parseFloat(jsonObject.getString("rating")));
+                        myReview.setReview(jsonObject.getString("reviewMessage"));
+                        myReviewList.add(myReview);
+                    }
+
+                    if(len == 5){
+                        btnLoadMoreReviews.setVisibility(View.VISIBLE);
+                    }else{
+                        btnLoadMoreReviews.setVisibility(View.GONE);
+                    }
+
+                    if(len == 0){
+                        textViewNoReviews.setVisibility(View.VISIBLE);
+                        recyclerViewReview.setVisibility(View.GONE);
+                    }else{
+                        textViewNoReviews.setVisibility(View.GONE);
+                        recyclerViewReview.setVisibility(View.VISIBLE);
+                    }
+
+                    myReviewAdapter.notifyDataSetChanged();
+                }
+            }else if (apiName.equals("productSaleData")) {
+                if (response.getBoolean("status")) {
+                    if(response.getString("result") == null || response.getString("result").equals("null")){
+                        setMonthlyBar();
+                    }else{
+                        JSONArray dataArray = response.getJSONArray("result");
+                        JSONObject jsonObject = null;
+                        int len = dataArray.length();
+                        float totalAmount = 0;
+                        float maxValue = 0;
+                        for (int i = 0; i < len; i++) {
+                            jsonObject = dataArray.getJSONObject(i);
+                            totalAmount = totalAmount + (float) jsonObject.getDouble("amount");
+                            updateMonthlySaleList(Utility.parseMonth(jsonObject.getString("orderDate"),
+                                    "yyyy-MM-dd HH:mm:ss"), jsonObject.getInt("amount"));
+
+                            /*if(maxValue < (float) jsonObject.getDouble("amount")){
+                                maxValue = (float) jsonObject.getDouble("amount");
+                            }*/
+                        }
+
+                        textTotalSale.setText("Rs "+Utility.numberFormat(totalAmount));
+                       /* if(maxValue == 0f){
+                            ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget(50000);
+                        }else{
+                            ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget(maxValue);
+                        }*/
+
+
+                        if(len == 0){
+                            setNullMonthlyBar();
+                        }else{
+                            setMonthlyBar();
+                        }
+                    }
+                }
+            }else if (apiName.equals("productRatingsData")) {
+                if (response.getBoolean("status")) {
+                    JSONObject jsonObject = response.getJSONObject("result");
+                    tvStarRatings.setText(String.format("%.01f",(float)jsonObject.getDouble("ratings")));
+                    tvNumRatings.setText(jsonObject.getInt("ratingHits")+" Ratings");
+                }
+            }
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setMonthlyBar(){
@@ -172,46 +401,98 @@ public class ProductDetailActivity extends BaseActivity {
             String monthName=getMonth(month);
             Bar bar=new Bar();
             bar.setName(monthName);
-            bar.setSaleValue(5000);
+            bar.setSaleValue(getSaleData(monthName));
+            Log.i(TAG,"Sale value "+bar.getSaleValue());
             bar.setSaleAchievedValue(5000);
             bar.setSaleTargetValue(8000);
             bar.setBudget(10000);
+            bar.setBarColor(getBarColor(month));
             barList.add(bar);
         }
 
         monthlyGraphAdapter.notifyDataSetChanged();
     }
 
-    private void setReviews(){
-        MyReview myReview = new MyReview();
-        myReview.setUserName("Vipin Dhama");
-        myReview.setDateTime("4 hours ago");
-        myReview.setRating(4);
-        myReview.setReview("Review about product.");
+    public void setNullMonthlyBar(){
+        Calendar calendarTemp =Calendar.getInstance();
+        barList.clear();
+        for(int i=0;i<12;i++){
+            if(i > 0)
+                calendarTemp.add(Calendar.MONTH, -1);
 
-        myReviewList.add(myReview);
-        myReview = new MyReview();
-        myReview.setUserName("Amit kumar");
-        myReview.setDateTime("8 hours ago");
-        myReview.setRating(4);
-        myReview.setReview("Review about product.");
-        myReviewList.add(myReview);
+            int month=calendarTemp.get(Calendar.MONTH);
+            int year=calendarTemp.get(Calendar.YEAR);
+            String monthName=getMonth(month);
+            Bar bar=new Bar();
+            bar.setName(monthName);
+            bar.setSaleValue(0);
+            Log.i(TAG,"Sale value "+bar.getSaleValue());
+            bar.setSaleAchievedValue(5000);
+            bar.setSaleTargetValue(8000);
+            bar.setBudget(10000);
+            bar.setBarColor(getBarColor(month));
+            barList.add(bar);
+        }
 
-        myReview = new MyReview();
-        myReview.setUserName("Sunil Kumar");
-        myReview.setDateTime("6 days ago");
-        myReview.setRating(4);
-        myReview.setReview("Review about product.");
-        myReviewList.add(myReview);
+        monthlyGraphAdapter.notifyDataSetChanged();
+    }
 
-        myReviewAdapter.notifyDataSetChanged();
+    public int getSaleData(String monthName){
+        int value = 0;
+        for(Bar bar : productSaleList){
+            if(bar.getName().equals(monthName)){
+                value = bar.getSaleValue();
+                break;
+            }
+        }
 
+        return value;
+    }
+
+    public void initMonthlySaleList(){
+        Calendar calendarTemp =Calendar.getInstance();
+        productSaleList.clear();
+        for(int i=0;i<12;i++){
+            if(i > 0)
+                calendarTemp.add(Calendar.MONTH, -1);
+
+            int month=calendarTemp.get(Calendar.MONTH);
+            int year=calendarTemp.get(Calendar.YEAR);
+            String monthName=getMonth(month);
+            Bar bar=new Bar();
+            bar.setName(monthName);
+            bar.setSaleValue(0);
+            bar.setBarColor(getBarColor(month));
+            productSaleList.add(bar);
+        }
+    }
+
+    public void updateMonthlySaleList(String monthName,int value){
+        for(Bar bar : productSaleList){
+            if(bar.getName().equals(monthName)){
+                bar.setSaleValue(value);
+                //bar.setSaleValue(10000);
+                break;
+            }
+        }
     }
 
     public String getMonth(int position){
         String[] monthInText={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 
         return monthInText[position];
+    }
+
+    private int getBarColor(int month){
+        int[] barColor={getResources().getColor(R.color.light_blue500),
+                getResources().getColor(R.color.yellow500),getResources().getColor(R.color.green500),
+                getResources().getColor(R.color.orange500),getResources().getColor(R.color.red_500),
+                getResources().getColor(R.color.teal_500),getResources().getColor(R.color.cyan500),
+                getResources().getColor(R.color.deep_orange500),getResources().getColor(R.color.blue500),
+                getResources().getColor(R.color.purple500),getResources().getColor(R.color.amber500),
+                getResources().getColor(R.color.light_green500)};
+
+        return barColor[month];
     }
 
 }

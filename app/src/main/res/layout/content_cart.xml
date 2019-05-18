@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.CartActivity"
+    tools:showIn="@layout/activity_cart">
+
+    <Button
+        android:id="@+id/btn_scan"
+        android:text="Scan Products"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/accent_2_solid_round_corner_background"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_below="@+id/btn_scan"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_above="@+id/relative_pay_layout"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <RelativeLayout
+        android:id="@+id/relative_pay_layout"
+        android:visibility="gone"
+        android:layout_above="@+id/rlfooterviewcart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_pay_option_header"
+            android:text="Choose Payment Option"
+            android:textColor="@color/white"
+            android:background="@color/colorAccent"
+            android:padding="12dp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:id="@+id/tv_pay_cash"
+            android:clickable="true"
+            android:layout_below="@id/tv_pay_option_header"
+            android:text="Cash"
+            android:textColor="@color/primary_text_color"
+            android:background="@drawable/grey_border_bottom_background"
+            android:padding="12dp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_pay_card"
+            android:layout_below="@id/tv_pay_cash"
+            android:text="Card"
+            android:clickable="true"
+            android:textColor="@color/primary_text_color"
+            android:background="@drawable/grey_border_bottom_background"
+            android:padding="12dp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_mpos"
+            android:clickable="true"
+            android:layout_below="@id/tv_pay_option_header"
+            android:text="ME30S"
+            android:textColor="@color/primary_text_color"
+            android:background="@drawable/grey_border_bottom_background"
+            android:padding="12dp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_android_pos"
+            android:layout_below="@id/tv_mpos"
+            android:text="N910"
+            android:clickable="true"
+            android:textColor="@color/primary_text_color"
+            android:background="@drawable/grey_border_bottom_background"
+            android:padding="12dp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </RelativeLayout>
+
+    <include layout="@layout/footer_viewcart_layout"/>
+
+</RelativeLayout>

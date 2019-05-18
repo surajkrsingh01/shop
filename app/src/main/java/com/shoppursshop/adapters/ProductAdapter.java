@@ -1,5 +1,6 @@
 package com.shoppursshop.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -7,10 +8,12 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +42,7 @@ import com.shoppursshop.models.MyProduct;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.SubCategory;
 import com.shoppursshop.models.CatListItem;
+import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 import java.util.List;
@@ -49,7 +53,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private List<Object> itemList;
     private Context context;
-    private String type,subCatName;
+    private String type,subCatName,flag;
 
     private MyItemTouchListener myItemTouchListener;
 
@@ -59,6 +63,10 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public void setSubCatName(String subCatName) {
         this.subCatName = subCatName;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 
     private ConstraintSet constraintSet = new ConstraintSet();
@@ -109,6 +117,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Intent intent = new Intent(context,SubCatListActivity.class);
                 intent.putExtra("catID",""+myItem.getId());
                 intent.putExtra("catName",myItem.getTitle());
+                intent.putExtra("flag",flag);
                 context.startActivity(intent);
             }
         }
@@ -159,6 +168,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         Intent intent = new Intent(context,SubCatListActivity.class);
                         intent.putExtra("catID",myItem.getId());
                         intent.putExtra("catName",myItem.getName());
+                        intent.putExtra("flag",flag);
                         context.startActivity(intent);
                     }
                     break;
@@ -197,11 +207,12 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if(view == relativeLayoutAddManually){
                 Intent intent = new Intent(context,AddProductActivity.class);
                 intent.putExtra("flag","manual");
+                intent.putExtra("type",flag);
                 context.startActivity(intent);
             }else if(view == relativeLayoutScan){
                 Intent intent = new Intent(context,ScannarActivity.class);
                 intent.putExtra("flag","scan");
-                intent.putExtra("isProduct",true);
+                intent.putExtra("type","searchProduct");
                 context.startActivity(intent);
             }
         }
@@ -266,6 +277,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     Intent intent = new Intent(context,ProductListActivity.class);
                     intent.putExtra("subCatID",myItem.getId());
                     intent.putExtra("subCatName",myItem.getName());
+                    intent.putExtra("flag",flag);
                     context.startActivity(intent);
                     break;
                 case MotionEvent.ACTION_CANCEL:
@@ -295,18 +307,96 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class MyProductListType1ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
 
-        private TextView textCatName,textName,textMrp,textSellingPrice,textDesc;
-        private ImageView imageView;
+        private TextView textBarCode,textName,textMrp;
+        private ImageView imageView,imageMenu;
+        private Button btnAddToCart;
         private View rootView;
 
         public MyProductListType1ViewHolder(View itemView) {
             super(itemView);
             rootView = itemView;
-            textCatName=itemView.findViewById(R.id.text_cat_name);
+            textBarCode=itemView.findViewById(R.id.text_bar_code);
             textName=itemView.findViewById(R.id.text_name);
             textMrp=itemView.findViewById(R.id.text_mrp);
-            textSellingPrice=itemView.findViewById(R.id.text_selling_price);
-            textDesc=itemView.findViewById(R.id.text_desc);
+            btnAddToCart=itemView.findViewById(R.id.btn_add_to_cart);
+            imageView=itemView.findViewById(R.id.image_view);
+            imageMenu=itemView.findViewById(R.id.image_menu);
+            imageMenu.setOnClickListener(this);
+
+            if(flag.equals("order")){
+                btnAddToCart.setVisibility(View.VISIBLE);
+            }else{
+                btnAddToCart.setVisibility(View.GONE);
+            }
+            rootView.setOnTouchListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if(view == imageMenu){
+                final MyProductItem myProductItem = (MyProductItem) itemList.get(getAdapterPosition());
+
+                PopupMenu popupMenu = new PopupMenu(view.getContext(), imageMenu);
+                ((Activity)context).getMenuInflater().inflate(R.menu.product_list_popup_menu, popupMenu.getMenu());
+                popupMenu.show();
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Intent intent = new Intent(context,AddProductActivity.class);
+                        intent.putExtra("flag","editProduct");
+                        intent.putExtra("type","editProduct");
+                        intent.putExtra("product",myProductItem);
+                        ((Activity) context).startActivityForResult(intent,2);
+                        return false;
+                    }
+                });
+            }
+        }
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    //Log.i("Adapter","onPressDown");
+                    zoomAnimation(true,rootView);
+                    //myItemTouchListener.onPressDown(getAdapterPosition());
+                    break;
+                // break;
+
+                case MotionEvent.ACTION_UP:
+                    // Log.i("Adapter","onPressUp");
+                    if(!type.equals("orderProductList")){
+                        MyProductItem item = (MyProductItem) itemList.get(getAdapterPosition());
+                        Intent intent = new Intent(context,ProductDetailActivity.class);
+                        intent.putExtra("id",item.getProdId());
+                        intent.putExtra("subCatName",subCatName);
+                        intent.putExtra("flag",flag);
+                        context.startActivity(intent);
+                    }
+
+                    zoomAnimation(false,rootView);
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    Log.i("Adapter","onPressCancel");
+                    zoomAnimation(false,rootView);
+                    break;
+            }
+            return true;
+        }
+    }
+
+    public class MyOrderProductListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
+
+        private TextView textName,textMrp,textQty;
+        private ImageView imageView;
+        private View rootView;
+
+        public MyOrderProductListViewHolder(View itemView) {
+            super(itemView);
+            rootView = itemView;
+            textName=itemView.findViewById(R.id.text_name);
+            textMrp=itemView.findViewById(R.id.text_mrp);
+            textQty=itemView.findViewById(R.id.text_qty);
             imageView=itemView.findViewById(R.id.image_view);
             rootView.setOnTouchListener(this);
         }
@@ -327,11 +417,15 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 case MotionEvent.ACTION_UP:
                     // Log.i("Adapter","onPressUp");
-                    MyProductItem item = (MyProductItem) itemList.get(getAdapterPosition());
-                    Intent intent = new Intent(context,ProductDetailActivity.class);
-                    intent.putExtra("id",item.getProdCatId());
-                    intent.putExtra("subCatName",subCatName);
-                    context.startActivity(intent);
+                    if(!type.equals("orderProductList")){
+                        MyProductItem item = (MyProductItem) itemList.get(getAdapterPosition());
+                        Intent intent = new Intent(context,ProductDetailActivity.class);
+                        intent.putExtra("id",item.getProdId());
+                        intent.putExtra("subCatName",subCatName);
+                        intent.putExtra("flag",flag);
+                        context.startActivity(intent);
+                    }
+
                     zoomAnimation(false,rootView);
                     break;
                 case MotionEvent.ACTION_CANCEL:
@@ -426,6 +520,10 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 View v9 = inflater.inflate(R.layout.header_item_type_2_layout, parent, false);
                 viewHolder = new MyHomeHeader2ViewHolder(v9);
                 break;
+            case 10:
+                View v10 = inflater.inflate(R.layout.order_product_list_item, parent, false);
+                viewHolder = new MyOrderProductListViewHolder(v10);
+                break;
             default:
                 View v = inflater.inflate(R.layout.list_item_layout, parent, false);
                 viewHolder = new MyViewHolder(v);
@@ -466,15 +564,19 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         }else if(type.equals("productList")){
             Object item = itemList.get(position);
-            if(position == 0){
+           /* if(position == 0){
                 return 7;
             }else if(position == 1){
                 return 9;
             }else{
                 return 8;
-            }
-        } else{
+            }*/
+
+            return 8;
+        }else if(type.equals("orderProductList")){
             return 10;
+        } else{
+            return 11;
         }
     }
 
@@ -497,6 +599,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             myViewHolder.recyclerView.setLayoutManager(layoutManager);
             myViewHolder.recyclerView.setItemAnimator(new DefaultItemAnimator());
             ProductAdapter myItemAdapter = new ProductAdapter(context,item.getItemList(),"catList");
+            myItemAdapter.setFlag(flag);
             myViewHolder.recyclerView.setAdapter(myItemAdapter);
 
           //  StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams)myViewHolder.itemView.getLayoutParams();
@@ -516,6 +619,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             myViewHolder.recyclerView.setLayoutManager(staggeredGridLayoutManager);
             myViewHolder.recyclerView.setItemAnimator(new DefaultItemAnimator());
             ProductAdapter myItemAdapter = new ProductAdapter(context,item.getItemList(),"catList");
+            myItemAdapter.setFlag(flag);
             myViewHolder.recyclerView.setAdapter(myItemAdapter);
 
           //  StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams)myViewHolder.itemView.getLayoutParams();
@@ -532,14 +636,29 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
             requestOptions.skipMemoryCache(false);
             requestOptions.dontTransform();
+            requestOptions.disallowHardwareConfig();
             // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
             // requestOptions.centerCrop();
             requestOptions.skipMemoryCache(true);
 
+            String url = "";
+            if(!item.getImage().contains("http")){
+                url = context.getResources().getString(R.string.base_url)+"/"+item.getImage();
+            }else{
+                url = item.getImage();
+            }
+
             Glide.with(context)
-                    .load(context.getResources().getString(R.string.base_url)+"/"+item.getImage())
+                    .load(url)
                     .apply(requestOptions)
                     .into(myViewHolder.imageView);
+
+            /*Picasso.with(context)
+                    .load(url)
+                    .centerCrop()
+                    .into(myViewHolder.imageView);*/
+
+           // Picasso.get().load("http://i.imgur.com/DvpvklR.png").into(imageView);
 
             String ratio = String.format("%d:%d", (int)item.getWidth(),(int)item.getHeight());
 
@@ -555,14 +674,27 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
             requestOptions.skipMemoryCache(false);
+            requestOptions.disallowHardwareConfig();
             //requestOptions.dontTransform();
             // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
             // requestOptions.centerCrop();
 
+            String url = "";
+            if(!item.getImage().contains("http")){
+                url = context.getResources().getString(R.string.base_url)+"/"+item.getImage();
+            }else{
+                url = item.getImage();
+            }
+
             Glide.with(context)
-                    .load(context.getResources().getString(R.string.base_url)+"/"+item.getImage())
+                    .load(url)
                     .apply(requestOptions)
                     .into(myViewHolder.imageView);
+
+            /*Picasso.with(context)
+                    .load(url)
+                    .centerCrop()
+                    .into(myViewHolder.imageView);*/
 
         }else if(holder instanceof MySubHomeHeaderViewHolder){
 
@@ -581,12 +713,10 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             MyProductItem item = (MyProductItem) itemList.get(position);
             MyProductListType1ViewHolder myViewHolder = (MyProductListType1ViewHolder)holder;
 
-            myViewHolder.textCatName.setText(subCatName);
-            myViewHolder.textName.setText(item.getProdName()+", "+item.getProdBarCode());
+            myViewHolder.textBarCode.setText(item.getProdBarCode());
+            myViewHolder.textName.setText(item.getProdName());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
             myViewHolder.textMrp.setText("MRP: Rs"+item.getProdMrp());
-            myViewHolder.textSellingPrice.setText("Selling Price: Rs"+item.getProdSp());
-            myViewHolder.textDesc.setText(item.getProdDesc());
 
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
@@ -595,8 +725,31 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             requestOptions.skipMemoryCache(false);
 
             Glide.with(context)
-                    .load(context.getResources().getString(R.string.base_url)+"/"+item.getProdImage1())
+                    .load(item.getProdImage1())
                     .apply(requestOptions)
+                    .error(R.drawable.ic_photo_black_192dp)
+                    .into(myViewHolder.imageView);
+
+
+        }else if(holder instanceof MyOrderProductListViewHolder){
+            MyProductItem item = (MyProductItem) itemList.get(position);
+            MyOrderProductListViewHolder myViewHolder = (MyOrderProductListViewHolder)holder;
+
+            myViewHolder.textName.setText(item.getProdName()+", "+item.getProdBarCode());
+            //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
+            myViewHolder.textMrp.setText("MRP: Rs"+item.getProdSp());
+            myViewHolder.textQty.setText("Qty: "+item.getQty());
+
+            RequestOptions requestOptions = new RequestOptions();
+            requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
+            // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
+            requestOptions.centerCrop();
+            requestOptions.skipMemoryCache(false);
+
+            Glide.with(context)
+                    .load(item.getProdImage1())
+                    .apply(requestOptions)
+                    .error(R.drawable.ic_photo_black_192dp)
                     .into(myViewHolder.imageView);
 
 

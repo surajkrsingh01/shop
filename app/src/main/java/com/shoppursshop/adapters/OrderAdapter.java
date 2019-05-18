@@ -1,6 +1,8 @@
 package com.shoppursshop.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -23,10 +25,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
+import com.shoppursshop.activities.OrderDetailActivity;
+import com.shoppursshop.activities.settings.MyOrderDetailsActivity;
 import com.shoppursshop.interfaces.MyItemTouchListener;
 import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.models.MyItem;
 import com.shoppursshop.models.OrderItem;
+import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.Utility;
 
 import java.util.List;
 
@@ -37,6 +43,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<Object> itemList;
     private Context context;
     private String type;
+
+    private SharedPreferences sharedPreferences;
 
     private MyItemTouchListener myItemTouchListener;
 
@@ -50,7 +58,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         this.itemList = itemList;
         this.context=context;
         this.type = type;
-
+        sharedPreferences = context.getSharedPreferences(Constants.MYPREFERENCEKEY,context.MODE_PRIVATE);
     }
 
     public class MyHomeHeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -72,7 +80,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     public class MyListType1ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
 
-        private TextView textCustName,textAmount,textDeliveryType;
+        private TextView textCustName,textAmount,textDeliveryType,textViewStatus;
         private ImageView imageView;
         private View rootView;
 
@@ -82,6 +90,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             textCustName=itemView.findViewById(R.id.text_customer_name);
             textAmount=itemView.findViewById(R.id.text_amount);
             textDeliveryType=itemView.findViewById(R.id.text_delivery_type);
+            textViewStatus=itemView.findViewById(R.id.text_status);
             imageView=itemView.findViewById(R.id.image_view);
             rootView.setOnTouchListener(this);
         }
@@ -94,15 +103,45 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         public boolean onTouch(View view, MotionEvent motionEvent) {
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    //Log.i("Adapter","onPressDown");
                     zoomAnimation(true,rootView);
                     //myItemTouchListener.onPressDown(getAdapterPosition());
                     break;
                 // break;
 
                 case MotionEvent.ACTION_UP:
-                    // Log.i("Adapter","onPressUp");
                     zoomAnimation(false,rootView);
+                    OrderItem item = (OrderItem) itemList.get(getAdapterPosition());
+                    if(sharedPreferences.getString(Constants.SHOP_CODE,"").equals(item.getCustCode())){
+
+                        Intent intent = new Intent(context, MyOrderDetailsActivity.class);
+                        intent.putExtra("id",item.getId());
+                        intent.putExtra("date",item.getDateTime());
+                        intent.putExtra("totalAmount",item.getAmount());
+                        intent.putExtra("status",item.getStatus());
+                        intent.putExtra("ordPaymentStatus",item.getOrderPayStatus());
+                        context.startActivity(intent);
+
+                    }else{
+                        Intent intent = new Intent(context, OrderDetailActivity.class);
+                        intent.putExtra("id",item.getId());
+                        intent.putExtra("custName",item.getCustomerName());
+                        intent.putExtra("custCode",item.getCustCode());
+                        intent.putExtra("date",item.getDateTime());
+                        intent.putExtra("totalAmount",item.getAmount());
+                        intent.putExtra("deliveryMode",item.getDeliveryType());
+                        intent.putExtra("deliveryAddress",item.getDeliveryAddress());
+                        intent.putExtra("status",item.getStatus());
+                        intent.putExtra("ordPaymentStatus",item.getOrderPayStatus());
+                        intent.putExtra("orderPosition",getAdapterPosition());
+
+                        if(Utility.getTimeStamp("yyyy-MM-dd").equals(item.getDateTime().split(" ")[0]))
+                            intent.putExtra("type","today");
+                        else
+                            intent.putExtra("type","pre");
+
+                        context.startActivity(intent);
+                    }
+
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     Log.i("Adapter","onPressCancel");
@@ -129,6 +168,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             textDateTime=itemView.findViewById(R.id.text_date_time);
             btnReorder=itemView.findViewById(R.id.btn_reorder);
             ratingBar=itemView.findViewById(R.id.ratingBar);
+            ratingBar.setVisibility(View.GONE);
             rootView.setOnTouchListener(this);
             btnReorder.setOnClickListener(this);
         }
@@ -251,16 +291,30 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             myViewHolder.textCustName.setText(item.getCustomerName()+", "+item.getMobile());
             myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getAmount()));
             myViewHolder.textDeliveryType.setText(item.getDeliveryType());
+            myViewHolder.textViewStatus.setText(item.getStatus());
+
+            if(item.getStatus() != null){
+                myViewHolder.textViewStatus.setVisibility(View.VISIBLE);
+                if(item.getStatus().equals("Accepted")|| item.getStatus().equals("Delivered")){
+                    myViewHolder.textViewStatus.setTextColor(context.getResources().getColor(R.color.green500));
+                }else{
+                    myViewHolder.textViewStatus.setTextColor(context.getResources().getColor(R.color.red_500));
+                }
+            }else{
+                myViewHolder.textViewStatus.setVisibility(View.GONE);
+            }
+
 
             RequestOptions requestOptions = new RequestOptions();
-            requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+            requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
             // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
             requestOptions.centerCrop();
-            requestOptions.skipMemoryCache(true);
+            requestOptions.skipMemoryCache(false);
 
             Glide.with(context)
-                    .load(item.getLocalImage())
+                    .load(item.getOrderImage())
                     .apply(requestOptions)
+                    .error(R.drawable.ic_photo_black_192dp)
                     .into(myViewHolder.imageView);
 
 

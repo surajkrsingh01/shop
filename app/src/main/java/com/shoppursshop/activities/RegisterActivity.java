@@ -27,10 +27,11 @@ import com.shoppursshop.utilities.Utility;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegisterActivity extends NetworkBaseActivity implements OnFragmentInteraction {
+public class RegisterActivity extends BaseImageActivity implements OnFragmentInteraction {
 
     public static final int LANGUAGE = 1,PERSONAL=2,BANK =3,CATEGORY =4,SUB_CATEGORY =5,PRODUCT =6;
 
@@ -51,7 +52,7 @@ public class RegisterActivity extends NetworkBaseActivity implements OnFragmentI
 
         languageFragment = LanguageFragment.newInstance("","");
         personalInfoFragment = PersonalInfoFragment.newInstance("","");
-        bankFragment = BankFragment.newInstance("","");
+        bankFragment = BankFragment.newInstance("register","");
         categoryFragment = CategoryFragment.newInstance("","");
         subCatFragment = SubCatFragment.newInstance("","");
         productFragment = ProductFragment.newInstance("","");
@@ -121,11 +122,18 @@ public class RegisterActivity extends NetworkBaseActivity implements OnFragmentI
         }else if(type == PERSONAL){
             FragmentTransaction trans = getSupportFragmentManager()
                     .beginTransaction();
+            trans.replace(R.id.container, categoryFragment,"categoryFragment");
+            fragmentTag = "categoryFragment";
+            trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            trans.addToBackStack(null);
+            trans.commit();
+            /*FragmentTransaction trans = getSupportFragmentManager()
+                    .beginTransaction();
             trans.replace(R.id.container, bankFragment,"bankFragment");
             fragmentTag = "bankFragment";
             trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             trans.addToBackStack(null);
-            trans.commit();
+            trans.commit();*/
         }else if(type == BANK){
             FragmentTransaction trans = getSupportFragmentManager()
                     .beginTransaction();
@@ -145,7 +153,7 @@ public class RegisterActivity extends NetworkBaseActivity implements OnFragmentI
             trans.addToBackStack(null);
             trans.commit();
         }else if(type == SUB_CATEGORY){
-            List<Object> selectedItemList = (List<Object>) item;
+            /*List<Object> selectedItemList = (List<Object>) item;
             productFragment.setItemCatList(selectedItemList);
             FragmentTransaction trans = getSupportFragmentManager()
                     .beginTransaction();
@@ -153,8 +161,21 @@ public class RegisterActivity extends NetworkBaseActivity implements OnFragmentI
             fragmentTag = "productFragment";
             trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             trans.addToBackStack(null);
-            trans.commit();
+            trans.commit();*/
+
+            Intent intent = new Intent(this,MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
+
+        }else if(type == 0){
+            selectImage();
         }
+    }
+
+    @Override
+    protected void imageAdded(){
+        bankFragment.setImageBase64(convertToBase64(new File(imagePath)),imagePath);
     }
 
     private void testApi(){

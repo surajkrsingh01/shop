@@ -5,25 +5,23 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
+import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.utilities.Constants;
-
-import java.util.List;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -36,7 +34,7 @@ public class BaseActivity extends AppCompatActivity {
     protected int colorTheme;
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
-    protected int limit = 30,offset = 0;
+    protected int limit = 20,offset = 0;
     protected int visibleItemCount,pastVisibleItems,totalItemCount;
     protected boolean loading=true,isScroll = true;
 
@@ -79,6 +77,25 @@ public class BaseActivity extends AppCompatActivity {
         boolean isDarkTheme = sharedPreferences.getBoolean(Constants.IS_DARK_THEME,false);
         if(this.isDarkTheme != isDarkTheme)
             recreate();
+    }
+
+    public void setToolbarTheme(){
+        int backColor=0,textColor = 0;
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        appBarLayout = findViewById(R.id.app_bar);
+        if(isDarkTheme){
+            backColor = getResources().getColor(R.color.dark_color);
+            textColor = getResources().getColor(R.color.white);
+            toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        }else{
+            backColor = getResources().getColor(R.color.white);
+            textColor = getResources().getColor(R.color.primary_text_color);
+            toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
+        }
+
+        appBarLayout.setBackgroundColor(backColor);
+        toolbar.setBackgroundColor(backColor);
+        toolbar.setTitleTextColor(textColor);
     }
 
 
@@ -175,6 +192,7 @@ public class BaseActivity extends AppCompatActivity {
                     //DialogAndToast.showToast("Profile clicked in profile",BaseActivity.this);
                 } else {
                     Intent intent = new Intent(BaseActivity.this, CategoryListActivity.class);
+                    intent.putExtra("flag","shop");
                     startActivity(intent);
                 }
             }
@@ -241,7 +259,40 @@ public class BaseActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    public void showMyBothDialog(String msg,String negative,String positive) {
+        //  errorNoInternet.setText("Oops... No internet");
+        //  errorNoInternet.setVisibility(View.VISIBLE);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        // set title
+        // alertDialogBuilder.setTitle("Oops...No internet");
+        // set dialog message
+        alertDialogBuilder
+                .setMessage(msg)
+                .setCancelable(false)
+                .setNegativeButton(negative, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        onDialogNegativeClicked();
+                    }
+                })
+                .setPositiveButton(positive, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        onDialogPositiveClicked();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+    }
+
     public void onDialogPositiveClicked(){
+
+    }
+
+    public void onDialogNegativeClicked(){
 
     }
 
@@ -254,12 +305,28 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    void showProgress(boolean show){
+    public void showProgress(boolean show){
         if(show){
             progressDialog.show();
         }else{
             progressDialog.dismiss();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            super.onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

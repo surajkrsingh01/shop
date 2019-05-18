@@ -31,7 +31,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.CheckedOutputStream;
 
 /**
@@ -179,9 +181,11 @@ public class SubCatFragment extends NetworkBaseFragment implements MyLevelItemCl
     }
 
     private void getSubCategories(String catIds){
-        String url=getResources().getString(R.string.url)+ Constants.GET_SUB_CATEGORY +catIds;
+        Map<String,String> params = new HashMap<>();
+        params.put("ids",catIds);
+        String url=getResources().getString(R.string.url)+ Constants.GET_SUB_CATEGORY;
         showProgress(true);
-        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(),"sub_categories");
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"sub_categories");
     }
 
     private void createSubCategory(){
@@ -198,7 +202,8 @@ public class SubCatFragment extends NetworkBaseFragment implements MyLevelItemCl
                     dataObject.put("retId",sharedPreferences.getString(Constants.USER_ID,""));
                     dataObject.put("retCatId",""+category.getId());
                     dataObject.put("retSubCatId",""+subCat.getId());
-                    dataObject.put("catName",subCat.getName());
+                    dataObject.put("catName",category.getTitle());
+                    dataObject.put("subCatName",subCat.getName());
                     dataObject.put("imageUrl",subCat.getImage());
                     dataObject.put("delStatus","N");
                     dataObject.put("retShopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));

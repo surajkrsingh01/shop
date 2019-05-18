@@ -49,16 +49,19 @@ public class SubCatListActivity extends BaseActivity {
         Log.i(TAG,"catId "+catID);
 
         itemList = dbHelper.getCatSubCategoriesForActivity(catID,limit,offset);
-        SubCategory s1 = (SubCategory) itemList.get(0);
-        s1.setWidth(MIN_WIDTH);
-        s1.setHeight(MIN_HEIGHT);
-        s1 = (SubCategory) itemList.get(itemList.size()-1);
-        s1.setWidth(MIN_WIDTH);
-        s1.setHeight(MIN_HEIGHT);
-        HomeListItem myItem = new HomeListItem();
-        myItem.setTitle(catName);
-        myItem.setDesc(catName+" Products");
-        itemList.add(0,myItem);
+        if(itemList.size() > 0){
+            SubCategory s1 = (SubCategory) itemList.get(0);
+            s1.setWidth(MIN_WIDTH);
+            s1.setHeight(MIN_HEIGHT);
+            s1 = (SubCategory) itemList.get(itemList.size()-1);
+            s1.setWidth(MIN_WIDTH);
+            s1.setHeight(MIN_HEIGHT);
+            HomeListItem myItem = new HomeListItem();
+            myItem.setTitle(catName);
+            myItem.setDesc(catName+" Products");
+            itemList.add(0,myItem);
+        }
+
 
        // setItemList();
 
@@ -76,6 +79,7 @@ public class SubCatListActivity extends BaseActivity {
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
         recyclerView.setLayoutAnimation(animation);*/
         myItemAdapter=new ProductAdapter(this,itemList,"subCatList");
+        myItemAdapter.setFlag(getIntent().getStringExtra("flag"));
         recyclerView.setAdapter(myItemAdapter);
 
        // int[] posArray = ((StaggeredGridLayoutManager)staggeredGridLayoutManager).findLastCompletelyVisibleItemPositions(null);

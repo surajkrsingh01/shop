@@ -66,7 +66,10 @@ public class NetworkBaseActivity extends BaseActivity {
         Log.i(TAG,url);
         Log.i(TAG,jsonObject.toString());
         try {
-            jsonObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+            //jsonObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+            if(!jsonObject.has("dbName")){
+                jsonObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+            }
             jsonObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
             jsonObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
         } catch (JSONException e) {
@@ -87,6 +90,7 @@ public class NetworkBaseActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 AppController.getInstance().getRequestQueue().getCache().clear();
                 Log.i(TAG,"Json Error "+error.toString());
+                if(!apiName.contains("customer"))
                 showProgress(false);
                 onServerErrorResponse(error,apiName);
                 // DialogAndToast.showDialog(getResources().getString(R.string.connection_error),BaseActivity.this);

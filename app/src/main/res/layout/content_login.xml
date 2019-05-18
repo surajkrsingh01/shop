@@ -56,7 +56,7 @@
                 android:textColor="@color/input_color_1"
                 android:textSize="@dimen/login_page_text_size"
                 android:gravity="center_vertical"
-                android:inputType="textEmailAddress"
+                android:inputType="phone"
                 android:imeOptions="actionNext"
                 android:background="@null"
                 android:layout_centerVertical="true"

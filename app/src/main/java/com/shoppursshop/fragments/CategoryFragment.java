@@ -266,6 +266,7 @@ public class CategoryFragment extends NetworkBaseFragment implements MyItemClick
                         MySimpleItem category = null;
                         for(Object ob: selectedItemList){
                             category = (MySimpleItem)ob;
+                            if(!dbHelper.isCatExist(""+category.getId()))
                             dbHelper.addCategory(category, Utility.getTimeStamp(),Utility.getTimeStamp());
                         }
                         mListener.onFragmentInteraction(selectedItemList,RegisterActivity.CATEGORY);

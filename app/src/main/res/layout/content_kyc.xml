@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.settings.profile.KYCActivity"
+    tools:showIn="@layout/activity_kyc">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/relative_doc_image"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/grey_border_small_round_background"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="@dimen/kyc_image_size"
+            android:layout_height="@dimen/kyc_image_size">
+
+            <ImageView
+                android:id="@+id/image_camera"
+                android:padding="10dp"
+                android:layout_centerInParent="true"
+                android:tint="@color/secondary_text_color"
+                android:src="@drawable/ic_photo_camera_black_24dp"
+                android:layout_marginTop="@dimen/register_container_margin_top"
+                android:layout_width="@dimen/camera_default_size"
+                android:layout_height="@dimen/camera_default_size" />
+
+            <ImageView
+                android:id="@+id/image_doc"
+                android:layout_marginTop="@dimen/register_container_margin_top"
+                android:layout_width="@dimen/kyc_image_size"
+                android:layout_height="@dimen/kyc_image_size" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/text_upload_label"
+            android:text="Upload PAN Image"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="KYC Document"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <RadioGroup
+            android:id="@+id/radio_doc_type_group"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/radio_pan"
+                android:text="Pan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:id="@+id/radio_aadhar"
+                android:layout_marginLeft="16dp"
+                android:text="Aadhar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RadioGroup>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edit_full_name"
+                android:hint="Full Name"
+                android:inputType="text|textCapWords"
+                android:imeOptions="actionNext"
+                android:theme="@style/MySelectViewTheme"
+                android:textSize="@dimen/edit_text_small_text_size"
+                android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                android:paddingRight="@dimen/edit_text_horizontal_padding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edit_dob_name"
+                android:hint="Date of Birth"
+                android:inputType="none"
+                android:focusable="false"
+                android:theme="@style/MySelectViewTheme"
+                android:textSize="@dimen/edit_text_small_text_size"
+                android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                android:paddingRight="@dimen/edit_text_horizontal_padding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_doc_number"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edit_doc_number"
+                android:inputType="text"
+                android:imeOptions="actionNext"
+                android:theme="@style/MySelectViewTheme"
+                android:textSize="@dimen/edit_text_small_text_size"
+                android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                android:paddingRight="@dimen/edit_text_horizontal_padding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_marginTop="30dp"
+            android:text="@string/submit"
+            android:textColor="@color/white"
+            android:textSize="@dimen/large_text_size"
+            android:background="@drawable/accent_1_solid_round_corner_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</ScrollView>

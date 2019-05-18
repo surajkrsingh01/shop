@@ -10,8 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.RegisterActivity;
 import com.shoppursshop.interfaces.OnFragmentInteraction;
@@ -45,12 +51,18 @@ public class BankFragment extends NetworkBaseFragment {
     private String mParam2;
 
     private View rootView;
+    private TextView textViewHeaderLabel;
+    private ImageView imageViewCheque,imageViewCamera;
+    private RelativeLayout rvCheque;
     private EditText editTextShopName,editTextBankName,editTextIfscCode,editTextAccountNo,editTextBranchAddress;
-    private String shopName,bankName,accountNo,ifscCode,branchAddress;
+    private String shopName,bankName,accountNo,ifscCode,branchAddress,imageBase64;
     private Button btnSubmit,btnBack;
     private MyUser myUser;
+    private RequestOptions requestOptions;
 
     private OnFragmentInteraction mListener;
+
+
 
     public BankFragment() {
         // Required empty public constructor
@@ -99,14 +111,42 @@ public class BankFragment extends NetworkBaseFragment {
     }
 
     private void init(){
+        imageBase64 = "no";
+        requestOptions = new RequestOptions();
+        requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
+        // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
+        requestOptions.centerCrop();
+        requestOptions.skipMemoryCache(false);
         btnSubmit=(Button)rootView.findViewById(R.id.btn_submit);
         btnBack=(Button)rootView.findViewById(R.id.btn_back);
+
+        textViewHeaderLabel = rootView.findViewById(R.id.text_bank_info_label);
+        rvCheque = rootView.findViewById(R.id.relative_cheque);
+        imageViewCheque = rootView.findViewById(R.id.image_cheque);
+        imageViewCamera = rootView.findViewById(R.id.image_camera);
 
         editTextShopName = rootView.findViewById(R.id.edit_business_name);
         editTextAccountNo = rootView.findViewById(R.id.edit_bank_account);
         editTextBankName = rootView.findViewById(R.id.edit_bank_name);
         editTextIfscCode = rootView.findViewById(R.id.edit_bank_ifsc);
         editTextBranchAddress = rootView.findViewById(R.id.edit_bank_address);
+
+        editTextShopName.setText(sharedPreferences.getString(Constants.SHOP_NAME,""));
+        editTextAccountNo.setText(sharedPreferences.getString(Constants.ACCOUNT_NO,""));
+        editTextBankName.setText(sharedPreferences.getString(Constants.BANK_NAME,""));
+        editTextIfscCode.setText(sharedPreferences.getString(Constants.IFSC_CODE,""));
+        editTextBranchAddress.setText(sharedPreferences.getString(Constants.BRANCH_ADRESS,""));
+
+        if(!TextUtils.isEmpty(sharedPreferences.getString(Constants.CHEQUE_IMAGE,""))){
+            imageViewCheque.setVisibility(View.VISIBLE);
+            imageViewCamera.setVisibility(View.GONE);
+            Glide.with(this)
+                    .load(sharedPreferences.getString(Constants.CHEQUE_IMAGE,""))
+                    .apply(requestOptions)
+                    .into(imageViewCheque);
+        }
+
+
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,12 +156,30 @@ public class BankFragment extends NetworkBaseFragment {
                  attemptUpdateBankDetails();
             }
         });
+
+        rvCheque.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onFragmentInteraction("image",0);
+            }
+        });
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();
             }
         });
+    }
+
+    public void setImageBase64(String image,String imagePath){
+        imageBase64 = image;
+        imageViewCheque.setVisibility(View.VISIBLE);
+        imageViewCamera.setVisibility(View.GONE);
+        Glide.with(this)
+                .load(imagePath)
+                .apply(requestOptions)
+                .into(imageViewCheque);
     }
 
     private void attemptUpdateBankDetails(){
@@ -179,6 +237,7 @@ public class BankFragment extends NetworkBaseFragment {
                 params.put("acctNo",accountNo);
                 params.put("ifscCode",ifscCode);
                 params.put("branchAddress",branchAddress);
+                params.put("chequeImage",imageBase64);
                // params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
                // params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
                // params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
@@ -205,6 +264,14 @@ public class BankFragment extends NetworkBaseFragment {
             if(apiName.equals("updateBankDetails")){
                 if(response.getBoolean("status")){
                     editor.putBoolean(Constants.IS_BANK_DETAIL_ADDED,true);
+                    editor.putString(Constants.BANK_NAME,editTextBankName.getText().toString());
+                    editor.putString(Constants.ACCOUNT_NO,editTextAccountNo.getText().toString());
+                    editor.putString(Constants.BRANCH_ADRESS,editTextBranchAddress.getText().toString());
+                    editor.putString(Constants.IFSC_CODE,editTextIfscCode.getText().toString());
+                    if(!imageBase64.equals("no")){
+                        editor.putString(Constants.CHEQUE_IMAGE,response.getJSONObject("result").getString("chequeImage"));
+                        //Glide.get(getActivity()).clearDiskCache();
+                    }
                     editor.commit();
                     mListener.onFragmentInteraction(myUser,RegisterActivity.BANK);
                 }else{

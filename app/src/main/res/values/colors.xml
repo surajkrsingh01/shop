@@ -12,7 +12,7 @@
     <color name="colorPrimary800">@color/grey800</color>
     <color name="colorPrimary900">@color/grey900</color>
     <color name="colorPrimaryDark">@color/grey300</color>
-    <color name="colorAccent">@color/accent_blue_A_400</color>
+    <color name="colorAccent">@color/orange700</color>
 
     <color name="dark_color">@color/grey900</color>
     <color name="dark_separator_color">@color/grey800</color>
@@ -23,6 +23,7 @@
     <color name="accent_color_1">@color/blue700</color>
     <color name="accent_color_2">@color/orange700</color>
     <color name="accent_color_3">@color/orange700</color>
+    <color name="accent_color_4">@color/green600</color>
     <color name="input_color_1">@color/orange700</color>
     <color name="hint_color_1">@color/orange500</color>
     <color name="transparent_light_grey">#609e9e9e</color>

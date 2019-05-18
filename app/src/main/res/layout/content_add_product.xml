@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -25,7 +26,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/text_personal_info_label"
+                android:id="@+id/text_header_label"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:textSize="@dimen/large_text_size"
                 android:gravity="center_horizontal"
@@ -33,9 +34,96 @@
                 android:layout_height="wrap_content"
                 android:text="@string/add_product" />
 
+            <LinearLayout
+                android:weightSum="3"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_width="match_parent"
+                android:layout_height="150dp">
+
+                <RelativeLayout
+                    android:id="@+id/relative_image_1"
+                    android:background="@drawable/grey_border_background"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/image_default_1"
+                        android:src="@drawable/ic_photo_camera_black_24dp"
+                        android:tint="@color/secondary_text_color"
+                        android:layout_centerInParent="true"
+                        android:scaleType="centerCrop"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp" />
+
+                    <ImageView
+                        android:id="@+id/image_view_1"
+                        android:visibility="gone"
+                        android:scaleType="centerCrop"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relative_image_2"
+                    android:background="@drawable/grey_border_background"
+                    android:layout_marginLeft="@dimen/view_horizontal_margin"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/image_default_2"
+                        android:src="@drawable/ic_photo_camera_black_24dp"
+                        android:tint="@color/secondary_text_color"
+                        android:layout_centerInParent="true"
+                        android:scaleType="centerCrop"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp" />
+
+                    <ImageView
+                        android:id="@+id/image_view_2"
+                        android:visibility="gone"
+                        android:scaleType="centerCrop"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relative_image_3"
+                android:background="@drawable/grey_border_background"
+                android:layout_marginLeft="@dimen/view_horizontal_margin"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/image_default_3"
+                    android:src="@drawable/ic_photo_camera_black_24dp"
+                    android:tint="@color/secondary_text_color"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+
+                <ImageView
+                    android:id="@+id/image_view_3"
+                    android:visibility="gone"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </RelativeLayout>
+
+            </LinearLayout>
+
             <RelativeLayout
                 android:id="@+id/relative_category"
-                android:layout_marginTop="@dimen/edit_text_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginBottom="@dimen/edit_text_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,7 +204,7 @@
             <LinearLayout
                 android:layout_marginTop="@dimen/edit_text_margin"
                 android:orientation="horizontal"
-                android:weightSum="2"
+                android:weightSum="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -126,8 +214,8 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:id="@+id/edit_product_barcode"
-                        android:hint="@string/product_barcode"
+                        android:id="@+id/edit_product_code"
+                        android:hint="@string/product_code"
                         android:inputType="text"
                         android:imeOptions="actionNext"
                         android:theme="@style/MyViewTheme"
@@ -141,32 +229,39 @@
 
 
                 </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content">
-
-                    <EditText
-                        android:id="@+id/edit_product_hsn_code"
-                        android:hint="@string/product_hsn_code"
-                        android:inputType="text"
-                        android:imeOptions="actionNext"
-                        android:theme="@style/MyViewTheme"
-                        android:textSize="@dimen/edit_text_small_text_size"
-                        android:paddingBottom="@dimen/edit_text_small_vertical_padding"
-                        android:paddingTop="@dimen/edit_text_small_vertical_padding"
-                        android:paddingLeft="@dimen/edit_text_horizontal_padding"
-                        android:paddingRight="@dimen/edit_text_horizontal_padding"
-                        android:layout_marginLeft="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-
-                </android.support.design.widget.TextInputLayout>
-
 
             </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/checkbox_is_barcode_available"
+                android:layout_marginTop="@dimen/edit_text_margin"
+                android:text="Is barcode available"
+                android:textColor="@color/primary_text_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_barcode"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edit_product_barcode"
+                    android:hint="@string/product_barcode"
+                    android:inputType="text"
+                    android:imeOptions="actionNext"
+                    android:theme="@style/MyViewTheme"
+                    android:textSize="@dimen/edit_text_small_text_size"
+                    android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                    android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                    android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                    android:paddingRight="@dimen/edit_text_horizontal_padding"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+            </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_marginTop="@dimen/edit_text_margin"
@@ -397,6 +492,28 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="@dimen/edit_text_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edit_product_hsn_code"
+                    android:hint="@string/product_hsn_code"
+                    android:inputType="text"
+                    android:imeOptions="actionNext"
+                    android:theme="@style/MyViewTheme"
+                    android:textSize="@dimen/edit_text_small_text_size"
+                    android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                    android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                    android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                    android:paddingRight="@dimen/edit_text_horizontal_padding"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+            </android.support.design.widget.TextInputLayout>
+
 
             <LinearLayout
                 android:layout_marginTop="@dimen/edit_text_margin"
@@ -406,6 +523,29 @@
                 android:layout_height="wrap_content">
 
                 <android.support.design.widget.TextInputLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/edit_product_sgst"
+                        android:hint="@string/sgst"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
+                        android:theme="@style/MyViewTheme"
+                        android:textSize="@dimen/edit_text_small_text_size"
+                        android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                        android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                        android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                        android:paddingRight="@dimen/edit_text_horizontal_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content">
@@ -450,51 +590,10 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content">
-
-                    <EditText
-                        android:id="@+id/edit_product_sgst"
-                        android:hint="@string/sgst"
-                        android:inputType="text"
-                        android:imeOptions="actionNext"
-                        android:theme="@style/MyViewTheme"
-                        android:textSize="@dimen/edit_text_small_text_size"
-                        android:paddingBottom="@dimen/edit_text_small_vertical_padding"
-                        android:paddingTop="@dimen/edit_text_small_vertical_padding"
-                        android:paddingLeft="@dimen/edit_text_horizontal_padding"
-                        android:paddingRight="@dimen/edit_text_horizontal_padding"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-
-                </android.support.design.widget.TextInputLayout>
-
-
             </LinearLayout>
 
             <RelativeLayout
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/btn_add_photo"
-                    android:paddingLeft="@dimen/view_horizontal_margin"
-                    android:paddingRight="@dimen/view_horizontal_margin"
-                    android:text="@string/add_photo1"
-                    android:textColor="@color/secondary_text_color"
-                    android:textSize="@dimen/large_text_size"
-                    android:background="@drawable/grey_border_transparent_background"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/regular_btn_size" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -513,6 +612,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

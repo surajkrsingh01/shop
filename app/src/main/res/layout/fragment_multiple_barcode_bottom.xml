@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
+
+        <RelativeLayout
+            android:id="@+id/relative_header"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/accent_color_3_solid_round_backgground">
+
+            <TextView
+                android:layout_toLeftOf="@+id/iv_clear"
+                android:id="@+id/et_multiple_barcode_label"
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:hint="Multiple Barcode"
+                android:gravity="center_horizontal"
+                android:textColorHint="@color/white"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:background="@null"/>
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:id="@+id/iv_clear"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_margin="10dp"
+                android:tint="@color/white"
+                android:src="@drawable/ic_close_black_24dp" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/top_seperator"
+            android:layout_below="@+id/relative_header"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="?attr/separatorColor"/>
+
+        <RelativeLayout
+            android:id="@+id/relative_barcode"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_below="@+id/top_seperator"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/image_scan"
+                android:src="@drawable/ic_camera_black_24dp"
+                android:tint="@color/colorAccent"
+                android:layout_centerHorizontal="true"
+                android:layout_width="48dp"
+                android:layout_height="48dp" />
+
+            <TextView
+                android:id="@+id/edit_product_barcode"
+                android:layout_below="@+id/image_scan"
+                android:text="Scan Barcode"
+                android:layout_centerHorizontal="true"
+                android:textSize="@dimen/edit_text_small_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_below="@+id/relative_barcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.RecyclerView>
+
+    </RelativeLayout>
+
+</RelativeLayout>

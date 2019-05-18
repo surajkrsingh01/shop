@@ -1,7 +1,9 @@
 package com.shoppursshop.models;
 
 public class MyCustomer {
-    String id,name,image,mobile,address,state,city;
+    String id,code,name,email,image,mobile,address,state,city;
+    private String isFav;
+    private float ratings;
 
     private int localImage;
 
@@ -11,6 +13,14 @@ public class MyCustomer {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
@@ -67,5 +77,29 @@ public class MyCustomer {
 
     public void setLocalImage(int localImage) {
         this.localImage = localImage;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getIsFav() {
+        return isFav;
+    }
+
+    public void setIsFav(String isFav) {
+        this.isFav = isFav;
+    }
+
+    public float getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(float ratings) {
+        this.ratings = ratings;
     }
 }

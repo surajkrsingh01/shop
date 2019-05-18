@@ -43,6 +43,52 @@ public class CategoryListActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         itemList = new ArrayList<>();
+        swipeRefreshLayout=findViewById(R.id.swipe_refresh);
+        progressBar=findViewById(R.id.progress_bar);
+        textViewError = findViewById(R.id.text_error);
+        recyclerView=findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
+        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,
+                StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+      /*  int resId = R.anim.layout_animation_slide_from_bottom;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
+        recyclerView.setLayoutAnimation(animation);*/
+        myItemAdapter=new ProductAdapter(this,itemList,"catList");
+        myItemAdapter.setFlag(getIntent().getStringExtra("flag"));
+        recyclerView.setAdapter(myItemAdapter);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                getItemList();
+            }
+        });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.blue700));
+        }
+
+        initFooter(this,1);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        getItemList();
+    }
+
+
+    private void getItemList(){
+        swipeRefreshLayout.setRefreshing(false);
+
+        itemList.clear();
         CatListItem myItem = new CatListItem();
         myItem.setTitle("Products");
         myItem.setDesc("Store Category");
@@ -64,58 +110,24 @@ public class CategoryListActivity extends BaseActivity {
                 myItem.setId(Integer.parseInt(cat.getId()));
                 myItem.setType(1);
                 List<Object> subCatList = dbHelper.getCatSubCategoriesForActivity(cat.getId(),4,0);
-                SubCategory s1 = (SubCategory) subCatList.get(0);
-                s1.setWidth(MIN_WIDTH);
-                s1.setHeight(MIN_HEIGHT);
-                s1 = (SubCategory) subCatList.get(subCatList.size()-1);
-                s1.setWidth(MIN_WIDTH);
-                s1.setHeight(MIN_HEIGHT);
-                myItem.setItemList(subCatList);
-                itemList.add(myItem);
+                if(subCatList.size() > 0){
+                    SubCategory s1 = (SubCategory) subCatList.get(0);
+                    s1.setWidth(MIN_WIDTH);
+                    s1.setHeight(MIN_HEIGHT);
+                    s1 = (SubCategory) subCatList.get(subCatList.size()-1);
+                    s1.setWidth(MIN_WIDTH);
+                    s1.setHeight(MIN_HEIGHT);
+                    myItem.setItemList(subCatList);
+                    itemList.add(myItem);
+                }
+
             }
 
         }
-
-        swipeRefreshLayout=findViewById(R.id.swipe_refresh);
-        progressBar=findViewById(R.id.progress_bar);
-        textViewError = findViewById(R.id.text_error);
-        recyclerView=findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
-        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,
-                StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-      /*  int resId = R.anim.layout_animation_slide_from_bottom;
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
-        recyclerView.setLayoutAnimation(animation);*/
-        myItemAdapter=new ProductAdapter(this,itemList,"catList");
-        recyclerView.setAdapter(myItemAdapter);
-
         if(itemList.size() == 0){
             showNoData(true);
         }
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
-                getItemList();
-            }
-        });
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.blue700));
-        }
-
-        initFooter(this,1);
-    }
-
-
-    private void getItemList(){
-        swipeRefreshLayout.setRefreshing(false);
+        myItemAdapter.notifyDataSetChanged();
     }
 
     private void showNoData(boolean show){

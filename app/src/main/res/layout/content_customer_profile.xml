@@ -25,145 +25,370 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/image_fav"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:tint="?attr/primaryTextColor"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_favorite_border_black_24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+                <TextView
+                    android:id="@+id/text_header"
+                    android:textColor="?attr/secondaryTextColor"
+                    android:text="Customer Details"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:paddingLeft="@dimen/view_horizontal_margin"
+                    android:paddingRight="@dimen/view_horizontal_margin"
+                    android:textSize="@dimen/home_list_header_text_size"
+                    android:textAllCaps="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+
+
             <TextView
                 android:id="@+id/text_customer_name"
-                android:textAllCaps="true"
-                android:text="Vipin Dhama"
-                android:textColor="?attr/secondaryTextColor"
-                android:textSize="@dimen/home_list_cat_name_text_size_type_4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/text_address"
-                android:textStyle="bold"
-                android:text="Address"
-                android:layout_marginTop="@dimen/home_list_title_text_margin_type_2"
-                android:layout_marginBottom="@dimen/home_list_title_text_margin_type_2"
+                android:layout_marginTop="@dimen/view_vertical_margin"
+                android:paddingLeft="@dimen/view_horizontal_margin"
+                android:paddingRight="@dimen/view_horizontal_margin"
+                android:layout_below="@+id/text_header"
                 android:textColor="?attr/primaryTextColor"
-                android:textSize="@dimen/home_list_title_text_size_type_4"
+                android:textStyle="bold"
+                android:textSize="@dimen/product_list_very_large_text_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/text_state_city"
-                android:textColor="?attr/secondaryTextColor"
-                android:textSize="@dimen/home_list_cat_name_text_size_type_4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <HorizontalScrollView
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_view_2"
+                    android:layout_margin="5dp"
+                    card_view:cardElevation="5dp"
+                    android:background="@color/white"
+                    android:layout_width="@dimen/customer_list_image_width"
+                    android:layout_height="@dimen/customer_list_image_height"
+                    card_view:cardCornerRadius="10dp">
+
+                    <ImageView
+                        android:id="@+id/image_view_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/tv_initial"
+                        android:textSize="25sp"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:background="@color/blue500"
+                        android:layout_width="@dimen/customer_list_image_width"
+                        android:layout_height="@dimen/customer_list_image_height" />
+
+                </android.support.v7.widget.CardView>
+
+                <LinearLayout
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/text_mobile"
+                        android:textColor="?attr/secondaryTextColor"
+                        android:layout_marginTop="@dimen/home_list_title_text_margin_type_2"
+                        android:layout_marginBottom="@dimen/home_list_title_text_margin_type_2"
+                        android:textSize="@dimen/home_list_cat_name_text_size_type_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/text_address"
+                        android:textStyle="bold"
+                        android:text="Address"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textSize="@dimen/home_list_title_text_size_type_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/text_state_city"
+                        android:textColor="?attr/secondaryTextColor"
+                        android:textSize="@dimen/home_list_cat_name_text_size_type_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="@dimen/view_vertical_margin"
+                android:background="?attr/separatorColor"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+            <RelativeLayout
+                android:layout_marginTop="@dimen/view_vertical_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/text_total_sale_Label"
+                    android:textColor="?attr/primaryTextColor"
+                    android:textSize="@dimen/large_text_size"
+                    android:text="Total Sales"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/text_total_sale"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text=""
+                    android:layout_marginLeft="@dimen/view_vertical_margin"
+                    android:textColor="?attr/primaryTextColor"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_marginTop="@dimen/view_vertical_margin"
+                android:background="?attr/separatorColor"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+            <RelativeLayout
+                android:layout_marginTop="@dimen/view_vertical_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/text_sale_trend_Label"
+                    android:layout_centerVertical="true"
+                    android:textColor="?attr/primaryTextColor"
+                    android:textSize="@dimen/large_text_size"
+                    android:text="Customer Sales Trend"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                    android:id="@+id/relative_rating"
+                    android:background="@drawable/accent_color_4_solid_small_round_corner_background"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/text_start_rating"
+                        android:textColor="@color/white"
+                        android:text="4.5"
+                        android:textSize="@dimen/small_text_size"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <ImageView
+                        android:layout_toRightOf="@+id/text_start_rating"
+                        android:layout_marginLeft="5dp"
+                        android:src="@drawable/ic_star_black_24dp"
+                        android:layout_centerVertical="true"
+                        android:tint="@color/white"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_marginTop="@dimen/view_vertical_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:id="@+id/linear_amount_division"
+                    android:orientation="vertical"
+                    android:weightSum="6"
+                    android:layout_width="40dp"
+                    android:layout_height="@dimen/profile_graph_amount_div_size">
 
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/card_view_1"
-                        android:layout_margin="5dp"
-                        card_view:cardElevation="5dp"
-                        android:background="@color/white"
-                        android:layout_width="@dimen/product_list_image_width"
-                        android:layout_height="@dimen/product_list_image_height"
-                        card_view:cardCornerRadius="10dp">
+                    <RelativeLayout
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp">
 
-                        <RelativeLayout
-                            android:paddingLeft="@dimen/view_horizontal_margin"
-                            android:paddingRight="@dimen/view_horizontal_margin"
+                        <TextView
+                            android:text="25k"
+                            android:textSize="10sp"
+                            android:gravity="center"
+                            android:textColor="?attr/primaryTextColor"
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <View
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/grey400"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="0.5dp"/>
 
-                            <TextView
-                                android:id="@+id/text_bar_code"
-                                android:layout_centerInParent="true"
-                                android:gravity="center"
-                                android:textColor="?attr/primaryTextColor"
-                                android:textSize="@dimen/small_text_size"
-                                android:text="Customer Code, Customer Bar Code"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                    </RelativeLayout>
 
-                        </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp">
 
+                        <TextView
+                            android:id="@+id/text_limit2"
+                            android:text="20k"
+                            android:textSize="10sp"
+                            android:gravity="center"
+                            android:textColor="?attr/primaryTextColor"
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
 
-                    </android.support.v7.widget.CardView>
-
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/card_view_2"
-                        android:layout_margin="5dp"
-                        card_view:cardElevation="5dp"
-                        android:background="@color/white"
-                        android:layout_width="@dimen/product_list_image_width"
-                        android:layout_height="@dimen/product_list_image_height"
-                        card_view:cardCornerRadius="10dp">
-
-                        <ImageView
-                            android:id="@+id/image_view_2"
+                        <View
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/grey400"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop" />
+                            android:layout_height="0.5dp"/>
 
-                    </android.support.v7.widget.CardView>
+                    </RelativeLayout>
 
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/card_view_3"
-                        android:layout_margin="5dp"
-                        card_view:cardElevation="5dp"
-                        android:background="@color/white"
-                        android:layout_width="@dimen/product_list_image_width"
-                        android:layout_height="@dimen/product_list_image_height"
-                        card_view:cardCornerRadius="10dp">
 
-                        <ImageView
-                            android:id="@+id/image_view_3"
+                    <RelativeLayout
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp">
+
+                        <TextView
+                            android:id="@+id/text_limit3"
+                            android:text="15k"
+                            android:textSize="10sp"
+                            android:gravity="center"
+                            android:textColor="?attr/primaryTextColor"
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <View
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/grey400"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop" />
+                            android:layout_height="0.5dp"/>
 
-                    </android.support.v7.widget.CardView>
+                    </RelativeLayout>
 
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/card_view_4"
-                        android:layout_margin="5dp"
-                        card_view:cardElevation="5dp"
-                        android:background="@color/white"
-                        android:layout_width="@dimen/product_list_image_width"
-                        android:layout_height="@dimen/product_list_image_height"
-                        card_view:cardCornerRadius="10dp">
+                    <RelativeLayout
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp">
 
-                        <ImageView
-                            android:id="@+id/image_view_4"
+                        <TextView
+                            android:id="@+id/text_limit4"
+                            android:text="10k"
+                            android:textSize="10sp"
+                            android:gravity="center"
+                            android:textColor="?attr/primaryTextColor"
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <View
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/grey400"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop" />
+                            android:layout_height="0.5dp"/>
 
-                    </android.support.v7.widget.CardView>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp">
+
+                        <TextView
+                            android:id="@+id/text_limit5"
+                            android:text="5k"
+                            android:textSize="10sp"
+                            android:gravity="center"
+                            android:textColor="?attr/primaryTextColor"
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <View
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/grey400"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp">
+
+                        <TextView
+                            android:id="@+id/text_limit6"
+                            android:text="0k"
+                            android:textSize="10sp"
+                            android:gravity="center"
+                            android:textColor="?attr/primaryTextColor"
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <View
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/grey400"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"/>
+
+                    </RelativeLayout>
 
                 </LinearLayout>
 
-            </HorizontalScrollView>
+                <android.support.v7.widget.RecyclerView
+                    android:layout_toRightOf="@id/linear_amount_division"
+                    android:id="@+id/recycler_view_monthly_graph"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/profile_graph_size">
 
-            <TextView
-                android:id="@+id/text_sale_trend_Label"
-                android:layout_marginTop="@dimen/view_vertical_margin"
-                android:textColor="?attr/primaryTextColor"
-                android:textSize="@dimen/large_text_size"
-                android:text="Customer Sales Trend"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                </android.support.v7.widget.RecyclerView>
 
-            <android.support.v7.widget.RecyclerView
-                android:layout_marginTop="@dimen/view_vertical_margin"
-                android:id="@+id/recycler_view_monthly_graph"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/profile_graph_size">
-
-            </android.support.v7.widget.RecyclerView>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/text_orders_Label"

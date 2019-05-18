@@ -2,9 +2,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.shoppursshop.activities.MainActivity">
+
+
+
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_favourite"
+        android:orderInCategory="100"
+        android:visible="false"
+        android:title="Favourite"
+        android:icon="@drawable/ic_favorite_border_black_24dp"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/action_search"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_search_black_24dp"
+        app:showAsAction="always" />
+
 </menu>

@@ -16,6 +16,8 @@
     <dimen name="simple_drop_text_view_horizontal_margin">10dp</dimen>
     <dimen name="simple_drop_text_view_vertical_margin">8dp</dimen>
     <dimen name="simple_drop_text_view_size">16sp</dimen>
+    <dimen name="kyc_image_size">160dp</dimen>
+    <dimen name="camera_default_size">80dp</dimen>
 
     <dimen name="very_large_text_size">20sp</dimen>
     <dimen name="large_text_size">16sp</dimen>
@@ -74,8 +76,8 @@
     <!--Home List. -->
     <dimen name="home_list_image_size_1">400dp</dimen>
     <dimen name="home_list_image_size_2">300dp</dimen>
-    <dimen name="home_list_image_width_4">130dp</dimen>
-    <dimen name="home_list_image_height_4">110dp</dimen>
+    <dimen name="home_list_image_width_4">110dp</dimen>
+    <dimen name="home_list_image_height_4">90dp</dimen>
     <dimen name="home_list_image_2_size">80dp</dimen>
     <dimen name="home_list_header_text_size">14sp</dimen>
     <dimen name="home_list_desc_text_size">18sp</dimen>
@@ -125,11 +127,31 @@
     <dimen name="sub_header_label_size">16sp</dimen>
 
     <!-- Profile. -->
-    <dimen name="profile_graph_size">235dp</dimen>
+    <dimen name="profile_graph_size">265dp</dimen>
+    <dimen name="profile_graph_amount_div_size">235dp</dimen>
 
     <!-- Scanner in. -->
     <dimen name="scanner_width">250dp</dimen>
     <dimen name="scanner_height">200dp</dimen>
+
+    <!-- Profile. -->
+    <dimen name="profile_view_width">240dp</dimen>
+    <dimen name="qr_code_image_size">200dp</dimen>
+    <dimen name="profile_image_size">200dp</dimen>
+
+    <!-- address. -->
+    <dimen name="address_spinner_size">40dp</dimen>
+    <dimen name="address_map_size">250dp</dimen>
+
+    <!-- invoice. -->
+    <dimen name="invoice_header_text_size">12sp</dimen>
+    <dimen name="invoice_sub_header_text_size">10sp</dimen>
+    <dimen name="invoice_right_view_width">40dp</dimen>
+    <dimen name="invoice_right_view_small_width">20dp</dimen>
+    <dimen name="invoice_hsn_view_width">50dp</dimen>
+
+    <!-- cart list item. -->
+    <dimen name="cart_action_size">36dp</dimen>
 
     <!-- Footer. -->
     <dimen name="bottom_nav_icon_size">24dp</dimen>
