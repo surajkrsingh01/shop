@@ -344,6 +344,11 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                         recyclerViewReview.setVisibility(View.VISIBLE);
                     }
 
+                    if(myReviewList.size()==0){
+                        recyclerViewReview.setVisibility(View.GONE);
+                        textViewNoReviews.setVisibility(View.VISIBLE);
+                    }
+
                     myReviewAdapter.notifyDataSetChanged();
                 }
             }else if (apiName.equals("productSaleData")) {
