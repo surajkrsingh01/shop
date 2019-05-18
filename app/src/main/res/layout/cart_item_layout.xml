@@ -58,16 +58,16 @@
 
 
         <RelativeLayout
-            android:background="@color/white"
+            android:background="?attr/backgroundColor"
             android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/image_minus"
-                android:background="@drawable/grey_border_background"
+                android:background="?attr/solidPrimaryStrokeBorderBackground"
                 android:src="@drawable/ic_remove_black_24dp"
-                android:tint="@color/grey500"
+                android:tint="?attr/primaryTextColor"
                 android:layout_width="@dimen/cart_action_size"
                 android:layout_height="@dimen/cart_action_size" />
 
@@ -75,6 +75,7 @@
                 android:id="@+id/tv_counter"
                 android:text="1"
                 android:textSize="18sp"
+                android:textColor="?attr/primaryTextColor"
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:layout_toRightOf="@+id/image_minus"
@@ -83,10 +84,10 @@
 
             <ImageView
                 android:id="@+id/image_add"
-                android:background="@drawable/grey_border_background"
+                android:background="?attr/solidPrimaryStrokeBorderBackground"
                 android:layout_toRightOf="@+id/tv_counter"
                 android:src="@drawable/ic_add_black_24dp"
-                android:tint="@color/grey500"
+                android:tint="?attr/primaryTextColor"
                 android:layout_width="@dimen/cart_action_size"
                 android:layout_height="@dimen/cart_action_size" />
 
