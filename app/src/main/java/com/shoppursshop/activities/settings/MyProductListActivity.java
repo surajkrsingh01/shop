@@ -36,6 +36,7 @@ public class MyProductListActivity extends NetworkBaseActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setToolbarTheme();
 
         itemList = dbHelper.getProducts(limit,offset);
         recyclerView=findViewById(R.id.recycler_view);
