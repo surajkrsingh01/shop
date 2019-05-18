@@ -45,7 +45,7 @@ public class MyProductListActivity extends NetworkBaseActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         itemAdapter=new ProductAdapter(this,itemList,"productList");
-        itemAdapter.setFlag(getIntent().getStringExtra("flag"));
+        itemAdapter.setFlag("productList");
         itemAdapter.setSubCatName("");
         recyclerView.setAdapter(itemAdapter);
 

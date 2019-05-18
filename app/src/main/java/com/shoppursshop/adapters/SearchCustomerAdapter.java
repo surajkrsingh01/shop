@@ -158,7 +158,7 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
         public void onClick(View v) {
             if(v == rootView){
                 if(type.equals("customerInfoActivity")){
-                    myItemTypeClickListener.onItemClicked(getAdapterPosition(),1);
+                    myItemTypeClickListener.onItemClicked(getAdapterPosition(),2);
                 }else{
                     MyCustomer item = (MyCustomer)itemList.get(getAdapterPosition());
                     Intent intent = new Intent(context, CustomerProfileActivity.class);

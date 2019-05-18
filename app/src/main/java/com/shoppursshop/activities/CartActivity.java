@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -51,6 +52,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     private RelativeLayout relativeLayoutPayOptionLayout;
     private TextView tvCash,tvCard,tvMPos,tvAndroidPos;
 
+    private ImageView imageViewScan,imageViewSearch;
+
     private float totalPrice;
 
     private String paymentMode,orderId;
@@ -74,6 +77,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     private void init(){
         dbHelper.deleteTable(DbHelper.CART_TABLE);
         itemList = new ArrayList<>();
+        imageViewScan = findViewById(R.id.image_scan);
+        imageViewSearch = findViewById(R.id.image_search);
         buttonScan = findViewById(R.id.btn_scan);
         tvItemCount=findViewById(R.id.itemCount);
         tvItemPrice=findViewById(R.id.itemPrice);
@@ -137,6 +142,26 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 paymentMode = "Credit/Debit Card";
                 deviceType = "N910";
                 generateJson(paymentMode);
+            }
+        });
+
+        imageViewScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openScannar();
+            }
+        });
+
+        imageViewSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BottomSearchFragment bottomSearchFragment = new BottomSearchFragment();
+                bottomSearchFragment.setCallingActivityName("productList");
+                Bundle bundle = new Bundle();
+                bundle.putString("flag","searchCartProduct");
+                bottomSearchFragment.setArguments(bundle);
+                bottomSearchFragment.setMyItemClickListener(CartActivity.this);
+                bottomSearchFragment.show(getSupportFragmentManager(), "Search Product Bottom Sheet");
             }
         });
 
