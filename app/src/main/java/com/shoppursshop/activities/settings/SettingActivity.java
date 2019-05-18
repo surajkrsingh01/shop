@@ -14,6 +14,7 @@ import com.shoppursshop.activities.LoginActivity;
 import com.shoppursshop.adapters.SettingsAdapter;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.interfaces.MyItemClickListener;
+import com.shoppursshop.models.MyProduct;
 import com.shoppursshop.utilities.Constants;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        MyProduct product;
         init();
         initFooter(this,4);
     }
