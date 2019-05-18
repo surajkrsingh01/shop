@@ -24,6 +24,7 @@ import com.shoppursshop.adapters.SettingsAdapter;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.DialogAndToast;
+import com.shoppursshop.utilities.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,19 +57,19 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
 
         mschemeList = new ArrayList<>();
         item = new MyProductItem();
-        item.setProdName("Month ");
+        item.setProdName("Monthly Payment ");
         item.setProdMrp(500);
         item.setSelected(false);
         mschemeList.add(item);
 
         item = new MyProductItem();
-        item.setProdName("Quarter ");
+        item.setProdName("Quarterly Payment ");
         item.setProdMrp(2500);
         item.setSelected(false);
         mschemeList.add(item);
 
         item = new MyProductItem();
-        item.setProdName("Year ");
+        item.setProdName("Yearly Payment ");
         item.setProdMrp(4500);
         item.setSelected(false);
         mschemeList.add(item);

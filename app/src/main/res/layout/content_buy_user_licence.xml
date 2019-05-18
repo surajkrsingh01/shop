@@ -63,6 +63,35 @@
         android:id="@+id/recycler_payment_option">
     </android.support.v7.widget.RecyclerView>
 
+    <TextView
+        android:layout_below="@+id/recycler_payment_option"
+        android:layout_marginLeft="15dp"
+        android:id="@+id/text_mysubscription"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Subscription"
+        android:textSize="16sp"
+        android:textColor="?attr/primaryTextColor"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/text_mysubscription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textColor="?attr/primaryTextColor"
+        android:text="No Subscription Available"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_below="@+id/text_mysubscription"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recycler_mysubscription">
+    </android.support.v7.widget.RecyclerView>
+
+
     <RelativeLayout
         android:layout_above="@+id/btnProceed"
         android:layout_marginTop="10dp"

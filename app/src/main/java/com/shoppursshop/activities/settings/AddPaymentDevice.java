@@ -290,7 +290,7 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                 cartSize = cartSize + 1;
             }else viewCart.setVisibility(View.GONE);
         }
-        tv_total.setText("Amount " + String.valueOf(total_amount));
+        tv_total.setText("Amount " + String.valueOf(Utility.numberFormat(total_amount)));
         tv_totalItems.setText("Items(" + cartSize + ")");
         //shoppursProductAdapter.notifyDataSetChanged();
     }

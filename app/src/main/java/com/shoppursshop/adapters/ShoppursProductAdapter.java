@@ -19,6 +19,7 @@ import com.shoppursshop.activities.ProductDetailActivity;
 import com.shoppursshop.activities.settings.AddPaymentDevice;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.DialogAndToast;
+import com.shoppursshop.utilities.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
             final MyProductItem item = (MyProductItem) myProductsList.get(position);
             myViewHolder.textbarcode.setText(item.getProdCode());
             myViewHolder.textName.setText(item.getProdName());
-            myViewHolder.textMrp.setText("MRP: Rs"+item.getProdMrp());
+            myViewHolder.textMrp.setText("MRP: Rs"+ Utility.numberFormat(item.getProdMrp()));
 
             myViewHolder.btnAddCart.setOnClickListener(new View.OnClickListener() {
                 @Override

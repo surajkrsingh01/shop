@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.shoppursshop.R;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.utilities.Utility;
 
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class PaymentSchemeAdapter extends RecyclerView.Adapter<RecyclerView.View
             MyHomeHeaderViewHolder myViewHolder = (MyHomeHeaderViewHolder)holder;
             MyProductItem productItem = itemList.get(position);
             myViewHolder.textHeader.setText(productItem.getProdName());
-            myViewHolder.textAmount.setText(String.valueOf(productItem.getProdMrp()));
+            myViewHolder.textAmount.setText(Utility.numberFormat(productItem.getProdMrp()));
             if(productItem.isSelected()) {
                 myViewHolder.imageViewSelected.setVisibility(View.VISIBLE);
             }
