@@ -138,7 +138,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
             }
         }
 
-        textViewId.setText("Order id - "+intent.getStringExtra("id"));
+        textViewId.setText("Order No - "+intent.getStringExtra("id"));
         textViewCustomerName.setText(intent.getStringExtra("custName"));
         textViewOrderDate.setText(Utility.parseDate(intent.getStringExtra("date"),
                 "yyyy-MM-dd HH:mm:ss","HH:mm, MMM dd, yyyy"));

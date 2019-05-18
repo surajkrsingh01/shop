@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -51,7 +52,7 @@ public class AddProductActivity extends BaseImageActivity {
 
     private EditText editTextName,editTextCode,editTextBarCode,editTextHSN,editTextDesc,editTextMRP,editTextSP,
             editTextRL,editTextQOH,editTextMfgBy,editTextWarranty,editTextCGST,editTextIGST,editTextSGST,editTextMfgDate,editTextExpiryDate;
-    private CheckBox checkBoxIsBarAvaialble;
+    private AppCompatCheckBox checkBoxIsBarAvaialble;
     private TextInputLayout tipBarcode;
     private TextView tvHeaderLabel;
     private RelativeLayout btnPhoto1,btnPhoto2,btnPhoto3;
@@ -89,7 +90,7 @@ public class AddProductActivity extends BaseImageActivity {
         imageList.add("no");
         imageList.add("no");
         flag = getIntent().getStringExtra("flag");
-        tvHeaderLabel = findViewById(R.id.text_header_label);
+        tvHeaderLabel = findViewById(R.id.text_sub_header);
         editTextName = findViewById(R.id.edit_product_name);
         editTextCode = findViewById(R.id.edit_product_code);
         editTextBarCode = findViewById(R.id.edit_product_barcode);
@@ -149,7 +150,11 @@ public class AddProductActivity extends BaseImageActivity {
                     // Set the hint text color gray
                     tv.setTextColor(getResources().getColor(R.color.grey500));
                 }else{
-                    tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
                 }
                 return view;
             }
@@ -157,12 +162,21 @@ public class AddProductActivity extends BaseImageActivity {
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
+                if(isDarkTheme){
+                    view.setBackgroundColor(getResources().getColor(R.color.dark_color));
+                }else{
+                    view.setBackgroundColor(getResources().getColor(R.color.white));
+                }
                 TextView tv = (TextView) view;
                 if(position == 0){
                     // Set the hint text color gray
                     tv.setTextColor(getResources().getColor(R.color.grey500));
                 }else{
-                    tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
                 }
                 tv.setPadding(20,20,20,20);
                 return view;
@@ -192,7 +206,11 @@ public class AddProductActivity extends BaseImageActivity {
                     // Set the hint text color gray
                     tv.setTextColor(getResources().getColor(R.color.grey500));
                 }else{
-                    tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
                 }
                 return view;
             }
@@ -200,12 +218,21 @@ public class AddProductActivity extends BaseImageActivity {
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
+                if(isDarkTheme){
+                    view.setBackgroundColor(getResources().getColor(R.color.dark_color));
+                }else{
+                    view.setBackgroundColor(getResources().getColor(R.color.white));
+                }
                 TextView tv = (TextView) view;
                 if(position == 0){
                     // Set the hint text color gray
                     tv.setTextColor(getResources().getColor(R.color.grey500));
                 }else{
-                    tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
                 }
                 tv.setPadding(20,20,20,20);
                 return view;
