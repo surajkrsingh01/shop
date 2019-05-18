@@ -308,7 +308,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class MyProductListType1ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
 
-        private TextView textBarCode,textName,textMrp;
+        private TextView textBarCode,textName,textMrp,textStatus;
         private ImageView imageView,imageMenu;
         private Button btnAddToCart;
         private View rootView;
@@ -319,6 +319,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             textBarCode=itemView.findViewById(R.id.text_bar_code);
             textName=itemView.findViewById(R.id.text_name);
             textMrp=itemView.findViewById(R.id.text_mrp);
+            textStatus=itemView.findViewById(R.id.text_status);
             btnAddToCart=itemView.findViewById(R.id.btn_add_to_cart);
             imageView=itemView.findViewById(R.id.image_view);
             imageMenu=itemView.findViewById(R.id.image_menu);
@@ -724,6 +725,23 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             myViewHolder.textName.setText(item.getProdName());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
             myViewHolder.textMrp.setText("MRP: Rs "+Utility.numberFormat(item.getProdSp()));
+
+            if(item.getIsBarCodeAvailable().equals("Y")){
+                if(item.getBarcodeList() != null && item.getBarcodeList().size() > 0){
+                    myViewHolder.textStatus.setVisibility(View.GONE);
+                }else{
+                    myViewHolder.textStatus.setText("Out of stock");
+                    myViewHolder.textStatus.setVisibility(View.GONE);
+
+                }
+            }else{
+                if(item.getProdQoh() == 0){
+                    myViewHolder.textStatus.setText("Out of stock");
+                    myViewHolder.textStatus.setVisibility(View.GONE);
+                }else{
+                    myViewHolder.textStatus.setVisibility(View.GONE);
+                }
+            }
 
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);

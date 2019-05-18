@@ -71,18 +71,18 @@ public class SearchProductAdapter extends RecyclerView.Adapter<SearchProductAdap
 
             if(flag.equals("searchCartProduct")){
                 if(item.getIsBarCodeAvailable().equals("Y")){
-                    if(item.getBarcodeList() == null || item.getBarcodeList().size() > 0){
+                    if(item.getBarcodeList() != null && item.getBarcodeList().size() > 0){
                         myViewHolder.textStatus.setVisibility(View.GONE);
                     }else{
                         myViewHolder.textStatus.setText("Out of stock");
-                        myViewHolder.textStatus.setVisibility(View.VISIBLE);
+                        myViewHolder.textStatus.setVisibility(View.GONE);
                     }
                 }else{
                     if(item.getProdQoh() > 0){
                         myViewHolder.textStatus.setVisibility(View.GONE);
                     }else{
                         myViewHolder.textStatus.setText("Out of stock");
-                        myViewHolder.textStatus.setVisibility(View.VISIBLE);
+                        myViewHolder.textStatus.setVisibility(View.GONE);
                     }
                 }
             }

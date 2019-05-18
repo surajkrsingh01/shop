@@ -514,9 +514,10 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     @Override
     public void onItemClicked(int prodId) {
 
-        Log.i(TAG,"item clicked "+prodId+" "+dbHelper.getBarCodesForCart(prodId));
+        Log.i(TAG,"item clicked "+prodId+" "+dbHelper.getBarCodesForCart(prodId).size());
 
         MyProductItem item = dbHelper.getProductDetails(prodId);
+
         if(item.getIsBarCodeAvailable().equals("Y")){
             item.setBarcodeList(dbHelper.getBarCodesForCart(prodId));
         }
