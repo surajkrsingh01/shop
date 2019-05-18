@@ -343,11 +343,17 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        Intent intent = new Intent(context,AddProductActivity.class);
-                        intent.putExtra("flag","editProduct");
-                        intent.putExtra("type","editProduct");
-                        intent.putExtra("product",myProductItem);
-                        ((Activity) context).startActivityForResult(intent,2);
+                        if(item.getTitle().equals("action_edit")){
+                            Intent intent = new Intent(context,AddProductActivity.class);
+                            intent.putExtra("flag","editProduct");
+                            intent.putExtra("type","editProduct");
+                            intent.putExtra("product",myProductItem);
+                            ((Activity) context).startActivityForResult(intent,2);
+                        }else{
+                            itemList.remove(getAdapterPosition());
+                            notifyItemRemoved(getAdapterPosition());
+                        }
+
                         return false;
                     }
                 });

@@ -8,5 +8,11 @@
         android:title="Edit"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_remove"
+        android:orderInCategory="100"
+        android:title="Remove"
+        app:showAsAction="always" />
+
 
 </menu>

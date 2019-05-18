@@ -98,6 +98,7 @@ public class Constants {
     public static String CREATE_CATEGORY="/api/categories/addCategoryRetailer";
     public static String DELETE_CATEGORY="/api/categories/delete";
     public static String GET_SUB_CATEGORY="/api/categories/subcategories";
+    public static String DELETE_SUB_CATEGORY="/api/categories/subcategories/delete";
     public static String CREATE_SUB_CATEGORY="/api/categories/addSubCategoryRetailer";
     public static String GET_PRODUCTS="/api/products/productslist";
     public static String GET_PRODUCTS_WITH_BAR="/api/products/productslistbar";

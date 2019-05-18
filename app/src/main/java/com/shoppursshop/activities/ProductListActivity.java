@@ -89,9 +89,6 @@ public class ProductListActivity extends BaseActivity {
         // staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-      /*  int resId = R.anim.layout_animation_slide_from_bottom;
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
-        recyclerView.setLayoutAnimation(animation);*/
         myItemAdapter=new ProductAdapter(this,itemList,"productList");
         myItemAdapter.setFlag(getIntent().getStringExtra("flag"));
         myItemAdapter.setSubCatName(subCatName);

@@ -75,10 +75,10 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
             Intent intent = new Intent(this, MyCategoriesActivity.class);
             startActivity(intent);
         }else if(name.equals("Store Sub Category")){
-            Intent intent = new Intent(this, AddSubCatActivity.class);
+            Intent intent = new Intent(this, MySubCategoriesActivity.class);
             startActivity(intent);
         }else if(name.equals("Add Products to Store")){
-            Intent intent = new Intent(this, SyncProductActivity.class);
+            Intent intent = new Intent(this, MyProductListActivity.class);
             startActivity(intent);
         }else if(name.equals("Customer Orders")){
             Intent intent = new Intent(this, MyOrdersActivity.class);

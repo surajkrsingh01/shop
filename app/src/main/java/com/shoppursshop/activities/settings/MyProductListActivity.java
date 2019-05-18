@@ -1,15 +1,32 @@
 package com.shoppursshop.activities.settings;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 
 import com.shoppursshop.R;
+import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.adapters.ProductAdapter;
+import com.shoppursshop.adapters.SimpleItemAdapter;
 
-public class MyProductListActivity extends AppCompatActivity {
+import java.util.List;
+
+public class MyProductListActivity extends NetworkBaseActivity {
+
+    private RecyclerView recyclerView;
+    private List<Object> itemList;
+    private ProductAdapter itemAdapter;
+    private int counter;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,14 +37,69 @@ public class MyProductListActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        itemList = dbHelper.getProducts(limit,offset);
+        recyclerView=findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        final RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
+        // staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        itemAdapter=new ProductAdapter(this,itemList,"productList");
+        itemAdapter.setFlag(getIntent().getStringExtra("flag"));
+        itemAdapter.setSubCatName("");
+        recyclerView.setAdapter(itemAdapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(isScroll){
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    Log.i(TAG,"visible "+visibleItemCount+" total "+totalItemCount);
+                    pastVisibleItems = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+                    Log.i(TAG,"total visible "+(visibleItemCount+pastVisibleItems));
+
+                    if (loading) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            loading = false;
+                            offset = limit + offset;
+                            List<Object> nextItemList = dbHelper.getProducts(limit,offset);
+                            for(Object ob : nextItemList){
+                                itemList.add(ob);
+                               // itemAdapter.add(ob);
+                            }
+                            if(nextItemList.size() < limit){
+                                isScroll = false;
+                            }
+                            if(nextItemList.size() > 0){
+                                recyclerView.post(new Runnable() {
+                                    public void run() {
+                                        itemAdapter.notifyItemRangeInserted(offset,limit);
+                                        loading = true;
+                                    }
+                                });
+                                Log.d(TAG, "NEXT ITEMS LOADED");
+                            }else{
+                                Log.d(TAG, "NO ITEMS FOUND");
+                            }
+
+                        }
+                    }
+                }
+            }
+        });
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MyProductListActivity.this, SyncProductActivity.class);
+                startActivityForResult(intent,2);
             }
         });
     }
+
+
 
 }
