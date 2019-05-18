@@ -295,6 +295,7 @@
 
                <RelativeLayout
                    android:id="@+id/relative_igst"
+                   android:visibility="gone"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content">
 
@@ -323,7 +324,7 @@
 
                 <RelativeLayout
                     android:id="@+id/relative_sgst"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -352,7 +353,7 @@
 
                 <RelativeLayout
                     android:id="@+id/relative_cgst"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 

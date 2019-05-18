@@ -122,6 +122,8 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     tvSubTotAmt.setText(Utility.numberFormat(subTotal));
                     tvGrossTotAmt.setText(Utility.numberFormat(subTotal));
                     tvTotIgst.setText(Utility.numberFormat(Float.parseFloat(jsonObject.getString("invTotIGST"))));
+                    tvTotSgst.setText(Utility.numberFormat(Float.parseFloat(jsonObject.getString("invTotSGST"))));
+                    tvTotCgst.setText(Utility.numberFormat(Float.parseFloat(jsonObject.getString("invTotCGST"))));
                     tvShortExcess.setText(Utility.numberFormat(Float.parseFloat(jsonObject.getString("invTotDisAmount"))));
                     float netPayable = (float) Math.round(jsonObject.getDouble("invTotNetPayable"));
                     tvNetPayableAmt.setText(Utility.numberFormat(netPayable));

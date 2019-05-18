@@ -212,7 +212,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             tvItemCount.setText(itemList.size()+" items");
         }
 
-        tvItemPrice.setText("Rs "+String.format("%.02f",dbHelper.getTotalPriceCart()));
+        tvItemPrice.setText("Rs "+Utility.numberFormat(dbHelper.getTotalPriceCart()));
 
         tvCheckout.setVisibility(View.VISIBLE);
 
@@ -350,7 +350,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                                 }
                             }
                         }
-                        showMyDialog("Take Cash Rs "+String.format("%.02f",totalPrice));
+                        showMyDialog("Take Cash Rs "+Utility.numberFormat(totalPrice));
                     }else{
                         Log.d(TAG, "orderId "+orderId );
                         Intent intent = new Intent(CartActivity.this, MPayActivity.class);

@@ -180,12 +180,12 @@ public class MyCategoriesActivity extends NetworkBaseActivity implements MyItemC
 
         if(counter == 0){
             menu.getItem(0).setVisible(false);
-            setTitle(getResources().getString(R.string.title_activity_my_categories));
+           // setTitle(getResources().getString(R.string.title_activity_my_categories));
         }else if(counter == 1){
             menu.getItem(0).setVisible(true);
-            setTitle(""+counter);
+           // setTitle(""+counter);
         }else{
-            setTitle(""+counter);
+          //  setTitle(""+counter);
         }
 
         itemAdapter.notifyItemChanged(position);
