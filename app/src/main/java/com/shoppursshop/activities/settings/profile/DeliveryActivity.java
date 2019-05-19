@@ -9,7 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
@@ -28,7 +30,6 @@ public class DeliveryActivity extends NetworkBaseActivity {
 
     private Switch switchDelivery;
     private EditText editTextMinAmount;
-    private Button btnUpdate;
     private int amount;
 
     @Override
@@ -39,6 +40,7 @@ public class DeliveryActivity extends NetworkBaseActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initFooterAction(this);
         init();
         setToolbarTheme();
     }
@@ -46,7 +48,7 @@ public class DeliveryActivity extends NetworkBaseActivity {
     private void init(){
         switchDelivery = findViewById(R.id.switch_delivery);
         editTextMinAmount = findViewById(R.id.edit_min_delivery_amount);
-        btnUpdate = findViewById(R.id.btn_update);
+        RelativeLayout btnUpdate = findViewById(R.id.relative_footer_action);
 
         boolean delivery = sharedPreferences.getBoolean(Constants.IS_DELIVERY_AVAILABLE,false);
         if(delivery){

@@ -124,7 +124,7 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
             String[] nameArray = name.split(" ");
             initials = nameArray[0].substring(0,1)+nameArray[1].substring(0,1);
         }else{
-            initials = name.substring(0,1);
+            initials = name.substring(0,2);
         }
 
         textViewInitials.setText(initials);

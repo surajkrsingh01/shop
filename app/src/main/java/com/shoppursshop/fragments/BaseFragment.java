@@ -2,6 +2,7 @@ package com.shoppursshop.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +18,9 @@ import android.widget.TextView;
 
 import com.shoppursshop.R;
 import com.shoppursshop.activities.BaseActivity;
+import com.shoppursshop.activities.settings.profile.AddressActivity;
+import com.shoppursshop.activities.settings.profile.BasicProfileActivity;
+import com.shoppursshop.activities.settings.profile.DeliveryActivity;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.utilities.Constants;
 
@@ -44,6 +48,8 @@ public class BaseFragment extends Fragment {
         sharedPreferences=getActivity().getSharedPreferences(Constants.MYPREFERENCEKEY,getActivity().MODE_PRIVATE);
         editor=sharedPreferences.edit();
 
+        colorTheme = sharedPreferences.getInt(Constants.COLOR_THEME,getActivity().getResources().getColor(R.color.red_500));
+
         dbHelper=new DbHelper(getActivity());
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setCanceledOnTouchOutside(false);
@@ -58,6 +64,18 @@ public class BaseFragment extends Fragment {
             }
         };
         progressDialog.setOnKeyListener(keyListener);
+    }
+
+    public void initFooterAction(final Context context,View view){
+        view.findViewById(R.id.relative_footer_action).setBackgroundColor(colorTheme);
+        TextView tv = view.findViewById(R.id.text_action);
+        if(colorTheme == getResources().getColor(R.color.white)){
+            tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+        }else{
+            tv.setTextColor(getResources().getColor(R.color.white));
+        }
+
+        tv.setText("Update Bank Details");
     }
 
     public void showMyDialog(String msg) {

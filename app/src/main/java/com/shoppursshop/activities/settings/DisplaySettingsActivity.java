@@ -111,7 +111,7 @@ public class DisplaySettingsActivity extends BaseActivity implements View.OnClic
             }
         });
 
-        setColorTheme();
+        setFooterColorTheme();
 
         relativeLayoutRed.setOnClickListener(this);
         relativeLayoutBlue.setOnClickListener(this);
@@ -169,7 +169,8 @@ public class DisplaySettingsActivity extends BaseActivity implements View.OnClic
         drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
     }
 
-    private void setColorTheme(){
+
+    public void setFooterColorTheme(){
         if(colorTheme == getResources().getColor(R.color.red_500)){
             imageViewTemp = imageViewRed;
             imageViewRed.setImageResource(R.drawable.ic_check_black_24dp);
@@ -185,10 +186,10 @@ public class DisplaySettingsActivity extends BaseActivity implements View.OnClic
         }else if(colorTheme == getResources().getColor(R.color.yellow500)){
             imageViewTemp = imageViewYellow;
             imageViewYellow.setImageResource(R.drawable.ic_check_black_24dp);
-        }else if(colorTheme == getResources().getColor(R.color.amber500)){
+        }else if(colorTheme == getResources().getColor(R.color.amber600)){
             imageViewTemp = imageViewAmber;
             imageViewAmber.setImageResource(R.drawable.ic_check_black_24dp);
-        }else if(colorTheme == getResources().getColor(R.color.grey500)){
+        }else if(colorTheme == getResources().getColor(R.color.grey600)){
             imageViewTemp = imageViewGrey;
             imageViewGrey.setImageResource(R.drawable.ic_check_black_24dp);
         }else if(colorTheme == getResources().getColor(R.color.white)){

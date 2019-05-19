@@ -35,7 +35,7 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         init();
-        initFooter(this,4);
+        //initFooter(this,4);
     }
 
     private void init(){
@@ -61,6 +61,13 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
         itemAdapter=new SettingsAdapter(this,itemList);
         itemAdapter.setMyItemClickListener(this);
         recyclerView.setAdapter(itemAdapter);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        initFooter(this,4);
     }
 
     @Override

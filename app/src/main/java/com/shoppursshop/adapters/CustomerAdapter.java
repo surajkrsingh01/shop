@@ -328,7 +328,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 String[] name = item.getName().split(" ");
                 initials = name[0].substring(0,1)+name[1].substring(0,1);
             }else{
-                initials = item.getName().substring(0,1);
+                initials = item.getName().substring(0,2);
             }
 
             myViewHolder.textInitial.setText(initials);

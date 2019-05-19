@@ -62,6 +62,7 @@
                 android:layout_marginTop="@dimen/view_vertical_margin"
                 android:paddingLeft="@dimen/view_horizontal_margin"
                 android:paddingRight="@dimen/view_horizontal_margin"
+                android:textAllCaps="false"
                 android:layout_below="@+id/text_header"
                 android:textColor="?attr/primaryTextColor"
                 android:textStyle="bold"

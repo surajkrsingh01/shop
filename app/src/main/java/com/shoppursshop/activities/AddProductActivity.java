@@ -55,7 +55,8 @@ public class AddProductActivity extends BaseImageActivity {
     private AppCompatCheckBox checkBoxIsBarAvaialble;
     private TextInputLayout tipBarcode;
     private TextView tvHeaderLabel;
-    private RelativeLayout btnPhoto1,btnPhoto2,btnPhoto3;
+    private RelativeLayout btnPhoto1,btnPhoto2,btnPhoto3,relativeLayoutAction;
+    private TextView tvAction;
     private ImageView imageView1,imageView2,imageView3;
     private Spinner spinnerCategory,spinnerSubCategory;
     List<SpinnerItem> categoryListObject,subCatListObject;
@@ -70,7 +71,6 @@ public class AddProductActivity extends BaseImageActivity {
     private JSONObject dataObject;
     private boolean scanSelection;
     private int imagePosition;
-    private Button btnAddProduct;
 
     private MyProductItem myProductItem;
 
@@ -81,6 +81,7 @@ public class AddProductActivity extends BaseImageActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        initFooterAction(this);
         init();
     }
 
@@ -112,12 +113,11 @@ public class AddProductActivity extends BaseImageActivity {
         imageView1 = findViewById(R.id.image_view_1);
         imageView2 = findViewById(R.id.image_view_2);
         imageView3 = findViewById(R.id.image_view_3);
-        btnAddProduct = findViewById(R.id.btn_add);
+        relativeLayoutAction = findViewById(R.id.relative_footer_action);
+        tvAction = findViewById(R.id.text_action);
         btnPhoto1 = findViewById(R.id.relative_image_1);
         btnPhoto2 = findViewById(R.id.relative_image_2);
         btnPhoto3 = findViewById(R.id.relative_image_3);
-        btnAddProduct = findViewById(R.id.btn_add);
-        btnAddProduct = findViewById(R.id.btn_add);
         spinnerCategory = findViewById(R.id.spinner_category);
         spinnerSubCategory = findViewById(R.id.spinner_sub_category);
         categoryListObject = dbHelper.getCategoriesAddProduct();
@@ -347,7 +347,6 @@ public class AddProductActivity extends BaseImageActivity {
             editTextCGST.setText(""+myProductItem.getProdCgst());
             editTextIGST.setText(""+myProductItem.getProdIgst());
             editTextSGST.setText(""+myProductItem.getProdSgst());
-            btnAddProduct.setText("Update");
             tvHeaderLabel.setText("Update");
             setCatSelection(dbHelper.getCategoryName(myProductItem.getProdCatId()));
 
@@ -438,7 +437,7 @@ public class AddProductActivity extends BaseImageActivity {
             }
         });
 
-        btnAddProduct.setOnClickListener(new View.OnClickListener() {
+        relativeLayoutAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(ConnectionDetector.isNetworkAvailable(AddProductActivity.this)){
@@ -452,7 +451,14 @@ public class AddProductActivity extends BaseImageActivity {
             }
         });
 
-        initFooter(this,1);
+        if(flag.equals("editProduct")){
+            tvAction.setText("Update Product");
+        }else{
+            tvAction.setText("Add Product");
+        }
+
+
+        //initFooter(this,1);
 
     }
 

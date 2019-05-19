@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -42,15 +43,10 @@ import java.util.Map;
 public class CustomerInfoActivity extends NetworkBaseActivity implements MyListItemClickListener {
 
     private EditText editTextMobile,editTextName;
-    private Button btnContinue,btnBack;
+    private RelativeLayout btnContinue;
     private boolean isCustomerRegistered,infoChecked;
 
     private ImageView imageViewScan,imageViewSearch;
-
-    private TextView tvCustomerHeader;
-    private RecyclerView recyclerView;
-    private CustomerAdapter myItemAdapter;
-    private List<Object> itemList;
 
     private String mobile,name,custCode,custImage;
     private int custId;
@@ -65,7 +61,8 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         init();
-        initFooter(this,0);
+        initFooterAction(this);
+       // initFooter(this,0);
 
     }
 
@@ -74,18 +71,7 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
         imageViewSearch = findViewById(R.id.image_search);
         editTextMobile = findViewById(R.id.edit_mobile);
         editTextName = findViewById(R.id.edit_full_name);
-        btnContinue = findViewById(R.id.btn_continue);
-        btnBack = findViewById(R.id.btn_back);
-        tvCustomerHeader = findViewById(R.id.text_customer_header);
-
-        itemList = new ArrayList<>();
-        recyclerView=findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        myItemAdapter=new CustomerAdapter(this,itemList,"customerList");
-        recyclerView.setAdapter(myItemAdapter);
+        btnContinue = findViewById(R.id.relative_footer_action);
 
         editTextMobile.setText("9958736910");
 
@@ -104,7 +90,7 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
             }
         });
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        /*btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 infoChecked = false;
@@ -115,7 +101,7 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
                 btnBack.setVisibility(View.GONE);
                 btnContinue.setText("Continue");
             }
-        });
+        });*/
 
         imageViewScan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,19 +135,9 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
         editTextMobile.setText("");
         editTextName.setText("");
         editTextName.setVisibility(View.GONE);
-        btnBack.setVisibility(View.GONE);
-        btnContinue.setText("Continue");
+      //  btnBack.setVisibility(View.GONE);
+     //   btnContinue.setText("Continue");
 
-    }
-
-    private void getItemList(){
-        Map<String,String> params=new HashMap<>();
-        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
-        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
-        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
-        String url=getResources().getString(R.string.url)+Constants.CUSTOMER_LIST;
-        showProgress(true);
-        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"customerList");
     }
 
     private void checkCustomerInfo(){
@@ -230,14 +206,14 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
                      infoChecked = true;
                      editTextName.setVisibility(View.VISIBLE);
                      editTextName.setText(name);
-                     btnBack.setVisibility(View.VISIBLE);
+                    // btnBack.setVisibility(View.VISIBLE);
                 }else{
                     if(response.getInt("result") == 1){
                         isCustomerRegistered = false;
                         infoChecked = true;
-                        btnContinue.setText("Register");
+                       // btnContinue.setText("Register");
                         editTextName.setVisibility(View.VISIBLE);
-                        btnBack.setVisibility(View.VISIBLE);
+                       // btnBack.setVisibility(View.VISIBLE);
                     }
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }
@@ -249,35 +225,6 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
                       showMyDialog(response.getString("message"));
                     }else {
                         DialogAndToast.showDialog(response.getString("message"), this);
-                    }
-                }
-            }else if (apiName.equals("customerList")) {
-                if (response.getBoolean("status")) {
-                    JSONArray dataArray = response.getJSONArray("result");
-                    JSONObject jsonObject = null;
-                    int len = dataArray.length();
-                    MyCustomer myCustomer= null;
-                    itemList.clear();
-                    for (int i = 0; i < len; i++) {
-                        jsonObject = dataArray.getJSONObject(i);
-                        myCustomer = new MyCustomer();
-                        myCustomer.setId(jsonObject.getString("id"));
-                        myCustomer.setCode(jsonObject.getString("code"));
-                        myCustomer.setName(jsonObject.getString("name"));
-                        myCustomer.setMobile(jsonObject.getString("mobileNo"));
-                        myCustomer.setEmail(jsonObject.getString("email"));
-                        myCustomer.setImage(jsonObject.getString("photo"));
-                        myCustomer.setIsFav(jsonObject.getString("isFav"));
-                        myCustomer.setRatings((float)jsonObject.getDouble("ratings"));
-                        myCustomer.setLocalImage(R.drawable.author_1);
-                        itemList.add(myCustomer);
-                    }
-
-                    if(itemList.size() == 0){
-                        tvCustomerHeader.setVisibility(View.GONE);
-                    }else{
-                        tvCustomerHeader.setVisibility(View.VISIBLE);
-                        myItemAdapter.notifyDataSetChanged();
                     }
                 }
             }

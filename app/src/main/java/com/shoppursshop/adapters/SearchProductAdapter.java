@@ -159,7 +159,7 @@ public class SearchProductAdapter extends RecyclerView.Adapter<SearchProductAdap
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        if(item.getTitle().equals("action_edit")){
+                        if(item.getTitle().equals("Edit")){
                             Intent intent = new Intent(context,AddProductActivity.class);
                             intent.putExtra("flag","editProduct");
                             intent.putExtra("type","editProduct");

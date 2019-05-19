@@ -37,7 +37,7 @@
         android:layout_height="wrap_content" />
 
     <ScrollView
-        android:layout_above="@+id/linear_footer"
+        android:layout_above="@+id/relative_footer_action"
         android:layout_below="@+id/text_sub_header"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
@@ -49,6 +49,7 @@
         android:scrollbars="none">
 
         <LinearLayout
+            android:focusableInTouchMode="true"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -146,7 +147,7 @@
                 android:layout_marginBottom="@dimen/edit_text_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/solidPrimaryStrokeBorderBackground"
+                android:background="?attr/borderBottomSolidBackground"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp">
 
@@ -175,7 +176,7 @@
                 android:layout_marginTop="@dimen/edit_text_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/solidPrimaryStrokeBorderBackground"
+                android:background="?attr/borderBottomSolidBackground"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp">
 
@@ -212,7 +213,6 @@
                     android:textColorHint="?attr/secondaryTextColor"
                     android:inputType="textCapWords"
                     android:imeOptions="actionNext"
-                    android:theme="@style/MyViewTheme"
                     android:textSize="@dimen/edit_text_small_text_size"
                     android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                     android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -245,7 +245,6 @@
                         android:textColor="?attr/primaryTextColor"
                         android:textColorHint="?attr/secondaryTextColor"
                         android:imeOptions="actionNext"
-                        android:theme="@style/MyViewTheme"
                         android:textSize="@dimen/edit_text_small_text_size"
                         android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                         android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -282,7 +281,6 @@
                     android:textColorHint="?attr/secondaryTextColor"
                     android:inputType="text"
                     android:imeOptions="actionNext"
-                    android:theme="@style/MyViewTheme"
                     android:textSize="@dimen/edit_text_small_text_size"
                     android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                     android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -307,7 +305,6 @@
                     android:textColor="?attr/primaryTextColor"
                     android:textColorHint="?attr/secondaryTextColor"
                     android:imeOptions="actionNext"
-                    android:theme="@style/MyViewTheme"
                     android:textSize="@dimen/edit_text_small_text_size"
                     android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                     android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -338,7 +335,6 @@
                         android:textColorHint="?attr/secondaryTextColor"
                         android:inputType="numberDecimal"
                         android:imeOptions="actionNext"
-                        android:theme="@style/MyViewTheme"
                         android:textSize="@dimen/edit_text_small_text_size"
                         android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                         android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -364,7 +360,6 @@
                         android:textColorHint="?attr/secondaryTextColor"
                         android:inputType="numberDecimal"
                         android:imeOptions="actionNext"
-                        android:theme="@style/MyViewTheme"
                         android:textSize="@dimen/edit_text_small_text_size"
                         android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                         android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -399,7 +394,6 @@
                         android:textColorHint="?attr/secondaryTextColor"
                         android:inputType="number"
                         android:imeOptions="actionNext"
-                        android:theme="@style/MyViewTheme"
                         android:textSize="@dimen/edit_text_small_text_size"
                         android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                         android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -425,7 +419,6 @@
                         android:textColorHint="?attr/secondaryTextColor"
                         android:inputType="number"
                         android:imeOptions="actionNext"
-                        android:theme="@style/MyViewTheme"
                         android:textSize="@dimen/edit_text_small_text_size"
                         android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                         android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -460,7 +453,6 @@
                         android:textColorHint="?attr/secondaryTextColor"
                         android:inputType="none"
                         android:focusable="false"
-                        android:theme="@style/MyViewTheme"
                         android:textSize="@dimen/edit_text_small_text_size"
                         android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                         android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -486,7 +478,6 @@
                         android:textColorHint="?attr/secondaryTextColor"
                         android:inputType="none"
                         android:focusable="false"
-                        android:theme="@style/MyViewTheme"
                         android:textSize="@dimen/edit_text_small_text_size"
                         android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                         android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -513,7 +504,6 @@
                     android:textColorHint="?attr/secondaryTextColor"
                     android:inputType="text"
                     android:imeOptions="actionNext"
-                    android:theme="@style/MyViewTheme"
                     android:textSize="@dimen/edit_text_small_text_size"
                     android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                     android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -538,7 +528,6 @@
                     android:textColorHint="?attr/secondaryTextColor"
                     android:inputType="text"
                     android:imeOptions="actionNext"
-                    android:theme="@style/MyViewTheme"
                     android:textSize="@dimen/edit_text_small_text_size"
                     android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                     android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -563,7 +552,6 @@
                     android:textColorHint="?attr/secondaryTextColor"
                     android:inputType="text"
                     android:imeOptions="actionNext"
-                    android:theme="@style/MyViewTheme"
                     android:textSize="@dimen/edit_text_small_text_size"
                     android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                     android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -578,6 +566,7 @@
 
             <LinearLayout
                 android:layout_marginTop="@dimen/edit_text_margin"
+                android:layout_marginBottom="40dp"
                 android:orientation="horizontal"
                 android:weightSum="3"
                 android:layout_width="match_parent"
@@ -596,7 +585,6 @@
                         android:textColorHint="?attr/secondaryTextColor"
                         android:inputType="text"
                         android:imeOptions="actionNext"
-                        android:theme="@style/MyViewTheme"
                         android:textSize="@dimen/edit_text_small_text_size"
                         android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                         android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -622,7 +610,6 @@
                         android:textColorHint="?attr/secondaryTextColor"
                         android:inputType="text"
                         android:imeOptions="actionNext"
-                        android:theme="@style/MyViewTheme"
                         android:textSize="@dimen/edit_text_small_text_size"
                         android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                         android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -648,7 +635,6 @@
                         android:textColorHint="?attr/secondaryTextColor"
                         android:inputType="text"
                         android:imeOptions="actionNext"
-                        android:theme="@style/MyViewTheme"
                         android:textSize="@dimen/edit_text_small_text_size"
                         android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                         android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -700,20 +686,10 @@
 
             </RelativeLayout>
 
-            <Button
-                android:id="@+id/btn_add"
-                android:layout_marginTop="40dp"
-                android:text="@string/add"
-                android:textColor="@color/white"
-                android:textSize="@dimen/large_text_size"
-                android:background="@drawable/accent_2_solid_round_corner_background"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
         </LinearLayout>
 
     </ScrollView>
 
-    <include layout="@layout/footer_layout"/>
+    <include layout="@layout/footer_action_layout"/>
 
 </RelativeLayout>

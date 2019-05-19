@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.bumptech.glide.Glide;
@@ -38,7 +39,6 @@ public class BasicProfileActivity extends BaseImageActivity {
     private CircleImageView profileImage;
     private RelativeLayout rlImageLayout;
     private String imageBase64;
-    private Button btnUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +47,8 @@ public class BasicProfileActivity extends BaseImageActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        initFooterAction(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTheme(R.style.Dark);
         init();
         setToolbarTheme();
     }
@@ -62,7 +62,7 @@ public class BasicProfileActivity extends BaseImageActivity {
         etMobile = findViewById(R.id.edit_mobile);
         profileImage = findViewById(R.id.profile_image);
         rlImageLayout = findViewById(R.id.relative_image);
-        btnUpdate = findViewById(R.id.btn_update);
+        RelativeLayout btnUpdate = findViewById(R.id.relative_footer_action);
 
         etUsername.setText(sharedPreferences.getString(Constants.FULL_NAME,""));
         etShopName.setText(sharedPreferences.getString(Constants.SHOP_NAME,""));

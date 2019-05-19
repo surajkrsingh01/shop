@@ -99,7 +99,13 @@ public class BankFragment extends NetworkBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView =  inflater.inflate(R.layout.fragment_bank, container, false);
+        if(mParam1.equals("update")){
+            rootView =  inflater.inflate(R.layout.bank_fragment_update, container, false);
+        }else{
+            rootView =  inflater.inflate(R.layout.fragment_bank, container, false);
+        }
+
+        initFooterAction(getActivity(),rootView);
         init();
 
        /* editor.putString(Constants.MOBILE_NO,"9718181501");
@@ -117,8 +123,37 @@ public class BankFragment extends NetworkBaseFragment {
         // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
         requestOptions.centerCrop();
         requestOptions.skipMemoryCache(false);
-        btnSubmit=(Button)rootView.findViewById(R.id.btn_submit);
-        btnBack=(Button)rootView.findViewById(R.id.btn_back);
+        RelativeLayout relativeLayout = null;
+        if(mParam1.equals("update")){
+            relativeLayout = rootView.findViewById(R.id.relative_footer_action);
+            relativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    myUser = new MyUser();
+                    // mListener.onFragmentInteraction(myUser,RegisterActivity.BANK);
+                    attemptUpdateBankDetails();
+                }
+            });
+        }else{
+            btnSubmit=(Button)rootView.findViewById(R.id.btn_submit);
+            btnBack=(Button)rootView.findViewById(R.id.btn_back);
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    myUser = new MyUser();
+                    // mListener.onFragmentInteraction(myUser,RegisterActivity.BANK);
+                    attemptUpdateBankDetails();
+                }
+            });
+
+            btnBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
+
 
         textViewHeaderLabel = rootView.findViewById(R.id.text_bank_info_label);
         rvCheque = rootView.findViewById(R.id.relative_cheque);
@@ -148,26 +183,12 @@ public class BankFragment extends NetworkBaseFragment {
 
 
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                myUser = new MyUser();
-               // mListener.onFragmentInteraction(myUser,RegisterActivity.BANK);
-                 attemptUpdateBankDetails();
-            }
-        });
+
 
         rvCheque.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.onFragmentInteraction("image",0);
-            }
-        });
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
             }
         });
     }

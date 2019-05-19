@@ -20,6 +20,9 @@ import android.widget.TextView;
 
 import com.shoppursshop.R;
 import com.shoppursshop.activities.settings.SettingActivity;
+import com.shoppursshop.activities.settings.profile.AddressActivity;
+import com.shoppursshop.activities.settings.profile.BasicProfileActivity;
+import com.shoppursshop.activities.settings.profile.DeliveryActivity;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.utilities.Constants;
 
@@ -54,6 +57,8 @@ public class BaseActivity extends AppCompatActivity {
             setTheme(R.style.Light);
         }
 
+        setColorTheme();
+
         dbHelper=new DbHelper(this);
         progressDialog = new ProgressDialog(BaseActivity.this);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -73,10 +78,32 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
-
+        colorTheme = sharedPreferences.getInt(Constants.COLOR_THEME,getResources().getColor(R.color.red_500));
         boolean isDarkTheme = sharedPreferences.getBoolean(Constants.IS_DARK_THEME,false);
         if(this.isDarkTheme != isDarkTheme)
             recreate();
+    }
+
+    public void setColorTheme(){
+        if(colorTheme == getResources().getColor(R.color.red_500)){
+            getTheme().applyStyle(R.style.MyRedViewTheme, true);
+        }else if(colorTheme == getResources().getColor(R.color.blue500)){
+            getTheme().applyStyle(R.style.MyBlueViewTheme, true);
+        }else if(colorTheme == getResources().getColor(R.color.green500)){
+            getTheme().applyStyle(R.style.MyGreenViewTheme, true);
+        }else if(colorTheme == getResources().getColor(R.color.pink500)){
+            getTheme().applyStyle(R.style.MyPinkViewTheme, true);
+        }else if(colorTheme == getResources().getColor(R.color.yellow500)){
+            getTheme().applyStyle(R.style.MyYellowViewTheme, true);
+        }else if(colorTheme == getResources().getColor(R.color.amber600)){
+            getTheme().applyStyle(R.style.MyAmberViewTheme, true);
+        }else if(colorTheme == getResources().getColor(R.color.grey600)){
+            getTheme().applyStyle(R.style.MyGreyViewTheme, true);
+        }else if(colorTheme == getResources().getColor(R.color.white)){
+            getTheme().applyStyle(R.style.MyWhiteViewTheme, true);
+        }else if(colorTheme == getResources().getColor(R.color.black)){
+            getTheme().applyStyle(R.style.MyBlackViewTheme, true);
+        }
     }
 
     public void setToolbarTheme(){
@@ -96,6 +123,30 @@ public class BaseActivity extends AppCompatActivity {
         appBarLayout.setBackgroundColor(backColor);
         toolbar.setBackgroundColor(backColor);
         toolbar.setTitleTextColor(textColor);
+    }
+
+    public void initFooterAction(final  Context context){
+        findViewById(R.id.relative_footer_action).setBackgroundColor(colorTheme);
+        TextView tv = findViewById(R.id.text_action);
+        if(colorTheme == getResources().getColor(R.color.white)){
+            tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+        }else{
+            tv.setTextColor(getResources().getColor(R.color.white));
+        }
+
+        if (context instanceof DeliveryActivity) {
+            tv.setText("Update Delivery Details");
+        }else if (context instanceof BasicProfileActivity) {
+            tv.setText("Update Profile");
+        }else if (context instanceof AddressActivity) {
+            tv.setText("Update Address");
+        }else if (context instanceof CustomerInfoActivity) {
+            tv.setText("Continue");
+        }
+    }
+
+    public void changeViewBackgroundColor(View view) {
+        view.setBackgroundColor(colorTheme);
     }
 
 

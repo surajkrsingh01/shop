@@ -110,4 +110,86 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+
+    <style name="MyBlueViewTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/grey400</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/blue500</item>
+        <item name="colorControlHighlight">@color/blue500</item>
+        <item name="colorAccent">@color/blue500</item>
+    </style>
+
+    <style name="MyRedViewTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/grey400</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/red_500</item>
+        <item name="colorControlHighlight">@color/red_500</item>
+        <item name="colorAccent">@color/red_500</item>
+    </style>
+
+    <style name="MyPinkViewTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/grey400</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/pink500</item>
+        <item name="colorControlHighlight">@color/pink500</item>
+        <item name="colorAccent">@color/pink500</item>
+    </style>
+
+    <style name="MyGreenViewTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/grey400</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/green500</item>
+        <item name="colorControlHighlight">@color/green500</item>
+        <item name="colorAccent">@color/green500</item>
+    </style>
+
+    <style name="MyYellowViewTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/grey400</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/yellow500</item>
+        <item name="colorControlHighlight">@color/yellow500</item>
+        <item name="colorAccent">@color/yellow500</item>
+    </style>
+
+    <style name="MyAmberViewTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/grey400</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/amber600</item>
+        <item name="colorControlHighlight">@color/amber600</item>
+        <item name="colorAccent">@color/amber600</item>
+    </style>
+
+    <style name="MyGreyViewTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/grey400</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/grey600</item>
+        <item name="colorControlHighlight">@color/grey600</item>
+        <item name="colorAccent">@color/grey600</item>
+    </style>
+
+    <style name="MyBlackViewTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/grey400</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/black</item>
+        <item name="colorControlHighlight">@color/black</item>
+        <item name="colorAccent">@color/black</item>
+    </style>
+
+    <style name="MyWhiteViewTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/grey400</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
+        <item name="colorAccent">@color/white</item>
+    </style>
+
 </resources>

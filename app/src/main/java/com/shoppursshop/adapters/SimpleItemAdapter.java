@@ -168,7 +168,7 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }else{
                     myViewHolder.imageViewSelected.setVisibility(View.GONE);
                     if(isDarkTheme) {
-                        myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.black));
+                        myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.dark_color));
                         myViewHolder.textHeader.setTextColor(context.getResources().getColor(R.color.white));
                     }
                     else{
@@ -187,7 +187,7 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }else{
                     myViewHolder.imageViewSelected.setVisibility(View.GONE);
                     if(isDarkTheme) {
-                        myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.black));
+                        myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.dark_color));
                         myViewHolder.textHeader.setTextColor(context.getResources().getColor(R.color.white));
                     }
                     else{

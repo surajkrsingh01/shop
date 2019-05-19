@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -77,7 +78,7 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
     List<String> stateList, cityList, countryList;
     private ArrayAdapter<String> stateAdapter, cityAdapter, countryAdapter;
 
-    private Button btnGetLocation,btnUpdate;
+    private Button btnGetLocation;
     private boolean isFirstTime = true;
 
     @Override
@@ -89,6 +90,7 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         init();
+        initFooterAction(this);
         setToolbarTheme();
     }
 
@@ -102,7 +104,7 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
         }
 
         btnGetLocation = findViewById(R.id.btn_get_location);
-        btnUpdate = findViewById(R.id.btn_update);
+        RelativeLayout btnUpdate = findViewById(R.id.relative_footer_action);
         editAddress = findViewById(R.id.edit_address);
         editPincode = findViewById(R.id.edit_pincode);
         editAddress.setText(sharedPreferences.getString(Constants.ADDRESS,""));
