@@ -9,13 +9,47 @@
     tools:context=".activities.settings.profile.AddressActivity"
     tools:showIn="@layout/activity_address">
 
+    <TextView
+        android:id="@+id/text_left_label"
+        android:text="Setting"
+        android:textColor="?attr/secondaryTextColor"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_toRightOf="@+id/text_left_label"
+        android:id="@+id/text_right_label"
+        android:text="Profile"
+        android:textColor="?attr/secondaryTextColor"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_below="@+id/text_right_label"
+        android:id="@+id/text_second_label"
+        android:text="Store Address"
+        android:textColor="?attr/primaryTextColor"
+        android:textStyle="bold"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/list_very_large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <ScrollView
+        android:layout_below="@+id/text_second_label"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:scrollbars="none"
-        android:layout_above="@+id/linear_footer_action"
+        android:layout_above="@+id/relative_footer_action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -32,11 +66,12 @@
                 android:layout_height="@dimen/address_map_size" />
 
             <Button
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:id="@+id/btn_get_location"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:text="Get Location"
+                android:text="Get Current Location"
                 android:textColor="?attr/primaryTextColor"
-                android:background="?attr/solidPrimaryStrokeBorderBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

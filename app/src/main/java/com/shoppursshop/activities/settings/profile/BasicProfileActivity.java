@@ -1,5 +1,6 @@
 package com.shoppursshop.activities.settings.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,6 +21,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.BaseActivity;
 import com.shoppursshop.activities.BaseImageActivity;
+import com.shoppursshop.activities.settings.ProfileActivity;
+import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 
@@ -39,6 +42,7 @@ public class BasicProfileActivity extends BaseImageActivity {
     private CircleImageView profileImage;
     private RelativeLayout rlImageLayout;
     private String imageBase64;
+    private TextView tv_top_parent, tv_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +91,24 @@ public class BasicProfileActivity extends BaseImageActivity {
             @Override
             public void onClick(View view) {
                 selectImage();
+            }
+        });
+
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_parent = findViewById(R.id.text_right_label);
+
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BasicProfileActivity.this, SettingActivity.class));
+                finish();
+            }
+        });
+        tv_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BasicProfileActivity.this, ProfileActivity.class));
+                finish();
             }
         });
     }

@@ -13,11 +13,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.settings.profile.AddressActivity;
 import com.shoppursshop.adapters.SimpleItemAdapter;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MySimpleItem;
@@ -39,11 +41,11 @@ public class AddCategoryActivity extends NetworkBaseActivity implements MyItemCl
     private SimpleItemAdapter itemAdapter;
     private List<Object> itemList;
     private List<Object> selectedItemList;
-    private Button btnBack,btnNext,btnSelectAll;
+    private Button btnSelectAll;
+    private RelativeLayout relative_footer_action;
     private boolean isSelectingAll = true;
 
-    private TextView textViewNoData,textViewSelectCatLabel;
-    private LinearLayout linearLayoutFooter;
+    private TextView textViewNoData,textViewSelectCatLabel, tv_top_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +55,14 @@ public class AddCategoryActivity extends NetworkBaseActivity implements MyItemCl
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setToolbarTheme();
+        initFooterAction(this);
         init();
 
     }
 
     private void init(){
-        btnBack = findViewById(R.id.btn_back);
-        btnNext = findViewById(R.id.btn_next);
+        relative_footer_action = findViewById(R.id.relative_footer_action);
         btnSelectAll = findViewById(R.id.btn_select_all);
-        linearLayoutFooter = findViewById(R.id.linear_footer);
         textViewNoData = findViewById(R.id.text_no_data);
         textViewSelectCatLabel = findViewById(R.id.text_select_category_label);
 
@@ -89,7 +90,7 @@ public class AddCategoryActivity extends NetworkBaseActivity implements MyItemCl
         }
 
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
+        relative_footer_action.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -106,13 +107,6 @@ public class AddCategoryActivity extends NetworkBaseActivity implements MyItemCl
 
                 createCategory();
                 //  mListener.onFragmentInteraction(selectedItemList,RegisterActivity.CATEGORY);
-            }
-        });
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
             }
         });
 
@@ -139,6 +133,15 @@ public class AddCategoryActivity extends NetworkBaseActivity implements MyItemCl
                 }
 
                 itemAdapter.notifyDataSetChanged();
+            }
+        });
+
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AddCategoryActivity.this, SettingActivity.class));
+                finish();
             }
         });
     }
@@ -251,13 +254,11 @@ public class AddCategoryActivity extends NetworkBaseActivity implements MyItemCl
     private void showNoData(boolean show){
         if(show){
             recyclerView.setVisibility(View.GONE);
-            linearLayoutFooter.setVisibility(View.GONE);
             textViewNoData.setVisibility(View.VISIBLE);
             textViewSelectCatLabel.setVisibility(View.GONE);
             btnSelectAll.setVisibility(View.GONE);
         }else{
             recyclerView.setVisibility(View.VISIBLE);
-            linearLayoutFooter.setVisibility(View.VISIBLE);
             textViewNoData.setVisibility(View.GONE);
             textViewSelectCatLabel.setVisibility(View.GONE);
             btnSelectAll.setVisibility(View.VISIBLE);

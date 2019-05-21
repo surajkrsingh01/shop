@@ -9,7 +9,41 @@
     tools:context=".activities.settings.MyCategoriesActivity"
     tools:showIn="@layout/activity_my_categories">
 
+    <ImageView
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:id="@+id/action_delete"
+        android:visible="true"
+        android:src="@drawable/ic_delete_black_24dp"
+        android:tint="?attr/primaryTextColor"
+        android:layout_width="25dp"
+        android:layout_height="25dp"/>
+
+    <TextView
+        android:id="@+id/text_left_label"
+        android:text="Setting"
+        android:textColor="?attr/secondaryTextColor"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_below="@+id/text_left_label"
+        android:id="@+id/text_second_label"
+        android:text="Categories"
+        android:textColor="?attr/primaryTextColor"
+        android:textStyle="bold"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/list_very_large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <android.support.v7.widget.RecyclerView
+        android:layout_below="@+id/text_second_label"
         android:id="@+id/recycler_view"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_width="match_parent"

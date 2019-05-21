@@ -7,6 +7,7 @@
     tools:context=".activities.settings.AddSubCatActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:visibility="gone"
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +19,6 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
-
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_add_sub_cat" />

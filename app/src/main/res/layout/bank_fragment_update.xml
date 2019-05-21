@@ -6,7 +6,7 @@
     tools:context=".fragments.BankFragment">
 
     <ScrollView
-        android:layout_above="@+id/linear_footer_action"
+        android:layout_above="@+id/relative_footer_action"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -20,6 +20,7 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:textColor="?attr/primaryTextColor"
                 android:id="@+id/text_bank_info_label"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:textSize="@dimen/large_text_size"
@@ -28,14 +29,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/bank_info" />
+                android:text="Cancel Cheque Image" />
 
             <RelativeLayout
                 android:id="@+id/relative_cheque"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:background="?attr/solidPrimaryStrokeBorderBackground"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="@dimen/kyc_image_size"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/kyc_image_size">
 
                 <ImageView
@@ -45,20 +46,20 @@
                     android:tint="@color/secondary_text_color"
                     android:src="@drawable/ic_photo_camera_black_24dp"
                     android:layout_marginTop="@dimen/register_container_margin_top"
-                    android:layout_width="@dimen/camera_default_size"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/camera_default_size" />
 
                 <ImageView
                     android:id="@+id/image_cheque"
                     android:scaleType="centerCrop"
-                    android:layout_width="@dimen/kyc_image_size"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/kyc_image_size" />
 
             </RelativeLayout>
 
             <TextView
                 android:id="@+id/image_upload_label"
-                android:text="Upload Cheque Image"
+                android:text="Upload Cancel Cheque"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="8dp"
                 android:textColor="?attr/primaryTextColor"

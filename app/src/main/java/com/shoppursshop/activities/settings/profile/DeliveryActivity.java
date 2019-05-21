@@ -1,5 +1,6 @@
 package com.shoppursshop.activities.settings.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.settings.ProfileActivity;
+import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 
@@ -31,6 +34,7 @@ public class DeliveryActivity extends NetworkBaseActivity {
     private Switch switchDelivery;
     private EditText editTextMinAmount;
     private int amount;
+    private TextView tv_top_parent, tv_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,23 @@ public class DeliveryActivity extends NetworkBaseActivity {
             @Override
             public void onClick(View view) {
                 updateDeliveryDetails();
+            }
+        });
+
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_parent = findViewById(R.id.text_right_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DeliveryActivity.this, SettingActivity.class));
+                finish();
+            }
+        });
+        tv_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DeliveryActivity.this, ProfileActivity.class));
+                finish();
             }
         });
 

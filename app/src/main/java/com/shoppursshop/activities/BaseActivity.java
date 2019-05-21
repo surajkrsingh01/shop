@@ -19,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
+import com.shoppursshop.activities.settings.AddCategoryActivity;
+import com.shoppursshop.activities.settings.AddSubCatActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
 import com.shoppursshop.activities.settings.profile.BasicProfileActivity;
@@ -137,11 +139,15 @@ public class BaseActivity extends AppCompatActivity {
         if (context instanceof DeliveryActivity) {
             tv.setText("Update Delivery Details");
         }else if (context instanceof BasicProfileActivity) {
-            tv.setText("Update Profile");
+            tv.setText("Update Store Details");
         }else if (context instanceof AddressActivity) {
-            tv.setText("Update Address");
+            tv.setText("Update Store Address");
         }else if (context instanceof CustomerInfoActivity) {
             tv.setText("Continue");
+        }else if(context instanceof AddCategoryActivity){
+            tv.setText("Add Categories");
+        }else if(context instanceof AddSubCatActivity){
+            tv.setText("Add Sub Categories");
         }
     }
 

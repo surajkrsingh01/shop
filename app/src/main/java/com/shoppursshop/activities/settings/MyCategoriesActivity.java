@@ -13,10 +13,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.settings.profile.DeliveryActivity;
 import com.shoppursshop.adapters.SimpleItemAdapter;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyListItemClickListener;
@@ -41,6 +43,7 @@ public class MyCategoriesActivity extends NetworkBaseActivity implements MyItemC
     private SimpleItemAdapter itemAdapter;
     private int counter;
     private Menu menu;
+    private TextView tv_top_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,15 @@ public class MyCategoriesActivity extends NetworkBaseActivity implements MyItemC
             public void onClick(View view) {
                 Intent intent = new Intent(MyCategoriesActivity.this, AddCategoryActivity.class);
                 startActivityForResult(intent,2);
+            }
+        });
+
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MyCategoriesActivity.this, SettingActivity.class));
+                finish();
             }
         });
     }

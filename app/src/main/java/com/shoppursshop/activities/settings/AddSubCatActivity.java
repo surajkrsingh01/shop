@@ -1,5 +1,6 @@
 package com.shoppursshop.activities.settings;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -41,12 +43,10 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
     private RecyclerView recyclerView;
     private SimpleItemAdapter itemAdapter;
     private List<Object> itemList;
-    private Button btnBack,btnNext;
-
     private TextView textViewNoData;
-    private LinearLayout linearLayoutFooter;
-
+    private RelativeLayout relative_footer_action;
     private String catIds;
+    private TextView tv_top_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +55,13 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initFooterAction(this);
         init();
         setToolbarTheme();
     }
 
     private void init(){
-        btnBack = findViewById(R.id.btn_back);
-        btnNext = findViewById(R.id.btn_next);
-        linearLayoutFooter = findViewById(R.id.linear_footer);
+        relative_footer_action = findViewById(R.id.relative_footer_action);
         textViewNoData = findViewById(R.id.text_no_data);
 
         itemList = new ArrayList<>();
@@ -91,7 +90,7 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
         itemAdapter.setMyLevelItemClickListener(this);
         recyclerView.setAdapter(itemAdapter);
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
+        relative_footer_action.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -125,11 +124,12 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
             }
         });
 
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                onBackPressed();
+            public void onClick(View v) {
+                startActivity(new Intent(AddSubCatActivity.this, SettingActivity.class));
+                finish();
             }
         });
     }
@@ -331,11 +331,9 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
     private void showNoData(boolean show){
         if(show){
             recyclerView.setVisibility(View.GONE);
-            linearLayoutFooter.setVisibility(View.GONE);
             textViewNoData.setVisibility(View.VISIBLE);
         }else{
             recyclerView.setVisibility(View.VISIBLE);
-            linearLayoutFooter.setVisibility(View.VISIBLE);
             textViewNoData.setVisibility(View.GONE);
         }
     }

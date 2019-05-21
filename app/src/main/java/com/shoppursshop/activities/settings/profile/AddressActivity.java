@@ -46,6 +46,8 @@ import com.google.android.gms.tasks.Task;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.RegisterActivity;
+import com.shoppursshop.activities.settings.ProfileActivity;
+import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.interfaces.OnLocationReceivedListener;
 import com.shoppursshop.location.GpsLocationProvider;
 import com.shoppursshop.location.NetworkSensor;
@@ -77,6 +79,7 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
     List<SpinnerItem> stateListObject, cityListObject, countryListObject;
     List<String> stateList, cityList, countryList;
     private ArrayAdapter<String> stateAdapter, cityAdapter, countryAdapter;
+    private TextView tv_parent, tv_top_parent;
 
     private Button btnGetLocation;
     private boolean isFirstTime = true;
@@ -104,7 +107,10 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
         }
 
         btnGetLocation = findViewById(R.id.btn_get_location);
+        //int colorTheme = sharedPreferences.getInt(Constants.COLOR_THEME,0);
         RelativeLayout btnUpdate = findViewById(R.id.relative_footer_action);
+        btnUpdate.setBackgroundColor(colorTheme);
+        btnGetLocation.setBackgroundColor(colorTheme);
         editAddress = findViewById(R.id.edit_address);
         editPincode = findViewById(R.id.edit_pincode);
         editAddress.setText(sharedPreferences.getString(Constants.ADDRESS,""));
@@ -131,7 +137,22 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
             }
         });
 
-
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_parent = findViewById(R.id.text_right_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AddressActivity.this, SettingActivity.class));
+                finish();
+            }
+        });
+        tv_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AddressActivity.this, ProfileActivity.class));
+                finish();
+            }
+        });
     }
 
 
