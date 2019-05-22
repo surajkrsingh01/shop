@@ -55,6 +55,8 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
         btn_plus = findViewById(R.id.btn_plus);
         btnProceed = findViewById(R.id.btnProceed);
 
+        btnProceed.setBackgroundColor(colorTheme);
+
         mschemeList = new ArrayList<>();
         item = new MyProductItem();
         item.setProdName("Monthly Payment ");

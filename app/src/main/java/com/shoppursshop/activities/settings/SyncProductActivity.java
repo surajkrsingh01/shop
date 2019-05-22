@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -45,8 +46,10 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
     private RecyclerView recyclerView;
     private SimpleItemAdapter itemAdapter;
     private List<Object> itemList,itemRemoveObject;
-    private Button btnBack,btnNext;
+    private RelativeLayout rlFooter;
     private String subCats;
+
+    private boolean isAddingProduct;
 
     private TextView textViewNoData;
     private LinearLayout linearLayoutFooter;
@@ -59,13 +62,13 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initFooterAction(this);
         setToolbarTheme();
         init();
     }
 
     private void init(){
-        btnBack = findViewById(R.id.btn_back);
-        btnNext = findViewById(R.id.btn_next);
+        rlFooter = findViewById(R.id.relative_footer_action);
         linearLayoutFooter = findViewById(R.id.linear_footer);
         textViewNoData = findViewById(R.id.text_no_data);
 
@@ -104,49 +107,16 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
         itemAdapter.setMyLevelItemClickListener(this);
         recyclerView.setAdapter(itemAdapter);
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
+        rlFooter.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-
-                CatListItem subCat = null,mySelectedCatItem = null;
-                List<Object> selectedList = null;
-                MyProductItem prod = null;
-                for(Object ob: itemList){
-                    subCat = (CatListItem)ob;
-                    selectedList = new ArrayList<>();
-                    mySelectedCatItem = new CatListItem();
-                    mySelectedCatItem.setId(subCat.getId());
-                    mySelectedCatItem.setTitle(subCat.getTitle());
-                    mySelectedCatItem.setDesc(subCat.getDesc());
-                    for(Object ob1 : subCat.getItemList()){
-                        prod = (MyProductItem) ob1;
-                        if(prod.isSelected())
-                            selectedList.add(ob1);
-                    }
-                    if(selectedList.size() > 0){
-                        mySelectedCatItem.setItemList(selectedList);
-                        selectedItemList.add(mySelectedCatItem);
-                    }
-                }
-
-                if(selectedItemList.size() == 0){
-                    DialogAndToast.showDialog("Please select Products",SyncProductActivity.this);
-                    return;
-                }
-
-                createProducts();
+                isAddingProduct = true;
+                showMyBothDialog("Are you sure to want add selected products?","Cancel","Yes");
 
             }
         });
 
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
 
         if(ConnectionDetector.isNetworkAvailable(this)){
             getProducts();
@@ -355,7 +325,41 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
 
     @Override
     public void onDialogPositiveClicked(){
-        finish();
+        if(isAddingProduct){
+            CatListItem subCat = null,mySelectedCatItem = null;
+            List<Object> selectedList = null;
+            MyProductItem prod = null;
+            for(Object ob: itemList){
+                subCat = (CatListItem)ob;
+                selectedList = new ArrayList<>();
+                mySelectedCatItem = new CatListItem();
+                mySelectedCatItem.setId(subCat.getId());
+                mySelectedCatItem.setTitle(subCat.getTitle());
+                mySelectedCatItem.setDesc(subCat.getDesc());
+                for(Object ob1 : subCat.getItemList()){
+                    prod = (MyProductItem) ob1;
+                    if(prod.isSelected())
+                        selectedList.add(ob1);
+                }
+                if(selectedList.size() > 0){
+                    mySelectedCatItem.setItemList(selectedList);
+                    selectedItemList.add(mySelectedCatItem);
+                }
+            }
+
+            if(selectedItemList.size() == 0){
+                DialogAndToast.showDialog("Please select Products",SyncProductActivity.this);
+                return;
+            }
+
+            createProducts();
+        }else{
+            Intent intent = new Intent();
+            intent.putExtra("flag","productAdded");
+            setResult(-1,intent);
+            finish();
+        }
+
     }
 
     @Override
@@ -386,11 +390,11 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
     private void showNoData(boolean show){
         if(show){
             recyclerView.setVisibility(View.GONE);
-            linearLayoutFooter.setVisibility(View.GONE);
+            rlFooter.setVisibility(View.GONE);
             textViewNoData.setVisibility(View.VISIBLE);
         }else{
             recyclerView.setVisibility(View.VISIBLE);
-            linearLayoutFooter.setVisibility(View.VISIBLE);
+            rlFooter.setVisibility(View.VISIBLE);
             textViewNoData.setVisibility(View.GONE);
         }
     }

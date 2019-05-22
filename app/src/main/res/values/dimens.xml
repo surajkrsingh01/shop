@@ -123,7 +123,7 @@
     <dimen name="list_header_text_size">16sp</dimen>
     <dimen name="list_desc_text_size">12sp</dimen>
 
-    <!-- Setting. -->
+    <!-- Settings. -->
     <dimen name="header_label_size">18sp</dimen>
     <dimen name="sub_header_label_size">16sp</dimen>
 

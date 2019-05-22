@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
@@ -40,6 +41,7 @@ public class MySubCategoriesActivity extends NetworkBaseActivity implements MyIt
     private SimpleItemAdapter itemAdapter;
     private int counter;
     private Menu menu;
+    private ImageView ivDelete;
 
     private String catIds;
 
@@ -75,7 +77,7 @@ public class MySubCategoriesActivity extends NetworkBaseActivity implements MyIt
             itemList.add(myItem);
         }*/
 
-
+        ivDelete= findViewById(R.id.action_delete);
         itemList = dbHelper.getSubCategories();
         recyclerView= findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -87,6 +89,13 @@ public class MySubCategoriesActivity extends NetworkBaseActivity implements MyIt
         itemAdapter.setMyItemClickListener(this);
         itemAdapter.setMyLevelItemClickListener(this);
         recyclerView.setAdapter(itemAdapter);
+
+        ivDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMyBothDialog("Are you sure want to delete selected sub categories","Cancel","Ok");
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -172,9 +181,11 @@ public class MySubCategoriesActivity extends NetworkBaseActivity implements MyIt
 
         if(counter == 0){
             menu.getItem(0).setVisible(false);
+            ivDelete.setVisibility(View.GONE);
             // setTitle(getResources().getString(R.string.title_activity_my_categories));
         }else if(counter == 1){
             menu.getItem(0).setVisible(true);
+            ivDelete.setVisibility(View.VISIBLE);
             // setTitle(""+counter);
         }else{
             //  setTitle(""+counter);
@@ -186,5 +197,28 @@ public class MySubCategoriesActivity extends NetworkBaseActivity implements MyIt
     @Override
     public void onLevelItemClicked(int itemPosition, int level) {
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.i(TAG,"Result received");
+
+        if (requestCode == 2){
+            if(data != null){
+                resetList();
+            }
+        }
+    }
+
+    private void resetList(){
+        List<Object> itemCatList = dbHelper.getSubCategories();
+        itemList.clear();
+        for(Object ob : itemCatList){
+            itemList.add(ob);
+        }
+
+        itemAdapter.notifyDataSetChanged();
     }
 }

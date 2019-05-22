@@ -12,7 +12,7 @@
 
     <TextView
         android:id="@+id/text_left_label"
-        android:text="Setting"
+        android:text="Settings"
         android:textColor="?attr/secondaryTextColor"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -111,7 +111,7 @@
                 android:textColorHint="?attr/secondaryTextColor"
                 android:textColor="?attr/primaryTextColor"
                 android:id="@+id/edit_time_delivery_amount"
-                android:hint="Estimated Time for delivery"
+                android:hint="Estimated Time for delivery (mins)"
                 android:inputType="numberDecimal"
                 android:imeOptions="actionDone"
                 android:textSize="@dimen/edit_text_small_text_size"
@@ -134,7 +134,7 @@
                 android:textColorHint="?attr/secondaryTextColor"
                 android:textColor="?attr/primaryTextColor"
                 android:id="@+id/edit_distance_delivery_amount"
-                android:hint="Delivered up to distance"
+                android:hint="Delivered up to distance (kms)"
                 android:inputType="numberDecimal"
                 android:imeOptions="actionDone"
                 android:textSize="@dimen/edit_text_small_text_size"

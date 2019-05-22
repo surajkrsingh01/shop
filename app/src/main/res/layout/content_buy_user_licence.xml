@@ -10,7 +10,30 @@
     tools:showIn="@layout/activity_buy_user_licence">
 
     <TextView
+        android:id="@+id/text_left_label"
+        android:text="Settings"
+        android:textColor="?attr/secondaryTextColor"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_below="@+id/text_left_label"
+        android:id="@+id/text_second_label"
+        android:text="Buy User License"
+        android:textColor="?attr/primaryTextColor"
+        android:textStyle="bold"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/list_very_large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
         android:layout_marginLeft="15dp"
+        android:layout_below="@+id/text_second_label"
         android:id="@+id/tvUser"
         android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
@@ -20,6 +43,7 @@
         android:textColor="?attr/primaryTextColor"/>
 
     <LinearLayout
+        android:layout_below="@+id/text_second_label"
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
@@ -123,10 +147,11 @@
         android:id="@+id/btnProceed"
         android:layout_alignParentBottom="true"
         android:background="@color/green700"
-        android:layout_margin="15dp"
+        android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:textSize="15sp"
         android:text="Proceed"/>
+
 </RelativeLayout>

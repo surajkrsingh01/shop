@@ -520,21 +520,36 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
         if(item.getIsBarCodeAvailable().equals("Y")){
             item.setBarcodeList(dbHelper.getBarCodesForCart(prodId));
-        }
-
-        if(item.getBarcodeList().size() > 0){
-            item.setQty(1);
-            item.setTotalAmount(item.getProdSp());
-            dbHelper.addProductToCart(item);
-            itemList.add(item);
-            myItemAdapter.notifyItemChanged(itemList.size() -1 );
-
-            if(itemList.size() > 0){
-                setFooterValues();
-                relativeLayoutCartFooter.setVisibility(View.VISIBLE);
+            if(item.getBarcodeList() != null && item.getBarcodeList().size() > 0){
+                item.setQty(1);
+                item.setTotalAmount(item.getProdSp());
+                dbHelper.addProductToCart(item);
+                itemList.add(item);
+                myItemAdapter.notifyItemChanged(itemList.size() -1 );
+                if(itemList.size() > 0){
+                    setFooterValues();
+                    relativeLayoutCartFooter.setVisibility(View.VISIBLE);
+                }
+            }else{
+                DialogAndToast.showDialog("Product is out of stock.",this);
             }
+
         }else{
-            DialogAndToast.showDialog("Product is out of stock.",this);
+            if(item.getProdQoh() > 0){
+                item.setQty(1);
+                item.setTotalAmount(item.getProdSp());
+                dbHelper.addProductToCart(item);
+                itemList.add(item);
+                myItemAdapter.notifyItemChanged(itemList.size() -1 );
+                if(itemList.size() > 0){
+                    setFooterValues();
+                    relativeLayoutCartFooter.setVisibility(View.VISIBLE);
+                }
+            }else{
+                DialogAndToast.showDialog("Product is out of stock.",this);
+            }
         }
+
+
     }
 }

@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -88,6 +89,15 @@ public class InvoiceActivity extends NetworkBaseActivity {
         tvCollectionAmt = findViewById(R.id.text_collection_amount);
         tvPaidAmt = findViewById(R.id.text_paid_amount);
         tvBalAmt = findViewById(R.id.text_balance);
+
+        ImageView ivClose = findViewById(R.id.image_close);
+
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
     private void getInvoice(){
@@ -121,10 +131,10 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     float subTotal = Float.parseFloat(""+(jsonObject.getDouble("invTotAmount") - jsonObject.getDouble("invTotTaxAmount")));
                     tvSubTotAmt.setText(Utility.numberFormat(subTotal));
                     tvGrossTotAmt.setText(Utility.numberFormat(subTotal));
-                    tvTotIgst.setText(Utility.numberFormat(Float.parseFloat(jsonObject.getString("invTotIGST"))));
-                    tvTotSgst.setText(Utility.numberFormat(Float.parseFloat(jsonObject.getString("invTotSGST"))));
-                    tvTotCgst.setText(Utility.numberFormat(Float.parseFloat(jsonObject.getString("invTotCGST"))));
-                    tvShortExcess.setText(Utility.numberFormat(Float.parseFloat(jsonObject.getString("invTotDisAmount"))));
+                    tvTotIgst.setText(Utility.numberFormat(jsonObject.getDouble("invTotIGST")));
+                    tvTotSgst.setText(Utility.numberFormat(jsonObject.getDouble("invTotSGST")));
+                    tvTotCgst.setText(Utility.numberFormat(jsonObject.getDouble("invTotCGST")));
+                    tvShortExcess.setText(Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
                     float netPayable = (float) Math.round(jsonObject.getDouble("invTotNetPayable"));
                     tvNetPayableAmt.setText(Utility.numberFormat(netPayable));
                     tvCollectionMode.setText(jsonObject.getString("invPaymentMode"));

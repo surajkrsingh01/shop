@@ -22,6 +22,7 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.settings.AddCategoryActivity;
 import com.shoppursshop.activities.settings.AddSubCatActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
+import com.shoppursshop.activities.settings.SyncProductActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
 import com.shoppursshop.activities.settings.profile.BasicProfileActivity;
 import com.shoppursshop.activities.settings.profile.DeliveryActivity;
@@ -148,6 +149,8 @@ public class BaseActivity extends AppCompatActivity {
             tv.setText("Add Categories");
         }else if(context instanceof AddSubCatActivity){
             tv.setText("Add Sub Categories");
+        }else if(context instanceof SyncProductActivity){
+            tv.setText("Add Products");
         }
     }
 

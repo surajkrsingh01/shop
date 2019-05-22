@@ -48,6 +48,8 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
     private String catIds;
     private TextView tv_top_parent;
 
+    private boolean isAddingSubCat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,32 +96,8 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
 
             @Override
             public void onClick(View view) {
-                MySimpleItem item1 = null;
-                CatListItem catListItem = null,mySelectedCatItem = null;
-                List<Object> selectedList = null;
-                for(Object ob : itemList){
-                    catListItem = (CatListItem) ob;
-                    selectedList = new ArrayList<>();
-                    mySelectedCatItem = new CatListItem();
-                    mySelectedCatItem.setId(catListItem.getId());
-                    mySelectedCatItem.setTitle(catListItem.getTitle());
-                    mySelectedCatItem.setDesc(catListItem.getDesc());
-                    for(Object ob1 : catListItem.getItemList()){
-                        item1 = (MySimpleItem) ob1;
-                        if(item1.isSelected())
-                            selectedList.add(ob1);
-                    }
-                    if(selectedList.size() > 0){
-                        mySelectedCatItem.setItemList(selectedList);
-                        selectedItemList.add(mySelectedCatItem);
-                    }
-
-                }
-                if(selectedItemList.size() == 0){
-                    DialogAndToast.showDialog("Please select Category",AddSubCatActivity.this);
-                    return;
-                }
-                createSubCategory();
+                isAddingSubCat = true;
+                showMyBothDialog("Are you sure to want add selected sub categories?","Cancel","Yes");
                 //mListener.onFragmentInteraction(selectedItemList,RegisterActivity.SUB_CATEGORY);
             }
         });
@@ -289,7 +267,41 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
 
     @Override
     public void onDialogPositiveClicked(){
-       finish();
+        if(isAddingSubCat){
+            isAddingSubCat = false;
+            MySimpleItem item1 = null;
+            CatListItem catListItem = null,mySelectedCatItem = null;
+            List<Object> selectedList = null;
+            for(Object ob : itemList){
+                catListItem = (CatListItem) ob;
+                selectedList = new ArrayList<>();
+                mySelectedCatItem = new CatListItem();
+                mySelectedCatItem.setId(catListItem.getId());
+                mySelectedCatItem.setTitle(catListItem.getTitle());
+                mySelectedCatItem.setDesc(catListItem.getDesc());
+                for(Object ob1 : catListItem.getItemList()){
+                    item1 = (MySimpleItem) ob1;
+                    if(item1.isSelected())
+                        selectedList.add(ob1);
+                }
+                if(selectedList.size() > 0){
+                    mySelectedCatItem.setItemList(selectedList);
+                    selectedItemList.add(mySelectedCatItem);
+                }
+
+            }
+            if(selectedItemList.size() == 0){
+                DialogAndToast.showDialog("Please select Category",AddSubCatActivity.this);
+                return;
+            }
+            createSubCategory();
+        }else{
+            Intent intent = new Intent();
+            intent.putExtra("flag","subCategoryAdded");
+            setResult(-1,intent);
+            finish();
+        }
+
     }
 
     @Override

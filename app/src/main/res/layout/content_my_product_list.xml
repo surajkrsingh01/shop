@@ -9,8 +9,31 @@
     tools:context=".activities.settings.MyProductListActivity"
     tools:showIn="@layout/activity_my_product_list">
 
+    <TextView
+        android:id="@+id/text_left_label"
+        android:text="Settings"
+        android:textColor="?attr/secondaryTextColor"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_below="@+id/text_left_label"
+        android:id="@+id/text_second_label"
+        android:text="Store Products"
+        android:textColor="?attr/primaryTextColor"
+        android:textStyle="bold"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/list_very_large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
+        android:layout_below="@+id/text_second_label"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"

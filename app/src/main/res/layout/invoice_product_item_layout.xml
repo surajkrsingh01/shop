@@ -33,17 +33,6 @@
         <TextView
             android:id="@+id/text_qty"
             android:text="Qty"
-            android:layout_toLeftOf="@+id/text_gst"
-            android:layout_marginRight="10dp"
-            android:textSize="@dimen/invoice_sub_header_text_size"
-            android:gravity="right"
-            android:textColor="@color/primary_text_color"
-            android:layout_width="@dimen/invoice_right_view_small_width"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/text_gst"
-            android:text="GST"
             android:layout_toLeftOf="@+id/text_rate"
             android:layout_marginRight="10dp"
             android:textSize="@dimen/invoice_sub_header_text_size"
@@ -51,6 +40,7 @@
             android:textColor="@color/primary_text_color"
             android:layout_width="@dimen/invoice_right_view_small_width"
             android:layout_height="wrap_content" />
+
 
         <TextView
             android:id="@+id/text_rate"

@@ -1,6 +1,7 @@
 package com.shoppursshop.activities.settings;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -44,6 +46,7 @@ public class MyCategoriesActivity extends NetworkBaseActivity implements MyItemC
     private int counter;
     private Menu menu;
     private TextView tv_top_parent;
+    private ImageView ivDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,7 @@ public class MyCategoriesActivity extends NetworkBaseActivity implements MyItemC
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setToolbarTheme();
 
+        ivDelete= findViewById(R.id.action_delete);
         itemList = dbHelper.getCategories();
         recyclerView= findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -71,6 +75,13 @@ public class MyCategoriesActivity extends NetworkBaseActivity implements MyItemC
             public void onClick(View view) {
                 Intent intent = new Intent(MyCategoriesActivity.this, AddCategoryActivity.class);
                 startActivityForResult(intent,2);
+            }
+        });
+
+        ivDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMyBothDialog("Are you sure want to delete selected categories","Cancel","Ok");
             }
         });
 
@@ -192,9 +203,11 @@ public class MyCategoriesActivity extends NetworkBaseActivity implements MyItemC
 
         if(counter == 0){
             menu.getItem(0).setVisible(false);
+            ivDelete.setVisibility(View.GONE);
            // setTitle(getResources().getString(R.string.title_activity_my_categories));
         }else if(counter == 1){
             menu.getItem(0).setVisible(true);
+            ivDelete.setVisibility(View.VISIBLE);
            // setTitle(""+counter);
         }else{
           //  setTitle(""+counter);

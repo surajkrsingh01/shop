@@ -43,7 +43,7 @@ public class AddCategoryActivity extends NetworkBaseActivity implements MyItemCl
     private List<Object> selectedItemList;
     private Button btnSelectAll;
     private RelativeLayout relative_footer_action;
-    private boolean isSelectingAll = true;
+    private boolean isSelectingAll = true,isAddingCat;
 
     private TextView textViewNoData,textViewSelectCatLabel, tv_top_parent;
 
@@ -94,18 +94,8 @@ public class AddCategoryActivity extends NetworkBaseActivity implements MyItemCl
 
             @Override
             public void onClick(View view) {
-                MySimpleItem item1 = null;
-                for(Object ob : itemList){
-                    item1 = (MySimpleItem) ob;
-                    if(item1.isSelected())
-                        selectedItemList.add(ob);
-                }
-                if(selectedItemList.size() == 0){
-                    DialogAndToast.showDialog("Please select Category", AddCategoryActivity.this);
-                    return;
-                }
-
-                createCategory();
+                isAddingCat = true;
+                showMyBothDialog("Are you sure to want add selected categories?","Cancel","Yes");
                 //  mListener.onFragmentInteraction(selectedItemList,RegisterActivity.CATEGORY);
             }
         });
@@ -151,6 +141,7 @@ public class AddCategoryActivity extends NetworkBaseActivity implements MyItemCl
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(),"categories");
     }
+
 
     private void createCategory(){
         JSONArray dataArray = new JSONArray();
@@ -233,10 +224,27 @@ public class AddCategoryActivity extends NetworkBaseActivity implements MyItemCl
 
     @Override
     public void onDialogPositiveClicked(){
-        Intent intent = new Intent();
-        intent.putExtra("flag","categoryAdded");
-        setResult(-1,intent);
-        finish();
+        if(isAddingCat){
+            isAddingCat = false;
+            MySimpleItem item1 = null;
+            for(Object ob : itemList){
+                item1 = (MySimpleItem) ob;
+                if(item1.isSelected())
+                    selectedItemList.add(ob);
+            }
+            if(selectedItemList.size() == 0){
+                DialogAndToast.showDialog("Please select Category", AddCategoryActivity.this);
+                return;
+            }
+
+            createCategory();
+        }else{
+            Intent intent = new Intent();
+            intent.putExtra("flag","categoryAdded");
+            setResult(-1,intent);
+            finish();
+        }
+
     }
 
     @Override

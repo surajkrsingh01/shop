@@ -41,7 +41,7 @@ public class SplashActivity extends BaseActivity {
 
             intent = new Intent(SplashActivity.this, MainActivity.class);
         } else {
-            intent = new Intent(SplashActivity.this, MainActivity.class);
+            intent = new Intent(SplashActivity.this, LoginActivity.class);
         }
 
         if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {

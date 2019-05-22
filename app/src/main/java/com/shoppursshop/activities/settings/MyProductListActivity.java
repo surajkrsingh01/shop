@@ -101,6 +101,28 @@ public class MyProductListActivity extends NetworkBaseActivity {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        Log.i(TAG,"Result received");
+
+        if (requestCode == 2){
+            if(data != null){
+                resetList();
+            }
+        }
+    }
+
+    private void resetList(){
+        offset = 0;
+        List<Object> itemCatList = dbHelper.getProducts(limit,offset);
+        itemList.clear();
+        for(Object ob : itemCatList){
+            itemList.add(ob);
+        }
+
+        itemAdapter.notifyDataSetChanged();
+    }
 
 }

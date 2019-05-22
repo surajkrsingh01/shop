@@ -118,7 +118,7 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
          iv_clear = view.findViewById(R.id.iv_clear);
          etSearch = view.findViewById(R.id.et_search);
          recyclerView_Search = view.findViewById(R.id.recyclerView_Search);
-         Log.d(TAG, callingActivityName);
+      //   Log.d(TAG, callingActivityName);
 
          iv_clear.setOnClickListener(new View.OnClickListener() {
             @Override
