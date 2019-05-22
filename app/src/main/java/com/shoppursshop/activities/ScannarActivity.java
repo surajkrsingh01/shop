@@ -90,7 +90,7 @@ public class ScannarActivity extends NetworkBaseActivity {
             }else if(type.equals("addToCart")){
                 int id = dbHelper.checkBarCodeExist(rawValue);
                 if(id == 0){
-                    DialogAndToast.showToast("Product is not exist in database.",this);
+                    DialogAndToast.showToast("Product does not exist in database.",this);
                     finish();
                 }else{
                     if(dbHelper.checkProdExistInCart(rawValue)){
@@ -117,7 +117,7 @@ public class ScannarActivity extends NetworkBaseActivity {
             }else{
                int  id = dbHelper.checkBarCodeExist(rawValue);
                if(id == 0){
-                   DialogAndToast.showToast("Product is not exist in database.",this);
+                   DialogAndToast.showToast("Product does not exist in database.",this);
                    finish();
                }else{
                    Intent intent = new Intent(this,ProductDetailActivity.class);

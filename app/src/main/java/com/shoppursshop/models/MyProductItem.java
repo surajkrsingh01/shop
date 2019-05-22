@@ -5,7 +5,7 @@ import java.util.List;
 
 public class MyProductItem implements Serializable {
 
-    private int prodId,prodCatId,prodReorderLevel,prodQoh,qty;
+    private int prodId,prodCatId,prodSubCatId,prodReorderLevel,prodQoh,qty;
     private String prodName,prodCode,prodBarCode,prodDesc,prodHsnCode,prodMfgDate,prodExpiryDate,prodMfgBy,prodImage1,prodImage2,prodImage3,
             createdBy,updatedBy,createdDate,updatedDate,status,isBarCodeAvailable;
     private String retRetailerId,dbName,dbUserName,dbPassword;
@@ -29,6 +29,14 @@ public class MyProductItem implements Serializable {
 
     public void setIsBarCodeAvailable(String isBarCodeAvailable) {
         this.isBarCodeAvailable = isBarCodeAvailable;
+    }
+
+    public int getProdSubCatId() {
+        return prodSubCatId;
+    }
+
+    public void setProdSubCatId(int prodSubCatId) {
+        this.prodSubCatId = prodSubCatId;
     }
 
     public float getTotalAmount() {

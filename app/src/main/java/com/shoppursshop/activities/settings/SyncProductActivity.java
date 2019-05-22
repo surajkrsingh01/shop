@@ -165,6 +165,7 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
                 try {
                     dataObject.put("retRetailerId",sharedPreferences.getString(Constants.USER_ID,""));
                     dataObject.put("prodCatId",""+category.getId());
+                    dataObject.put("prodSubCatId",""+subCat.getProdSubCatId());
                     dataObject.put("prodId",""+subCat.getProdId());
                     dataObject.put("prodReorderLevel",""+subCat.getProdReorderLevel());
                     dataObject.put("prodQoh",""+subCat.getProdQoh());
@@ -228,6 +229,7 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
                             item = new MyProductItem();
                             item.setProdId(jsonObject.getInt("prodId"));
                             item.setProdCatId(jsonObject.getInt("prodCatId"));
+                            item.setProdSubCatId(jsonObject.getInt("prodSubCatId"));
                             item.setProdName(jsonObject.getString("prodName"));
                             item.setProdCode(jsonObject.getString("prodCode"));
                             item.setProdBarCode(jsonObject.getString("prodBarCode"));

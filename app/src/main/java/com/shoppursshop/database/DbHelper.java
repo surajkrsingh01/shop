@@ -37,6 +37,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String NAME = "name";
     public static final String IMAGE = "image";
     public static final String PROD_SUB_CAT_ID = "PROD_SUB_CAT_ID";
+    public static final String PROD_CAT_ID = "PROD_CAT_ID";
     public static final String PROD_NAME = "PROD_NAME";
     public static final String PROD_CODE = "PROD_CODE";
     public static final String PROD_BARCODE = "PROD_BARCODE";
@@ -85,6 +86,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String CREATE_PRODUCT_TABLE = "create table "+PRODUCT_TABLE +
             "("+ID+" TEXT NOT NULL, " +
             " "+PROD_SUB_CAT_ID+" TEXT NOT NULL, " +
+            " "+PROD_CAT_ID+" TEXT NOT NULL, " +
             " "+PROD_NAME+" TEXT NOT NULL, " +
             " "+PROD_CODE+" TEXT, " +
             " "+PROD_DESC+" TEXT, " +
@@ -116,6 +118,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String CREATE_CART_TABLE = "create table "+CART_TABLE +
             "("+ID+" TEXT NOT NULL, " +
             " "+PROD_SUB_CAT_ID+" TEXT NOT NULL, " +
+            " "+PROD_CAT_ID+" TEXT NOT NULL, " +
             " "+PROD_NAME+" TEXT NOT NULL, " +
             " "+PROD_CODE+" TEXT, " +
             " "+PROD_BARCODE+" TEXT, " +
@@ -137,7 +140,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME, null, 11);
+        super(context, DATABASE_NAME, null, 12);
         this.context=context;
     }
 
@@ -194,7 +197,8 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(ID, item.getProdId());
-        contentValues.put(PROD_SUB_CAT_ID, item.getProdCatId());
+        contentValues.put(PROD_SUB_CAT_ID, item.getProdSubCatId());
+        contentValues.put(PROD_CAT_ID, item.getProdCatId());
         contentValues.put(PROD_CODE, item.getProdCode());
         contentValues.put(PROD_NAME, item.getProdName());
         contentValues.put(PROD_DESC, item.getProdDesc());
@@ -257,7 +261,8 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(ID, item.getProdId());
-        contentValues.put(PROD_SUB_CAT_ID, item.getProdCatId());
+        contentValues.put(PROD_SUB_CAT_ID, item.getProdSubCatId());
+        contentValues.put(PROD_CAT_ID, item.getProdCatId());
         contentValues.put(PROD_CODE, item.getProdCode());
         contentValues.put(PROD_BARCODE, item.getProdBarCode());
         contentValues.put(PROD_NAME, item.getProdName());
@@ -543,7 +548,8 @@ public class DbHelper extends SQLiteOpenHelper {
             do{
                 productItem=new MyProductItem();
                 productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
-                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+                productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
                 productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
                 productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));
                 productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
@@ -580,7 +586,8 @@ public class DbHelper extends SQLiteOpenHelper {
             do{
                 productItem=new MyProductItem();
                 productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
-                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+                productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
                 productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
                 productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));
                 productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
@@ -618,7 +625,8 @@ public class DbHelper extends SQLiteOpenHelper {
             do{
                 productItem=new MyProductItem();
                 productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
-                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+                productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
                 productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
                 productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));
                 productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
@@ -658,7 +666,8 @@ public class DbHelper extends SQLiteOpenHelper {
             do{
                 productItem=new MyProductItem();
                 productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
-                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+                productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
                 productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
                 productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));
                 productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
@@ -693,7 +702,8 @@ public class DbHelper extends SQLiteOpenHelper {
         if(res.moveToFirst()){
             productItem=new MyProductItem();
             productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
-            productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+            productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+            productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
             productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
             productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));
             productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
@@ -726,7 +736,8 @@ public class DbHelper extends SQLiteOpenHelper {
         if(res.moveToFirst()){
             productItem=new MyProductItem();
             productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
-            productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+            productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+            productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
             productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
             productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));
             productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
@@ -760,7 +771,8 @@ public class DbHelper extends SQLiteOpenHelper {
         if(res.moveToFirst()){
             productItem=new MyProductItem();
             productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
-            productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+            productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+            productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
             productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
             productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));
             productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
@@ -795,7 +807,8 @@ public class DbHelper extends SQLiteOpenHelper {
             do{
                 productItem=new MyProductItem();
                 productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
-                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+                productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
                 productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
                 productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));
                 productItem.setProdBarCode(res.getString(res.getColumnIndex(PROD_BARCODE)));
@@ -829,7 +842,8 @@ public class DbHelper extends SQLiteOpenHelper {
             do{
                 productItem=new MyProductItem();
                 productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
-                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+                productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
                 productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
                 productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));
                 productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
@@ -1028,6 +1042,18 @@ public class DbHelper extends SQLiteOpenHelper {
     public void deleteCategory(int id){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(CAT_TABLE, ID+" = ?",new String[]{String.valueOf(id)});
+
+    }
+
+    public void deleteSubCategory(int catId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(SUB_CAT_TABLE, CAT_ID+" = ?",new String[]{String.valueOf(catId)});
+
+    }
+
+    public void deleteProducts(int catId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(PRODUCT_TABLE, PROD_CAT_ID+" = ?",new String[]{String.valueOf(catId)});
 
     }
 

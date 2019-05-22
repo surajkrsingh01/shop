@@ -152,6 +152,8 @@ public class MyCategoriesActivity extends NetworkBaseActivity implements MyItemC
                         item = (MySimpleItem)ob;
                         if(item.isSelected()){
                             dbHelper.deleteCategory(item.getId());
+                            dbHelper.deleteSubCategory(item.getId());
+                            dbHelper.deleteProducts(item.getId());
                         }
                     }
 

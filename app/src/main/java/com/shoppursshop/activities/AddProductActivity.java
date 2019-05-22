@@ -464,6 +464,7 @@ public class AddProductActivity extends BaseImageActivity {
 
     private void attemptAddProduct(){
        String subCatId = null;
+        String catId = null;
        String prodName = editTextName.getText().toString();
         String prodCode = editTextCode.getText().toString();
        String barCode = editTextBarCode.getText().toString();
@@ -488,6 +489,7 @@ public class AddProductActivity extends BaseImageActivity {
            return;
        }else{
            subCatId = subCatListObject.get(spinnerSubCategory.getSelectedItemPosition()-1).getId();
+           catId = categoryListObject.get(spinnerCategory.getSelectedItemPosition()-1).getId();
        }
 
        if(TextUtils.isEmpty(prodName)){
@@ -576,7 +578,8 @@ public class AddProductActivity extends BaseImageActivity {
            return;
        }else{
            Map<String,String> params=new HashMap<>();
-           params.put("prodCatId",subCatId);
+           params.put("prodCatId",catId);
+           params.put("prodSubCatId",subCatId);
            params.put("prodReorderLevel",reorderLevel);
            params.put("prodQoh",qoh);
            params.put("prodName",prodName);

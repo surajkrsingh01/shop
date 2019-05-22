@@ -272,6 +272,7 @@ public class LoginActivity extends NetworkBaseActivity{
                         productItem = new MyProductItem();
                         productItem.setProdId(jsonObject.getInt("prodId"));
                         productItem.setProdCatId(jsonObject.getInt("prodCatId"));
+                        productItem.setProdSubCatId(jsonObject.getInt("prodSubCatId"));
                         productItem.setProdName(jsonObject.getString("prodName"));
                         productItem.setProdCode(jsonObject.getString("prodCode"));
                        // productItem.setProdBarCode(jsonObject.getString("prodBarCode"));

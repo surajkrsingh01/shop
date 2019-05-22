@@ -229,6 +229,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
             public void onClick(View view) {
                 multipleBarcodeBottomFragment = new MultipleBarcodeBottomFragment();
                 multipleBarcodeBottomFragment.setProdCode(myProductItem.getProdCode());
+                multipleBarcodeBottomFragment.setProdId(myProductItem.getProdId());
                 multipleBarcodeBottomFragment.show(getSupportFragmentManager(), "Multiple Barcode Bottom Sheet");
             }
         });
