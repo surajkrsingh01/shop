@@ -71,6 +71,7 @@
                     android:layout_height="@dimen/profile_image_size" />
 
                 <ImageView
+                    android:id="@+id/btn_camera"
                     app:srcCompat="@drawable/ic_photo_camera_black_24dp"
                     android:tint="@color/white"
                     android:background="@drawable/accent_solid_circle"

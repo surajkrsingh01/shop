@@ -1,6 +1,7 @@
 package com.shoppursshop.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -100,6 +101,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         buttonCancel = findViewById(R.id.btn_cancel);
         buttonOrderDelivered = findViewById(R.id.btn_order_delivered);
         btnViewInvoice = findViewById(R.id.btn_view_invoice);
+        ((GradientDrawable)btnViewInvoice.getBackground()).setColor(colorTheme);
         relativeLayoutDeliveryContainer = findViewById(R.id.relative_delivery_container);
         relativeLayoutPayOptionLayout = findViewById(R.id.relative_pay_layout);
 

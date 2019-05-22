@@ -2,6 +2,7 @@ package com.shoppursshop.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,11 +32,16 @@ import java.util.List;
 public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProductAdapter.MyViewHolder> {
     private List<MyProductItem> myProductsList = new ArrayList<>();
     private Context context;
+    private int colorTheme;
 
     public ShoppursProductAdapter(Context context, List<MyProductItem> myProducts) {
         super();
         this.context = context;
         this.myProductsList = myProducts;
+    }
+
+    public void setColorTheme(int colorTheme){
+        this.colorTheme = colorTheme;
     }
 
     @Override
@@ -136,8 +142,11 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
             imageView=itemView.findViewById(R.id.image_view);
             linear_plus_minus = itemView.findViewById(R.id.linear_plus_minus);
             btnAddCart = itemView.findViewById(R.id.btn_addCart);
+            ((GradientDrawable)btnAddCart.getBackground()).setColor(colorTheme);
             btn_plus = itemView.findViewById(R.id.btn_plus);
+            ((GradientDrawable)btn_plus.getBackground()).setColor(colorTheme);
             btn_minus = itemView.findViewById(R.id.btn_minus);
+            ((GradientDrawable)btn_minus.getBackground()).setColor(colorTheme);
             tv_cartCount = itemView.findViewById(R.id.tv_cartCount);
             rootView.setOnClickListener(this);
         }

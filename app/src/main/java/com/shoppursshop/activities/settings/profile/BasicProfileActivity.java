@@ -1,6 +1,7 @@
 package com.shoppursshop.activities.settings.profile;
 
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,6 +45,7 @@ public class BasicProfileActivity extends BaseImageActivity {
     private RelativeLayout rlImageLayout;
     private String imageBase64;
     private TextView tv_top_parent, tv_parent;
+    private ImageView btn_camera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,8 @@ public class BasicProfileActivity extends BaseImageActivity {
         profileImage = findViewById(R.id.profile_image);
         rlImageLayout = findViewById(R.id.relative_image);
         RelativeLayout btnUpdate = findViewById(R.id.relative_footer_action);
+        btn_camera = findViewById(R.id.btn_camera);
+        ((GradientDrawable)btn_camera.getBackground()).setColor(colorTheme);
 
         etUsername.setText(sharedPreferences.getString(Constants.FULL_NAME,""));
         etShopName.setText(sharedPreferences.getString(Constants.SHOP_NAME,""));

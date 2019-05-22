@@ -197,6 +197,7 @@ public class AddPaymentDevice extends NetworkBaseActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         // myProductList = dbHelper.getShoppursProducts(subCatId);
         shoppursProductAdapter = new ShoppursProductAdapter(this, myProductList);
+        shoppursProductAdapter.setColorTheme(colorTheme);
         recyclerView.setAdapter(shoppursProductAdapter);
 
         Map<String,String> params=new HashMap<>();

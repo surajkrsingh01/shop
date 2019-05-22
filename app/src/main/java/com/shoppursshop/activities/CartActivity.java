@@ -89,6 +89,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         tvAndroidPos = findViewById(R.id.tv_android_pos);
         relativeLayoutPayOptionLayout = findViewById(R.id.relative_pay_layout);
         relativeLayoutCartFooter=findViewById(R.id.rlfooterviewcart);
+        relativeLayoutCartFooter.setBackgroundColor(colorTheme);
         recyclerView=findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         final RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);

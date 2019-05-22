@@ -1,6 +1,7 @@
 package com.shoppursshop.activities.settings;
 
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -63,6 +64,8 @@ public class AddCategoryActivity extends NetworkBaseActivity implements MyItemCl
     private void init(){
         relative_footer_action = findViewById(R.id.relative_footer_action);
         btnSelectAll = findViewById(R.id.btn_select_all);
+        ((GradientDrawable)btnSelectAll.getBackground()).setColor(colorTheme);
+        btnSelectAll.setTextColor(getResources().getColor(R.color.white));
         textViewNoData = findViewById(R.id.text_no_data);
         textViewSelectCatLabel = findViewById(R.id.text_select_category_label);
 
