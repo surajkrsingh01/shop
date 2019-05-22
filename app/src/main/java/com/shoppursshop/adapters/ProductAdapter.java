@@ -3,6 +3,7 @@ package com.shoppursshop.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -56,10 +57,15 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<Object> itemList;
     private Context context;
     private String type,subCatName,flag;
+    private int colorTheme;
 
     private MyItemTouchListener myItemTouchListener;
 
     private MyItemClickListener myItemClickListener;
+
+    public void setColorTheme(int colorTheme){
+        this.colorTheme = colorTheme;
+    }
 
     public void setMyItemClickListener(MyItemClickListener myItemClickListener) {
         this.myItemClickListener = myItemClickListener;
@@ -113,6 +119,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(itemView);
             textHeader=itemView.findViewById(R.id.text_title);
             btnSeeAll=itemView.findViewById(R.id.btn_see_all);
+            ((GradientDrawable)btnSeeAll.getBackground()).setColor(colorTheme);
             recyclerView=itemView.findViewById(R.id.recycler_view);
 
             btnSeeAll.setOnClickListener(this);

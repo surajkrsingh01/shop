@@ -2,6 +2,7 @@ package com.shoppursshop.activities.settings;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -54,8 +55,11 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
         tvnoOfUser = findViewById(R.id.tv_cartCount);
         tvtotalAmount = findViewById(R.id.tvTotalAmount);
         btn_minus = findViewById(R.id.btn_minus);
+        ((GradientDrawable)btn_minus.getBackground()).setColor(colorTheme);
         btn_plus = findViewById(R.id.btn_plus);
+        ((GradientDrawable)btn_plus.getBackground()).setColor(colorTheme);
         btnProceed = findViewById(R.id.btnProceed);
+        btnProceed.setBackgroundColor(colorTheme);
 
         btnProceed.setBackgroundColor(colorTheme);
 

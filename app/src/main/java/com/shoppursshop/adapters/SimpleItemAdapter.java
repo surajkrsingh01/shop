@@ -3,6 +3,7 @@ package com.shoppursshop.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -109,6 +110,7 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             btnSelectAll=itemView.findViewById(R.id.btn_see_all);
             recyclerView=itemView.findViewById(R.id.recycler_view);
             btnSelectAll.setText("Select All");
+            //((GradientDrawable)btnSelectAll.getBackground()).setColor(colorTheme);
             btnSelectAll.setOnClickListener(this);
         }
 

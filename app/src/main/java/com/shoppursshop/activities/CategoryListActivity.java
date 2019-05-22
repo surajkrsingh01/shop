@@ -57,6 +57,7 @@ public class CategoryListActivity extends BaseActivity {
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
         recyclerView.setLayoutAnimation(animation);*/
         myItemAdapter=new ProductAdapter(this,itemList,"catList");
+        myItemAdapter.setColorTheme(colorTheme);
         myItemAdapter.setFlag(getIntent().getStringExtra("flag"));
         recyclerView.setAdapter(myItemAdapter);
 
