@@ -56,7 +56,7 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
             final MyProductItem item = (MyProductItem) myProductsList.get(position);
             myViewHolder.textbarcode.setText(item.getProdCode());
             myViewHolder.textName.setText(item.getProdName());
-            myViewHolder.textMrp.setText("MRP: Rs"+ Utility.numberFormat(item.getProdMrp()));
+            myViewHolder.textMrp.setText(Utility.numberFormat(item.getProdSp()));
 
             myViewHolder.btnAddCart.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -64,7 +64,7 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
                     myViewHolder.linear_plus_minus.setVisibility(View.VISIBLE);
                     myViewHolder.btnAddCart.setVisibility(View.GONE);
                     item.setQty(1);
-                    float subtotal = item.getProdMrp() * item.getQty();
+                    float subtotal = item.getProdSp() * item.getQty();
                     item.setTotalAmount(subtotal);
                     DialogAndToast.showToast("Add to Cart ", context);
                     ((AddPaymentDevice)context).updateUi();
@@ -79,13 +79,13 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
                         myViewHolder.linear_plus_minus.setVisibility(View.GONE);
                         myViewHolder.btnAddCart.setVisibility(View.VISIBLE);
                         item.setQty(0);
-                        float subtotal = item.getProdMrp() * item.getQty();
+                        float subtotal = item.getProdSp() * item.getQty();
                         item.setTotalAmount(subtotal);
                         ((AddPaymentDevice)context).updateUi();
                     }else {
                         myViewHolder.tv_cartCount.setText(String.valueOf(count-1));
                         item.setQty(count-1);
-                        float subtotal = item.getProdMrp() * item.getQty();
+                        float subtotal = item.getProdSp() * item.getQty();
                         item.setTotalAmount(subtotal);
                         ((AddPaymentDevice)context).updateUi();
                     }
@@ -97,7 +97,7 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
                     int count = Integer.parseInt(myViewHolder.tv_cartCount.getText().toString());
                     myViewHolder.tv_cartCount.setText(String.valueOf(count+1));
                     item.setQty(count+1);
-                    float subtotal = item.getProdMrp() * item.getQty();
+                    float subtotal = item.getProdSp() * item.getQty();
                     item.setTotalAmount(subtotal);
                     ((AddPaymentDevice)context).updateUi();
                 }

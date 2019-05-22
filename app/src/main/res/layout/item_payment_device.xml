@@ -52,18 +52,45 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/rl_mrp"
             android:layout_below="@+id/text_name"
-            android:id="@+id/text_mrp"
-            android:textColor="?attr/secondaryTextColor"
-            android:textSize="12sp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="14dp">
+
+            <TextView
+                android:id="@+id/text_mrp_label"
+                android:text="MRP:"
+                android:textColor="?attr/secondaryTextColor"
+                android:textSize="@dimen/home_list_title_text_size_type_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_toRightOf="@+id/text_mrp_label"
+                android:layout_marginLeft="8dp"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/iv_rupees"
+                android:src="@drawable/rupee"
+                android:tint="?attr/secondaryTextColor"
+                android:layout_width="12dp"
+                android:layout_height="12dp" />
+
+            <TextView
+                android:id="@+id/text_mrp"
+                android:layout_toRightOf="@+id/iv_rupees"
+                android:layout_marginLeft="4dp"
+                android:textColor="?attr/secondaryTextColor"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
 
             <Button
                 android:visibility="visible"
                 android:layout_marginTop="10dp"
-                android:layout_below="@+id/text_mrp"
+                android:layout_below="@+id/rl_mrp"
                 android:id="@+id/btn_addCart"
                 android:textColor="@color/white"
                 android:text="Add"
@@ -74,7 +101,7 @@
             <LinearLayout
                 android:visibility="gone"
                 android:layout_marginTop="10dp"
-                android:layout_below="@+id/text_mrp"
+                android:layout_below="@+id/rl_mrp"
                 android:id="@+id/linear_plus_minus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

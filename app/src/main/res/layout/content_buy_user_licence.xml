@@ -132,15 +132,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Total Amount"/>
-        <TextView
-            android:layout_marginRight="55dp"
-            android:textColor="?attr/primaryTextColor"
-            android:textSize="15sp"
+
+        <RelativeLayout
             android:layout_alignParentRight="true"
-            android:id="@+id/tvTotalAmount"
+            android:layout_marginRight="55dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rs. 0.0"/>
+            android:layout_height="20dp">
+
+            <ImageView
+                android:layout_alignParentBottom="true"
+                android:id="@+id/iv_rupees"
+                android:src="@drawable/rupee"
+                android:tint="?attr/primaryTextColor"
+                android:layout_width="16dp"
+                android:layout_height="16dp" />
+
+            <TextView
+                android:layout_toRightOf="@+id/iv_rupees"
+                android:layout_marginLeft="6dp"
+                android:textColor="?attr/primaryTextColor"
+                android:textSize="15sp"
+                android:id="@+id/tvTotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.0"/>
+
+        </RelativeLayout>
+
+
+
     </RelativeLayout>
 
     <Button

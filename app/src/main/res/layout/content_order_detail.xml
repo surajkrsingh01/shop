@@ -362,19 +362,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/text_total_amount"
+            <RelativeLayout
+                android:id="@+id/rl_amount"
                 android:layout_toRightOf="@+id/text_total_amount_label"
                 android:layout_marginLeft="40dp"
-                android:textStyle="bold"
-                android:textColor="@color/accent_color_2"
-                android:textSize="@dimen/large_text_size"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="22dp">
+
+                <ImageView
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@+id/text_total_sale"
+                    android:id="@+id/iv_rupees"
+                    android:src="@drawable/rupee"
+                    android:tint="@color/accent_color_2"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp" />
+
+                <TextView
+                    android:id="@+id/text_total_amount"
+                    android:layout_toRightOf="@+id/iv_rupees"
+                    android:layout_marginLeft="6dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/accent_color_2"
+                    android:textSize="@dimen/large_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
 
             <TextView
                 android:id="@+id/text_order_status"
-                android:layout_below="@+id/text_total_amount"
+                android:layout_below="@+id/rl_amount"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:text=""
                 android:textStyle="bold"

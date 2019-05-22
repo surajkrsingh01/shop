@@ -149,7 +149,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         textViewCustomerName.setText(intent.getStringExtra("custName"));
         textViewOrderDate.setText(Utility.parseDate(intent.getStringExtra("date"),
                 "yyyy-MM-dd HH:mm:ss","HH:mm, MMM dd, yyyy"));
-        textViewTotalAmount.setText("Rs "+String.format("%.02f",intent.getFloatExtra("totalAmount",0f)));
+        textViewTotalAmount.setText(Utility.numberFormat(intent.getFloatExtra("totalAmount",0f)));
         String deliveryMode = intent.getStringExtra("deliveryMode");
         if(deliveryMode.equals("Self")){
 

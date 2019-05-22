@@ -362,7 +362,7 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
                                     "yyyy-MM-dd HH:mm:ss"), jsonObject.getInt("amount"));
                         }
 
-                        textTotalSale.setText("Rs "+Utility.numberFormat(totalSale));
+                        textTotalSale.setText(Utility.numberFormat(totalSale));
 
                         if(len == 0){
                             setNullMonthlyBar();
