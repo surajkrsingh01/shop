@@ -87,6 +87,7 @@
                 android:id="@+id/edit_customer_mobile"
                 android:hint="@string/mobile"
                 android:inputType="phone"
+                android:maxLength="10"
                 android:imeOptions="actionNext"
                 android:layout_marginTop="@dimen/edit_text_margin"
                 android:textSize="@dimen/edit_text_small_text_size"
@@ -130,6 +131,7 @@
                 android:layout_height="wrap_content" />
 
             <RelativeLayout
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

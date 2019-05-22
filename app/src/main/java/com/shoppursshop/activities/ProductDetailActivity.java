@@ -144,7 +144,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
 
 
         textViewProductName.setText(myProductItem.getProdName());
-        textViewMrp.setText("Rs "+Utility.numberFormat(myProductItem.getProdSp()));
+        textViewMrp.setText(Utility.numberFormat(myProductItem.getProdSp()));
         tvMrp.setText(Utility.numberFormat(myProductItem.getProdMrp()));
         textViewCode.setText(myProductItem.getProdBarCode());
 
@@ -373,7 +373,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                             }*/
                         }
 
-                        textTotalSale.setText("Rs "+Utility.numberFormat(totalAmount));
+                        textTotalSale.setText(Utility.numberFormat(totalAmount));
                        /* if(maxValue == 0f){
                             ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget(50000);
                         }else{

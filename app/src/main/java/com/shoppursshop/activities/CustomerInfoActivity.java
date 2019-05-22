@@ -183,6 +183,9 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
         Map<String,String> params=new HashMap<>();
         params.put("mobile",mobile);
         params.put("name",name);
+        params.put("address","");
+        params.put("email","");
+        params.put("pin","");
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));

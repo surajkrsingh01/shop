@@ -289,7 +289,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             MyListType1ViewHolder myViewHolder = (MyListType1ViewHolder)holder;
 
             myViewHolder.textCustName.setText(item.getCustomerName()+", "+item.getMobile());
-            myViewHolder.textAmount.setText("Rs. "+Utility.numberFormat(item.getAmount()));
+            myViewHolder.textAmount.setText(Utility.numberFormat(item.getAmount()));
             myViewHolder.textDeliveryType.setText(item.getDeliveryType());
             myViewHolder.textViewStatus.setText(item.getStatus());
 

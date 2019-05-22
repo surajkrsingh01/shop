@@ -189,18 +189,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/text_mrp"
-                    android:layout_centerVertical="true"
-                    android:textStyle="bold"
-                    android:textColor="?attr/primaryTextColor"
-                    android:textSize="@dimen/large_text_size"
+                <RelativeLayout
+                    android:id="@+id/rl_mrp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="20dp">
+
+                    <TextView
+                        android:id="@+id/text_mrp_label"
+                        android:text="MRP:"
+                        android:textColor="?attr/secondaryTextColor"
+                        android:textSize="@dimen/home_list_title_text_size_type_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <ImageView
+                        android:layout_toRightOf="@+id/text_mrp_label"
+                        android:layout_marginLeft="8dp"
+                        android:layout_alignParentBottom="true"
+                        android:id="@+id/iv_rupees"
+                        android:src="@drawable/rupee"
+                        android:tint="?attr/secondaryTextColor"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp" />
+
+                    <TextView
+                        android:id="@+id/text_mrp"
+                        android:layout_toRightOf="@+id/iv_rupees"
+                        android:layout_marginLeft="4dp"
+                        android:textColor="?attr/secondaryTextColor"
+                        android:textSize="@dimen/home_list_title_text_size_type_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/text_off"
-                    android:layout_toRightOf="@+id/text_mrp"
+                    android:layout_toRightOf="@+id/rl_mrp"
                     android:layout_marginLeft="5dp"
                     android:textColor="?attr/secondaryTextColor"
                     android:textSize="@dimen/small_text_size"
@@ -370,19 +395,37 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/text_total_sale"
+                <RelativeLayout
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:text=""
-                    android:layout_marginLeft="@dimen/view_vertical_margin"
-                    android:textColor="?attr/primaryTextColor"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="22dp">
+
+                    <ImageView
+                        android:layout_alignParentBottom="true"
+                        android:layout_toLeftOf="@+id/text_total_sale"
+                        android:id="@+id/iv_rupees_total_sale"
+                        android:src="@drawable/rupee"
+                        android:tint="?attr/primaryTextColor"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp" />
+
+                    <TextView
+                        android:id="@+id/text_total_sale"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:text=""
+                        android:layout_marginLeft="5dp"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </RelativeLayout>
+
+
 
             </RelativeLayout>
 

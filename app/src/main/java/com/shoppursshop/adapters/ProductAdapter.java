@@ -732,7 +732,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             myViewHolder.textBarCode.setText(item.getProdBarCode());
             myViewHolder.textName.setText(item.getProdName());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
-            myViewHolder.textMrp.setText("MRP: Rs "+Utility.numberFormat(item.getProdSp()));
+            myViewHolder.textMrp.setText(Utility.numberFormat(item.getProdSp()));
 
             if(item.getIsBarCodeAvailable().equals("Y")){
                 if(item.getBarcodeList() != null && item.getBarcodeList().size() > 0){
@@ -770,7 +770,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             myViewHolder.textName.setText(item.getProdName()+", "+item.getProdBarCode());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
-            myViewHolder.textMrp.setText("MRP: Rs "+ Utility.numberFormat(item.getProdSp()));
+            myViewHolder.textMrp.setText(Utility.numberFormat(item.getProdSp()));
             myViewHolder.textQty.setText("Qty: "+item.getQty());
 
             RequestOptions requestOptions = new RequestOptions();

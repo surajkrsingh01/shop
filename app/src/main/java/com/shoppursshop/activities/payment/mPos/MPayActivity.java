@@ -83,7 +83,7 @@ public class MPayActivity extends NetworkBaseActivity implements MyItemClickList
         }
         Log.i(TAG,"device type "+devType+" "+deviceType);
         ordAmount = getIntent().getStringExtra("totalAmount");
-        ordAmount = "50.00";
+       // ordAmount = "50.00";
         Log.i(TAG,"amount "+ordAmount);
         list = new ArrayList<String>();
         recyclerView = findViewById(R.id.recycler_view);
