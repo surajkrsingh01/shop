@@ -1,6 +1,7 @@
 package com.shoppursshop.activities.settings;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -39,6 +40,7 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
     private RecyclerView recyclerView;
     private PaymentSchemeAdapter paymentSchemeAdapter;
     private MyProductItem item;
+    private TextView tv_top_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +115,15 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
                     DialogAndToast.showDialog("Please Select Scheme", BuyUserLicenceActivity.this);
                 else
                     DialogAndToast.showDialog("Total Amout Paybale Rs. "+totalAmount, BuyUserLicenceActivity.this);
+            }
+        });
+
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BuyUserLicenceActivity.this, SettingActivity.class));
+                finish();
             }
         });
     }

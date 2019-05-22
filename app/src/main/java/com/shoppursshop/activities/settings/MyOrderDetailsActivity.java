@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.settings.profile.DeliveryActivity;
 import com.shoppursshop.adapters.ProductAdapter;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.ConnectionDetector;
@@ -46,6 +47,7 @@ public class MyOrderDetailsActivity extends NetworkBaseActivity {
     private ProductAdapter myItemAdapter;
 
     private Intent intent;
+    private TextView tv_top_parent, tv_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,23 @@ public class MyOrderDetailsActivity extends NetworkBaseActivity {
 
         if(ConnectionDetector.isNetworkAvailable(this))
         getProducts();
+
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_parent = findViewById(R.id.text_right_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MyOrderDetailsActivity.this, SettingActivity.class));
+                finish();
+            }
+        });
+        tv_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MyOrderDetailsActivity.this, MyOrdersActivity.class));
+                finish();
+            }
+        });
     }
 
     private void getProducts(){

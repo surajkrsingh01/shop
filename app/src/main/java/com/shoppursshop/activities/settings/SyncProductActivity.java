@@ -19,6 +19,7 @@ import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.MainActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.settings.profile.DeliveryActivity;
 import com.shoppursshop.adapters.SimpleItemAdapter;
 import com.shoppursshop.interfaces.MyLevelItemClickListener;
 import com.shoppursshop.models.Barcode;
@@ -53,6 +54,7 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
 
     private TextView textViewNoData;
     private LinearLayout linearLayoutFooter;
+    private TextView tv_top_parent, tv_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +123,23 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
         if(ConnectionDetector.isNetworkAvailable(this)){
             getProducts();
         }
+
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_parent = findViewById(R.id.text_right_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SyncProductActivity.this, SettingActivity.class));
+                finish();
+            }
+        });
+        tv_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SyncProductActivity.this, MyProductListActivity.class));
+                finish();
+            }
+        });
     }
 
     private void getProducts(){

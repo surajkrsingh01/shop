@@ -1,5 +1,6 @@
 package com.shoppursshop.activities.settings;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -35,7 +36,7 @@ public class MyOrdersActivity extends NetworkBaseActivity {
     private RecyclerView recyclerView;
     private OrderAdapter myItemAdapter;
     private List<Object> itemList;
-    private TextView textViewError;
+    private TextView textViewError,tv_top_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,14 @@ public class MyOrdersActivity extends NetworkBaseActivity {
         }else{
             showNoNetwork(true);
         }
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MyOrdersActivity.this, SettingActivity.class));
+                finish();
+            }
+        });
     }
 
     private void getItemList(){

@@ -1,5 +1,6 @@
 package com.shoppursshop.activities.settings;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -38,6 +39,7 @@ public class DisplaySettingsActivity extends BaseActivity implements View.OnClic
     private LinearLayout linearLayoutSetting2;
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
+    private TextView tv_top_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +125,14 @@ public class DisplaySettingsActivity extends BaseActivity implements View.OnClic
         relativeLayoutGrey.setOnClickListener(this);
         relativeLayoutBlack.setOnClickListener(this);
 
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DisplaySettingsActivity.this, SettingActivity.class));
+                finish();
+            }
+        });
 
     }
 

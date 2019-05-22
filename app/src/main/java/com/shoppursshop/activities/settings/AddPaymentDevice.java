@@ -1,5 +1,6 @@
 package com.shoppursshop.activities.settings;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,6 +48,7 @@ public class AddPaymentDevice extends NetworkBaseActivity {
     private LinearLayout linear_details;
     private String transactionId;
     private List<Barcode> barCodeList;
+    private TextView tv_top_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +74,22 @@ public class AddPaymentDevice extends NetworkBaseActivity {
         tv_placeorder = findViewById(R.id.viewCart);
         linear_details = findViewById(R.id.linear_details);
         rlfooterviewcart = findViewById(R.id.rlfooterviewcart);
+        rlfooterviewcart.setBackgroundColor(colorTheme);
         tvnoData = findViewById(R.id.tvnoData);
         viewCart = findViewById(R.id.viewCart);
         viewCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 generateJson();
+            }
+        });
+
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //startActivity(new Intent(AddPaymentDevice.this, SettingActivity.class));
+                finish();
             }
         });
     }

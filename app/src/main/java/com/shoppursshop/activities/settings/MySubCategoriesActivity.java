@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
@@ -44,6 +45,7 @@ public class MySubCategoriesActivity extends NetworkBaseActivity implements MyIt
     private ImageView ivDelete;
 
     private String catIds;
+    private TextView tv_top_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +105,14 @@ public class MySubCategoriesActivity extends NetworkBaseActivity implements MyIt
             public void onClick(View view) {
                 Intent intent = new Intent(MySubCategoriesActivity.this, AddSubCatActivity.class);
                 startActivityForResult(intent,2);
+            }
+        });
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MySubCategoriesActivity.this, SettingActivity.class));
+                finish();
             }
         });
     }

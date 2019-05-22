@@ -1,5 +1,6 @@
 package com.shoppursshop.activities.settings;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
@@ -36,6 +38,7 @@ public class MySalesActivity extends NetworkBaseActivity {
     private RecyclerView recyclerViewMonthlyGraph;
     private MonthlyGraphAdapter monthlyGraphAdapter;
     private Toolbar toolbar;
+    private TextView tv_top_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,15 @@ public class MySalesActivity extends NetworkBaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.grey900), PorterDuff.Mode.SRC_ATOP);
+
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MySalesActivity.this, SettingActivity.class));
+                finish();
+            }
+        });
     }
 
     private void getSales(){

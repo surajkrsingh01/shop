@@ -23,6 +23,10 @@ import com.pnsol.sdk.auth.AccountValidator;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.payment.mPos.MPayActivity;
 import com.shoppursshop.activities.payment.mPos.MPayTransactionDetailsActivity;
+import com.shoppursshop.activities.settings.MyOrdersActivity;
+import com.shoppursshop.activities.settings.ProfileActivity;
+import com.shoppursshop.activities.settings.SettingActivity;
+import com.shoppursshop.activities.settings.profile.DeliveryActivity;
 import com.shoppursshop.adapters.ProductAdapter;
 import com.shoppursshop.fragments.AcceptOrderDialogFragment;
 import com.shoppursshop.fragments.CancelDialogFragment;
@@ -68,6 +72,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
     AcceptOrderDialogFragment acceptOrderDialogFragment;
 
     private String orderStatus,ordPayStatus;
+    private TextView tv_top_parent, tv_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,6 +217,22 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         });
 
         getProducts();
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_parent = findViewById(R.id.text_right_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(OrderDetailActivity.this, SettingActivity.class));
+                finish();
+            }
+        });
+        tv_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(OrderDetailActivity.this, MyOrdersActivity.class));
+                finish();
+            }
+        });
     }
 
     private void setTrackStatus(String mode){

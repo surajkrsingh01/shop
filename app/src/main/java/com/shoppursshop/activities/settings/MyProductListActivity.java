@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
@@ -27,6 +28,7 @@ public class MyProductListActivity extends NetworkBaseActivity {
     private ProductAdapter itemAdapter;
     private int counter;
     private Menu menu;
+    private TextView tv_top_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,14 @@ public class MyProductListActivity extends NetworkBaseActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MyProductListActivity.this, SyncProductActivity.class);
                 startActivityForResult(intent,2);
+            }
+        });
+        tv_top_parent = findViewById(R.id.text_left_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MyProductListActivity.this, SettingActivity.class));
+                finish();
             }
         });
     }
