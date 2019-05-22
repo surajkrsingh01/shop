@@ -26,6 +26,7 @@ import com.shoppursshop.interfaces.MyLevelItemClickListener;
 import com.shoppursshop.models.CatListItem;
 import com.shoppursshop.models.MySimpleItem;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.DialogAndToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -145,8 +146,36 @@ public class MySubCategoriesActivity extends NetworkBaseActivity implements MyIt
         }
 
         String url=getResources().getString(R.string.url)+Constants.DELETE_SUB_CATEGORY;
-       // showProgress(true);
-      //  jsonObjectApiRequest(Request.Method.POST,url,jsonObject,"deleteCategory");
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,jsonObject,"deleteSubCategory");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject response, String apiName) {
+        Log.d(TAG, response.toString());
+
+        try {
+            if(apiName.equals("deleteSubCategory")){
+
+                if(response.getBoolean("status")){
+                    MySimpleItem item = null;
+                    for(Object ob : itemList){
+                        item = (MySimpleItem)ob;
+                        if(item.isSelected()){
+                            dbHelper.deleteSubCategoryById(item.getId());
+                            dbHelper.deleteProductsBySubCatId(item.getId());
+                        }
+                    }
+
+                    resetList();
+
+                }else{
+                    DialogAndToast.showDialog(response.getString("message"), MySubCategoriesActivity.this);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

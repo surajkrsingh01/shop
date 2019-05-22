@@ -99,8 +99,10 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
 
     private void init(){
 
-        double latitude = (double) sharedPreferences.getLong(Constants.LATITUDE,0);
-        double longitude = (double) sharedPreferences.getLong(Constants.LONGITUDE,0);
+        double latitude = Double.parseDouble(sharedPreferences.getString(Constants.USER_LAT,"0.0"));
+        double longitude = Double.parseDouble(sharedPreferences.getString(Constants.USER_LONG,"0.0"));
+
+        Log.i(TAG,"lat "+latitude+" long "+longitude);
 
         if(latitude != 0d){
             shopLatLng = new LatLng(latitude,longitude);
@@ -110,7 +112,12 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
         //int colorTheme = sharedPreferences.getInt(Constants.COLOR_THEME,0);
         RelativeLayout btnUpdate = findViewById(R.id.relative_footer_action);
         btnUpdate.setBackgroundColor(colorTheme);
+
+        if(colorTheme == getResources().getColor(R.color.white)){
+            btnGetLocation.setTextColor(getResources().getColor(R.color.primary_text_color));
+        }
         btnGetLocation.setBackgroundColor(colorTheme);
+
         editAddress = findViewById(R.id.edit_address);
         editPincode = findViewById(R.id.edit_pincode);
         editAddress.setText(sharedPreferences.getString(Constants.ADDRESS,""));
@@ -394,6 +401,13 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
                 createLocationRequest();
             }
         }
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                openDialog();
+            }
+        });
     }
 
     protected void createLocationRequest() {
@@ -692,8 +706,8 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
                     editor.putString(Constants.STATE,stateList.get(spinnerState.getSelectedItemPosition()));
                     editor.putString(Constants.CITY,cityList.get(spinnerCity.getSelectedItemPosition()));
                     if(shopLatLng != null){
-                        editor.putLong(Constants.LATITUDE,(long) shopLatLng.latitude);
-                        editor.putLong(Constants.LONGITUDE,(long)shopLatLng.longitude);
+                        editor.putLong(Constants.USER_LAT,(long) shopLatLng.latitude);
+                        editor.putLong(Constants.USER_LONG,(long)shopLatLng.longitude);
                     }
                     editor.commit();
                     DialogAndToast.showToast(response.getString("message"),this);
@@ -727,5 +741,9 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
             i++;
         }
         isFirstTime = false;
+    }
+
+    private void openDialog(){
+        DialogAndToast.showDialog("Get location",this);
     }
 }

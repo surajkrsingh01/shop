@@ -98,11 +98,12 @@ public class Constants {
     public static String CREATE_CATEGORY="/api/categories/addCategoryRetailer";
     public static String DELETE_CATEGORY="/api/categories/delete";
     public static String GET_SUB_CATEGORY="/api/categories/subcategories";
-    public static String DELETE_SUB_CATEGORY="/api/categories/subcategories/delete";
+    public static String DELETE_SUB_CATEGORY="/api/categories/sub_categories/delete";
     public static String CREATE_SUB_CATEGORY="/api/categories/addSubCategoryRetailer";
     public static String GET_PRODUCTS="/api/products/productslist";
     public static String GET_PRODUCTS_WITH_BAR="/api/products/productslistbar";
     public static String CREATE_PRODUCTS="/api/products/addProduct";
+    public static String DELETE_PRODUCTS="/api/products/delete";
     public static String MANAGE_ORDERS="/api/order/manageShoppursOrder";
     public static String CUSTOMER_LIST="/api/shop_customer/customers";
     public static String REVIEW_LIST="/api/product_review/getReview";

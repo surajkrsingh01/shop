@@ -14,19 +14,28 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.adapters.ProductAdapter;
 import com.shoppursshop.adapters.SimpleItemAdapter;
+import com.shoppursshop.interfaces.MyItemClickListener;
+import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.DialogAndToast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
-public class MyProductListActivity extends NetworkBaseActivity {
+public class MyProductListActivity extends NetworkBaseActivity implements MyItemClickListener {
 
     private RecyclerView recyclerView;
     private List<Object> itemList;
     private ProductAdapter itemAdapter;
-    private int counter;
+    private int counter,position;
     private Menu menu;
     private TextView tv_top_parent;
 
@@ -50,6 +59,7 @@ public class MyProductListActivity extends NetworkBaseActivity {
         itemAdapter=new ProductAdapter(this,itemList,"productList");
         itemAdapter.setFlag("productList");
         itemAdapter.setSubCatName("");
+        itemAdapter.setMyItemClickListener(this);
         recyclerView.setAdapter(itemAdapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -135,4 +145,54 @@ public class MyProductListActivity extends NetworkBaseActivity {
         itemAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onItemClicked(int position) {
+        this.position = position;
+        showMyBothDialog("Are you sure want to delete selected product","Cancel","Ok");
+
+    }
+
+    @Override
+    public void onDialogPositiveClicked(){
+        MyProductItem item = (MyProductItem) itemList.get(position);
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        StringBuilder sb = new StringBuilder();
+        try {
+            sb.append(item.getProdId());
+            String prodIds = sb.toString();
+            //catIds = catIds.substring(0,catIds.length()-1);
+            jsonObject.put("prodIds",prodIds);
+            jsonObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+            jsonObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+            jsonObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        String url=getResources().getString(R.string.url)+Constants.DELETE_PRODUCTS;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,jsonObject,"deleteProducts");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject response, String apiName) {
+        Log.d(TAG, response.toString());
+
+        try {
+            if(apiName.equals("deleteProducts")){
+
+                if(response.getBoolean("status")){
+                    MyProductItem item = (MyProductItem) itemList.get(position);
+                    dbHelper.deleteProductById(item.getProdId());
+                    itemList.remove(position);
+                    itemAdapter.notifyItemRemoved(position);
+                }else{
+                    DialogAndToast.showDialog(response.getString("message"), MyProductListActivity.this);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }

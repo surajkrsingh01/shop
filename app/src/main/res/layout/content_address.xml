@@ -71,7 +71,7 @@
                 android:id="@+id/btn_get_location"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:text="Get Current Location"
-                android:textColor="?attr/primaryTextColor"
+                android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

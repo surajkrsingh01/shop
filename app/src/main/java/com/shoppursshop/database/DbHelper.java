@@ -1051,9 +1051,27 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
+    public void deleteSubCategoryById(int subCatId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(SUB_CAT_TABLE, ID+" = ?",new String[]{String.valueOf(subCatId)});
+
+    }
+
+    public void deleteProductById(int prodId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(PRODUCT_TABLE, ID+" = ?",new String[]{String.valueOf(prodId)});
+
+    }
+
     public void deleteProducts(int catId){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(PRODUCT_TABLE, PROD_CAT_ID+" = ?",new String[]{String.valueOf(catId)});
+
+    }
+
+    public void deleteProductsBySubCatId(int subCatId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(PRODUCT_TABLE, PROD_SUB_CAT_ID+" = ?",new String[]{String.valueOf(subCatId)});
 
     }
 

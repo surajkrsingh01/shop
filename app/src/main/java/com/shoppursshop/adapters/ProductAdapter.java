@@ -33,6 +33,7 @@ import com.shoppursshop.activities.ProductDetailActivity;
 import com.shoppursshop.activities.ProductListActivity;
 import com.shoppursshop.activities.ScannarActivity;
 import com.shoppursshop.activities.SubCatListActivity;
+import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTouchListener;
 import com.shoppursshop.models.Category;
 import com.shoppursshop.models.HomeListItem;
@@ -57,6 +58,12 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private String type,subCatName,flag;
 
     private MyItemTouchListener myItemTouchListener;
+
+    private MyItemClickListener myItemClickListener;
+
+    public void setMyItemClickListener(MyItemClickListener myItemClickListener) {
+        this.myItemClickListener = myItemClickListener;
+    }
 
     public void setMyItemTouchListener(MyItemTouchListener myItemTouchListener) {
         this.myItemTouchListener = myItemTouchListener;
@@ -351,8 +358,9 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             intent.putExtra("product",myProductItem);
                             ((Activity) context).startActivityForResult(intent,2);
                         }else{
-                            itemList.remove(getAdapterPosition());
-                            notifyItemRemoved(getAdapterPosition());
+                            myItemClickListener.onItemClicked(getAdapterPosition());
+                            //itemList.remove(getAdapterPosition());
+                           // notifyItemRemoved(getAdapterPosition());
                         }
 
                         return false;
