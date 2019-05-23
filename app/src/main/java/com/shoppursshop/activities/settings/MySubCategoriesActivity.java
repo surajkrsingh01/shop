@@ -96,7 +96,7 @@ public class MySubCategoriesActivity extends NetworkBaseActivity implements MyIt
         ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showMyBothDialog("Are you sure want to delete selected sub categories","Cancel","Ok");
+                showMyBothDialog("Your action will delete the sub categories and related products and affect your stock control. Do you wish to continue?","Cancel","Ok");
             }
         });
 

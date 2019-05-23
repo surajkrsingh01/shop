@@ -91,8 +91,9 @@ public class MyOrderDetailsActivity extends NetworkBaseActivity {
         setTrackStatus(orderStatus);
 
         textViewId.setText("Order No - "+intent.getStringExtra("id"));
-        textViewOrderDate.setText(Utility.parseDate(intent.getStringExtra("date"),
-                "yyyy-MM-dd HH:mm:ss","HH:mm, MMM dd, yyyy"));
+        String[] orderDate = Utility.parseDate(intent.getStringExtra("date"),
+                "yyyy-MM-dd HH:mm:ss","HH:mm, MMM dd, yyyy").split(",");
+        textViewOrderDate.setText(orderDate[0]+" hrs,"+orderDate[1]+orderDate[2]);
         textViewTotAmt.setText("Total Amount: Rs "+Utility.numberFormat(intent.getFloatExtra("totalAmount",0f)));
 
         if(ConnectionDetector.isNetworkAvailable(this))

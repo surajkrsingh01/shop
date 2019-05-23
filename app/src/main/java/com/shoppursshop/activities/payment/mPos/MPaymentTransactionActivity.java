@@ -246,6 +246,7 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
                     i.putExtra("custName", getIntent().getStringExtra("custName"));
                     i.putExtra("custMobile", getIntent().getStringExtra("custMobile"));
                     i.putExtra("custImage", getIntent().getStringExtra("custImage"));
+                    i.putExtra("custUserCreateStatus", getIntent().getStringExtra("custUserCreateStatus"));
                     MPaymentTransactionActivity.this.startActivity(i);
                     finish();
                 } catch (JsonGenerationException e1) {

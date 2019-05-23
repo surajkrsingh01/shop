@@ -147,8 +147,9 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
 
         textViewId.setText("Order No - "+intent.getStringExtra("id"));
         textViewCustomerName.setText(intent.getStringExtra("custName"));
-        textViewOrderDate.setText(Utility.parseDate(intent.getStringExtra("date"),
-                "yyyy-MM-dd HH:mm:ss","HH:mm, MMM dd, yyyy"));
+        String[] orderDate = Utility.parseDate(intent.getStringExtra("date"),
+                "yyyy-MM-dd HH:mm:ss","HH:mm, MMM dd, yyyy").split(",");
+        textViewOrderDate.setText(orderDate[0]+" hrs,"+orderDate[1]+orderDate[2]);
         textViewTotalAmount.setText(Utility.numberFormat(intent.getFloatExtra("totalAmount",0f)));
         String deliveryMode = intent.getStringExtra("deliveryMode");
         if(deliveryMode.equals("Self")){

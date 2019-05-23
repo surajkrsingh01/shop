@@ -291,54 +291,21 @@
 
             </RelativeLayout>
 
-            <LinearLayout
-               android:id="@+id/ll_cust_report_layout"
-                android:weightSum="4"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:layout_below="@id/rl_graph"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:background="?attr/borderBottomSolidBackground"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/text_name"
-                    android:text="Customer Name"
-                    android:textColor="?attr/primaryTextColor"
-                    android:textSize="@dimen/small_text_size"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/text_mobile"
-                    android:text="Mobile"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="?attr/primaryTextColor"
-                    android:textSize="@dimen/small_text_size"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/text_amount"
-                    android:text="Amount"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="?attr/primaryTextColor"
-                    android:textSize="@dimen/small_text_size"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
+            <TextView
+                android:layout_below="@+id/rl_graph"
+                android:id="@+id/text_customer_sale_label"
+                android:text="Customer Sale"
+                android:textColor="?attr/primaryTextColor"
+                android:textStyle="bold"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="5dp"
+                android:textSize="@dimen/list_very_large_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <android.support.v7.widget.RecyclerView
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_below="@id/ll_cust_report_layout"
+                android:layout_below="@id/text_customer_sale_label"
                 android:id="@+id/recyclerViewCustomerSaleReport"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"

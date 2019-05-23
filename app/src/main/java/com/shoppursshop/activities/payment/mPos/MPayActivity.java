@@ -189,6 +189,7 @@ public class MPayActivity extends NetworkBaseActivity implements MyItemClickList
         i.putExtra("custName", getIntent().getStringExtra("custName"));
         i.putExtra("custMobile", getIntent().getStringExtra("custMobile"));
         i.putExtra("custImage", getIntent().getStringExtra("custImage"));
+        i.putExtra("custUserCreateStatus", getIntent().getStringExtra("custUserCreateStatus"));
         i.putExtra("amount", ordAmount);
         i.putExtra("referanceno", sharedPreferences.getString(Constants.MERCHANT_REF_NO,"null"));
         startActivity(i);

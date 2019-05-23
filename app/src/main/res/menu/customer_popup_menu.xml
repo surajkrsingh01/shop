@@ -15,4 +15,10 @@
         android:title="Message"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_location"
+        android:orderInCategory="100"
+        android:title="Location"
+        app:showAsAction="always" />
+
 </menu>

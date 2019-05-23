@@ -38,6 +38,8 @@ public class MyOrdersActivity extends NetworkBaseActivity {
     private List<Object> itemList;
     private TextView textViewError,tv_top_parent;
 
+    private String flag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,7 @@ public class MyOrdersActivity extends NetworkBaseActivity {
     }
 
     private void init(){
+        flag = getIntent().getStringExtra("flag");
         itemList = new ArrayList<>();
         textViewError = findViewById(R.id.text_no_order);
         recyclerView=findViewById(R.id.recycler_view);
@@ -83,16 +86,23 @@ public class MyOrdersActivity extends NetworkBaseActivity {
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
-        String url=getResources().getString(R.string.url)+Constants.GET_ORDERS;
+        String url="",api="";
+        if(flag.equals("customerOrders")){
+            url=getResources().getString(R.string.url)+Constants.GET_CUSTOMER_ORDERS;
+            api = "customerOrders";
+        }else{
+            url=getResources().getString(R.string.url)+Constants.GET_SHOP_ORDERS;
+            api = "shopOrders";
+        }
         showProgress(true);
-        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"orders");
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),api);
     }
 
     @Override
     public void onJsonObjectResponse(JSONObject response, String apiName) {
 
         try {
-            if (apiName.equals("orders")) {
+            if (apiName.equals("customerOrders") || apiName.equals("shopOrders")) {
                 if (response.getBoolean("status")) {
                     JSONArray dataArray = response.getJSONArray("result");
                     JSONObject jsonObject = null;

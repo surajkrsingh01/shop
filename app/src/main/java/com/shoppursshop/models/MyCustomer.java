@@ -1,11 +1,19 @@
 package com.shoppursshop.models;
 
 public class MyCustomer {
-    String id,code,name,email,image,mobile,address,state,city;
+    String id,code,name,email,image,mobile,address,state,city,custUserCreateStatus;
     private String isFav;
     private float ratings;
 
     private int localImage;
+
+    public String getCustUserCreateStatus() {
+        return custUserCreateStatus;
+    }
+
+    public void setCustUserCreateStatus(String custUserCreateStatus) {
+        this.custUserCreateStatus = custUserCreateStatus;
+    }
 
     public String getId() {
         return id;

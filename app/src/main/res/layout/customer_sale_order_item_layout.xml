@@ -26,25 +26,46 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/text_amount"
+    <RelativeLayout
+        android:id="@+id/rl_mrp"
         android:layout_marginLeft="10dp"
-        android:textColor="?attr/primaryTextColor"
-        android:textSize="@dimen/small_text_size"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/text_view_invoice"
-        android:layout_marginLeft="10dp"
-        android:clickable="true"
-        android:textColor="?attr/primaryTextColor"
-        android:textSize="@dimen/small_text_size"
         android:gravity="center_horizontal"
-        android:text="View invoice"
         android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="18dp">
+
+        <ImageView
+            android:layout_alignParentBottom="true"
+            android:id="@+id/iv_rupees"
+            android:src="@drawable/rupee"
+            android:tint="?attr/primaryTextColor"
+            android:layout_width="12dp"
+            android:layout_height="12dp" />
+
+        <TextView
+            android:id="@+id/text_amount"
+            android:layout_toRightOf="@+id/iv_rupees"
+            android:layout_marginLeft="4dp"
+            android:textColor="?attr/primaryTextColor"
+            android:textSize="@dimen/small_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_invoice"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/red_solid_round_corner_background"
+        android:textColor="@color/white"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_centerVertical="true"
+        android:text="Invoice"
+        android:layout_alignParentRight="true"
+        android:textSize="@dimen/home_list_header_text_size"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="25dp" />
 
 </LinearLayout>

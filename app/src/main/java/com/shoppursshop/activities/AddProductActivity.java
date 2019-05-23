@@ -349,7 +349,8 @@ public class AddProductActivity extends BaseImageActivity {
             editTextSGST.setText(""+myProductItem.getProdSgst());
             tvHeaderLabel.setText("Update");
             setCatSelection(dbHelper.getCategoryName(myProductItem.getProdCatId()));
-
+            spinnerCategory.setEnabled(false);
+            spinnerSubCategory.setEnabled(false);
 
             if(myProductItem.getProdImage1().contains("http")){
                 imageView1.setVisibility(View.VISIBLE);
@@ -924,7 +925,7 @@ public class AddProductActivity extends BaseImageActivity {
         if(scanSelection){
             int i = 0;
             for(String name : subCatList){
-                if(name.equals(dbHelper.getSubCategoryName(myProductItem.getProdCatId()))){
+                if(name.equals(dbHelper.getSubCategoryName(myProductItem.getProdSubCatId()))){
                     scanSelection = false;
                     spinnerSubCategory.setSelection(i);
                     break;

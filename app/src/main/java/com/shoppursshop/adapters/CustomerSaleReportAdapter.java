@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
@@ -20,6 +21,11 @@ public class CustomerSaleReportAdapter extends RecyclerView.Adapter<RecyclerView
     private List<CustomerSaleReport> itemList;
     private Context context;
     private String type;
+    private int coloTheme;
+
+    public void setColoTheme(int coloTheme) {
+        this.coloTheme = coloTheme;
+    }
 
     private MyItemClickListener myItemClickListener;
 
@@ -35,15 +41,18 @@ public class CustomerSaleReportAdapter extends RecyclerView.Adapter<RecyclerView
 
     public class MyHomeHeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView textName,textMobile,textAmount,textViewInvoice;
+        private TextView textName,textMobile,textAmount;
+        private Button btnInvoice;
 
         public MyHomeHeaderViewHolder(View itemView) {
             super(itemView);
             textName=itemView.findViewById(R.id.text_name);
             textMobile=itemView.findViewById(R.id.text_mobile);
             textAmount=itemView.findViewById(R.id.text_amount);
-            textViewInvoice=itemView.findViewById(R.id.text_view_invoice);
-            textViewInvoice.setOnClickListener(this);
+            btnInvoice=itemView.findViewById(R.id.btn_invoice);
+            btnInvoice.setOnClickListener(this);
+
+            Utility.setColorFilter(btnInvoice.getBackground(),coloTheme);
         }
 
         @Override

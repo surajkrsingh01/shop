@@ -148,7 +148,7 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
     @Override
     public void onItemClicked(int position) {
         this.position = position;
-        showMyBothDialog("Are you sure want to delete selected product","Cancel","Ok");
+        showMyBothDialog("Your action will delete the products and affect your stock control. Do you wish to continue?","Cancel","Ok");
 
     }
 

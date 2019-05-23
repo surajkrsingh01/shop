@@ -374,6 +374,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
                     shopObject.put("custName", getIntent().getStringExtra("custName"));
                     shopObject.put("custCode",getIntent().getStringExtra("custCode"));
                     shopObject.put("mobileNo",getIntent().getStringExtra("custMobile"));
+                    shopObject.put("custUserCreateStatus", getIntent().getStringExtra("custUserCreateStatus"));
                     if (getIntent().getStringExtra("custImage") == null || getIntent().getStringExtra("custImage").equals("null")) {
                         shopObject.put("orderImage",getIntent().getStringExtra("no"));
                     }else{

@@ -48,7 +48,7 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
 
     private ImageView imageViewScan,imageViewSearch;
 
-    private String mobile,name,custCode,custImage;
+    private String mobile,name,custCode,custImage,custUserCreateStatus;
     private int custId;
 
     @Override
@@ -205,6 +205,7 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
                     custImage = dataObject.getString("photo");
                     name = dataObject.getString("name");
                     custId = dataObject.getInt("id");
+                    custUserCreateStatus = dataObject.getString("userCreateStatus");
                      isCustomerRegistered = true;
                      infoChecked = true;
                      editTextName.setVisibility(View.VISIBLE);
@@ -285,6 +286,7 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
         intent.putExtra("custId", custId);
         intent.putExtra("custCode",custCode);
         intent.putExtra("custImage",custImage);
+        intent.putExtra("custUserCreateStatus","S");
         startActivity(intent);
     }
 
@@ -297,6 +299,7 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
         intent.putExtra("custId", bundle.getInt("custId"));
         intent.putExtra("custCode",bundle.getString("custCode"));
         intent.putExtra("custImage",bundle.getString("custImage"));
+        intent.putExtra("custUserCreateStatus",bundle.getString("custUserCreateStatus"));
         startActivity(intent);
     }
 
@@ -315,6 +318,7 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
                 intent.putExtra("custId", data.getIntExtra("custId",0));
                 intent.putExtra("custCode",data.getStringExtra("custCode"));
                 intent.putExtra("custImage",data.getStringExtra("custImage"));
+                intent.putExtra("custUserCreateStatus",data.getStringExtra("custUserCreateStatus"));
                 startActivity(intent);
             }
         }

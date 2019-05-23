@@ -60,7 +60,7 @@
         <EditText
             android:id="@+id/edit_mobile"
             android:hint="@string/mobile"
-            android:textSize="18sp"
+            android:textSize="@dimen/edit_large_text_size"
             android:layout_below="@+id/text_header"
             android:gravity="center_vertical"
             android:inputType="phone"

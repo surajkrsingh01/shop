@@ -314,6 +314,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     shopObject.put("custCode",getIntent().getStringExtra("custCode"));
                     shopObject.put("mobileNo",getIntent().getStringExtra("custMobile"));
                     shopObject.put("orderImage",getIntent().getStringExtra("custImage"));
+                    shopObject.put("custUserCreateStatus",getIntent().getStringExtra("custUserCreateStatus"));
                     shopObject.put("totalQuantity",String.valueOf(dbHelper.getTotalQuantityCart()));
                     shopObject.put("toalAmount",String.valueOf(dbHelper.getTotalPriceCart()));
                     shopObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
@@ -387,6 +388,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                         intent.putExtra("custName", getIntent().getStringExtra("custName"));
                         intent.putExtra("custMobile", getIntent().getStringExtra("custMobile"));
                         intent.putExtra("custImage", getIntent().getStringExtra("custImage"));
+                        intent.putExtra("custUserCreateStatus", getIntent().getStringExtra("custUserCreateStatus"));
                         intent.putExtra("deviceType", deviceType);
                         startActivity(intent);
                         finish();

@@ -305,11 +305,10 @@ public class DbHelper extends SQLiteOpenHelper {
         return name;
     }
 
-    public String getCategoryName(int subCatId){
+    public String getCategoryName(int catId){
         SQLiteDatabase db = this.getReadableDatabase();
-        final String query="select "+NAME+" from "+CAT_TABLE+" where "+ID+" IN (SELECT DISTINCT "+CAT_ID+" FROM "+SUB_CAT_TABLE+" " +
-                "WHERE " + ID+" = ?)";
-        Cursor res =  db.rawQuery(query, new String[]{String.valueOf(subCatId)});
+        final String query="select "+NAME+" from "+CAT_TABLE+" where "+ID+"  = ?";
+        Cursor res =  db.rawQuery(query, new String[]{String.valueOf(catId)});
         String name = "";
         if(res.moveToFirst()){
             name = res.getString(res.getColumnIndex(NAME));
@@ -765,7 +764,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public MyProductItem getProductDetailsByBarCode(String barCode){
         SQLiteDatabase db = this.getReadableDatabase();
         final String query="select pt.*,pbt."+PROD_BARCODE+" from "+PRODUCT_TABLE+" as pt,"+PRODUCT_BARCODE_TABLE+" as pbt " +
-                "where pt."+PROD_CODE+" = pbt."+PROD_CODE+" AND pbt."+PROD_BARCODE+" = ?";
+                "where pt."+ID+" = pbt."+ID+" AND pbt."+PROD_BARCODE+" = ?";
         Cursor res =  db.rawQuery(query, new String[]{barCode});
         MyProductItem productItem = null;
         if(res.moveToFirst()){

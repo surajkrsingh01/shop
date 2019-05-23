@@ -217,7 +217,7 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
                         }
                     }
 
-                    showMyDialog("Product added successfully");
+                    showMyDialog("Sub category added successfully");
                 }
             }
         } catch (JSONException e) {

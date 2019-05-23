@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
+import com.shoppursshop.activities.InvoiceActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.adapters.CustomerSaleReportAdapter;
 import com.shoppursshop.adapters.MonthlyGraphAdapter;
@@ -198,6 +199,7 @@ public class MySalesActivity extends NetworkBaseActivity implements MyItemClickL
         recyclerViewCustomerSale.setLayoutManager(layoutManagerMonthlyGraph);
         customerSaleReportAdapter=new CustomerSaleReportAdapter(this,customerSaleList);
         customerSaleReportAdapter.setMyItemClickListener(this);
+        customerSaleReportAdapter.setColoTheme(colorTheme);
         recyclerViewCustomerSale.setAdapter(customerSaleReportAdapter);
         recyclerViewCustomerSale.setNestedScrollingEnabled(false);
     }
@@ -383,6 +385,9 @@ public class MySalesActivity extends NetworkBaseActivity implements MyItemClickL
 
     @Override
     public void onItemClicked(int position) {
-
+       CustomerSaleReport item = customerSaleList.get(position);
+        Intent intent = new Intent(MySalesActivity.this, InvoiceActivity.class);
+        intent.putExtra("orderId",""+item.getInvId());
+        startActivity(intent);
     }
 }
