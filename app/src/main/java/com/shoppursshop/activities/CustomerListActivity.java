@@ -270,6 +270,9 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
                         myCustomer.setName(jsonObject.getString("name"));
                         myCustomer.setMobile(jsonObject.getString("mobileNo"));
                         myCustomer.setEmail(jsonObject.getString("email"));
+                        myCustomer.setAddress(jsonObject.getString("address"));
+                        myCustomer.setState(jsonObject.getString("state"));
+                        myCustomer.setCity(jsonObject.getString("city"));
                         myCustomer.setImage(jsonObject.getString("photo"));
                         myCustomer.setIsFav(jsonObject.getString("isFav"));
                         myCustomer.setRatings((float)jsonObject.getDouble("ratings"));

@@ -200,6 +200,7 @@ public class MainActivity extends NetworkBaseActivity {
         Map<String,String> params=new HashMap<>();
         params.put("limit", ""+limit);
         params.put("offset",""+offset);
+        params.put("code",sharedPreferences.getString(Constants.SHOP_CODE,""));
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));

@@ -109,6 +109,7 @@ public class Constants {
     public static String REVIEW_LIST="/api/product_review/getReview";
     public static String PRODUCT_SALE_DATA="/api/products/product_sale_data";
     public static String PRODUCT_RATINGS_DATA="/api/products/product_ratings";
+    public static String SHOP_SALE_DATE="/api/user/shop_sale_data";
     public static String IS_CUSTOMER_REGISTERED="/api/shop_customer/is_registered";
     public static String REGISTER_CUSTOMER="/api/shop_customer/register_shop_customer";
     public static String ORDER_PRODUCTS="/api/shop/order/productslist";

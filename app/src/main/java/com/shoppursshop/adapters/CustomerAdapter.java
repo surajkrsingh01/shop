@@ -317,7 +317,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 myViewHolder.textAddress.setVisibility(View.GONE);
                 myViewHolder.textStateCity.setVisibility(View.GONE);
             }else{
-                myViewHolder.textAddress.setVisibility(View.VISIBLE);
+                myViewHolder.textAddress.setVisibility(View.GONE);
                 myViewHolder.textStateCity.setVisibility(View.VISIBLE);
                 myViewHolder.textAddress.setText(item.getAddress());
                 myViewHolder.textStateCity.setText(item.getState()+", "+item.getCity());

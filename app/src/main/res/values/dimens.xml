@@ -154,6 +154,12 @@
     <!-- cart list item. -->
     <dimen name="cart_action_size">36dp</dimen>
 
+    <!-- Date range. -->
+    <dimen name="relative_date_height">80dp</dimen>
+    <dimen name="relative_date_padding">10dp</dimen>
+    <dimen name="date_text_size">14sp</dimen>
+    <dimen name="date_range_icon_size">24dp</dimen>
+
     <!-- Footer. -->
     <dimen name="bottom_nav_icon_size">24dp</dimen>
     <dimen name="bottom_nav_text_size">10sp</dimen>

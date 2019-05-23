@@ -75,7 +75,6 @@
             android:id="@+id/text_address"
             android:visibility="gone"
             android:textStyle="bold"
-            android:text="@string/order_amount"
             android:layout_marginTop="@dimen/home_list_title_text_margin_type_2"
             android:layout_marginBottom="@dimen/home_list_title_text_margin_type_2"
             android:textColor="?attr/primaryTextColor"
