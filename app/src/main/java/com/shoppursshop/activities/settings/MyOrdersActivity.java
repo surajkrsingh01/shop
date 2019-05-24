@@ -36,7 +36,7 @@ public class MyOrdersActivity extends NetworkBaseActivity {
     private RecyclerView recyclerView;
     private OrderAdapter myItemAdapter;
     private List<Object> itemList;
-    private TextView textViewError,tv_top_parent;
+    private TextView textViewError,tv_top_parent, text_second_label;
 
     private String flag;
 
@@ -69,6 +69,10 @@ public class MyOrdersActivity extends NetworkBaseActivity {
             showNoNetwork(true);
         }
         tv_top_parent = findViewById(R.id.text_left_label);
+        text_second_label = findViewById(R.id.text_second_label);
+        if(flag.equals("customerOrders"))
+            text_second_label.setText("Customer Orders");
+        else text_second_label.setText("Store Orders");
         tv_top_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
