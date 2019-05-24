@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -45,10 +46,10 @@ public class AddCustomerActivity extends NetworkBaseActivity {
 
     private void init(){
         etName = findViewById(R.id.edit_customer_name);
-        etMobile = findViewById(R.id.edit_customer_name);
-        etEmail = findViewById(R.id.edit_customer_name);
-        etAddress = findViewById(R.id.edit_customer_name);
-        etPinCode = findViewById(R.id.edit_customer_name);
+        etMobile = findViewById(R.id.edit_customer_mobile);
+        etEmail = findViewById(R.id.edit_customer_email);
+        etAddress = findViewById(R.id.edit_customer_address);
+        etPinCode = findViewById(R.id.edit_customer_pin);
         rlFooter = findViewById(R.id.relative_footer_action);
 
         rlFooter.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +68,8 @@ public class AddCustomerActivity extends NetworkBaseActivity {
         String email =   etEmail.getText().toString();
         String address =   etAddress.getText().toString();
         String pin =   etPinCode.getText().toString();
+
+        Log.i(TAG,"length "+mobile.length());
 
         if(TextUtils.isEmpty(mobile)){
             DialogAndToast.showDialog("Please enter mobile number.",this);

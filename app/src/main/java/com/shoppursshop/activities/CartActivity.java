@@ -109,10 +109,14 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         tvCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tvCard.setVisibility(View.GONE);
+                /*tvCard.setVisibility(View.GONE);
                 tvCash.setVisibility(View.GONE);
                 tvAndroidPos.setVisibility(View.VISIBLE);
-                tvMPos.setVisibility(View.VISIBLE);
+                tvMPos.setVisibility(View.VISIBLE);*/
+
+                paymentMode = "Credit/Debit Card";
+                deviceType = "ME30S";
+                generateJson(paymentMode);
             }
         });
 

@@ -16,6 +16,7 @@ import com.android.volley.Request;
 import com.google.android.gms.maps.model.Marker;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.payment.ePay.EPayPayswiffActivity;
 import com.shoppursshop.adapters.ShoppursProductAdapter;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.MyProductItem;
@@ -80,7 +81,10 @@ public class AddPaymentDevice extends NetworkBaseActivity {
         viewCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                generateJson();
+                //generateJson();
+
+                Intent intent = new Intent(AddPaymentDevice.this, EPayPayswiffActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -141,11 +145,12 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     shopObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
                     shopObject.put("dbUserName",dbUserName);
                     shopObject.put("dbPassword",dbPassword);
-                    productObject.put("prodCode", cartItem.getProdCode());
-                    productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
-                    productObject.put("barcodeList",  tempbarcodeArray);
-                    productObject.put("qty", cartItem.getQty());
                     productObject.put("prodId", cartItem.getProdId());
+                    if(cartItem.getIsBarCodeAvailable().equals("Y")){
+                        productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
+                        productObject.put("barcodeList",  tempbarcodeArray);
+                    }
+                    productObject.put("qty", cartItem.getQty());
                     productArray.put(productObject);
                     shopObject.put("myProductList", productArray);
                     shopArray.put(shopObject);
@@ -153,10 +158,12 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     productObject = new JSONObject();
 
                     productObject.put("prodCode", cartItem.getProdCode());
-                    productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
-                    productObject.put("barcodeList",  tempbarcodeArray);
-                    productObject.put("qty", cartItem.getQty());
                     productObject.put("prodId", cartItem.getProdId());
+                    if(cartItem.getIsBarCodeAvailable().equals("Y")){
+                        productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
+                        productObject.put("barcodeList",  tempbarcodeArray);
+                    }
+                    productObject.put("qty", cartItem.getQty());
                     productArray.put(productObject);
                     shopObject.put("myProductList", productArray);
                 }
@@ -249,14 +256,17 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     myProduct.setProdSgst(Float.parseFloat(productJArray.getJSONObject(i).getString("prodSgst")));
                     myProduct.setProdWarranty(Float.parseFloat(productJArray.getJSONObject(i).getString("prodWarranty")));
                     // myProduct.setSubCatName(subcatname);
-                    myProductList.add(myProduct);
 
-                    barcodeArray = productJArray.getJSONObject(i).getJSONArray("barcodeList");
-                    barCodeList = new ArrayList<>();
-                    for (int j= 0;j<barcodeArray.length();j++){
-                        barCodeList.add(new Barcode(barcodeArray.getJSONObject(j).getString("barcode")));
+                    if(!productJArray.getJSONObject(i).getString("barcodeList").equals("null")){
+                        myProductList.add(myProduct);
+                        barcodeArray = productJArray.getJSONObject(i).getJSONArray("barcodeList");
+                        barCodeList = new ArrayList<>();
+                        for (int j= 0;j<barcodeArray.length();j++){
+                            barCodeList.add(new Barcode(barcodeArray.getJSONObject(j).getString("barcode")));
+                        }
+                        myProduct.setBarcodeList(barCodeList);
                     }
-                    myProduct.setBarcodeList(barCodeList);
+
                 }
                 if(myProductList.size()>0){
                     shoppursProductAdapter.notifyDataSetChanged();
@@ -269,7 +279,11 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     Log.d(TAG, "Ordeer Generated" );
                     String orderId = response.getJSONObject("result").getString("orderId");
                     Log.d(TAG, "orderId "+orderId );
-                    placeOrder(shopArray, orderId);  // open payment option
+                    //placeOrder(shopArray, orderId);  // open payment option
+
+                    Intent intent = new Intent(AddPaymentDevice.this, EPayPayswiffActivity.class);
+                    startActivity(intent);
+
                 }else {
                     DialogAndToast.showToast(response.getString("message"),AddPaymentDevice.this);
                 }

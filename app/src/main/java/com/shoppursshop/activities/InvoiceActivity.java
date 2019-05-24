@@ -13,6 +13,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfDocument;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.shoppursshop.R;
 import com.shoppursshop.adapters.InvoiceItemAdapter;
 import com.shoppursshop.models.Invoice;
@@ -27,6 +38,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -134,9 +148,10 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     tvTotIgst.setText(Utility.numberFormat(jsonObject.getDouble("invTotIGST")));
                     tvTotSgst.setText(Utility.numberFormat(jsonObject.getDouble("invTotSGST")));
                     tvTotCgst.setText(Utility.numberFormat(jsonObject.getDouble("invTotCGST")));
-                    tvShortExcess.setText(Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
+                   // tvShortExcess.setText(Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
                     float netPayable = (float) Math.round(jsonObject.getDouble("invTotNetPayable"));
                     tvNetPayableAmt.setText(Utility.numberFormat(netPayable));
+                    tvShortExcess.setText(Utility.numberFormat(jsonObject.getDouble("invTotDisAmount") - netPayable));
                     tvCollectionMode.setText(jsonObject.getString("invPaymentMode"));
                     tvCollectionAmt.setText(Utility.numberFormat(netPayable));
                     tvPaidAmt.setText(Utility.numberFormat(netPayable));
@@ -184,6 +199,83 @@ public class InvoiceActivity extends NetworkBaseActivity {
         itemList.add(item);
 
         itemAdapter.notifyDataSetChanged();
+    }
+
+    private void createPdf(){
+
+        /***
+         * Variables for further use....
+         */
+        BaseColor mColorAccent = new BaseColor(0, 153, 204, 255);
+        float mHeadingFontSize = 20.0f;
+        float mValueFontSize = 26.0f;
+
+        BaseFont baseFont = null;
+
+        /**
+         * How to USE FONT....
+         */
+        try {
+            baseFont = BaseFont.createFont("assets/fonts/brandon_medium.otf", "UTF-8", BaseFont.EMBEDDED);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // LINE SEPARATOR
+        LineSeparator lineSeparator = new LineSeparator();
+        lineSeparator.setLineColor(new BaseColor(0, 0, 0, 68));
+
+        // create a new document
+        PdfDocument document = new PdfDocument();
+        // Location to save
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(""));
+            // Open to write
+            document.open();
+            // Document Settings
+            document.setPageSize(PageSize.A4);
+            document.addCreationDate();
+            document.addAuthor("Shoppurs");
+            document.addCreator(sharedPreferences.getString(Constants.FULL_NAME,""));
+
+
+            // Title Order Details...
+// Adding Title....
+            Font mOrderDetailsTitleFont = new Font(baseFont, 36.0f, Font.NORMAL, BaseColor.BLACK);
+
+// Creating Chunk
+            Chunk mOrderDetailsTitleChunk = new Chunk("Order Details", mOrderDetailsTitleFont);
+
+// Creating Paragraph to add...
+            Paragraph mOrderDetailsTitleParagraph = new Paragraph(mOrderDetailsTitleChunk);
+
+// Setting Alignment for Heading
+            mOrderDetailsTitleParagraph.setAlignment(Element.ALIGN_CENTER);
+
+// Finally Adding that Chunk
+            document.add(mOrderDetailsTitleParagraph);
+
+            // Fields of Order Details...
+// Adding Chunks for Title and value
+            Font mOrderIdFont = new Font(baseFont, mHeadingFontSize, Font.NORMAL, mColorAccent);
+            Chunk mOrderIdChunk = new Chunk("Order No:", mOrderIdFont);
+            Paragraph mOrderIdParagraph = new Paragraph(mOrderIdChunk);
+            document.add(mOrderIdParagraph);
+
+            document.add(new Paragraph(""));
+            document.add(new Chunk(lineSeparator));
+            document.add(new Paragraph(""));
+
+            document.close();
+
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

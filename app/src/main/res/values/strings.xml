@@ -258,5 +258,6 @@
     <string name="title_activity_my_product_list">Products</string>
     <string name="title_activity_my_order_details">My Order Details</string>
     <string name="title_activity_transaction_details">TransactionDetailsActivity</string>
+    <string name="title_activity_epay_payswiff">Transaction</string>
 
 </resources>
