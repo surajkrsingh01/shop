@@ -67,7 +67,7 @@ public class SearchProductAdapter extends RecyclerView.Adapter<SearchProductAdap
             myViewHolder.textBarCode.setText(item.getProdBarCode());
             myViewHolder.textName.setText(item.getProdName());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
-            myViewHolder.textMrp.setText(""+item.getProdSp());
+            myViewHolder.textMrp.setText(""+item.getProdMrp());
 
             if(flag.equals("searchCartProduct")){
                 if(item.getIsBarCodeAvailable().equals("Y")){
