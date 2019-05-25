@@ -54,6 +54,7 @@
         <TextView
             android:id="@+id/image_upload_label"
             android:text="Upload Cheque Image"
+            android:visibility="gone"
             android:gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:textColor="?attr/primaryTextColor"

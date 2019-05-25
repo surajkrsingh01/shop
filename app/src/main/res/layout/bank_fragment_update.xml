@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.BankFragment">
 
     <ScrollView
@@ -12,7 +13,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:scrollbars="none"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:orientation="vertical"
@@ -25,8 +26,6 @@
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:textSize="@dimen/large_text_size"
                 android:visibility="visible"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel Cheque Image" />
@@ -40,14 +39,17 @@
                 android:layout_height="@dimen/kyc_image_size">
 
                 <ImageView
-                    android:id="@+id/image_camera"
-                    android:padding="10dp"
-                    android:layout_centerInParent="true"
-                    android:tint="@color/secondary_text_color"
-                    android:src="@drawable/ic_photo_camera_black_24dp"
-                    android:layout_marginTop="@dimen/register_container_margin_top"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/camera_default_size" />
+                    android:id="@+id/btn_camera"
+                    app:srcCompat="@drawable/ic_photo_camera_black_24dp"
+                    android:tint="@color/white"
+                    android:background="@drawable/accent_solid_circle"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:elevation="8dp"
+                    android:padding="8dp"
+                    android:layout_margin="12dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
 
                 <ImageView
                     android:id="@+id/image_cheque"
@@ -62,6 +64,7 @@
                 android:text="Upload Cancel Cheque"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="8dp"
+                android:visibility="gone"
                 android:textColor="?attr/primaryTextColor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -69,7 +72,7 @@
 
             <android.support.design.widget.TextInputLayout
                 android:textColorHint="?attr/secondaryTextColor"
-                android:layout_marginTop="@dimen/register_container_margin_top"
+                android:layout_marginTop="30dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 

@@ -574,6 +574,11 @@ public class AddProductActivity extends BaseImageActivity {
             return;
         }
 
+        if(Float.parseFloat(mrp) < Float.parseFloat(sp)){
+            DialogAndToast.showDialog("Product enter Selling price less than MRP.",this);
+            return;
+        }
+
        if(cancel){
            focus.requestFocus();
            return;

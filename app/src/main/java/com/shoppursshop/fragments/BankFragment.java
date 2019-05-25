@@ -174,7 +174,7 @@ public class BankFragment extends NetworkBaseFragment {
 
         if(!TextUtils.isEmpty(sharedPreferences.getString(Constants.CHEQUE_IMAGE,""))){
             imageViewCheque.setVisibility(View.VISIBLE);
-            imageViewCamera.setVisibility(View.GONE);
+           // imageViewCamera.setVisibility(View.GONE);
             Glide.with(this)
                     .load(sharedPreferences.getString(Constants.CHEQUE_IMAGE,""))
                     .apply(requestOptions)
@@ -196,7 +196,7 @@ public class BankFragment extends NetworkBaseFragment {
     public void setImageBase64(String image,String imagePath){
         imageBase64 = image;
         imageViewCheque.setVisibility(View.VISIBLE);
-        imageViewCamera.setVisibility(View.GONE);
+        //imageViewCamera.setVisibility(View.GONE);
         Glide.with(this)
                 .load(imagePath)
                 .apply(requestOptions)

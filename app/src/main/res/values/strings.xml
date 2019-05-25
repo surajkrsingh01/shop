@@ -107,7 +107,7 @@
     <string name="product_manufacture_date">Manufacture Date</string>
     <string name="product_expiry_date">Expiry Date</string>
     <string name="product_manufacture_by">Manufacture By</string>
-    <string name="product_warranty">Warranty</string>
+    <string name="product_warranty">Warranty (months)</string>
     <string name="cgst">CGST</string>
     <string name="igst">IGST</string>
     <string name="sgst">SGST</string>

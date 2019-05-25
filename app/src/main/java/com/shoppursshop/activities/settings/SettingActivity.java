@@ -45,7 +45,7 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
         itemList.add("Store Categories");
         itemList.add("Store Sub Category");
         itemList.add("Add Products to Store");
-        itemList.add("Store Orders");
+        itemList.add("Orders to Shoppurs");
         itemList.add("Customer Orders");
         itemList.add("Store Sales");
         itemList.add("Store Offers");
@@ -87,7 +87,7 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
         }else if(name.equals("Add Products to Store")){
             Intent intent = new Intent(this, MyProductListActivity.class);
             startActivity(intent);
-        }else if(name.equals("Store Orders")){
+        }else if(name.equals("Orders to Shoppurs")){
             Intent intent = new Intent(this, MyOrdersActivity.class);
             intent.putExtra("flag","storeOrders");
             startActivity(intent);
