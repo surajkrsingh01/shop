@@ -61,6 +61,7 @@
             <TextView
                 android:id="@+id/text_mrp_label"
                 android:text="MRP:"
+                android:visibility="gone"
                 android:textColor="?attr/secondaryTextColor"
                 android:textSize="@dimen/home_list_title_text_size_type_4"
                 android:layout_width="wrap_content"
@@ -68,7 +69,7 @@
 
             <ImageView
                 android:layout_toRightOf="@+id/text_mrp_label"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="0dp"
                 android:layout_alignParentBottom="true"
                 android:id="@+id/iv_rupees"
                 android:src="@drawable/rupee"
@@ -77,10 +78,30 @@
                 android:layout_height="12dp" />
 
             <TextView
-                android:id="@+id/text_mrp"
+                android:id="@+id/text_sp"
                 android:layout_toRightOf="@+id/iv_rupees"
                 android:layout_marginLeft="4dp"
                 android:textColor="?attr/secondaryTextColor"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/text_mrp"
+                android:layout_toRightOf="@+id/text_sp"
+                android:layout_marginLeft="5dp"
+                android:textColor="?attr/secondaryTextColor"
+                android:textSize="12sp"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/text_off_percentage"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/text_mrp"
+                android:textColor="@color/green700"
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

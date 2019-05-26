@@ -3,6 +3,7 @@ package com.shoppursshop.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -322,7 +323,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class MyProductListType1ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
 
-        private TextView textBarCode,textName,textMrp,textStatus;
+        private TextView textBarCode,textName,textSp,textMrp,textOffPer,textStatus;
         private ImageView imageView,imageMenu;
         private Button btnAddToCart;
         private View rootView;
@@ -332,7 +333,9 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             rootView = itemView;
             textBarCode=itemView.findViewById(R.id.text_bar_code);
             textName=itemView.findViewById(R.id.text_name);
+            textSp=itemView.findViewById(R.id.text_sp);
             textMrp=itemView.findViewById(R.id.text_mrp);
+            textOffPer=itemView.findViewById(R.id.text_off_percentage);
             textStatus=itemView.findViewById(R.id.text_status);
             btnAddToCart=itemView.findViewById(R.id.btn_add_to_cart);
             imageView=itemView.findViewById(R.id.image_view);
@@ -410,7 +413,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class MyOrderProductListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
 
-        private TextView textName,textMrp,textQty;
+        private TextView textName,textSp,textMrp,textOffPer,textQty;
         private ImageView imageView;
         private View rootView;
 
@@ -418,7 +421,9 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(itemView);
             rootView = itemView;
             textName=itemView.findViewById(R.id.text_name);
+            textSp=itemView.findViewById(R.id.text_sp);
             textMrp=itemView.findViewById(R.id.text_mrp);
+            textOffPer=itemView.findViewById(R.id.text_off_percentage);
             textQty=itemView.findViewById(R.id.text_qty);
             imageView=itemView.findViewById(R.id.image_view);
             rootView.setOnTouchListener(this);
@@ -739,7 +744,20 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             myViewHolder.textBarCode.setText(item.getProdBarCode());
             myViewHolder.textName.setText(item.getProdName());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
+            myViewHolder.textSp.setText(Utility.numberFormat(item.getProdSp()));
             myViewHolder.textMrp.setText(Utility.numberFormat(item.getProdMrp()));
+            myViewHolder.textMrp.setPaintFlags(myViewHolder.textMrp.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+            float diff = item.getProdMrp() - item.getProdSp();
+            if(diff > 0f){
+                float percentage = diff * 100 /item.getProdMrp();
+                myViewHolder.textOffPer.setText(String.format("%.02f",percentage)+"% off");
+                myViewHolder.textMrp.setVisibility(View.VISIBLE);
+                myViewHolder.textOffPer.setVisibility(View.VISIBLE);
+            }else{
+                myViewHolder.textMrp.setVisibility(View.GONE);
+                myViewHolder.textOffPer.setVisibility(View.GONE);
+            }
 
             if(item.getIsBarCodeAvailable().equals("Y")){
                 if(item.getBarcodeList() != null && item.getBarcodeList().size() > 0){
@@ -775,9 +793,22 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             MyProductItem item = (MyProductItem) itemList.get(position);
             MyOrderProductListViewHolder myViewHolder = (MyOrderProductListViewHolder)holder;
 
-            myViewHolder.textName.setText(item.getProdName()+", "+item.getProdBarCode());
+            myViewHolder.textName.setText(item.getProdName());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
+            myViewHolder.textSp.setText(Utility.numberFormat(item.getProdSp()));
             myViewHolder.textMrp.setText(Utility.numberFormat(item.getProdMrp()));
+            myViewHolder.textMrp.setPaintFlags(myViewHolder.textMrp.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+            float diff = item.getProdMrp() - item.getProdSp();
+            if(diff > 0f){
+                float percentage = diff * 100 /item.getProdMrp();
+                myViewHolder.textOffPer.setText(String.format("%.02f",percentage)+"% off");
+                myViewHolder.textMrp.setVisibility(View.VISIBLE);
+                myViewHolder.textOffPer.setVisibility(View.VISIBLE);
+            }else{
+                myViewHolder.textMrp.setVisibility(View.GONE);
+                myViewHolder.textOffPer.setVisibility(View.GONE);
+            }
             myViewHolder.textQty.setText("Qty: "+item.getQty());
 
             RequestOptions requestOptions = new RequestOptions();

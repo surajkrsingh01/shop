@@ -113,7 +113,9 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
             textViewAddress.setText(address);
         }
 
-        if(TextUtils.isEmpty(city) || city.trim().equals("null, null")){
+        Log.i(TAG,"state and city "+city+".");
+
+        if(TextUtils.isEmpty(city) || city.trim().equals("null, null") || city.trim().equals(",")){
             textViewStateCity.setVisibility(View.GONE);
         }else{
             textViewStateCity.setText(city);

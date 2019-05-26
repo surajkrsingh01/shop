@@ -48,6 +48,7 @@
             android:textColor="?attr/primaryTextColor"
             android:text="@string/dark_mode"
             android:textSize="@dimen/header_label_size"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

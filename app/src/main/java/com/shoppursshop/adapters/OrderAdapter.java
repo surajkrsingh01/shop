@@ -3,7 +3,9 @@ package com.shoppursshop.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.RecyclerView;
@@ -22,8 +24,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.OrderDetailActivity;
 import com.shoppursshop.activities.settings.MyOrderDetailsActivity;
@@ -43,6 +49,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<Object> itemList;
     private Context context;
     private String type;
+    private int counter;
 
     private SharedPreferences sharedPreferences;
 
@@ -80,7 +87,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     public class MyListType1ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
 
-        private TextView textCustName,textAmount,textDeliveryType,textViewStatus;
+        private TextView textInitial,textCustName,textAmount,textDeliveryType,textViewStatus;
         private ImageView imageView;
         private View rootView;
 
@@ -88,6 +95,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             super(itemView);
             rootView = itemView;
             textCustName=itemView.findViewById(R.id.text_customer_name);
+            textInitial=itemView.findViewById(R.id.tv_initial);
             textAmount=itemView.findViewById(R.id.text_amount);
             textDeliveryType=itemView.findViewById(R.id.text_delivery_type);
             textViewStatus=itemView.findViewById(R.id.text_status);
@@ -286,7 +294,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         }else if(holder instanceof MyListType1ViewHolder){
             OrderItem item = (OrderItem) itemList.get(position);
-            MyListType1ViewHolder myViewHolder = (MyListType1ViewHolder)holder;
+            final MyListType1ViewHolder myViewHolder = (MyListType1ViewHolder)holder;
 
             myViewHolder.textCustName.setText(item.getCustomerName()+", "+item.getMobile());
             myViewHolder.textAmount.setText(Utility.numberFormat(item.getAmount()));
@@ -304,6 +312,15 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 myViewHolder.textViewStatus.setVisibility(View.GONE);
             }
 
+            String initials = "";
+            if(item.getCustomerName().contains(" ")){
+                String[] name = item.getCustomerName().split(" ");
+                initials = name[0].substring(0,1)+name[1].substring(0,1);
+            }else{
+                initials = item.getCustomerName().substring(0,2);
+            }
+
+            myViewHolder.textInitial.setText(initials);
 
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
@@ -313,8 +330,27 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
             Glide.with(context)
                     .load(item.getOrderImage())
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            myViewHolder.textInitial.setVisibility(View.VISIBLE);
+                            myViewHolder.imageView.setVisibility(View.GONE);
+                            myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+                            counter++;
+                            if(counter == 13){
+                                counter = 0;
+                            }
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            myViewHolder.textInitial.setVisibility(View.GONE);
+                            myViewHolder.imageView.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+                    })
                     .apply(requestOptions)
-                    .error(R.drawable.ic_photo_black_192dp)
                     .into(myViewHolder.imageView);
 
 
@@ -353,5 +389,17 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             aniSlide.setFillAfter(true);
             view.startAnimation(aniSlide);
         }
+    }
+
+    private int getTvColor(int position){
+        int[] tvColor={context.getResources().getColor(R.color.light_blue500),
+                context.getResources().getColor(R.color.yellow500),context.getResources().getColor(R.color.green500),
+                context.getResources().getColor(R.color.orange500),context.getResources().getColor(R.color.red_500),
+                context.getResources().getColor(R.color.teal_500),context.getResources().getColor(R.color.cyan500),
+                context.getResources().getColor(R.color.deep_orange500),context.getResources().getColor(R.color.blue500),
+                context.getResources().getColor(R.color.purple500),context.getResources().getColor(R.color.amber500),
+                context.getResources().getColor(R.color.light_green500)};
+
+        return tvColor[position];
     }
 }

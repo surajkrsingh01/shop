@@ -313,13 +313,17 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             MyCustomerListViewHolder myViewHolder = (MyCustomerListViewHolder)holder;
             myViewHolder.textCustName.setText(item.getName());
             myViewHolder.textMobile.setText(item.getMobile());
-            if(TextUtils.isEmpty(item.getAddress())){
+            if(TextUtils.isEmpty(item.getAddress()) || item.getAddress().equals("null")){
                 myViewHolder.textAddress.setVisibility(View.GONE);
-                myViewHolder.textStateCity.setVisibility(View.GONE);
             }else{
                 myViewHolder.textAddress.setVisibility(View.GONE);
-                myViewHolder.textStateCity.setVisibility(View.VISIBLE);
                 myViewHolder.textAddress.setText(item.getAddress());
+            }
+
+            if(TextUtils.isEmpty(item.getState()) || item.getState().equals("null")){
+                myViewHolder.textStateCity.setVisibility(View.GONE);
+            }else{
+                myViewHolder.textStateCity.setVisibility(View.VISIBLE);
                 myViewHolder.textStateCity.setText(item.getState()+", "+item.getCity());
             }
 
@@ -341,7 +345,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 myViewHolder.imageView.setVisibility(View.GONE);
                 myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
                 counter++;
-                if(counter == 13){
+                if(counter == 12){
                     counter = 0;
                 }
             }

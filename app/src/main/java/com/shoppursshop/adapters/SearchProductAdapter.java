@@ -3,6 +3,7 @@ package com.shoppursshop.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.shoppursshop.activities.ProductDetailActivity;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.utilities.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +69,20 @@ public class SearchProductAdapter extends RecyclerView.Adapter<SearchProductAdap
             myViewHolder.textBarCode.setText(item.getProdBarCode());
             myViewHolder.textName.setText(item.getProdName());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
-            myViewHolder.textMrp.setText(""+item.getProdMrp());
+            myViewHolder.textSp.setText(Utility.numberFormat(item.getProdSp()));
+            myViewHolder.textMrp.setText(Utility.numberFormat(item.getProdMrp()));
+            myViewHolder.textMrp.setPaintFlags(myViewHolder.textMrp.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+            float diff = item.getProdMrp() - item.getProdSp();
+            if(diff > 0f){
+                float percentage = diff * 100 /item.getProdMrp();
+                myViewHolder.textOffPer.setText(String.format("%.02f",percentage)+"% off");
+                myViewHolder.textMrp.setVisibility(View.VISIBLE);
+                myViewHolder.textOffPer.setVisibility(View.VISIBLE);
+            }else{
+                myViewHolder.textMrp.setVisibility(View.GONE);
+                myViewHolder.textOffPer.setVisibility(View.GONE);
+            }
 
             if(flag.equals("searchCartProduct")){
                 if(item.getIsBarCodeAvailable().equals("Y")){
@@ -111,7 +126,7 @@ public class SearchProductAdapter extends RecyclerView.Adapter<SearchProductAdap
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView textBarCode,textName,textMrp,textStatus;
+        private TextView textBarCode,textName,textSp,textMrp,textOffPer,textStatus;
         private ImageView imageView,imageMenu;
         private Button btnAddToCart;
         private View rootView;
@@ -121,7 +136,9 @@ public class SearchProductAdapter extends RecyclerView.Adapter<SearchProductAdap
             rootView = itemView;
             textBarCode=itemView.findViewById(R.id.text_bar_code);
             textName=itemView.findViewById(R.id.text_name);
+            textSp=itemView.findViewById(R.id.text_sp);
             textMrp=itemView.findViewById(R.id.text_mrp);
+            textOffPer=itemView.findViewById(R.id.text_off_percentage);
             textStatus=itemView.findViewById(R.id.text_status);
             btnAddToCart=itemView.findViewById(R.id.btn_add_to_cart);
             imageView=itemView.findViewById(R.id.image_view);

@@ -440,8 +440,9 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             }else{
                 int qty = item.getQty() - 1;
                 item.setQty(qty);
-                float amount = item.getTotalAmount() - item.getProdSp();
+                float amount = item.getTotalAmount() - item.getProdMrp();
                 dbHelper.updateCartData(item.getProdBarCode(),qty,amount);
+                dbHelper.updateCartData(item.getProdId(),qty,amount);
                 setFooterValues();
                 if(qty == 0){
                     itemList.remove(position);
@@ -455,7 +456,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 }else{
                     int qty = item.getQty() + 1;
                     item.setQty(qty);
-                    float amount = item.getTotalAmount() + item.getProdSp();
+                    float amount = item.getTotalAmount() + item.getProdMrp();
                     dbHelper.updateCartData(item.getProdBarCode(),qty,amount);
                     if(itemList.size() == 1){
                         relativeLayoutCartFooter.setVisibility(View.VISIBLE);
@@ -470,8 +471,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 }else{
                     int qty = item.getQty() + 1;
                     item.setQty(qty);
-                    float amount = item.getTotalAmount() + item.getProdSp();
-                    dbHelper.updateCartData(item.getProdBarCode(),qty,amount);
+                    float amount = item.getTotalAmount() + item.getProdMrp();
+                    dbHelper.updateCartData(item.getProdId(),qty,amount);
                     if(itemList.size() == 1){
                         relativeLayoutCartFooter.setVisibility(View.VISIBLE);
                     }
@@ -529,7 +530,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             item.setBarcodeList(dbHelper.getBarCodesForCart(prodId));
             if(item.getBarcodeList() != null && item.getBarcodeList().size() > 0){
                 item.setQty(1);
-                item.setTotalAmount(item.getProdSp());
+                item.setTotalAmount(item.getProdMrp());
                 dbHelper.addProductToCart(item);
                 itemList.add(item);
                 myItemAdapter.notifyItemChanged(itemList.size() -1 );
@@ -544,7 +545,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         }else{
             if(item.getProdQoh() > 0){
                 item.setQty(1);
-                item.setTotalAmount(item.getProdSp());
+                item.setTotalAmount(item.getProdMrp());
                 dbHelper.addProductToCart(item);
                 itemList.add(item);
                 myItemAdapter.notifyItemChanged(itemList.size() -1 );

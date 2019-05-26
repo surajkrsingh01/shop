@@ -137,7 +137,7 @@ public class MySubCategoriesActivity extends NetworkBaseActivity implements MyIt
             }
             String catIds = sb.toString();
             catIds = catIds.substring(0,catIds.length()-1);
-            jsonObject.put("subCatIds",catIds);
+            jsonObject.put("catIds",catIds);
             jsonObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
             jsonObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
             jsonObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));

@@ -526,7 +526,7 @@
                     android:hint="@string/product_warranty"
                     android:textColor="?attr/primaryTextColor"
                     android:textColorHint="?attr/secondaryTextColor"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:imeOptions="actionNext"
                     android:textSize="@dimen/edit_text_small_text_size"
                     android:paddingBottom="@dimen/edit_text_small_vertical_padding"

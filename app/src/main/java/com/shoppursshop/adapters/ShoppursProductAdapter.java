@@ -2,6 +2,7 @@ package com.shoppursshop.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -56,7 +57,21 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
             final MyProductItem item = (MyProductItem) myProductsList.get(position);
             myViewHolder.textbarcode.setText(item.getProdCode());
             myViewHolder.textName.setText(item.getProdName());
+
+            myViewHolder.textSp.setText(Utility.numberFormat(item.getProdSp()));
             myViewHolder.textMrp.setText(Utility.numberFormat(item.getProdMrp()));
+            myViewHolder.textMrp.setPaintFlags(myViewHolder.textMrp.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+            float diff = item.getProdMrp() - item.getProdSp();
+            if(diff > 0f){
+                float percentage = diff * 100 /item.getProdMrp();
+                myViewHolder.textOffPer.setText(String.format("%.02f",percentage)+"% off");
+                myViewHolder.textMrp.setVisibility(View.VISIBLE);
+                myViewHolder.textOffPer.setVisibility(View.VISIBLE);
+            }else{
+                myViewHolder.textMrp.setVisibility(View.GONE);
+                myViewHolder.textOffPer.setVisibility(View.GONE);
+            }
 
             myViewHolder.btnAddCart.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -127,7 +142,7 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private TextView textName,textMrp, textbarcode, tv_cartCount;
+        private TextView textName,textSp,textMrp,textOffPer, textbarcode, tv_cartCount;
         private ImageView imageView;
         private View rootView;
         private Button btnAddCart, btn_plus, btn_minus;
@@ -138,7 +153,9 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
             rootView = itemView;
             textbarcode = itemView.findViewById(R.id.text_bar_code);
             textName=itemView.findViewById(R.id.text_name);
+            textSp=itemView.findViewById(R.id.text_sp);
             textMrp=itemView.findViewById(R.id.text_mrp);
+            textOffPer=itemView.findViewById(R.id.text_off_percentage);
             imageView=itemView.findViewById(R.id.image_view);
             linear_plus_minus = itemView.findViewById(R.id.linear_plus_minus);
             btnAddCart = itemView.findViewById(R.id.btn_addCart);

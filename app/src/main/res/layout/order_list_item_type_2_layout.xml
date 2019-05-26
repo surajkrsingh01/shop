@@ -79,6 +79,7 @@
         android:layout_alignParentBottom="true"
         android:text="Reorder"
         android:textSize="@dimen/very_small_text_size"
+        android:visibility="gone"
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"

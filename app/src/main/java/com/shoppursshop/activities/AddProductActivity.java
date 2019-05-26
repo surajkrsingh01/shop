@@ -334,8 +334,8 @@ public class AddProductActivity extends BaseImageActivity {
             editTextExpiryDate.setText(myProductItem.getProdExpiryDate());
             editTextName.setText(myProductItem.getProdName());
             editTextCode.setText(myProductItem.getProdCode());
-            editTextBarCode.setVisibility(View.GONE);
-            checkBoxIsBarAvaialble.setVisibility(View.GONE);
+           // editTextBarCode.setVisibility(View.GONE);
+           // checkBoxIsBarAvaialble.setVisibility(View.GONE);
             editTextHSN.setText(myProductItem.getProdHsnCode());
             editTextDesc.setText(myProductItem.getProdDesc());
             editTextMRP.setText(""+myProductItem.getProdMrp());
