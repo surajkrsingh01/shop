@@ -168,6 +168,7 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
                     intent.putExtra("customerImage",item.getLocalImage());
                     intent.putExtra("isFav",item.getIsFav());
                     intent.putExtra("custCode",item.getCode());
+                    intent.putExtra("custId",item.getId());
                     intent.putExtra("ratings",item.getRatings());
                     context.startActivity(intent);
                 }

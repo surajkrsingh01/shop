@@ -61,13 +61,14 @@ public class MonthlyGraphAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public class MyViewOneHolder extends RecyclerView.ViewHolder{//,HomeActivity.OnSendRequest {
-        public TextView textMonth;
+        public TextView textMonth,textAmount;
         private View viewSale;
         public View itemView;
 
         public MyViewOneHolder(View view) {
             super(view);
             textMonth = (TextView) view.findViewById(R.id.text_month);
+            textAmount = (TextView) view.findViewById(R.id.text_amount);
             viewSale = view.findViewById(R.id.view_sale);
             // barHeight = view.getHeight();
         }
@@ -141,9 +142,19 @@ public class MonthlyGraphAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MyViewOneHolder){
             Bar bar = rowItems.get(position);
+            int amount = bar.getSaleValue();
             ((MyViewOneHolder)holder).textMonth.setText(bar.getName());
 
-            int amount = bar.getSaleValue();
+            if(amount == 0){
+                ((MyViewOneHolder)holder).textAmount.setVisibility(View.GONE);
+            }else{
+                ((MyViewOneHolder)holder).textAmount.setVisibility(View.VISIBLE);
+                ((MyViewOneHolder)holder).textAmount.setText(Utility.getBarFormattedAmount(amount));
+            }
+
+
+
+
             int currentBarHeight = (int) (((float) amount / (float) totalTarget) * barHeight);
 
             Log.i("Sale Target","Sale "+amount+" totalTarget "+totalTarget+" barHeigth "+currentBarHeight+" "+barHeight);

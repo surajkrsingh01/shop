@@ -361,24 +361,24 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                         JSONObject jsonObject = null;
                         int len = dataArray.length();
                         float totalAmount = 0;
-                        float maxValue = 0;
+                        double maxValue = 0;
                         for (int i = 0; i < len; i++) {
                             jsonObject = dataArray.getJSONObject(i);
                             totalAmount = totalAmount + (float) jsonObject.getDouble("amount");
                             updateMonthlySaleList(Utility.parseMonth(jsonObject.getString("orderDate"),
                                     "yyyy-MM-dd HH:mm:ss"), jsonObject.getInt("amount"));
 
-                            /*if(maxValue < (float) jsonObject.getDouble("amount")){
-                                maxValue = (float) jsonObject.getDouble("amount");
-                            }*/
+                            if(maxValue <  jsonObject.getDouble("amount")){
+                                maxValue =  jsonObject.getDouble("amount");
+                            }
                         }
 
                         textTotalSale.setText(Utility.numberFormat(totalAmount));
-                       /* if(maxValue == 0f){
+                        if(maxValue == 0f){
                             ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget(50000);
                         }else{
-                            ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget(maxValue);
-                        }*/
+                            ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget((float)maxValue);
+                        }
 
 
                         if(len == 0){

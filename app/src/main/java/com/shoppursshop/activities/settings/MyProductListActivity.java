@@ -21,14 +21,19 @@ import com.shoppursshop.adapters.ProductAdapter;
 import com.shoppursshop.adapters.SimpleItemAdapter;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
+import com.shoppursshop.utilities.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MyProductListActivity extends NetworkBaseActivity implements MyItemClickListener {
 
@@ -37,7 +42,7 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
     private ProductAdapter itemAdapter;
     private int counter,position;
     private Menu menu;
-    private TextView tv_top_parent;
+    private TextView tv_top_parent,tvError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +54,8 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setToolbarTheme();
 
-        itemList = dbHelper.getProducts(limit,offset);
+        itemList = new ArrayList<>();
+        tvError=findViewById(R.id.text_error);
         recyclerView=findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         final RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
@@ -119,6 +125,22 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
                 finish();
             }
         });
+
+        if(ConnectionDetector.isNetworkAvailable(this)){
+            getProductList();
+        }else{
+            showError(getResources().getString(R.string.no_internet));
+        }
+    }
+
+    private void getProductList(){
+        Map<String,String> params=new HashMap<>();
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.GET_SYNCED_PRODUCTS;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"productList");
     }
 
     @Override
@@ -190,9 +212,37 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
                 }else{
                     DialogAndToast.showDialog(response.getString("message"), MyProductListActivity.this);
                 }
+            }else if(apiName.equals("productList")){
+
+                if(response.getBoolean("status")){
+                    JSONArray productArray = response.getJSONArray("result");
+                    JSONObject jsonObject =null;
+                    MyProductItem productItem = null;
+                    int len = productArray.length();
+                    for(int i=0; i<len; i++){
+                        jsonObject = productArray.getJSONObject(i);
+                        productItem = dbHelper.getProductDetailsByCode(jsonObject.getString("prodCode"));
+                        itemList.add(productItem);
+                    }
+
+                    if(len == 0){
+                        showError("Please click on + icon to add products.");
+                    }else{
+                        itemAdapter.notifyDataSetChanged();
+                    }
+
+                }else{
+                    DialogAndToast.showDialog(response.getString("message"), MyProductListActivity.this);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void showError(String message){
+        tvError.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        tvError.setText(message);
     }
 }

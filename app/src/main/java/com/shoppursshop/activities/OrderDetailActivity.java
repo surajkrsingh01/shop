@@ -214,7 +214,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(OrderDetailActivity.this,InvoiceActivity.class);
-                intent.putExtra("orderId",getIntent().getStringExtra("id"));
+                intent.putExtra("orderNumber",getIntent().getStringExtra("orderNumber"));
                 startActivity(intent);
             }
         });

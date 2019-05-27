@@ -197,6 +197,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     intent.putExtra("customerImage",item.getImage());
                     intent.putExtra("isFav",item.getIsFav());
                     intent.putExtra("custCode",item.getCode());
+                    intent.putExtra("custId",item.getId());
                     intent.putExtra("ratings",item.getRatings());
                     context.startActivity(intent);
                     zoomAnimation(false,rootView);

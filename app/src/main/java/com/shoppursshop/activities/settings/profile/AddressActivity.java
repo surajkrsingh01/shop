@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -80,6 +81,7 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
     List<String> stateList, cityList, countryList;
     private ArrayAdapter<String> stateAdapter, cityAdapter, countryAdapter;
     private TextView tv_parent, tv_top_parent;
+    private ImageView ivSearch;
 
     private Button btnGetLocation;
     private boolean isFirstTime = true;
@@ -118,6 +120,7 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
         }
         btnGetLocation.setBackgroundColor(colorTheme);
 
+        ivSearch = findViewById(R.id.image_search);
         editAddress = findViewById(R.id.edit_address);
         editPincode = findViewById(R.id.edit_pincode);
         editAddress.setText(sharedPreferences.getString(Constants.ADDRESS,""));
@@ -158,6 +161,13 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
             public void onClick(View v) {
                 startActivity(new Intent(AddressActivity.this, ProfileActivity.class));
                 finish();
+            }
+        });
+
+        ivSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }

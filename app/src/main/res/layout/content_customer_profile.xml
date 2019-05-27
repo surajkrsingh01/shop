@@ -253,6 +253,7 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/linear_amount_division"
                     android:orientation="vertical"
                     android:weightSum="6"

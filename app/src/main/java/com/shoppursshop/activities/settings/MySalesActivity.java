@@ -256,10 +256,20 @@ public class MySalesActivity extends NetworkBaseActivity implements MyItemClickL
                         JSONArray custSaleReportArray = dataObject.getJSONArray("customerSaleData");
                         JSONObject jsonObject = null;
                         int len = dataArray.length();
+                        double maxValue = 0;
                         for (int i = 0; i < len; i++) {
                             jsonObject = dataArray.getJSONObject(i);
+                            if(maxValue <  jsonObject.getDouble("amount")){
+                                maxValue =  jsonObject.getDouble("amount");
+                            }
                             updateMonthlySaleList(Utility.parseMonth(jsonObject.getString("orderDate"),
                                     "yyyy-MM-dd HH:mm:ss"), jsonObject.getInt("amount"));
+                        }
+
+                        if(maxValue == 0f){
+                            ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget(50000);
+                        }else{
+                            ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget((float)maxValue);
                         }
 
                         len = custSaleReportArray.length();
@@ -385,9 +395,9 @@ public class MySalesActivity extends NetworkBaseActivity implements MyItemClickL
 
     @Override
     public void onItemClicked(int position) {
-       CustomerSaleReport item = customerSaleList.get(position);
+        CustomerSaleReport item = customerSaleList.get(position);
         Intent intent = new Intent(MySalesActivity.this, InvoiceActivity.class);
-        intent.putExtra("orderId",""+item.getInvId());
+        intent.putExtra("orderNumber",""+item.getInvId());
         startActivity(intent);
     }
 }

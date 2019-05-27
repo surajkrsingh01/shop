@@ -287,4 +287,25 @@ public class Utility {
         drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP));
     }
 
+    public static String getBarFormattedAmount(int amount){
+        String formattedAmount = "";
+
+        float div = 0f;
+        if(amount < 99){
+            div = ((float)amount)/1000;
+            formattedAmount = String.format("%.02f",div)+ "k";
+        }else if(amount < 99999){
+            div = ((float)amount)/1000;
+            formattedAmount = String.format("%.01f",div)+ "k";
+        }else if(amount < 9999999){
+            div = ((float)amount)/100000;
+            formattedAmount = String.format("%.01f",div) + "l";
+        }else if(amount < 999999999){
+            div = ((float)amount)/10000000;
+            formattedAmount = String.format("%.01f",div) + "cr";
+        }
+
+        return formattedAmount;
+    }
+
 }

@@ -100,11 +100,22 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/text_amount"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:layout_above="@+id/view_sale"
+            android:textColor="?attr/primaryTextColor"
+            android:textSize="@dimen/small_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <View
             android:id="@+id/view_sale"
             android:layout_alignParentBottom="true"
             android:background="@color/green500"
-            android:layout_width="20dp"
+            android:layout_width="wrap_content"
             android:layout_height="100dp"/>
 
     </RelativeLayout>

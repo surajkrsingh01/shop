@@ -22,7 +22,7 @@
     <TextView
         android:layout_below="@+id/text_left_label"
         android:id="@+id/text_second_label"
-        android:text="Store Products"
+        android:text="Shoppurs Products"
         android:textColor="?attr/primaryTextColor"
         android:textStyle="bold"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -40,5 +40,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/text_error"
+        android:textColor="?attr/secondaryTextColor"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

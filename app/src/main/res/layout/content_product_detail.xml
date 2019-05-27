@@ -461,6 +461,7 @@
                     android:id="@+id/linear_amount_division"
                     android:orientation="vertical"
                     android:weightSum="6"
+                    android:visibility="gone"
                     android:layout_width="40dp"
                     android:layout_height="@dimen/profile_graph_amount_div_size">
 

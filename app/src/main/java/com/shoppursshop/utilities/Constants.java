@@ -100,6 +100,7 @@ public class Constants {
     public static String GET_SUB_CATEGORY="/api/categories/subcategories";
     public static String DELETE_SUB_CATEGORY="/api/categories/sub_categories/delete";
     public static String CREATE_SUB_CATEGORY="/api/categories/addSubCategoryRetailer";
+    public static String GET_SYNCED_PRODUCTS="/api/products/syncproductslist";
     public static String GET_PRODUCTS="/api/products/productslist";
     public static String GET_PRODUCTS_WITH_BAR="/api/products/productslistbar";
     public static String CREATE_PRODUCTS="/api/products/addProduct";
@@ -121,6 +122,7 @@ public class Constants {
     public static String ORDER_DELIVERED="/api/shop/order/order_delivered";
     public static String CUST_SET_FAV_STATUS="/api/shop_customer/favourite";
     public static String CUST_SET_RATINGS="/api/shop_customer/ratings";
+    public static String CUST_GET_RATINGS="/api/shop_customer/get_ratings";
     public static String CUST_SALE_DATA="/api/shop_customer/customer_sale_data";
     public static String CUST_PRE_ORDER="/api/shop_customer/customer_pre_orders";
     public static String ADD_BAR_CODE="/api/products/add_product_barcode";

@@ -53,11 +53,12 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
     private List<Bar> barList,customerSaleList;
     private List<Object> orderItemList;
 
-    private String custCode,isFav;
+    private String custId,custCode,isFav;
     private float selectedRatings,ratings;
     private Menu menu;
 
-    private TextView textViewInitials,textViewName,textViewAddress,textViewStateCity,textViewMobile,textTotalSale;
+    private TextView textViewInitials,textViewName,textViewAddress,textViewStateCity,
+            textViewMobile,textTotalSale,textRatings;
     private ImageView imageView2,imageView3,imageView4,imageFav;
     private Button btnLoadMorePreOrders;
 
@@ -86,6 +87,7 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
         textViewMobile = findViewById(R.id.text_mobile);
         textViewInitials = findViewById(R.id.tv_initial);
         textTotalSale = findViewById(R.id.text_total_sale);
+        textRatings = findViewById(R.id.text_start_rating);
 
         imageView2 = findViewById(R.id.image_view_2);
         imageView3 = findViewById(R.id.image_view_3);
@@ -96,6 +98,7 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
 
         isFav = intent.getStringExtra("isFav");
         custCode = intent.getStringExtra("custCode");
+        custId = intent.getStringExtra("custId");
         ratings = intent.getFloatExtra("ratings",0f);
 
         String name = intent.getStringExtra("name");
@@ -198,7 +201,7 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
 
         getSaleData();
         getPreOrders();
-
+        getRatings();
     }
 
 
@@ -274,13 +277,25 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
 
     private void getSaleData(){
         Map<String,String> params=new HashMap<>();
-        params.put("code",custCode);
+        params.put("code",sharedPreferences.getString(Constants.SHOP_CODE,""));
+        params.put("id",custId);
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
         String url=getResources().getString(R.string.url)+Constants.CUST_SALE_DATA;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"customerSaleData");
+    }
+
+    private void getRatings(){
+        Map<String,String> params=new HashMap<>();
+        params.put("code",custCode);
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.CUST_GET_RATINGS;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"customerRatings");
     }
 
     private void getPreOrders(){
@@ -357,14 +372,23 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
                         JSONArray dataArray = response.getJSONArray("result");
                         JSONObject jsonObject = null;
                         int len = dataArray.length();
+                        double maxValue = 0;
                         for (int i = 0; i < len; i++) {
                             jsonObject = dataArray.getJSONObject(i);
                             totalSale = totalSale + (float) jsonObject.getDouble("amount");
+                            if(maxValue < jsonObject.getDouble("amount")){
+                                maxValue = jsonObject.getDouble("amount");
+                            }
                             updateMonthlySaleList(Utility.parseMonth(jsonObject.getString("orderDate"),
                                     "yyyy-MM-dd HH:mm:ss"), jsonObject.getInt("amount"));
                         }
 
                         textTotalSale.setText(Utility.numberFormat(totalSale));
+                        if(maxValue == 0d){
+                            ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget(50000);
+                        }else{
+                            ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget((float) maxValue);
+                        }
 
                         if(len == 0){
                             setNullMonthlyBar();
@@ -407,6 +431,11 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
                         }
                         orderAdapter.notifyDataSetChanged();
                     }
+                }
+            }else if (apiName.equals("customerRatings")) {
+                if (response.getBoolean("status")) {
+                   float ratings = (float)response.getDouble("result");
+                   textRatings.setText(String.format("%.01f",ratings));
                 }
             }
         }catch (JSONException e) {

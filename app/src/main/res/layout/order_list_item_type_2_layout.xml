@@ -52,37 +52,41 @@
         android:stepSize="0.5"
         android:rating="4.5" />
 
-    <TextView
-        android:id="@+id/text_sub_header"
+    <RelativeLayout
         android:layout_marginTop="@dimen/view_vertical_margin"
         android:layout_below="@+id/relative_header"
-        android:textSize="@dimen/very_small_text_size"
-        android:textColor="?attr/secondaryTextColor"
-        android:text="4 hours ago"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="20dp">
+
+        <ImageView
+            android:layout_alignParentBottom="true"
+            android:id="@+id/iv_rupees"
+            android:src="@drawable/rupee"
+            android:tint="?attr/secondaryTextColor"
+            android:layout_width="16dp"
+            android:layout_height="16dp" />
+
+        <TextView
+            android:id="@+id/text_amount"
+            android:layout_toRightOf="@+id/iv_rupees"
+            android:layout_marginLeft="6dp"
+            android:textStyle="bold"
+            android:textColor="?attr/secondaryTextColor"
+            android:textSize="@dimen/home_list_title_text_size_type_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/text_date_time"
-        android:layout_below="@+id/text_sub_header"
-        android:layout_marginTop="@dimen/view_vertical_margin"
         android:textSize="@dimen/very_small_text_size"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentRight="true"
         android:textColor="?attr/secondaryTextColor"
         android:text="4 hours ago"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/btn_reorder"
-        android:background="@drawable/accent_2_solid_round_corner_background"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:text="Reorder"
-        android:textSize="@dimen/very_small_text_size"
-        android:visibility="gone"
-        android:textColor="@color/white"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp" />
 
 </RelativeLayout>

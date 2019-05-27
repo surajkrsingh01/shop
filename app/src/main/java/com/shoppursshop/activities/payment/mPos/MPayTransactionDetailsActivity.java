@@ -219,7 +219,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
             @Override
             public void onClick(View view) {
                Intent intent = new Intent(MPayTransactionDetailsActivity.this,InvoiceActivity.class);
-               intent.putExtra("orderId",getIntent().getStringExtra("ordId"));
+               intent.putExtra("orderNumber",getIntent().getStringExtra("ordId"));
                startActivity(intent);
                finish();
             }
@@ -227,7 +227,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
     }
 
     private void placeOrder(JSONArray shopArray, String orderId) throws JSONException {
-        shopArray.getJSONObject(0).put("orderId", orderId );
+        shopArray.getJSONObject(0).put("orderNumber", orderId );
         shopArray.getJSONObject(0).put("transactionId", transId );
         Log.d(TAG, shopArray.toString());
         String url=getResources().getString(R.string.url)+Constants.PLACE_ORDER;
@@ -237,7 +237,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
 
     private void deliverOrder(){
         Map<String,String> params=new HashMap<>();
-        params.put("id", getIntent().getStringExtra("ordId"));
+        params.put("orderNumber", getIntent().getStringExtra("ordId"));
         params.put("custCode",getIntent().getStringExtra("custCode"));
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
@@ -628,7 +628,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
 
     private void updatePaymentStatus(JSONObject dataObject,String status){
         try{
-            dataObject.put("orderId",getIntent().getStringExtra("ordId"));
+            dataObject.put("orderNumber",getIntent().getStringExtra("ordId"));
             dataObject.put("payStatus", status);
           //  dataObject.put("approved", approved);
           //  dataObject.put("cardLevel", cardLevel);

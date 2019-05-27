@@ -171,14 +171,12 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             super(itemView);
             rootView = itemView;
             textHeader=itemView.findViewById(R.id.text_header);
-            textAmount=itemView.findViewById(R.id.text_sub_header);
+            textAmount=itemView.findViewById(R.id.text_amount);
             textStatus=itemView.findViewById(R.id.text_status);
             textDateTime=itemView.findViewById(R.id.text_date_time);
-            btnReorder=itemView.findViewById(R.id.btn_reorder);
             ratingBar=itemView.findViewById(R.id.ratingBar);
             ratingBar.setVisibility(View.GONE);
             rootView.setOnTouchListener(this);
-            btnReorder.setOnClickListener(this);
         }
 
         @Override
@@ -360,7 +358,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
             myViewHolder.textHeader.setText("Order No - "+item.getId());
             myViewHolder.textStatus.setText("("+item.getStatus()+")");
-            myViewHolder.textAmount.setText("Order Total amount - Rs "+Utility.numberFormat(item.getAmount()));
+            myViewHolder.textAmount.setText(Utility.numberFormat(item.getAmount()));
             myViewHolder.textDateTime.setText(item.getDateTime());
             myViewHolder.ratingBar.setRating(item.getRating());
 

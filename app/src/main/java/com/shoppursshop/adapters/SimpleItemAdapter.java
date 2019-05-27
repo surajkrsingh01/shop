@@ -25,6 +25,7 @@ import com.shoppursshop.models.CatListItem;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MySimpleItem;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.Utility;
 
 import java.util.List;
 
@@ -165,18 +166,25 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 myViewHolder.textHeader.setText(item.getProdName());
                 if(item.isSelected()){
                     myViewHolder.imageViewSelected.setVisibility(View.VISIBLE);
-                    myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.grey200));
-                    myViewHolder.textHeader.setTextColor(context.getResources().getColor(R.color.black));
+                    if(isDarkTheme){
+                        Utility.setColorFilter(myViewHolder.imageViewSelected.getDrawable(),
+                                context.getResources().getColor(R.color.white));
+                    }else{
+                        Utility.setColorFilter(myViewHolder.imageViewSelected.getDrawable(),
+                                context.getResources().getColor(R.color.primary_text_color));
+                    }
+                   // myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.grey200));
+                  //  myViewHolder.textHeader.setTextColor(context.getResources().getColor(R.color.black));
                 }else{
                     myViewHolder.imageViewSelected.setVisibility(View.GONE);
-                    if(isDarkTheme) {
+                    /*if(isDarkTheme) {
                         myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.dark_color));
                         myViewHolder.textHeader.setTextColor(context.getResources().getColor(R.color.white));
                     }
                     else{
                         myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.white));
                         myViewHolder.textHeader.setTextColor(context.getResources().getColor(R.color.black));
-                    }
+                    }*/
                 }
             }else{
                 MySimpleItem item = (MySimpleItem) itemList.get(position);
@@ -184,18 +192,25 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 myViewHolder.textHeader.setText(item.getName());
                 if(item.isSelected()){
                     myViewHolder.imageViewSelected.setVisibility(View.VISIBLE);
-                    myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.grey200));
-                    myViewHolder.textHeader.setTextColor(context.getResources().getColor(R.color.black));
+                    if(isDarkTheme){
+                        Utility.setColorFilter(myViewHolder.imageViewSelected.getDrawable(),
+                                context.getResources().getColor(R.color.white));
+                    }else{
+                        Utility.setColorFilter(myViewHolder.imageViewSelected.getDrawable(),
+                                context.getResources().getColor(R.color.primary_text_color));
+                    }
+                   // myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.grey200));
+                  //  myViewHolder.textHeader.setTextColor(context.getResources().getColor(R.color.black));
                 }else{
                     myViewHolder.imageViewSelected.setVisibility(View.GONE);
-                    if(isDarkTheme) {
+                  /*  if(isDarkTheme) {
                         myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.dark_color));
                         myViewHolder.textHeader.setTextColor(context.getResources().getColor(R.color.white));
                     }
                     else{
                         myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.white));
                         myViewHolder.textHeader.setTextColor(context.getResources().getColor(R.color.black));
-                    }
+                    }*/
                 }
             }
 

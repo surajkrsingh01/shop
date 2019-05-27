@@ -56,7 +56,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
     private float totalPrice;
 
-    private String paymentMode,orderId;
+    private String paymentMode,orderNumber;
     private String deviceType;
 
     private JSONArray shopArray;
@@ -367,7 +367,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
              if (apiName.equals("generate_order")){
                 if(response.getString("status").equals("true")||response.getString("status").equals(true)){
                     Log.d(TAG, "Ordeer Generated" );
-                    orderId = response.getJSONObject("result").getString("orderId");
+                    orderNumber = response.getJSONObject("result").getString("orderNumber");
                     totalPrice = dbHelper.getTotalPriceCart();
                    // dbHelper.deleteTable(DbHelper.CART_TABLE);
                     itemList.clear();
@@ -383,10 +383,10 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                         }
                         showMyDialog("Take Cash Rs "+Utility.numberFormat(totalPrice));
                     }else{
-                        Log.d(TAG, "orderId "+orderId );
+                        Log.d(TAG, "orderId "+orderNumber );
                         Intent intent = new Intent(CartActivity.this, MPayActivity.class);
                         intent.putExtra("totalAmount",String.format("%.02f",dbHelper.getTotalPriceCart()));
-                        intent.putExtra("ordId",orderId);
+                        intent.putExtra("ordId",orderNumber);
                         intent.putExtra("custCode", getIntent().getStringExtra("custCode"));
                         intent.putExtra("custId", getIntent().getIntExtra("custId",0));
                         intent.putExtra("custName", getIntent().getStringExtra("custName"));
@@ -422,7 +422,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     @Override
     public void onDialogPositiveClicked(){
       Intent intent = new Intent(CartActivity.this,InvoiceActivity.class);
-      intent.putExtra("orderId",orderId);
+      intent.putExtra("orderNumber",orderNumber);
       startActivity(intent);
       finish();
     }

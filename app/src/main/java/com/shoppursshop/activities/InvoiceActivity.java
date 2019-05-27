@@ -116,7 +116,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
     private void getInvoice(){
         Map<String,String> params=new HashMap<>();
-        params.put("id",getIntent().getStringExtra("orderId"));
+        params.put("orderNumber",getIntent().getStringExtra("orderNumber"));
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
