@@ -26,7 +26,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -44,6 +47,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.RegisterActivity;
@@ -63,6 +72,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +80,7 @@ import java.util.Map;
 public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCallback, OnLocationReceivedListener {
 
     private final float ZOOM = 15f;
+    private final int SEARCH_LOCATION = 3;
 
     private GoogleMap mMap;
     private Marker marker;
@@ -100,6 +111,10 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
     }
 
     private void init(){
+
+        // Initialize Places.
+        Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
+
 
         double latitude = Double.parseDouble(sharedPreferences.getString(Constants.USER_LAT,"0.0"));
         double longitude = Double.parseDouble(sharedPreferences.getString(Constants.USER_LONG,"0.0"));
@@ -167,7 +182,7 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
         ivSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                    searchPlaces();
             }
         });
     }
@@ -415,7 +430,7 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                openDialog();
+               // openDialog();
             }
         });
     }
@@ -494,17 +509,29 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            // Check for the integer request code originally supplied to startResolutionForResult().
-            case 1:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        getLocation(true);
-                    case Activity.RESULT_CANCELED:
-                        break;
-                }
-                break;
 
+        if (requestCode == 1) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    getLocation(true);
+                case Activity.RESULT_CANCELED:
+                    break;
+            }
+        }else if (requestCode == SEARCH_LOCATION) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.i(TAG, "Place: " + place.getName()
+                        + ", " + place.getId()+ ", " + place.getAddress());
+                editAddress.setText(place.getAddress());
+                shopLatLng = place.getLatLng();
+                updateMarker(shopLatLng);
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i(TAG, status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
         }
 
     }
@@ -544,6 +571,22 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
         }else {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         }
+    }
+
+    public void searchPlaces(){
+
+        // Create a new Places client instance.
+        PlacesClient placesClient = Places.createClient(this);
+// Set the fields to specify which types of place data to return.
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.ADDRESS,
+                Place.Field.LAT_LNG);
+
+
+        Intent intent =
+                new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN,fields)
+                        .build(this);
+        startActivityForResult(intent, SEARCH_LOCATION);
+
     }
 
     private void getCountries() {
@@ -756,4 +799,5 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
     private void openDialog(){
         DialogAndToast.showDialog("Get location",this);
     }
+
 }

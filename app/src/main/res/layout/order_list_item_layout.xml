@@ -57,6 +57,7 @@
             android:textStyle="bold"
             android:text="@string/order_amount"
             android:layout_marginTop="@dimen/home_list_title_text_margin_type_2"
+            android:visibility="gone"
             android:textColor="?attr/primaryTextColor"
             android:textSize="@dimen/home_list_title_text_size_type_4"
             android:layout_width="wrap_content"

@@ -102,19 +102,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/text_off_percentage"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/text_mrp"
-                android:textColor="@color/green700"
-                android:textSize="@dimen/small_text_size"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
         </RelativeLayout>
 
-
+        <TextView
+            android:id="@+id/text_off_percentage"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/green700"
+            android:textSize="@dimen/small_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/text_status"
