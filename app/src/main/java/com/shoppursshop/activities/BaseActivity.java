@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
+import com.shoppursshop.activities.payment.mPos.MPayTransactionDetailsActivity;
 import com.shoppursshop.activities.settings.AddCategoryActivity;
 import com.shoppursshop.activities.settings.AddSubCatActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
@@ -152,6 +153,8 @@ public class BaseActivity extends AppCompatActivity {
         }else if(context instanceof SyncProductActivity){
             tv.setText("Add Products");
         }else if(context instanceof TransactionDetailsActivity){
+            tv.setText("Deliver Order");
+        }else if(context instanceof MPayTransactionDetailsActivity){
             tv.setText("Deliver Order");
         }
     }

@@ -4,7 +4,15 @@ public class InvoiceItem {
 
     private String itemName,hsn;
     private int qty;
-    private float gst,rate,amount;
+    private float gst,mrp,rate,amount;
+
+    public float getMrp() {
+        return mrp;
+    }
+
+    public void setMrp(float mrp) {
+        this.mrp = mrp;
+    }
 
     public String getHsn() {
         return hsn;

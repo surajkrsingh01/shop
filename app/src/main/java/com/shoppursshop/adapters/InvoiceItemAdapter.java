@@ -28,12 +28,13 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class MyHomeHeaderViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvName,tvQty,tvHsn,tvRate,tvAmt;
+        private TextView tvName,tvQty,tvHsn,tvMrp,tvRate,tvAmt;
 
         public MyHomeHeaderViewHolder(View itemView) {
             super(itemView);
             tvName=itemView.findViewById(R.id.text_name);
             tvQty=itemView.findViewById(R.id.text_qty);
+            tvMrp=itemView.findViewById(R.id.text_mrp);
             tvRate=itemView.findViewById(R.id.text_rate);
             tvAmt=itemView.findViewById(R.id.text_amount);
             //tvGst=itemView.findViewById(R.id.text_gst);
@@ -75,6 +76,7 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             myViewHolder.tvName.setText(item.getItemName());
             myViewHolder.tvHsn.setText(item.getHsn());
             myViewHolder.tvQty.setText(""+item.getQty());
+            myViewHolder.tvMrp.setText(Utility.numberFormat(item.getMrp()));
             myViewHolder.tvRate.setText(Utility.numberFormat(item.getRate()));
           //  myViewHolder.tvGst.setText(Utility.numberFormat(item.getGst())+"%");
             float amt = item.getQty() * item.getRate();

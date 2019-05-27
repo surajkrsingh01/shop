@@ -164,7 +164,7 @@ public class EPayPayswiffActivity extends NetworkBaseActivity {
             dataObject = new JSONObject(responseData);
             Log.i(TAG,"Save Response "+dataObject.toString());
             try{
-                dataObject.put("orderNumber",getIntent().getStringExtra("ordId"));
+                dataObject.put("orderNumber",getIntent().getStringExtra("orderNumber"));
                 if(dataObject.getString("responseMessage").equals("Success")){
                     dataObject.put("payStatus", "Done");
                     approved = true;
@@ -201,7 +201,9 @@ public class EPayPayswiffActivity extends NetworkBaseActivity {
                 if (response.getBoolean("status")) {
                     Intent intent = new Intent(EPayPayswiffActivity.this, TransactionDetailsActivity.class);
                     intent.putExtra("responseData",dataObject.toString());
+                    intent.putExtra("shopArray",getIntent().getStringExtra("shopArray"));
                     startActivity(intent);
+                    finish();
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }

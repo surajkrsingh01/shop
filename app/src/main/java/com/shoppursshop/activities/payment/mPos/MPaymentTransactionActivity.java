@@ -319,7 +319,7 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
             }
 
             else if (msg.what == QPOS_EMV_MULITPLE_APPLICATION) {
-                ArrayList<String> applicationList = (ArrayList<String>) msg.obj;
+               /* ArrayList<String> applicationList = (ArrayList<String>) msg.obj;
                 emvList = (ListView) findViewById(R.id.application_list);
                 emvList.setVisibility(View.VISIBLE);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(MPaymentTransactionActivity.this,
@@ -334,7 +334,7 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
                             emvList.setVisibility(View.GONE);
                         }
                     }
-                });
+                });*/
             }
         };
     };

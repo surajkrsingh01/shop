@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/backgroundColor"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -14,19 +14,34 @@
     tools:showIn="@layout/activity_mpay">
 
     <TextView
-        android:id="@+id/tv_select_label"
-        android:text="Select Device"
+        android:id="@+id/text_header"
+        android:textColor="?attr/secondaryTextColor"
+        android:text="Payment"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:textSize="@dimen/large_text_size"
-        android:textColor="@color/primary_text_color"
-        android:layout_centerHorizontal="true"
+        android:paddingLeft="@dimen/view_horizontal_margin"
+        android:paddingRight="@dimen/view_horizontal_margin"
+        android:textSize="@dimen/home_list_header_text_size"
+        android:textAllCaps="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/text_sub_header"
+        android:layout_marginTop="@dimen/view_vertical_margin"
+        android:paddingLeft="@dimen/view_horizontal_margin"
+        android:paddingRight="@dimen/view_horizontal_margin"
+        android:layout_below="@+id/text_header"
+        android:textColor="?attr/primaryTextColor"
+        android:text="Select Device"
+        android:textStyle="bold"
+        android:textSize="@dimen/product_list_very_large_text_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_below="@+id/tv_select_label"
+        android:layout_below="@+id/text_sub_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

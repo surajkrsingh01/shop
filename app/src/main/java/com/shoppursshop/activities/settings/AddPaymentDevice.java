@@ -277,13 +277,15 @@ public class AddPaymentDevice extends NetworkBaseActivity {
             }else if (apiName.equals("generate_order")){
                 if(response.getString("status").equals("true")||response.getString("status").equals(true)){
                     Log.d(TAG, "Ordeer Generated" );
-                    String orderId = response.getJSONObject("result").getString("orderId");
-                    Log.d(TAG, "orderId "+orderId );
+                    String orderNumber = response.getJSONObject("result").getString("orderNumber");
+                    Log.d(TAG, "orderNumber "+orderNumber );
                     //placeOrder(shopArray, orderId);  // open payment option
 
                     Intent intent = new Intent(AddPaymentDevice.this, EPayPayswiffActivity.class);
+                    intent.putExtra("orderNumber",orderNumber);
+                    intent.putExtra("shopArray",shopArray.toString());
                     startActivity(intent);
-
+                    finish();
                 }else {
                     DialogAndToast.showToast(response.getString("message"),AddPaymentDevice.this);
                 }

@@ -54,7 +54,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
     private TextView tvShopName,tvShopAddress,tvShopEmail,tvShopPhone,tvShopGSTIN,tvInvoiceNo,tvDate,tvCustomerName,
                       tvSubTotAmt,tvGrossTotAmt,tvTotSgst,tvTotCgst,tvTotIgst,tvShortExcess,tvNetPayableAmt,tvNetPayableWords,
-                      tvCollectionMode,tvCollectionAmt,tvPaidAmt,tvBalAmt;
+                      tvPaidAmt,tvBalAmt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +99,6 @@ public class InvoiceActivity extends NetworkBaseActivity {
         tvShortExcess = findViewById(R.id.text_short_excess);
         tvNetPayableAmt = findViewById(R.id.text_net_payable_amount);
         tvNetPayableWords = findViewById(R.id.text_net_payable_amount_words);
-        tvCollectionMode = findViewById(R.id.text_collection);
-        tvCollectionAmt = findViewById(R.id.text_collection_amount);
         tvPaidAmt = findViewById(R.id.text_paid_amount);
         tvBalAmt = findViewById(R.id.text_balance);
 
@@ -116,7 +114,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
     private void getInvoice(){
         Map<String,String> params=new HashMap<>();
-        params.put("orderNumber",getIntent().getStringExtra("orderNumber"));
+        params.put("number",getIntent().getStringExtra("orderNumber"));
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
@@ -152,8 +150,6 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     float netPayable = (float) Math.round(jsonObject.getDouble("invTotNetPayable"));
                     tvNetPayableAmt.setText(Utility.numberFormat(netPayable));
                     tvShortExcess.setText(Utility.numberFormat(jsonObject.getDouble("invTotNetPayable") - netPayable));
-                    tvCollectionMode.setText(jsonObject.getString("invPaymentMode"));
-                    tvCollectionAmt.setText(Utility.numberFormat(netPayable));
                     tvPaidAmt.setText(Utility.numberFormat(netPayable));
                     tvNetPayableWords.setText(EnglishNumberToWords.convert((int)netPayable)+" rupees");
 
@@ -168,6 +164,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                         item.setHsn(jsonObject.getString("invDHsnCode"));
                         item.setQty(jsonObject.getInt("invDQty"));
                         item.setGst(jsonObject.getInt("invDIGST"));
+                        item.setMrp((float) jsonObject.getDouble("invDMrp"));
                         item.setRate(Float.parseFloat(jsonObject.getString("invDSp")));
                         itemList.add(item);
                     }

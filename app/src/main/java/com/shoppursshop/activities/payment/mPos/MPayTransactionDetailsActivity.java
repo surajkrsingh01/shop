@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,11 +57,13 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
     private TextView transactionresponse;
     String data,ptype,cardLevel,merchantRefNo,transId,invNo,invoiceJson;
     boolean approved;
+    private RelativeLayout rlFooter;
+    private TextView tvFooter;
 
+    private boolean isDelivered;
 
     private TextView textViewStatusHeader,tvStatus,tvTransactionId,tvRrn,tvAmount,tvPaymentMethod;
     private ImageView imageStatusSuccess,imageViewStatusFailure;
-    private Button btnDeliver,btnViewInvoice,btnBack;
     private JSONObject dataObject;
     private JSONArray shopArray;
 
@@ -77,6 +80,9 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
         text = (TextView) findViewById(R.id.text);
         void_ref_no=(EditText)findViewById(R.id.void_ref_no);
         transactionresponse= (TextView) findViewById(R.id.transactionresponse);
+        rlFooter = findViewById(R.id.relative_footer_action);
+        tvFooter = findViewById(R.id.text_action);
+        initFooterAction(this);
 
         transactionresponse.setText(data);
         Log.i(TAG,"Response "+data);
@@ -163,9 +169,6 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
         tvAmount = findViewById(R.id.tv_amount);
         imageStatusSuccess = findViewById(R.id.image_status_success);
         imageViewStatusFailure = findViewById(R.id.image_status_failure);
-        btnBack = findViewById(R.id.btn_back);
-        btnDeliver = findViewById(R.id.btn_deliver_order);
-        btnViewInvoice = findViewById(R.id.btn_view_invoice);
 
 
 
@@ -201,27 +204,17 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
             tvStatus.setText("There is some problem occurred.");
         }
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        rlFooter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-
-        btnDeliver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deliverOrder();
-            }
-        });
-
-        btnViewInvoice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               Intent intent = new Intent(MPayTransactionDetailsActivity.this,InvoiceActivity.class);
-               intent.putExtra("orderNumber",getIntent().getStringExtra("ordId"));
-               startActivity(intent);
-               finish();
+                if(isDelivered){
+                    Intent intent = new Intent(MPayTransactionDetailsActivity.this,InvoiceActivity.class);
+                    intent.putExtra("orderNumber",getIntent().getStringExtra("orderNumber"));
+                    startActivity(intent);
+                    finish();
+                }else{
+                    deliverOrder();
+                }
             }
         });
     }
@@ -598,8 +591,8 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
                 }
             }else if (apiName.equals("orderDelivered")) {
                 if (response.getBoolean("status")) {
-                    btnDeliver.setVisibility(View.GONE);
-                    btnViewInvoice.setVisibility(View.VISIBLE);
+                    isDelivered = true;
+                    tvFooter.setText("View Invoice");
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }
