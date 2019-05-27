@@ -226,8 +226,8 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
         });
     }
 
-    private void placeOrder(JSONArray shopArray, String orderId) throws JSONException {
-        shopArray.getJSONObject(0).put("orderNumber", orderId );
+    private void placeOrder(JSONArray shopArray, String orderNumber) throws JSONException {
+        shopArray.getJSONObject(0).put("orderNumber", orderNumber );
         shopArray.getJSONObject(0).put("transactionId", transId );
         Log.d(TAG, shopArray.toString());
         String url=getResources().getString(R.string.url)+Constants.PLACE_ORDER;
@@ -237,7 +237,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
 
     private void deliverOrder(){
         Map<String,String> params=new HashMap<>();
-        params.put("orderNumber", getIntent().getStringExtra("ordId"));
+        params.put("orderNumber", getIntent().getStringExtra("orderNumber"));
         params.put("custCode",getIntent().getStringExtra("custCode"));
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
@@ -412,7 +412,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
             }
 
             Log.d(TAG, shopArray.toString());
-            placeOrder(shopArray,getIntent().getStringExtra("ordId"));
+            placeOrder(shopArray,getIntent().getStringExtra("orderNumber"));
 
         }catch (Exception a){
             a.printStackTrace();
@@ -628,8 +628,9 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
 
     private void updatePaymentStatus(JSONObject dataObject,String status){
         try{
-            dataObject.put("orderNumber",getIntent().getStringExtra("ordId"));
+            dataObject.put("orderNumber",getIntent().getStringExtra("orderNumber"));
             dataObject.put("payStatus", status);
+            dataObject.put("paymentMode", "DevicePay");
           //  dataObject.put("approved", approved);
           //  dataObject.put("cardLevel", cardLevel);
          //   dataObject.put("merchantRefInvoiceNo", merchantRefNo);

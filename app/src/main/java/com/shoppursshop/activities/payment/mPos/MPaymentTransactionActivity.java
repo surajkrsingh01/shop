@@ -239,7 +239,7 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
                     //  generateJson("Credit/Debit Card");
                     Intent i = new Intent(MPaymentTransactionActivity.this, MPayTransactionDetailsActivity.class);
                     i.putExtra("paymentResponseObject", detailObject.toString());
-                    i.putExtra("ordId", getIntent().getStringExtra("ordId"));
+                    i.putExtra("orderNumber", getIntent().getStringExtra("orderNumber"));
                     i.putExtra("totalAmount", amount);
                     i.putExtra("custCode", getIntent().getStringExtra("custCode"));
                     i.putExtra("custId", getIntent().getIntExtra("custId", 0));

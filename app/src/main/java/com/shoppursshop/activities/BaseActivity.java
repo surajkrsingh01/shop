@@ -151,6 +151,8 @@ public class BaseActivity extends AppCompatActivity {
             tv.setText("Add Sub Categories");
         }else if(context instanceof SyncProductActivity){
             tv.setText("Add Products");
+        }else if(context instanceof TransactionDetailsActivity){
+            tv.setText("Deliver Order");
         }
     }
 

@@ -386,7 +386,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                         Log.d(TAG, "orderId "+orderNumber );
                         Intent intent = new Intent(CartActivity.this, MPayActivity.class);
                         intent.putExtra("totalAmount",String.format("%.02f",dbHelper.getTotalPriceCart()));
-                        intent.putExtra("ordId",orderNumber);
+                        intent.putExtra("orderNumber",orderNumber);
                         intent.putExtra("custCode", getIntent().getStringExtra("custCode"));
                         intent.putExtra("custId", getIntent().getIntExtra("custId",0));
                         intent.putExtra("custName", getIntent().getStringExtra("custName"));

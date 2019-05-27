@@ -183,7 +183,7 @@ public class MPayActivity extends NetworkBaseActivity implements MyItemClickList
         i.putExtra("devicetype", deviceType);
         i.putExtra(PAYMENT_TYPE, SALE);
         i.putExtra("transactionmode", deviceCommMode);
-        i.putExtra("ordId",getIntent().getStringExtra("ordId"));
+        i.putExtra("orderNumber",getIntent().getStringExtra("orderNumber"));
         i.putExtra("custCode", getIntent().getStringExtra("custCode"));
         i.putExtra("custId", getIntent().getIntExtra("custId",0));
         i.putExtra("custName", getIntent().getStringExtra("custName"));

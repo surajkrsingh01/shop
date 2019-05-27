@@ -1,6 +1,7 @@
 package com.shoppursshop.activities.payment.ePay;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import com.android.volley.Request;
 import com.pnsol.epay.enums.CountryEnums;
 import com.pnsol.epay.sdk.OrderCreation;
 import com.pnsol.epay.utils.ObjectMapperUtil;
@@ -19,11 +21,19 @@ import com.pnsol.epay.vo.PaymentResponseVO;
 import com.pnsol.exception.ServiceCallException;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.TransactionDetailsActivity;
+import com.shoppursshop.database.DbHelper;
+import com.shoppursshop.models.Barcode;
+import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.DialogAndToast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class EPayPayswiffActivity extends NetworkBaseActivity {
 
@@ -35,6 +45,8 @@ public class EPayPayswiffActivity extends NetworkBaseActivity {
     private final String secretKey = "RA136A579CB4MB0475GEA022626FZDAJ";
 
     private String responseData;
+    private boolean approved;
+    private JSONObject dataObject;
 
     private PaymentResponseVO requestResponseVO;
 
@@ -148,12 +160,55 @@ public class EPayPayswiffActivity extends NetworkBaseActivity {
 
 
     private void saveResponse(){
-        JSONObject jsonObject = null;
         try{
-            jsonObject = new JSONObject(responseData);
-            Log.i(TAG,"Save Response "+jsonObject.toString());
+            dataObject = new JSONObject(responseData);
+            Log.i(TAG,"Save Response "+dataObject.toString());
+            try{
+                dataObject.put("orderNumber",getIntent().getStringExtra("ordId"));
+                if(dataObject.getString("responseMessage").equals("Success")){
+                    dataObject.put("payStatus", "Done");
+                    approved = true;
+                }else{
+                    dataObject.put("payStatus", "Failed");
+                    approved = false;
+                }
+                dataObject.put("paymentMode", "Epay");
+                dataObject.put("custCode",getIntent().getStringExtra("custCode"));
+                //dataObject.put("cardHolderName",dataObject.getString("Card Hodler Name"));
+                dataObject.put("userName",sharedPreferences.getString(Constants.FULL_NAME,""));
+                dataObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+                dataObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+                dataObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+            String url=getResources().getString(R.string.url)+Constants.ADD_TRANS_DATA;
+            showProgress(true);
+            jsonObjectApiRequest(Request.Method.POST,url,dataObject,"updatePaymentStatus");
+
         }catch (JSONException e){
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject response, String apiName) {
+        showProgress(false);
+        try {
+            // JSONObject jsonObject=response.getJSONObject("response");
+            Log.d("response", response.toString());
+            if (apiName.equals("updatePaymentStatus")) {
+                if (response.getBoolean("status")) {
+                    Intent intent = new Intent(EPayPayswiffActivity.this, TransactionDetailsActivity.class);
+                    intent.putExtra("responseData",dataObject.toString());
+                    startActivity(intent);
+                }else{
+                    DialogAndToast.showDialog(response.getString("message"),this);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            DialogAndToast.showToast(getResources().getString(R.string.json_parser_error)+e.toString(),EPayPayswiffActivity.this);
         }
     }
 

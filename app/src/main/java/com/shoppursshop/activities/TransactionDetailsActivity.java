@@ -8,15 +8,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
 
-public class TransactionDetailsActivity extends AppCompatActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class TransactionDetailsActivity extends NetworkBaseActivity {
 
     private TextView textViewStatusHeader,tvStatus,tvTransactionId,tvRrn,tvAmount,tvPaymentMethod;
     private ImageView imageStatusSuccess,imageViewStatusFailure;
-    private Button btnDeliver,btnViewInvoice,btnBack;
+    private RelativeLayout rlFooter;
+    private TextView tvFooter;
+    private boolean isDelivered;
+    private JSONObject dataObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +44,56 @@ public class TransactionDetailsActivity extends AppCompatActivity {
         tvAmount = findViewById(R.id.tv_amount);
         imageStatusSuccess = findViewById(R.id.image_status_success);
         imageViewStatusFailure = findViewById(R.id.image_status_failure);
-        btnBack = findViewById(R.id.btn_back);
-        btnDeliver = findViewById(R.id.btn_deliver_order);
-        btnViewInvoice = findViewById(R.id.btn_view_invoice);
+        rlFooter = findViewById(R.id.relative_footer_action);
+        tvFooter = findViewById(R.id.text_action);
+        initFooterAction(this);
+
+        try {
+            dataObject = new JSONObject(getIntent().getStringExtra("responseData"));
+            tvTransactionId.setText(dataObject.getString("transactionId"));
+            tvRrn.setText(dataObject.getString("orderRefNo"));
+            tvPaymentMethod.setText(dataObject.getString("paymentMethod"));
+            tvAmount.setText(dataObject.getString("amount"));
+
+            String status = dataObject.getString("responseMessage");
+            if(status.equals("Success")){
+                imageStatusSuccess.setVisibility(View.VISIBLE);
+                imageViewStatusFailure.setVisibility(View.GONE);
+                textViewStatusHeader.setText("Congrats");
+                tvStatus.setText("Order has been successfully placed.");
+
+            }else{
+                imageStatusSuccess.setVisibility(View.GONE);
+                imageViewStatusFailure.setVisibility(View.VISIBLE);
+                textViewStatusHeader.setText("Sorry");
+                tvStatus.setText("There is some problem occurred.");
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+        rlFooter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isDelivered){
+                    openInvoiceActivity();
+                }else{
+                    deliverOrder();
+                }
+            }
+        });
+    }
+
+    private void deliverOrder(){
+
+    }
+
+    private void openInvoiceActivity(){
+
     }
 
 }
