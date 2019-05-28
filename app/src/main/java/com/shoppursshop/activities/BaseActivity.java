@@ -156,6 +156,8 @@ public class BaseActivity extends AppCompatActivity {
             tv.setText("Deliver Order");
         }else if(context instanceof MPayTransactionDetailsActivity){
             tv.setText("Deliver Order");
+        }else if(context instanceof DeliveryAddressActivity){
+            tv.setText("Update Delivery Address");
         }
     }
 

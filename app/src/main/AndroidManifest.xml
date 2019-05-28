@@ -33,14 +33,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
-
-        <activity android:name="com.pnsol.epay.sdk.PaymentPage"
-            android:screenOrientation="portrait"/>
-
+        <activity android:name=".activities.DeliveryAddressActivity"></activity>
+        <activity
+            android:name="com.pnsol.epay.sdk.PaymentPage"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.payment.ePay.EPayPayswiffActivity"
             android:label="@string/title_activity_epay_payswiff"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.TransactionDetailsActivity"
             android:label="@string/title_activity_transaction_details"
@@ -76,9 +76,7 @@
         <activity
             android:name=".activities.CartActivity"
             android:label="@string/title_activity_cart"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" >
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
 
         <uses-library
             android:name="org.apache.http.legacy"
