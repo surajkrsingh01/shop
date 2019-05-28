@@ -107,6 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/primaryTextColor"
+                android:textColorHint="?attr/primaryTextColor"
                 android:hint="Home Delivery"/>
 
             <RadioButton
@@ -116,6 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/primaryTextColor"
+                android:textColorHint="?attr/primaryTextColor"
                 android:hint="Self Delivery"/>
         </RadioGroup>
 

@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?attr/backgroundColor">
 
     <LinearLayout
         android:orientation="vertical"
@@ -182,7 +183,7 @@
                 android:textSize="@dimen/edit_text_small_text_size"
                 android:layout_below="@+id/linear_state"
                 android:gravity="center_vertical"
-                android:inputType="text"
+                android:inputType="number"
                 android:imeOptions="actionNext"
                 android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                 android:paddingTop="@dimen/edit_text_small_vertical_padding"
