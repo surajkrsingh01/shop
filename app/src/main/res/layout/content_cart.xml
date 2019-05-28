@@ -65,14 +65,83 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
+    <RelativeLayout
+        android:layout_marginLeft="@dimen/view_horizontal_margin"
         android:id="@+id/linear_billing"
         android:layout_below="@+id/text_sub_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <include layout="@layout/content_billing_address"/>
-    </LinearLayout>
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:id="@+id/tv_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/large_text_size"
+            android:textColor="?attr/secondaryTextColor"
+            android:text="Delivery Mode"/>
+
+        <TextView
+            android:layout_marginRight="15dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:id="@+id/tv_self_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/primaryTextColor"
+            android:textSize="@dimen/small_text_size"
+            android:text="Self Delivery Available"/>
+
+        <RadioGroup
+            android:layout_marginTop="5dp"
+            android:id="@+id/rg_delivery"
+            android:layout_below="@+id/tv_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="left">
+            <RadioButton
+                android:layout_marginRight="10dp"
+                android:id="@+id/rb_home_delivery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/primaryTextColor"
+                android:hint="Home Delivery"/>
+
+            <RadioButton
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/rb_self_delivery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/primaryTextColor"
+                android:hint="Self Delivery"/>
+        </RadioGroup>
+
+        <TextView
+            android:visibility="gone"
+            android:layout_below="@+id/rg_delivery"
+            android:layout_marginTop="5dp"
+            android:id="@+id/tv_address_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/large_text_size"
+            android:textColor="?attr/secondaryTextColor"
+            android:text="Delivery Address"/>
+
+        <TextView
+            android:visibility="gone"
+            android:layout_below="@+id/tv_address_label"
+            android:layout_marginTop="5dp"
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/small_text_size"
+            android:textColor="?attr/primaryTextColor"
+            android:text="Khanpur New Delhi 110062"/>
+
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
