@@ -121,9 +121,17 @@
                 android:hint="Self Delivery"/>
         </RadioGroup>
 
+        <View
+            android:id="@+id/seperator_delivery_mode"
+            android:layout_below="@+id/rg_delivery"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/separatorColor"/>
+
         <TextView
             android:visibility="gone"
-            android:layout_below="@+id/rg_delivery"
+            android:layout_below="@+id/seperator_delivery_mode"
             android:layout_marginTop="5dp"
             android:id="@+id/tv_address_label"
             android:layout_width="wrap_content"
@@ -142,6 +150,15 @@
             android:textSize="@dimen/small_text_size"
             android:textColor="?attr/primaryTextColor"
             android:text="Khanpur New Delhi 110062"/>
+
+        <View
+            android:visibility="gone"
+            android:id="@+id/seperator_delivery_address"
+            android:layout_below="@+id/tv_address"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/separatorColor"/>
 
     </RelativeLayout>
 

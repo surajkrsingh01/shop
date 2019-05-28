@@ -67,6 +67,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     List <MyProductItem> cartItemList;
 
     private TextView tv_mode, tv_self_status, tv_address_label, tv_address;
+    private View seperator_delivery_address;
     private RadioGroup rg_delivery;
     private RadioButton rb_home_delivery, rb_self_delivery;
 
@@ -192,6 +193,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         rg_delivery = findViewById(R.id.rg_delivery);
         tv_address_label = findViewById(R.id.tv_address_label);
         tv_address = findViewById(R.id.tv_address);
+        seperator_delivery_address = findViewById(R.id.seperator_delivery_address);
         rb_home_delivery = findViewById(R.id.rb_home_delivery);
         rb_self_delivery = findViewById(R.id.rb_self_delivery);
 
@@ -210,6 +212,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     tv_self_status.setText("Self Delivery");
                     //tv_self_status.setVisibility(View.VISIBLE);
                     tv_address_label.setVisibility(View.GONE);
+                    seperator_delivery_address.setVisibility(View.GONE);
                     tv_address.setVisibility(View.GONE);
                 }else{
                     startActivityForResult(new Intent(CartActivity.this, DeliveryAddressActivity.class), 101);
@@ -232,6 +235,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             tv_address_label.setVisibility(View.VISIBLE);
             tv_address.setVisibility(View.VISIBLE);
             tv_address.setText(address.concat(zip));
+            seperator_delivery_address.setVisibility(View.VISIBLE);
         }
     }
 
