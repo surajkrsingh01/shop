@@ -1,10 +1,18 @@
 package com.shoppursshop.models;
 
 public class OrderItem {
-    private String id,custCode,customerName,mobile,deliveryType,customerImage,status,dateTime,orderImage,deliveryAddress,
+    private String id,orderNumber,custCode,customerName,mobile,deliveryType,customerImage,status,dateTime,orderImage,deliveryAddress,
                    orderPayStatus;
     private int localImage,type;
     private float amount,rating;
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
 
     public String getOrderPayStatus() {
         return orderPayStatus;

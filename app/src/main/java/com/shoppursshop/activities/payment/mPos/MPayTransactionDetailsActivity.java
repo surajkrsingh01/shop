@@ -631,6 +631,8 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
             dataObject.put("merchantName",jsonArray.getString(0));
             dataObject.put("merchantAddress", jsonArray.getString(1));
             dataObject.put("custCode",getIntent().getStringExtra("custCode"));
+            dataObject.put("paymentMethod",dataObject.getString("cardType"));
+            dataObject.put("paymentBrand",dataObject.getString("cardBrand"));
             //dataObject.put("cardHolderName",dataObject.getString("Card Hodler Name"));
             dataObject.put("userName",sharedPreferences.getString(Constants.FULL_NAME,""));
             dataObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));

@@ -54,7 +54,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
     private TextView tvShopName,tvShopAddress,tvShopEmail,tvShopPhone,tvShopGSTIN,tvInvoiceNo,tvDate,tvCustomerName,
                       tvSubTotAmt,tvGrossTotAmt,tvTotSgst,tvTotCgst,tvTotIgst,tvShortExcess,tvNetPayableAmt,tvNetPayableWords,
-                      tvPaidAmt,tvBalAmt;
+                      tvPaidAmt,tvBalAmt,tvTotQty,tvDiscount,tvPaymentMethod,tvPaymentBrand,tvTransId,tvPaymentAmount,tvTotSavings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +101,13 @@ public class InvoiceActivity extends NetworkBaseActivity {
         tvNetPayableWords = findViewById(R.id.text_net_payable_amount_words);
         tvPaidAmt = findViewById(R.id.text_paid_amount);
         tvBalAmt = findViewById(R.id.text_balance);
+        tvDiscount = findViewById(R.id.text_discount);
+        tvPaymentMethod = findViewById(R.id.text_payment_method);
+        tvPaymentBrand = findViewById(R.id.text_payment_brand);
+        tvTransId = findViewById(R.id.text_payment_transaction_id);
+        tvPaymentAmount = findViewById(R.id.text_paid_amount);
+        tvTotSavings = findViewById(R.id.text_total_savings);
+        tvTotQty = findViewById(R.id.text_total_qty);
 
         ImageView ivClose = findViewById(R.id.image_close);
 
@@ -152,9 +159,16 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     tvShortExcess.setText(Utility.numberFormat(jsonObject.getDouble("invTotNetPayable") - netPayable));
                     tvPaidAmt.setText(Utility.numberFormat(netPayable));
                     tvNetPayableWords.setText(EnglishNumberToWords.convert((int)netPayable)+" rupees");
+                    tvPaymentMethod.setText(jsonObject.getString("paymentMethod"));
+                    tvPaymentBrand.setText(jsonObject.getString("paymentBrand"));
+                    tvTransId.setText(jsonObject.getString("invTransId"));
+                    tvPaymentAmount.setText(Utility.numberFormat(netPayable));
+                    tvTotSavings.setText("Total Savings(Rupees) "+Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
+                    tvDiscount.setText(Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
 
                     int len = invoiceDetailsArray.length();
                   //  InvoiceDetail invoiceDetail= null;
+                    int totQty = 0;
                     for (int i = 0; i < len; i++) {
                         jsonObject = invoiceDetailsArray.getJSONObject(i);
                         //invoiceDetail = new InvoiceDetail();
@@ -167,8 +181,10 @@ public class InvoiceActivity extends NetworkBaseActivity {
                         item.setMrp((float) jsonObject.getDouble("invDMrp"));
                         item.setRate(Float.parseFloat(jsonObject.getString("invDSp")));
                         itemList.add(item);
+                        totQty = totQty + item.getQty();
                     }
 
+                    tvTotQty.setText(""+totQty);
                     itemAdapter.notifyDataSetChanged();
 
                 }
