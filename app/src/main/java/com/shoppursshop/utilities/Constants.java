@@ -138,4 +138,6 @@ public class Constants {
     public static String ADD_TRANS_DATA="/api/trans/add_trans_data";
     public static String ADD_INVOICE_DATA="/api/trans/generate_invoice";
     public static String GENERATE_QR_CODE="/api/shop/profile/generate_qrcode";
+
+    public static String GET_USER_LICENSE="/api/user/user_licenses";
 }

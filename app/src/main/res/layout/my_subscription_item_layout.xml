@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="16dp"
+    android:background="?attr/borderBottomSolidBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_license_type_label"
+        android:text="License Type"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_license_type"
+        android:layout_below="@+id/tv_license_type_label"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_no_users_label"
+        android:text="No of Users"
+        android:layout_below="@+id/tv_license_type"
+        android:layout_marginTop="10dp"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_no_users"
+        android:layout_below="@+id/tv_no_users_label"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_license_expiry_date_label"
+        android:text="Expiry Date"
+        android:layout_alignParentRight="true"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_license_expiry_date"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tv_license_expiry_date_label"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/text_amount_label"
+        android:layout_marginTop="10dp"
+        android:text="Amount"
+        android:layout_below="@+id/tv_license_expiry_date"
+        android:layout_alignParentRight="true"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/text_amount"
+        android:layout_below="@+id/text_amount_label"
+        android:layout_alignParentRight="true"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

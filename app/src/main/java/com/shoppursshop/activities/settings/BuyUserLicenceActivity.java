@@ -19,27 +19,40 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.adapters.MySubscriptionAdapter;
 import com.shoppursshop.adapters.PaymentSchemeAdapter;
 import com.shoppursshop.adapters.SettingsAdapter;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.models.UserLicense;
+import com.shoppursshop.utilities.ConnectionDetector;
+import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyItemClickListener {
 
     private TextView tvnoOfUser, tvtotalAmount;
     private Button btnProceed, btn_minus, btn_plus;
     private List<MyProductItem> mschemeList;
+    private List<UserLicense> userLicenseList;
     private float totalAmount;
     private int noOfUser = 1, schemeCode =-1;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView,recyclerViewUserLicense;
     private PaymentSchemeAdapter paymentSchemeAdapter;
+    private MySubscriptionAdapter mySubscriptionAdapter;
     private MyProductItem item;
     private TextView tv_top_parent;
 
@@ -90,6 +103,16 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
         paymentSchemeAdapter.setMyItemClickListener(this);
         recyclerView.setAdapter(paymentSchemeAdapter);
 
+        userLicenseList = new ArrayList<>();
+        recyclerViewUserLicense = findViewById(R.id.recycler_mysubscription);
+        recyclerViewUserLicense.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager1=new LinearLayoutManager(this);
+        recyclerViewUserLicense.setLayoutManager(layoutManager1);
+        recyclerViewUserLicense.setItemAnimator(new DefaultItemAnimator());
+        mySubscriptionAdapter=new MySubscriptionAdapter(this,userLicenseList);
+        //paymentSchemeAdapter.setMyItemClickListener(this);
+        recyclerViewUserLicense.setAdapter(mySubscriptionAdapter);
+
         btn_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +153,52 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
                 finish();
             }
         });
+
+        if(ConnectionDetector.isNetworkAvailable(this)){
+            getUserLicense();
+        }
+    }
+
+    private void getUserLicense(){
+        Map<String,String> params=new HashMap<>();
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.GET_USER_LICENSE;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"userLicenses");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject response, String apiName) {
+
+        try {
+            if (apiName.equals("userLicenses")) {
+                if (response.getBoolean("status")) {
+                    JSONArray jsonArray = response.getJSONArray("result");
+                    int len = jsonArray.length();
+                    JSONObject jsonObject = null;
+                    UserLicense item = null;
+                    for(int i=0; i<len; i++){
+                        jsonObject = jsonArray.getJSONObject(i);
+                        item = new UserLicense();
+                        item.setLicenseType(jsonObject.getString("licenseType"));
+                        item.setPurchaseDate(jsonObject.getString("purchaseDate"));
+                        item.setRenewdDate(jsonObject.getString("renewdDate"));
+                        item.setExpiryDate(jsonObject.getString("expiryDate"));
+                        item.setNumOfUsers(jsonObject.getInt("numOfUsers"));
+                        item.setAmount((float)jsonObject.getDouble("amount"));
+                        item.setScheme(jsonObject.getString("scheme"));
+
+                        userLicenseList.add(item);
+                    }
+
+                    mySubscriptionAdapter.notifyDataSetChanged();
+                }
+            }
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void calculateTotal(){
