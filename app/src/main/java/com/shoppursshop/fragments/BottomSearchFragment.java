@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -67,6 +69,9 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
     private List<MyProductItem> myProductList;
     private List<MyCustomer> myCustomerList;
     private String callingActivityName, flag,mobile;
+    private int colorTheme;
+    private boolean isDarkTheme;
+
 
     private int limit = 20,offset = 0;
 
@@ -95,6 +100,8 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
 
         sharedPreferences=getActivity().getSharedPreferences(Constants.MYPREFERENCEKEY,getActivity().MODE_PRIVATE);
         editor=sharedPreferences.edit();
+        colorTheme = sharedPreferences.getInt(Constants.COLOR_THEME,getResources().getColor(R.color.red_500));
+        isDarkTheme = sharedPreferences.getBoolean(Constants.IS_DARK_THEME,false);
 
         dbHelper=new DbHelper(getActivity());
         progressDialog = new ProgressDialog(getActivity());
@@ -115,6 +122,8 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
          View view = inflater.inflate(R.layout.fragment_bottom_sheet_dialog, container, false);
+         RelativeLayout relative_search = view.findViewById(R.id.relative_search);
+        ((GradientDrawable)relative_search.getBackground()).setColor(colorTheme);
          iv_clear = view.findViewById(R.id.iv_clear);
          etSearch = view.findViewById(R.id.et_search);
          recyclerView_Search = view.findViewById(R.id.recyclerView_Search);

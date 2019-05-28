@@ -15,6 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -61,6 +64,13 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
     private JSONArray shopArray;
     List <MyProductItem> cartItemList;
+
+    private TextView tv_mode, tv_self_status;
+    private RadioGroup rg_delivery;
+    LinearLayout linear_billing_address;
+    private RadioButton rb_home_delivery, rb_self_delivery;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +186,25 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 openScannar();
             }
         });
+        boolean isDeliveryAvailable = sharedPreferences.getBoolean(Constants.IS_DELIVERY_AVAILABLE, false);
+        tv_mode = findViewById(R.id.tv_mode);
+        tv_self_status = findViewById(R.id.tv_self_status);
+        rg_delivery = findViewById(R.id.rg_delivery);
+        linear_billing_address = findViewById(R.id.linear_billing_address);
+        rb_home_delivery = findViewById(R.id.rb_home_delivery);
+        rb_self_delivery = findViewById(R.id.rb_self_delivery);
+
+        if(!isDeliveryAvailable){ // home delivery not available
+            tv_self_status.setText("Self Delivery");
+            rg_delivery.setVisibility(View.GONE);
+            linear_billing_address.setVisibility(View.GONE);
+        } else {
+            rg_delivery.setVisibility(View.VISIBLE);
+            linear_billing_address.setVisibility(View.VISIBLE);
+            int mode = rg_delivery.getCheckedRadioButtonId();
+            tv_self_status.setVisibility(View.GONE);
+        }
+
     }
 
     private void openScannar(){

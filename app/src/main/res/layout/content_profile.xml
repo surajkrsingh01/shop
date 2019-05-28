@@ -9,18 +9,41 @@
     tools:context=".activities.settings.ProfileActivity"
     tools:showIn="@layout/activity_profile">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/relative_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+
     <TextView
         android:id="@+id/text_first_label"
         android:text="Profile"
         android:textColor="?attr/secondaryTextColor"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:textSize="@dimen/small_text_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <View
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:id="@+id/view_seperator"
+        android:layout_width="2dp"
+        android:layout_height="20dp"
+        android:background="?attr/separatorColor"/>
+
     <TextView
-        android:layout_below="@+id/text_first_label"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:id="@+id/text_right_label"
+        android:text="Settings"
+        android:textColor="?attr/secondaryTextColor"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_below="@+id/relative_top"
         android:id="@+id/text_shop_name"
         android:text="Store Name"
         android:textColor="?attr/primaryTextColor"

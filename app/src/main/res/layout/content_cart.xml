@@ -65,9 +65,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <LinearLayout
+        android:id="@+id/linear_billing"
+        android:layout_below="@+id/text_sub_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include layout="@layout/content_billing_address"/>
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:layout_below="@+id/text_sub_header"
+        android:layout_below="@+id/linear_billing"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_above="@+id/relative_pay_layout"
         android:paddingLeft="@dimen/activity_horizontal_margin"

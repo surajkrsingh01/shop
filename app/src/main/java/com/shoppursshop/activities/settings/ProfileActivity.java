@@ -39,6 +39,7 @@ public class ProfileActivity extends BaseActivity implements MyItemClickListener
     private RecyclerView recyclerView;
     private List<String> itemList;
     private SettingsAdapter itemAdapter;
+    private TextView tv_top_parent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,15 @@ public class ProfileActivity extends BaseActivity implements MyItemClickListener
         itemAdapter=new SettingsAdapter(this,itemList);
         itemAdapter.setMyItemClickListener(this);
         recyclerView.setAdapter(itemAdapter);
+
+        tv_top_parent = findViewById(R.id.text_right_label);
+        tv_top_parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProfileActivity.this, SettingActivity.class));
+                finish();
+            }
+        });
     }
 
     @Override

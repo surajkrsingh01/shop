@@ -76,7 +76,9 @@
         <activity
             android:name=".activities.CartActivity"
             android:label="@string/title_activity_cart"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" >
+
+        </activity>
 
         <uses-library
             android:name="org.apache.http.legacy"
