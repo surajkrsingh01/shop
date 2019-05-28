@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.payment.mPos.MPayActivity;
+import com.shoppursshop.activities.settings.profile.DeliveryActivity;
 import com.shoppursshop.adapters.CartAdapter;
 import com.shoppursshop.adapters.ProductAdapter;
 import com.shoppursshop.database.DbHelper;
@@ -65,9 +66,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     private JSONArray shopArray;
     List <MyProductItem> cartItemList;
 
-    private TextView tv_mode, tv_self_status;
+    private TextView tv_mode, tv_self_status, tv_address_label, tv_address;
     private RadioGroup rg_delivery;
-    LinearLayout linear_billing_address;
     private RadioButton rb_home_delivery, rb_self_delivery;
 
 
@@ -190,21 +190,49 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         tv_mode = findViewById(R.id.tv_mode);
         tv_self_status = findViewById(R.id.tv_self_status);
         rg_delivery = findViewById(R.id.rg_delivery);
-        linear_billing_address = findViewById(R.id.linear_billing_address);
+        tv_address_label = findViewById(R.id.tv_address_label);
+        tv_address = findViewById(R.id.tv_address);
         rb_home_delivery = findViewById(R.id.rb_home_delivery);
         rb_self_delivery = findViewById(R.id.rb_self_delivery);
 
         if(!isDeliveryAvailable){ // home delivery not available
             tv_self_status.setText("Self Delivery");
             rg_delivery.setVisibility(View.GONE);
-            linear_billing_address.setVisibility(View.GONE);
         } else {
             rg_delivery.setVisibility(View.VISIBLE);
-            linear_billing_address.setVisibility(View.VISIBLE);
-            int mode = rg_delivery.getCheckedRadioButtonId();
             tv_self_status.setVisibility(View.GONE);
         }
 
+        rg_delivery.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId == R.id.rb_self_delivery){
+                    tv_self_status.setText("Self Delivery");
+                    //tv_self_status.setVisibility(View.VISIBLE);
+                    tv_address_label.setVisibility(View.GONE);
+                    tv_address.setVisibility(View.GONE);
+                }else{
+                    startActivityForResult(new Intent(CartActivity.this, DeliveryAddressActivity.class), 101);
+                    tv_self_status.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if(requestCode ==101 && intent!=null){
+            String address = intent.getStringExtra("address");
+            String country = intent.getStringExtra("country");
+            String state = intent.getStringExtra("state");
+            String city = intent.getStringExtra("city");
+            String zip = intent.getStringExtra("zip");
+
+            Log.d("addr ", address +country + state + city +zip);
+            tv_address_label.setVisibility(View.VISIBLE);
+            tv_address.setVisibility(View.VISIBLE);
+            tv_address.setText(address.concat(zip));
+        }
     }
 
     private void openScannar(){
