@@ -51,9 +51,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_1"
+        android:textColorHint="?attr/secondaryTextColor"
+        android:layout_marginTop="@dimen/register_container_margin_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_header">
+
         <EditText
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/text_header"
             android:textColorHint="?attr/secondaryTextColor"
             android:textColor="?attr/primaryTextColor"
             android:id="@+id/edit_offer_name"
@@ -68,10 +74,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"/>
+    </android.support.design.widget.TextInputLayout>
 
     <View
         android:id="@+id/seperator_header"
-        android:layout_below="@+id/edit_offer_name"
+        android:layout_below="@+id/text_input_1"
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -90,9 +97,16 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_2"
+        android:textColorHint="?attr/secondaryTextColor"
+        android:layout_marginTop="@dimen/register_container_margin_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seperator_header"
+        android:layout_toLeftOf="@+id/iv_buy_camera">
+
         <EditText
-            android:layout_below="@+id/seperator_header"
-            android:layout_toLeftOf="@+id/iv_buy_camera"
             android:textColorHint="?attr/secondaryTextColor"
             android:textColor="?attr/primaryTextColor"
             android:id="@+id/edit_buying_product"
@@ -106,10 +120,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"/>
+    </android.support.design.widget.TextInputLayout>
 
     <View
         android:id="@+id/seperator_header_buy"
-        android:layout_below="@+id/edit_buying_product"
+        android:layout_below="@+id/text_input_2"
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -128,9 +143,16 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_3"
+        android:textColorHint="?attr/secondaryTextColor"
+        android:layout_marginTop="@dimen/register_container_margin_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seperator_header_buy"
+        android:layout_toLeftOf="@+id/iv_free_camera">
+
         <EditText
-            android:layout_below="@+id/seperator_header_buy"
-            android:layout_toLeftOf="@+id/iv_free_camera"
             android:textColorHint="?attr/secondaryTextColor"
             android:textColor="?attr/primaryTextColor"
             android:id="@+id/edit_free_product"
@@ -145,10 +167,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"/>
+    </android.support.design.widget.TextInputLayout>
 
     <View
         android:id="@+id/seperator_header_free"
-        android:layout_below="@+id/edit_free_product"
+        android:layout_below="@+id/text_input_3"
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -165,8 +188,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <android.support.design.widget.TextInputLayout
+            android:textColorHint="?attr/secondaryTextColor"
+            android:layout_marginTop="@dimen/register_container_margin_top"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+
         <EditText
-            android:layout_below="@+id/seperator_header_free"
             android:textColorHint="?attr/secondaryTextColor"
             android:textColor="?attr/primaryTextColor"
             android:id="@+id/edit_buy_qty_product"
@@ -178,14 +207,19 @@
             android:paddingTop="@dimen/edit_text_small_vertical_padding"
             android:paddingLeft="@dimen/edit_text_horizontal_padding"
             android:paddingRight="@dimen/edit_text_horizontal_padding"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"/>
+        </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:textColorHint="?attr/secondaryTextColor"
+            android:layout_marginTop="@dimen/register_container_margin_top"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
 
         <EditText
-            android:layout_below="@+id/edit_buy_qty_product"
             android:textColorHint="?attr/secondaryTextColor"
             android:textColor="?attr/primaryTextColor"
             android:id="@+id/edit_free_qty_product"
@@ -197,10 +231,10 @@
             android:paddingTop="@dimen/edit_text_small_vertical_padding"
             android:paddingLeft="@dimen/edit_text_horizontal_padding"
             android:paddingRight="@dimen/edit_text_horizontal_padding"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"/>
+        </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
     <View
@@ -222,6 +256,12 @@
         android:weightSum="2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputLayout
+            android:textColorHint="?attr/secondaryTextColor"
+            android:layout_marginTop="@dimen/register_container_margin_top"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
             <EditText
                 android:id="@+id/edit_offer_start_date"
                 android:hint="Offer Start Date"
@@ -234,10 +274,17 @@
                 android:paddingTop="@dimen/edit_text_small_vertical_padding"
                 android:paddingLeft="@dimen/edit_text_horizontal_padding"
                 android:paddingRight="@dimen/edit_text_horizontal_padding"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:textColorHint="?attr/secondaryTextColor"
+            android:layout_marginTop="@dimen/register_container_margin_top"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/edit_offer_end_date"
@@ -251,10 +298,10 @@
                 android:paddingTop="@dimen/edit_text_small_vertical_padding"
                 android:paddingLeft="@dimen/edit_text_horizontal_padding"
                 android:paddingRight="@dimen/edit_text_horizontal_padding"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"/>
+        </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
     <View

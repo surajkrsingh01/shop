@@ -24,6 +24,7 @@ import com.shoppursshop.activities.settings.AddCategoryActivity;
 import com.shoppursshop.activities.settings.AddSubCatActivity;
 import com.shoppursshop.activities.settings.ComboProductOfferActivity;
 import com.shoppursshop.activities.settings.FreeProductOfferActivity;
+import com.shoppursshop.activities.settings.ProductPriceOfferActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.activities.settings.SyncProductActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
@@ -163,6 +164,8 @@ public class BaseActivity extends AppCompatActivity {
         }else if(context instanceof FreeProductOfferActivity){
             tv.setText("Save");
         }else if(context instanceof ComboProductOfferActivity){
+            tv.setText("Save");
+        }else if(context instanceof ProductPriceOfferActivity){
             tv.setText("Save");
         }
     }
