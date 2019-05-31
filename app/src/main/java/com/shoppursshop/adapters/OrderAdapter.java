@@ -28,7 +28,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.settings.MyOrderDetailsActivity;
 import com.shoppursshop.interfaces.MyItemTouchListener;
 import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.models.MyItem;
@@ -116,14 +115,6 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     zoomAnimation(false,rootView);
                     OrderItem item = (OrderItem) itemList.get(getAdapterPosition());
                     if(sharedPreferences.getString(Constants.SHOP_CODE,"").equals(item.getCustCode())){
-
-                        Intent intent = new Intent(context, MyOrderDetailsActivity.class);
-                        intent.putExtra("id",item.getId());
-                        intent.putExtra("date",item.getDateTime());
-                        intent.putExtra("totalAmount",item.getAmount());
-                        intent.putExtra("status",item.getStatus());
-                        intent.putExtra("ordPaymentStatus",item.getOrderPayStatus());
-                        context.startActivity(intent);
 
                     }else{
 
