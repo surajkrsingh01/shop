@@ -23,11 +23,15 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.AddProductActivity;
 import com.shoppursshop.activities.ProductDetailActivity;
 import com.shoppursshop.activities.settings.AddPaymentDevice;
+import com.shoppursshop.activities.settings.ComboProductOfferActivity;
+import com.shoppursshop.activities.settings.FreeProductOfferActivity;
+import com.shoppursshop.activities.settings.ProductPriceOfferActivity;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.ShopOfferItem;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,10 +109,21 @@ public class ShopOfferListAdapter extends RecyclerView.Adapter<ShopOfferListAdap
         public void onClick(View view) {
             if(view == rootView){
                 ShopOfferItem item = (ShopOfferItem) myItemList.get(getAdapterPosition());
-                Intent intent = new Intent(context, ProductDetailActivity.class);
-                intent.putExtra("myoffer",item);
-                intent.putExtra("flag","shoppurs_offer");
-               // context.startActivity(intent);
+                Intent intent = null;
+                if(item.getOfferType().equals("free")){
+                    intent = new Intent(context, FreeProductOfferActivity.class);
+                    intent.putExtra("flag",item);
+                    intent.putExtra("data",(Serializable) item.getProductObject());
+                }else if(item.getOfferType().equals("combo")){
+                    intent = new Intent(context, ComboProductOfferActivity.class);
+                    intent.putExtra("flag",item);
+                    intent.putExtra("data",(Serializable) item.getProductObject());
+                }else if(item.getOfferType().equals("price")){
+                    intent = new Intent(context, ProductPriceOfferActivity.class);
+                    intent.putExtra("flag",item);
+                    intent.putExtra("data",(Serializable) item.getProductObject());
+                }
+                context.startActivity(intent);
             }else if(view == iv_three_dot){
                 ShopOfferItem item = (ShopOfferItem) myItemList.get(getAdapterPosition());
 

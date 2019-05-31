@@ -19,6 +19,9 @@ import com.shoppursshop.adapters.ShopOfferListAdapter;
 import com.shoppursshop.models.MyProduct;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.OrderItem;
+import com.shoppursshop.models.ProductComboDetails;
+import com.shoppursshop.models.ProductComboOffer;
+import com.shoppursshop.models.ProductDiscountOffer;
 import com.shoppursshop.models.ShopOfferItem;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
@@ -76,16 +79,7 @@ public class MyOffersActivity extends NetworkBaseActivity {
         recyclerView.setAdapter(myItemAdapter);
 
         if (ConnectionDetector.isNetworkAvailable(this)){
-            ShopOfferItem offerItem;
-
-            offerItem = new ShopOfferItem();
-            offerItem.setOfferName("Buy 1 Get 1 Free");
-            offerItem.setProductName("Round Polo Tshirt");
-            offerItem.setProductLocalImage(R.drawable.thumb_12);
-            itemList.add(offerItem);
-
-
-            //getItemList();
+            getItemList();
         }else{
             showNoNetwork(true);
         }
@@ -106,39 +100,70 @@ public class MyOffersActivity extends NetworkBaseActivity {
 
     private void getItemList(){
         Map<String,String> params=new HashMap<>();
-        params.put("limit", ""+limit);
-        params.put("offset",""+offset);
-        params.put("code",sharedPreferences.getString(Constants.SHOP_CODE,""));
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
-        String url="",api="";
-        if(flag.equals("customerOrders")){
-            url=getResources().getString(R.string.url)+Constants.GET_CUSTOMER_ORDERS;
-            api = "customerOrders";
-        }else{
-            url=getResources().getString(R.string.url)+Constants.GET_SHOP_ORDERS;
-            api = "shopOrders";
-        }
+        String url=getResources().getString(R.string.url)+Constants.GET_PRODUCT_OFFER;
         showProgress(true);
-        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),api);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"offerList");
     }
 
     @Override
     public void onJsonObjectResponse(JSONObject response, String apiName) {
 
         try {
-            if (apiName.equals("customerOrders") || apiName.equals("shopOrders")) {
+            if (apiName.equals("offerList")) {
                 if (response.getBoolean("status")) {
-                    JSONArray dataArray = response.getJSONArray("result");
-                    JSONObject jsonObject = null;
-                    int len = dataArray.length();
+                    JSONObject jsonObject = response.getJSONObject("result");
+                    JSONArray freeArray = jsonObject.getJSONArray("freeOfferList");
+                    JSONArray comboArray = jsonObject.getJSONArray("comboOfferList");
+                    JSONArray priceArray = jsonObject.getJSONArray("priceOfferList");
+                    JSONObject dataObject = null;
                     ShopOfferItem offerItem= null;
-
+                    ProductComboOffer productComboOffer = null;
+                    ProductComboDetails productComboDetails = null;
+                    ProductDiscountOffer productDiscountOffer = null;
+                    int len = freeArray.length();
                     for (int i = 0; i < len; i++) {
-                        jsonObject = dataArray.getJSONObject(i);
+                        dataObject = freeArray.getJSONObject(i);
+                        productDiscountOffer = new ProductDiscountOffer();
                         offerItem = new ShopOfferItem();
+                        offerItem.setOfferName(dataObject.getString("offerName"));
+                        offerItem.setProductName("Offer");
                         offerItem.setProductLocalImage(R.drawable.thumb_12);
+                        offerItem.setOfferType("free");
+                        productDiscountOffer.setId(dataObject.getInt("id"));
+                        productDiscountOffer.setOfferName(dataObject.getString("offerName"));
+                        productDiscountOffer.setProdBuyId(dataObject.getInt("prodBuyId"));
+                        productDiscountOffer.setProdFreeId(dataObject.getInt("prodFreeId"));
+                        productDiscountOffer.setProdBuyQty(dataObject.getInt("prodBuyQty"));
+                        productDiscountOffer.setProdFreeQty(dataObject.getInt("prodFreeQty"));
+                        productDiscountOffer.setStatus(dataObject.getString("status"));
+                        productDiscountOffer.setStartDate(dataObject.getString("startDate"));
+                        productDiscountOffer.setEndDate(dataObject.getString("endDate"));
+                        offerItem.setProductObject(productDiscountOffer);
+                        itemList.add(offerItem);
+                    }
+
+                    len = comboArray.length();
+                    for (int i = 0; i < len; i++) {
+                        dataObject = comboArray.getJSONObject(i);
+                        offerItem = new ShopOfferItem();
+                        offerItem.setOfferName(dataObject.getString("offerName"));
+                        offerItem.setProductName("Offer");
+                        offerItem.setProductLocalImage(R.drawable.thumb_12);
+                        offerItem.setOfferType("combo");
+                        itemList.add(offerItem);
+                    }
+
+                    len = priceArray.length();
+                    for (int i = 0; i < len; i++) {
+                        dataObject = priceArray.getJSONObject(i);
+                        offerItem = new ShopOfferItem();
+                        offerItem.setOfferName(dataObject.getString("offerName"));
+                        offerItem.setProductName("Offer");
+                        offerItem.setProductLocalImage(R.drawable.thumb_12);
+                        offerItem.setOfferType("price");
                         itemList.add(offerItem);
                     }
 

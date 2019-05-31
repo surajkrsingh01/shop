@@ -1,6 +1,7 @@
 package com.shoppursshop.activities.settings;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -62,9 +64,11 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
         myProductItems = new ArrayList<>();
         MyProductItem productItem = new MyProductItem();
         productItem.setProdName("");
+        productItem.setProdSp(0);
         myProductItems.add(productItem);
         productItem = new MyProductItem();
         productItem.setProdName("");
+        productItem.setProdSp(0);
         myProductItems.add(productItem);
 
         edit_offer_name = findViewById(R.id.edit_offer_name);
@@ -118,7 +122,7 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
         findViewById(R.id.relative_footer_action).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                 createComboOffer();
             }
         });
 
@@ -174,7 +178,15 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
             jsonObject.put("status","1");
             jsonObject.put("startDate",startDate);
             jsonObject.put("endDate",endDate);
-            jsonObject.put("productComboOfferDetails","");
+            for(MyProductItem item : myProductItems){
+                productObject = new JSONObject();
+                productObject.put("pcodProdId",item.getProdId());
+                productObject.put("pcodProdQty",item.getQty());
+                productObject.put("pcodPrice",item.getProdSp());
+                productObject.put("status","1");
+                jsonArray.put(productObject);
+            }
+            jsonObject.put("productComboOfferDetails",jsonArray);
             jsonObject.put("userName",sharedPreferences.getString(Constants.FULL_NAME,""));
             jsonObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
             jsonObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
@@ -182,9 +194,29 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.i(TAG,"params "+jsonObject.toString());
         String url=getResources().getString(R.string.url)+ Constants.CREATE_COMBO_PRODUCT_OFFER;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,jsonObject,"comboOffer");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject response, String apiName) {
+        showProgress(false);
+        try {
+            Log.d("response", response.toString());
+            if(apiName.equals("comboOffer")){
+                if(response.getString("status").equals("true")||response.getString("status").equals(true)){
+                    showMyDialog("Offer created successfully.");
+
+                }else {
+                    DialogAndToast.showToast(response.getString("message"),ComboProductOfferActivity.this);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            DialogAndToast.showToast(getResources().getString(R.string.json_parser_error)+e.toString(),ComboProductOfferActivity.this);
+        }
     }
 
     @Override
@@ -195,8 +227,8 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
             MyProductItem myItem = myProductItems.get(position);
             myItem.setProdId(item.getProdId());
             myItem.setProdName(item.getProdName());
-            //myItem.setProdMrp(item.getProdMrp());
-            //myItem.setProdSp(item.getProdSp());
+            myItem.setProdMrp(item.getProdMrp());
+            myItem.setProdSp(item.getProdSp());
             comboOfferAdapter.notifyItemChanged(position);
         }else{
             isProductSearch = true;
@@ -211,5 +243,11 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
 
         }
 
+    }
+
+    public void onDialogPositiveClicked(){
+        Intent intent = new Intent(ComboProductOfferActivity.this,MyOffersActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

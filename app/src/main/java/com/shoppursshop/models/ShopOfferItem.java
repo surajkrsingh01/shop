@@ -11,6 +11,16 @@ public class ShopOfferItem implements Serializable {
     private String productImage;
     private int productLocalImage;
 
+    private Object productObject;
+
+    public Object getProductObject() {
+        return productObject;
+    }
+
+    public void setProductObject(Object productObject) {
+        this.productObject = productObject;
+    }
+
     public String getOfferType() {
         return offerType;
     }

@@ -141,6 +141,7 @@ public class Constants {
 
     public static String GET_USER_LICENSE="/api/user/user_licenses";
 
+    public static String GET_PRODUCT_OFFER="/api/offers/get_offer_list";
     public static String CREATE_FREE_PRODUCT_OFFER="/api/offers/create_product_discount_offer";
     public static String CREATE_COMBO_PRODUCT_OFFER="/api/offers/create_product_combo_offer";
 
