@@ -81,7 +81,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/seperator_header"
-            android:id="@+id/iv_camera"
+            android:id="@+id/iv_buy_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_camera_black_24dp"
@@ -92,7 +92,7 @@
 
         <EditText
             android:layout_below="@+id/seperator_header"
-            android:layout_toLeftOf="@+id/iv_camera"
+            android:layout_toLeftOf="@+id/iv_buy_camera"
             android:textColorHint="?attr/secondaryTextColor"
             android:textColor="?attr/primaryTextColor"
             android:id="@+id/edit_buying_product"
