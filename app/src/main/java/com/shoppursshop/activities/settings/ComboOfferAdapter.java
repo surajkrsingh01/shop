@@ -11,11 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
 import com.shoppursshop.adapters.PaymentSchemeAdapter;
 import com.shoppursshop.interfaces.MyItemClickListener;
+import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyProductItem;
 
 import java.util.List;
@@ -25,6 +27,11 @@ public class ComboOfferAdapter extends RecyclerView.Adapter<ComboOfferAdapter.My
     private List<MyProductItem> myProductItems;
 
     private MyItemClickListener myItemClickListener;
+    private MyItemTypeClickListener myItemTypeClickListener;
+
+    public void setMyItemTypeClickListener(MyItemTypeClickListener myItemTypeClickListener) {
+        this.myItemTypeClickListener = myItemTypeClickListener;
+    }
 
     public void setMyItemClickListener(MyItemClickListener myItemClickListener) {
         this.myItemClickListener = myItemClickListener;
@@ -63,13 +70,14 @@ public class ComboOfferAdapter extends RecyclerView.Adapter<ComboOfferAdapter.My
 
     public class MyComboViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private EditText edit_prodName,edit_quantity,edit_price;
-
+        private ImageView image_scan;
         public MyComboViewHolder(View itemView) {
             super(itemView);
             edit_prodName = itemView.findViewById(R.id.edit_name);
             edit_quantity = itemView.findViewById(R.id.edit_quantity);
             edit_price = itemView.findViewById(R.id.edit_price);
             edit_prodName.setOnClickListener(this);
+            image_scan.setOnClickListener(this);
            // final MyProductItem item = myProductItems.get(getAdapterPosition());
             edit_quantity.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -116,7 +124,12 @@ public class ComboOfferAdapter extends RecyclerView.Adapter<ComboOfferAdapter.My
 
         @Override
         public void onClick(View v) {
-           myItemClickListener.onItemClicked(getAdapterPosition());
+            if(v == image_scan){
+                myItemTypeClickListener.onItemClicked(getAdapterPosition(),1);
+            }else{
+                myItemClickListener.onItemClicked(getAdapterPosition());
+            }
+
         }
     }
 }

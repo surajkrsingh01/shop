@@ -135,7 +135,7 @@ public class MyOffersActivity extends NetworkBaseActivity {
                         productDiscountOffer = new ProductDiscountOffer();
                         offerItem = new ShopOfferItem();
                         offerItem.setOfferName(dataObject.getString("offerName"));
-                        offerItem.setProductName("Offer");
+                        offerItem.setProductName("Free Product Offer");
                         offerItem.setProductLocalImage(R.drawable.thumb_12);
                         offerItem.setOfferType("free");
                         productDiscountOffer.setId(dataObject.getInt("id"));
@@ -156,7 +156,7 @@ public class MyOffersActivity extends NetworkBaseActivity {
                         dataObject = comboArray.getJSONObject(i);
                         offerItem = new ShopOfferItem();
                         offerItem.setOfferName(dataObject.getString("offerName"));
-                        offerItem.setProductName("Offer");
+                        offerItem.setProductName("Combo Product Offer");
                         offerItem.setProductLocalImage(R.drawable.thumb_12);
                         offerItem.setOfferType("combo");
                         itemList.add(offerItem);
@@ -167,7 +167,7 @@ public class MyOffersActivity extends NetworkBaseActivity {
                         dataObject = priceArray.getJSONObject(i);
                         offerItem = new ShopOfferItem();
                         offerItem.setOfferName(dataObject.getString("offerName"));
-                        offerItem.setProductName("Offer");
+                        offerItem.setProductName("Product Price Offer");
                         offerItem.setProductLocalImage(R.drawable.thumb_12);
                         offerItem.setOfferType("price");
                         itemList.add(offerItem);

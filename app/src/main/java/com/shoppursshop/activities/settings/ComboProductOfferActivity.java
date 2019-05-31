@@ -20,9 +20,11 @@ import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.AddProductActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.ScannarActivity;
 import com.shoppursshop.adapters.PaymentSchemeAdapter;
 import com.shoppursshop.fragments.BottomSearchFragment;
 import com.shoppursshop.interfaces.MyItemClickListener;
+import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
@@ -38,7 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ComboProductOfferActivity extends NetworkBaseActivity implements MyItemClickListener {
+public class ComboProductOfferActivity extends NetworkBaseActivity implements MyItemClickListener, MyItemTypeClickListener {
 
     private RecyclerView recyclerView;
     private ComboOfferAdapter comboOfferAdapter;
@@ -147,6 +149,7 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         comboOfferAdapter=new ComboOfferAdapter(this,myProductItems);
         comboOfferAdapter.setMyItemClickListener(this);
+        comboOfferAdapter.setMyItemTypeClickListener(this);
         recyclerView.setAdapter(comboOfferAdapter);
     }
 
@@ -249,5 +252,32 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
         Intent intent = new Intent(ComboProductOfferActivity.this,MyOffersActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+    @Override
+    public void onItemClicked(int position, int type) {
+        this.position = position;
+        Intent intent = new Intent(this, ScannarActivity.class);
+        intent.putExtra("flag","offers");
+        intent.putExtra("type","offers");
+        // startActivity(intent);
+        startActivityForResult(intent,2);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i(TAG, "Result received");
+        if (data != null) {
+            if (requestCode == 2) {
+                MyProductItem item = dbHelper.getProductDetails(data.getIntExtra("prod_id", 0));
+                MyProductItem myItem = myProductItems.get(position);
+                myItem.setProdId(item.getProdId());
+                myItem.setProdName(item.getProdName());
+                myItem.setProdMrp(item.getProdMrp());
+                myItem.setProdSp(item.getProdSp());
+                comboOfferAdapter.notifyItemChanged(position);
+            }
+        }
     }
 }

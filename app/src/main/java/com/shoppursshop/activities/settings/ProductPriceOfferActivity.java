@@ -24,6 +24,8 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.BaseActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.ScannarActivity;
+import com.shoppursshop.fragments.BottomSearchFragment;
+import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
@@ -39,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProductPriceOfferActivity extends NetworkBaseActivity {
+public class ProductPriceOfferActivity extends NetworkBaseActivity implements MyItemClickListener {
 
     private RecyclerView recyclerView;
     private ProductPriceOfferAdapter priceOfferAdapter;
@@ -69,6 +71,19 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity {
         edit_offer_start_date = findViewById(R.id.edit_offer_start_date);
         edit_offer_end_date = findViewById(R.id.edit_offer_end_date);
         relative_footer_action = findViewById(R.id.relative_footer_action);
+
+        edit_product_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BottomSearchFragment bottomSearchFragment = new BottomSearchFragment();
+                bottomSearchFragment.setCallingActivityName("productList");
+                Bundle bundle = new Bundle();
+                bundle.putString("flag","searchCartProduct");
+                bottomSearchFragment.setArguments(bundle);
+                bottomSearchFragment.setMyItemClickListener(ProductPriceOfferActivity.this);
+                bottomSearchFragment.show(getSupportFragmentManager(), "Search Product Bottom Sheet");
+            }
+        });
 
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -285,5 +300,12 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity {
                 product_id = productItem.getProdId();
             }
         }
+    }
+
+    @Override
+    public void onItemClicked(int prodId) {
+        MyProductItem productItem = dbHelper.getProductDetails(prodId);
+        edit_product_name.setText(productItem.getProdName());
+        product_id = productItem.getProdId();
     }
 }
