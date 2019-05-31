@@ -112,7 +112,18 @@ public class ScannarActivity extends NetworkBaseActivity {
 
                     }
                 }
-            }else if(type.equals("customerInfo")){
+            }else if(type.equals("offers")){
+                int id = dbHelper.checkBarCodeExist(rawValue);
+                if(id == 0){
+                    DialogAndToast.showToast("Product does not exist in database.",this);
+                    finish();
+                }else{
+                    Intent intent = new Intent();
+                    intent.putExtra("prod_id",id);
+                    setResult(-1,intent);
+                    finish();
+                }
+            } else if(type.equals("customerInfo")){
                 checkCustomerInfo(rawValue);
             }else{
                int  id = dbHelper.checkBarCodeExist(rawValue);

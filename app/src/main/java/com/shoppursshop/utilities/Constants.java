@@ -140,4 +140,7 @@ public class Constants {
     public static String GENERATE_QR_CODE="/api/shop/profile/generate_qrcode";
 
     public static String GET_USER_LICENSE="/api/user/user_licenses";
+
+    public static String CREATE_FREE_PRODUCT_OFFER="/api/offers/create_product_discount_offer";
+
 }
