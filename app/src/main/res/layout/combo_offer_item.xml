@@ -11,21 +11,32 @@
         android:id="@+id/relative_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/edit_name"
-                android:hint="Search Product"
-                android:textColor="?attr/primaryTextColor"
-                android:textColorHint="?attr/secondaryTextColor"
-                android:inputType="text"
-                android:layout_toLeftOf="@+id/image_scan"
-                android:textSize="@dimen/edit_text_small_text_size"
-                android:paddingBottom="@dimen/edit_text_small_vertical_padding"
-                android:paddingTop="@dimen/edit_text_small_vertical_padding"
-                android:paddingLeft="@dimen/edit_text_horizontal_padding"
-                android:paddingRight="@dimen/edit_text_horizontal_padding"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"/>
+
+          <android.support.design.widget.TextInputLayout
+              android:textColorHint="?attr/secondaryTextColor"
+              android:layout_toLeftOf="@+id/image_scan"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+              <EditText
+                  android:id="@+id/edit_name"
+                  android:hint="Search Product"
+                  android:textColor="?attr/primaryTextColor"
+                  android:textColorHint="?attr/secondaryTextColor"
+                  android:inputType="none"
+                  android:focusable="false"
+                  android:textSize="@dimen/edit_text_small_text_size"
+                  android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                  android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                  android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                  android:paddingRight="@dimen/edit_text_horizontal_padding"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@null"/>
+
+          </android.support.design.widget.TextInputLayout>
+
+
 
         <ImageView
             android:tint="?attr/primaryTextColor"
@@ -53,6 +64,13 @@
             android:weightSum="2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputLayout
+                android:textColorHint="?attr/secondaryTextColor"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
                 <EditText
                     android:id="@+id/edit_quantity"
                     android:hint="Quantity"
@@ -64,10 +82,18 @@
                     android:paddingTop="@dimen/edit_text_small_vertical_padding"
                     android:paddingLeft="@dimen/edit_text_horizontal_padding"
                     android:paddingRight="@dimen/edit_text_horizontal_padding"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:textColorHint="?attr/secondaryTextColor"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
                 <EditText
                     android:id="@+id/edit_price"
                     android:hint="Price"
@@ -79,15 +105,15 @@
                     android:paddingTop="@dimen/edit_text_small_vertical_padding"
                     android:paddingLeft="@dimen/edit_text_horizontal_padding"
                     android:paddingRight="@dimen/edit_text_horizontal_padding"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"/>
+
+
+            </android.support.design.widget.TextInputLayout>
+
+
         </LinearLayout>
-    <View
-        android:layout_below="@+id/linear_price"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?attr/separatorColor"/>
+
+
 </RelativeLayout>

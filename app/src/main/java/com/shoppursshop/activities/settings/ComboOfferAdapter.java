@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.shoppursshop.R;
 import com.shoppursshop.adapters.PaymentSchemeAdapter;
+import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
 
 import java.util.List;
@@ -18,6 +19,12 @@ import java.util.List;
 public class ComboOfferAdapter extends RecyclerView.Adapter<ComboOfferAdapter.MyComboViewHolder> {
     private Context context;
     private List<MyProductItem> myProductItems;
+
+    private MyItemClickListener myItemClickListener;
+
+    public void setMyItemClickListener(MyItemClickListener myItemClickListener) {
+        this.myItemClickListener = myItemClickListener;
+    }
 
     public ComboOfferAdapter(Context context, List<MyProductItem> myProductItems){
         this.context = context;
@@ -51,11 +58,12 @@ public class ComboOfferAdapter extends RecyclerView.Adapter<ComboOfferAdapter.My
         public MyComboViewHolder(View itemView) {
             super(itemView);
             edit_prodName = itemView.findViewById(R.id.edit_name);
+            edit_prodName.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-
+           myItemClickListener.onItemClicked(getAdapterPosition());
         }
     }
 }

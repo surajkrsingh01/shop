@@ -66,7 +66,7 @@ public class MySubscriptionAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             UserLicense item = itemList.get(position);
             myViewHolder.textType.setText(item.getLicenseType());
             myViewHolder.textNumOfUsers.setText(""+item.getNumOfUsers());
-            if(item.getLicenseType().equals("free")){
+            if(item.getLicenseType().equals("Free")){
                 myViewHolder.textExpiryDate.setText("NA");
                 myViewHolder.textAmount.setText("0.0");
             }else{
