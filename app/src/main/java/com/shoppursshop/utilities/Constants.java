@@ -145,5 +145,6 @@ public class Constants {
     public static String CREATE_FREE_PRODUCT_OFFER="/api/offers/create_product_discount_offer";
     public static String UPDATE_FREE_PRODUCT_OFFER="/api/offers/update_product_discount_offer";
     public static String CREATE_COMBO_PRODUCT_OFFER="/api/offers/create_product_combo_offer";
+    public static String CREATE_PRODUCT_PRICE_OFFER = "/api/offers/create_product_price_offer";
 
 }
