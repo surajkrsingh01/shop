@@ -18,14 +18,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.AddProductActivity;
-import com.shoppursshop.activities.ProductDetailActivity;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.Utility;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -160,11 +157,6 @@ public class SearchProductAdapter extends RecyclerView.Adapter<SearchProductAdap
                     myItemClickListener.onItemClicked(getAdapterPosition());
                 }else{
                     MyProductItem item = (MyProductItem) myProductsList.get(getAdapterPosition());
-                    Intent intent = new Intent(context,ProductDetailActivity.class);
-                    intent.putExtra("id",item.getProdId());
-                    intent.putExtra("subCatName","");
-                    intent.putExtra("flag","search");
-                    context.startActivity(intent);
                 }
 
             }else if(v == imageMenu){
@@ -177,11 +169,6 @@ public class SearchProductAdapter extends RecyclerView.Adapter<SearchProductAdap
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if(item.getTitle().equals("Edit")){
-                            Intent intent = new Intent(context,AddProductActivity.class);
-                            intent.putExtra("flag","editProduct");
-                            intent.putExtra("type","editProduct");
-                            intent.putExtra("product",myProductItem);
-                            ((Activity) context).startActivityForResult(intent,2);
                         }else{
                             myProductsList.remove(getAdapterPosition());
                             notifyItemRemoved(getAdapterPosition());

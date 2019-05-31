@@ -143,8 +143,6 @@ public class MainActivity extends NetworkBaseActivity {
         fabNewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,CustomerInfoActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -152,8 +150,7 @@ public class MainActivity extends NetworkBaseActivity {
         btnNewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,CustomerInfoActivity.class);
-                startActivity(intent);
+
             }
         });
 

@@ -42,17 +42,12 @@
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".activities.settings.CreateOfferActivity"
             android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity android:name=".activities.DeliveryAddressActivity" />
         <activity
             android:name="com.pnsol.epay.sdk.PaymentPage"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.payment.ePay.EPayPayswiffActivity"
             android:label="@string/title_activity_epay_payswiff"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-        <activity
-            android:name=".activities.TransactionDetailsActivity"
-            android:label="@string/title_activity_transaction_details"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.MyOrderDetailsActivity"
@@ -71,20 +66,12 @@
             android:label="@string/title_activity_my_categories"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.settings.MySalesActivity"
-            android:label="@string/title_activity_my_sales"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-        <activity
             android:name=".activities.settings.BuyUserLicenceActivity"
             android:label="@string/title_activity_buy_user_licence"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.AddPaymentDevice"
             android:label="@string/title_activity_add_payment_device"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-        <activity
-            android:name=".activities.CartActivity"
-            android:label="@string/title_activity_cart"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
 
         <uses-library
@@ -114,18 +101,6 @@
         <activity
             android:name=".activities.settings.MyOffersActivity"
             android:label="@string/title_activity_my_orders"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-        <activity
-            android:name=".activities.settings.SyncProductActivity"
-            android:label="@string/title_activity_sync_product"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-        <activity
-            android:name=".activities.settings.AddSubCatActivity"
-            android:label="@string/title_activity_add_sub_cat"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-        <activity
-            android:name=".activities.settings.AddCategoryActivity"
-            android:label="@string/title_activity_add_category"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.profile.KYCActivity"
@@ -173,10 +148,6 @@
             android:name=".activities.settings.DisplaySettingsActivity"
             android:label="@string/title_activity_display_settings"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.InvoiceActivity"
-            android:label="@string/title_activity_invoice"
-            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -199,18 +170,6 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".activities.OrderSelectProductListActivity"
-            android:label="@string/title_activity_order_select_product_list"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-        <activity
-            android:name=".activities.OrderDetailActivity"
-            android:label="@string/title_activity_order_detail"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-        <activity
-            android:name=".activities.CustomerInfoActivity"
-            android:label="@string/title_activity_customer_info"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -240,48 +199,6 @@
             android:label="@string/title_activity_setting"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.NetworkBaseActivity" />
-        <activity
-            android:name=".activities.OffersActivity"
-            android:label="@string/title_activity_offers"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.CategoryListActivity"
-            android:label="@string/title_activity_products"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.CustomerListActivity"
-            android:label="@string/title_activity_customer_list"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.SubCatListActivity"
-            android:label="@string/title_activity_sub_cat_list"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.ProductListActivity"
-            android:label="@string/title_activity_product_list"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".activities.ForgotPasswordActivity"
-            android:label="@string/title_activity_forgot_password"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.ProductDetailActivity"
-            android:label="@string/title_activity_product_detail"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.CustomerProfileActivity"
-            android:label="@string/title_activity_customer_profile"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.AddProductActivity"
-            android:label="@string/title_activity_add_product"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".activities.AddCustomerActivity"
-            android:label="@string/title_activity_add_customer"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.ScannarActivity"
             android:label="@string/title_activity_scannar"

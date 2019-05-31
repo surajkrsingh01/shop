@@ -19,7 +19,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.CustomerProfileActivity;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyCustomer;
@@ -161,16 +160,6 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
                     myItemTypeClickListener.onItemClicked(getAdapterPosition(),2);
                 }else{
                     MyCustomer item = (MyCustomer)itemList.get(getAdapterPosition());
-                    Intent intent = new Intent(context, CustomerProfileActivity.class);
-                    intent.putExtra("name",item.getName());
-                    intent.putExtra("address",item.getAddress());
-                    intent.putExtra("stateCity",item.getState()+", "+item.getCity());
-                    intent.putExtra("customerImage",item.getLocalImage());
-                    intent.putExtra("isFav",item.getIsFav());
-                    intent.putExtra("custCode",item.getCode());
-                    intent.putExtra("custId",item.getId());
-                    intent.putExtra("ratings",item.getRatings());
-                    context.startActivity(intent);
                 }
 
             }else if(v == imageMenu){

@@ -30,23 +30,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.AddProductActivity;
-import com.shoppursshop.activities.ProductDetailActivity;
-import com.shoppursshop.activities.ProductListActivity;
 import com.shoppursshop.activities.ScannarActivity;
-import com.shoppursshop.activities.SubCatListActivity;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTouchListener;
 import com.shoppursshop.models.Category;
 import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.models.MyHeader;
 import com.shoppursshop.models.MyItem;
-import com.shoppursshop.models.MyProduct;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.SubCategory;
 import com.shoppursshop.models.CatListItem;
 import com.shoppursshop.utilities.Utility;
-import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 import java.util.List;
@@ -130,11 +124,6 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public void onClick(View view) {
             if(view == btnSeeAll){
                 CatListItem myItem = (CatListItem) itemList.get(getAdapterPosition());
-                Intent intent = new Intent(context,SubCatListActivity.class);
-                intent.putExtra("catID",""+myItem.getId());
-                intent.putExtra("catName",myItem.getTitle());
-                intent.putExtra("flag",flag);
-                context.startActivity(intent);
             }
         }
     }
@@ -180,12 +169,6 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     if(getAdapterPosition() == 0){
 
                     }else{
-                        Category myItem = (Category) itemList.get(getAdapterPosition());
-                        Intent intent = new Intent(context,SubCatListActivity.class);
-                        intent.putExtra("catID",myItem.getId());
-                        intent.putExtra("catName",myItem.getName());
-                        intent.putExtra("flag",flag);
-                        context.startActivity(intent);
                     }
                     break;
                 case MotionEvent.ACTION_CANCEL:
@@ -221,10 +204,6 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @Override
         public void onClick(View view) {
             if(view == relativeLayoutAddManually){
-                Intent intent = new Intent(context,AddProductActivity.class);
-                intent.putExtra("flag","manual");
-                intent.putExtra("type",flag);
-                context.startActivity(intent);
             }else if(view == relativeLayoutScan){
                 Intent intent = new Intent(context,ScannarActivity.class);
                 intent.putExtra("flag","scan");
@@ -290,11 +269,6 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     // Log.i("Adapter","onPressUp");
                     zoomAnimation(false,rootView);
                     SubCategory myItem = (SubCategory) itemList.get(getAdapterPosition());
-                    Intent intent = new Intent(context,ProductListActivity.class);
-                    intent.putExtra("subCatID",myItem.getId());
-                    intent.putExtra("subCatName",myItem.getName());
-                    intent.putExtra("flag",flag);
-                    context.startActivity(intent);
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     Log.i("Adapter","onPressCancel");
@@ -362,11 +336,6 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if(item.getTitle().equals("Edit")){
-                            Intent intent = new Intent(context,AddProductActivity.class);
-                            intent.putExtra("flag","editProduct");
-                            intent.putExtra("type","editProduct");
-                            intent.putExtra("product",myProductItem);
-                            ((Activity) context).startActivityForResult(intent,2);
                         }else{
                             myItemClickListener.onItemClicked(getAdapterPosition());
                             //itemList.remove(getAdapterPosition());
@@ -393,11 +362,6 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     // Log.i("Adapter","onPressUp");
                     if(!type.equals("orderProductList")){
                         MyProductItem item = (MyProductItem) itemList.get(getAdapterPosition());
-                        Intent intent = new Intent(context,ProductDetailActivity.class);
-                        intent.putExtra("id",item.getProdId());
-                        intent.putExtra("subCatName",subCatName);
-                        intent.putExtra("flag",flag);
-                        context.startActivity(intent);
                     }
 
                     zoomAnimation(false,rootView);
@@ -447,11 +411,6 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     // Log.i("Adapter","onPressUp");
                     if(!type.equals("orderProductList")){
                         MyProductItem item = (MyProductItem) itemList.get(getAdapterPosition());
-                        Intent intent = new Intent(context,ProductDetailActivity.class);
-                        intent.putExtra("id",item.getProdId());
-                        intent.putExtra("subCatName",subCatName);
-                        intent.putExtra("flag",flag);
-                        context.startActivity(intent);
                     }
 
                     zoomAnimation(false,rootView);

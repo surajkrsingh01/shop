@@ -16,7 +16,6 @@ import com.android.volley.Request;
 import com.google.android.gms.maps.model.Marker;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
-import com.shoppursshop.activities.payment.ePay.EPayPayswiffActivity;
 import com.shoppursshop.adapters.ShoppursProductAdapter;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.MyProductItem;
@@ -83,8 +82,6 @@ public class AddPaymentDevice extends NetworkBaseActivity {
             public void onClick(View v) {
                 //generateJson();
 
-                Intent intent = new Intent(AddPaymentDevice.this, EPayPayswiffActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -280,12 +277,6 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     String orderNumber = response.getJSONObject("result").getString("orderNumber");
                     Log.d(TAG, "orderNumber "+orderNumber );
                     //placeOrder(shopArray, orderId);  // open payment option
-
-                    Intent intent = new Intent(AddPaymentDevice.this, EPayPayswiffActivity.class);
-                    intent.putExtra("orderNumber",orderNumber);
-                    intent.putExtra("shopArray",shopArray.toString());
-                    startActivity(intent);
-                    finish();
                 }else {
                     DialogAndToast.showToast(response.getString("message"),AddPaymentDevice.this);
                 }

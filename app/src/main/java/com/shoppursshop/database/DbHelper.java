@@ -7,11 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.shoppursshop.activities.CategoryListActivity;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.CatListItem;
 import com.shoppursshop.models.Category;
-import com.shoppursshop.models.MyProduct;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MySimpleItem;
 import com.shoppursshop.models.SpinnerItem;
@@ -528,8 +526,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 item.setId(""+res.getInt(res.getColumnIndex(ID)));
                 item.setName(res.getString(res.getColumnIndex(NAME)));
                 item.setImage(res.getString(res.getColumnIndex(IMAGE)));
-                item.setWidth(CategoryListActivity.MAX_WIDTH);
-                item.setHeight(CategoryListActivity.MAX_HEIGHT);
                 itemList.add(item);
             }while (res.moveToNext());
         }

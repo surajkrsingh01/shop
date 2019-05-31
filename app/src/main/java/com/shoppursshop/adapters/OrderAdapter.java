@@ -6,11 +6,8 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,7 +28,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.OrderDetailActivity;
 import com.shoppursshop.activities.settings.MyOrderDetailsActivity;
 import com.shoppursshop.interfaces.MyItemTouchListener;
 import com.shoppursshop.models.HomeListItem;
@@ -130,25 +126,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                         context.startActivity(intent);
 
                     }else{
-                        Intent intent = new Intent(context, OrderDetailActivity.class);
-                        intent.putExtra("id",item.getId());
-                        intent.putExtra("orderNumber",item.getOrderNumber());
-                        intent.putExtra("custName",item.getCustomerName());
-                        intent.putExtra("custCode",item.getCustCode());
-                        intent.putExtra("date",item.getDateTime());
-                        intent.putExtra("totalAmount",item.getAmount());
-                        intent.putExtra("deliveryMode",item.getDeliveryType());
-                        intent.putExtra("deliveryAddress",item.getDeliveryAddress());
-                        intent.putExtra("status",item.getStatus());
-                        intent.putExtra("ordPaymentStatus",item.getOrderPayStatus());
-                        intent.putExtra("orderPosition",getAdapterPosition());
 
-                        if(Utility.getTimeStamp("yyyy-MM-dd").equals(item.getDateTime().split(" ")[0]))
-                            intent.putExtra("type","today");
-                        else
-                            intent.putExtra("type","pre");
-
-                        context.startActivity(intent);
                     }
 
                     break;

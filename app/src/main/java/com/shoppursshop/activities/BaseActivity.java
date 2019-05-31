@@ -19,14 +19,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
-import com.shoppursshop.activities.payment.mPos.MPayTransactionDetailsActivity;
-import com.shoppursshop.activities.settings.AddCategoryActivity;
-import com.shoppursshop.activities.settings.AddSubCatActivity;
 import com.shoppursshop.activities.settings.ComboProductOfferActivity;
 import com.shoppursshop.activities.settings.FreeProductOfferActivity;
 import com.shoppursshop.activities.settings.ProductPriceOfferActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
-import com.shoppursshop.activities.settings.SyncProductActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
 import com.shoppursshop.activities.settings.profile.BasicProfileActivity;
 import com.shoppursshop.activities.settings.profile.DeliveryActivity;
@@ -147,20 +143,6 @@ public class BaseActivity extends AppCompatActivity {
             tv.setText("Update Store Details");
         }else if (context instanceof AddressActivity) {
             tv.setText("Update Store Address");
-        }else if (context instanceof CustomerInfoActivity) {
-            tv.setText("Continue");
-        }else if(context instanceof AddCategoryActivity){
-            tv.setText("Add Categories");
-        }else if(context instanceof AddSubCatActivity){
-            tv.setText("Add Sub Categories");
-        }else if(context instanceof SyncProductActivity){
-            tv.setText("Add Products");
-        }else if(context instanceof TransactionDetailsActivity){
-            tv.setText("Deliver Order");
-        }else if(context instanceof MPayTransactionDetailsActivity){
-            tv.setText("Deliver Order");
-        }else if(context instanceof DeliveryAddressActivity){
-            tv.setText("Update Delivery Address");
         }else if(context instanceof FreeProductOfferActivity){
             tv.setText("Save");
         }else if(context instanceof ComboProductOfferActivity){
@@ -257,41 +239,6 @@ public class BaseActivity extends AppCompatActivity {
                 } else {
                     Intent intent = new Intent(BaseActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                }
-            }
-        });
-        relativeLayoutFooter2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (context instanceof CategoryListActivity) {
-                    //DialogAndToast.showToast("Profile clicked in profile",BaseActivity.this);
-                } else {
-                    Intent intent = new Intent(BaseActivity.this, CategoryListActivity.class);
-                    intent.putExtra("flag","shop");
-                    startActivity(intent);
-                }
-            }
-        });
-        relativeLayoutFooter3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (context instanceof CustomerListActivity) {
-                    //DialogAndToast.showToast("Profile clicked in profile",BaseActivity.this);
-                } else {
-                    Intent intent = new Intent(BaseActivity.this, CustomerListActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-
-        relativeLayoutFooter4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (context instanceof OffersActivity) {
-                    //DialogAndToast.showToast("Profile clicked in profile",BaseActivity.this);
-                } else {
-                    Intent intent = new Intent(BaseActivity.this, OffersActivity.class);
                     startActivity(intent);
                 }
             }

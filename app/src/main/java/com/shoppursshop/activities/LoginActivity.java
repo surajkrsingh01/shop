@@ -62,13 +62,6 @@ public class LoginActivity extends NetworkBaseActivity{
 
         progressDialog.setMessage(getResources().getString(R.string.logging_user));
 
-        relativeForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(LoginActivity.this,ForgotPasswordActivity.class);
-                startActivity(intent);
-            }
-        });
 
         relativeRegister.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -104,8 +104,6 @@ public class MySubCategoriesActivity extends NetworkBaseActivity implements MyIt
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MySubCategoriesActivity.this, AddSubCatActivity.class);
-                startActivityForResult(intent,2);
             }
         });
         tv_top_parent = findViewById(R.id.text_left_label);

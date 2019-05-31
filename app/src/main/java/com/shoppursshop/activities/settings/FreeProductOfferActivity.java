@@ -2,8 +2,6 @@ package com.shoppursshop.activities.settings;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.media.Image;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,17 +14,10 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.AddProductActivity;
-import com.shoppursshop.activities.CartActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.ScannarActivity;
-import com.shoppursshop.activities.payment.mPos.MPayActivity;
-import com.shoppursshop.activities.settings.profile.AddressActivity;
-import com.shoppursshop.adapters.ShopOfferListAdapter;
-import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.fragments.BottomSearchFragment;
 import com.shoppursshop.interfaces.MyItemClickListener;
-import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.ProductDiscountOffer;
 import com.shoppursshop.utilities.Constants;
