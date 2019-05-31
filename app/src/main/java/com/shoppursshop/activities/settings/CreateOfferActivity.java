@@ -43,4 +43,8 @@ public class CreateOfferActivity extends NetworkBaseActivity {
         myItemAdapter=new ShopOfferTypeAdapter(this,itemList);
         recycler_offer_type.setAdapter(myItemAdapter);
     }
+
+    private void getOffers(){
+
+    }
 }

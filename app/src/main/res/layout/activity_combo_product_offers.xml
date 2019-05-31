@@ -66,50 +66,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <EditText
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_offer_name"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:textColorHint="?attr/secondaryTextColor"
-            android:textColor="?attr/primaryTextColor"
-            android:id="@+id/edit_offer_name"
-            android:hint="Offer Name"
-            android:inputType="text"
-            android:imeOptions="actionDone"
-            android:textSize="@dimen/edit_text_small_text_size"
-            android:paddingBottom="@dimen/edit_text_small_vertical_padding"
-            android:paddingTop="@dimen/edit_text_small_vertical_padding"
-            android:paddingLeft="@dimen/edit_text_horizontal_padding"
-            android:paddingRight="@dimen/edit_text_horizontal_padding"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"/>
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:textColorHint="?attr/secondaryTextColor"
+                android:textColor="?attr/primaryTextColor"
+                android:id="@+id/edit_offer_name"
+                android:hint="Offer Name"
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:textSize="@dimen/edit_text_small_text_size"
+                android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                android:paddingRight="@dimen/edit_text_horizontal_padding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+
 
     <View
         android:id="@+id/seperator_header"
-        android:layout_below="@+id/edit_offer_name"
+        android:layout_below="@+id/til_offer_name"
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?attr/separatorColor"/>
 
-    <Button
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_below="@+id/seperator_header"
-        android:id="@+id/add_combo"
-        android:background="@drawable/red_solid_round_corner_background"
-        android:textColor="@color/white"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:text="Add"
-        android:layout_alignParentRight="true"
-        android:textSize="@dimen/home_list_header_text_size"
-        android:textAllCaps="true"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_below="@+id/add_combo"
+        android:layout_below="@+id/seperator_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -117,9 +112,32 @@
         android:layout_marginTop="@dimen/activity_vertical_margin">
     </android.support.v7.widget.RecyclerView>
 
+            <Button
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_below="@+id/recyclerView"
+                android:id="@+id/add_combo"
+                android:background="@drawable/red_solid_round_corner_background"
+                android:textColor="@color/white"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="Add More"
+                android:layout_alignParentRight="true"
+                android:textSize="@dimen/home_list_header_text_size"
+                android:textAllCaps="true"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp" />
+
+            <View
+                android:id="@+id/seperator_1"
+                android:layout_below="@+id/add_combo"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/separatorColor"/>
+
     <LinearLayout
         android:id="@+id/linear_date"
-        android:layout_below="@+id/recyclerView"
+        android:layout_below="@+id/seperator_1"
         android:layout_marginTop="@dimen/edit_text_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -127,6 +145,13 @@
         android:weightSum="2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputLayout
+            android:textColorHint="?attr/secondaryTextColor"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+
             <EditText
                 android:id="@+id/edit_offer_start_date"
                 android:hint="Offer Start Date"
@@ -139,10 +164,18 @@
                 android:paddingTop="@dimen/edit_text_small_vertical_padding"
                 android:paddingLeft="@dimen/edit_text_horizontal_padding"
                 android:paddingRight="@dimen/edit_text_horizontal_padding"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:textColorHint="?attr/secondaryTextColor"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+
             <EditText
                 android:id="@+id/edit_offer_end_date"
                 android:hint="Offer End Date"
@@ -155,10 +188,13 @@
                 android:paddingTop="@dimen/edit_text_small_vertical_padding"
                 android:paddingLeft="@dimen/edit_text_horizontal_padding"
                 android:paddingRight="@dimen/edit_text_horizontal_padding"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+
     </LinearLayout>
 
     <View

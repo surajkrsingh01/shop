@@ -141,7 +141,7 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
                 else if(schemeCode == -1)
                     DialogAndToast.showDialog("Please Select Scheme", BuyUserLicenceActivity.this);
                 else
-                    DialogAndToast.showDialog("Total Amout Paybale Rs. "+totalAmount, BuyUserLicenceActivity.this);
+                    buyUserLicense();
             }
         });
 
@@ -167,6 +167,10 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
         String url=getResources().getString(R.string.url)+Constants.GET_USER_LICENSE;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"userLicenses");
+    }
+
+    private void buyUserLicense(){
+
     }
 
     @Override
