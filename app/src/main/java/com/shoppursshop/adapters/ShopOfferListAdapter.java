@@ -112,20 +112,20 @@ public class ShopOfferListAdapter extends RecyclerView.Adapter<ShopOfferListAdap
                 Intent intent = null;
                 if(item.getOfferType().equals("free")){
                     intent = new Intent(context, FreeProductOfferActivity.class);
-                    intent.putExtra("flag",item);
+                    intent.putExtra("flag","edit");
                     intent.putExtra("data",(Serializable) item.getProductObject());
                 }else if(item.getOfferType().equals("combo")){
                     intent = new Intent(context, ComboProductOfferActivity.class);
-                    intent.putExtra("flag",item);
+                    intent.putExtra("flag","edit");
                     intent.putExtra("data",(Serializable) item.getProductObject());
                 }else if(item.getOfferType().equals("price")){
                     intent = new Intent(context, ProductPriceOfferActivity.class);
-                    intent.putExtra("flag",item);
+                    intent.putExtra("flag","edit");
                     intent.putExtra("data",(Serializable) item.getProductObject());
                 }
                 context.startActivity(intent);
             }else if(view == iv_three_dot){
-                ShopOfferItem item = (ShopOfferItem) myItemList.get(getAdapterPosition());
+                final ShopOfferItem shopOfferItem = (ShopOfferItem) myItemList.get(getAdapterPosition());
 
                 PopupMenu popupMenu = new PopupMenu(view.getContext(), iv_three_dot);
                 ((Activity)context).getMenuInflater().inflate(R.menu.offer_list_popup_menu, popupMenu.getMenu());
@@ -134,12 +134,21 @@ public class ShopOfferListAdapter extends RecyclerView.Adapter<ShopOfferListAdap
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if(item.getTitle().equals("Edit")){
-                            /*Intent intent = new Intent(context, AddProductActivity.class);
-                            intent.putExtra("flag","editProduct");
-                            intent.putExtra("type","editProduct");
-                            intent.putExtra("product",item);
-                            ((Activity) context).startActivityForResult(intent,2);*/
-                            DialogAndToast.showToast("Edit Clicked", context);
+                            Intent intent = null;
+                            if(shopOfferItem.getOfferType().equals("free")){
+                                intent = new Intent(context, FreeProductOfferActivity.class);
+                                intent.putExtra("flag","edit");
+                                intent.putExtra("data",(Serializable) shopOfferItem.getProductObject());
+                            }else if(shopOfferItem.getOfferType().equals("combo")){
+                                intent = new Intent(context, ComboProductOfferActivity.class);
+                                intent.putExtra("flag","edit");
+                                intent.putExtra("data",(Serializable) shopOfferItem.getProductObject());
+                            }else if(shopOfferItem.getOfferType().equals("price")){
+                                intent = new Intent(context, ProductPriceOfferActivity.class);
+                                intent.putExtra("flag","edit");
+                                intent.putExtra("data",(Serializable) shopOfferItem.getProductObject());
+                            }
+                            context.startActivity(intent);
                         }else if(item.getItemId() == R.id.action_remove){
                             DialogAndToast.showToast("Remove Clicked", context);
                             //myItemClickListener.onItemClicked(getAdapterPosition());

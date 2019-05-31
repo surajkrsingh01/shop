@@ -24,8 +24,11 @@ import com.shoppursshop.activities.payment.mPos.MPayActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
 import com.shoppursshop.adapters.ShopOfferListAdapter;
 import com.shoppursshop.database.DbHelper;
+import com.shoppursshop.fragments.BottomSearchFragment;
+import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.models.ProductDiscountOffer;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
@@ -38,7 +41,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FreeProductOfferActivity extends NetworkBaseActivity {
+public class FreeProductOfferActivity extends NetworkBaseActivity implements MyItemClickListener {
 
     private TextView tv_parent, tv_top_parent;
     private EditText edit_offer_name, edit_buying_product, edit_free_product, edit_buy_qty_product,
@@ -46,6 +49,11 @@ public class FreeProductOfferActivity extends NetworkBaseActivity {
     private int buyingProductId, freeProductId;
     private RelativeLayout relative_footer_action;
     private ImageView iv_buy_camera, iv_free_camera;
+
+    private String flag;
+    private ProductDiscountOffer productDiscountOffer;
+
+    private int searchType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +64,7 @@ public class FreeProductOfferActivity extends NetworkBaseActivity {
     }
 
     private void init(){
+        flag = getIntent().getStringExtra("flag");
         tv_top_parent = findViewById(R.id.text_left_label);
         tv_parent = findViewById(R.id.text_right_label);
         edit_offer_name = findViewById(R.id.edit_offer_name);
@@ -115,6 +124,22 @@ public class FreeProductOfferActivity extends NetworkBaseActivity {
             }
         });
 
+        edit_buying_product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchType = 0;
+                searchProduct();
+            }
+        });
+
+        edit_free_product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchType = 1;
+                searchProduct();
+            }
+        });
+
         iv_buy_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,7 +157,7 @@ public class FreeProductOfferActivity extends NetworkBaseActivity {
         relative_footer_action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createOffer();
+                createUpdateOffer();
             }
         });
 
@@ -150,9 +175,40 @@ public class FreeProductOfferActivity extends NetworkBaseActivity {
                 finish();
             }
         });
+
+        if(flag != null && flag.equals("edit")){
+            productDiscountOffer = (ProductDiscountOffer)getIntent().getSerializableExtra("data");
+            if(productDiscountOffer != null){
+                edit_offer_name.setText(productDiscountOffer.getOfferName());
+                MyProductItem item = dbHelper.getProductDetails(productDiscountOffer.getProdBuyId());
+                if(item != null){
+                    edit_buying_product.setText(item.getProdName());
+                    item = dbHelper.getProductDetails(productDiscountOffer.getProdFreeId());
+                    edit_free_product.setText(item.getProdName());
+                }
+                edit_buy_qty_product.setText(""+productDiscountOffer.getProdBuyQty());
+                edit_free_qty_product.setText(""+productDiscountOffer.getProdFreeQty());
+                edit_offer_start_date.setText(productDiscountOffer.getStartDate());
+                edit_offer_end_date.setText(productDiscountOffer.getEndDate());
+                buyingProductId = productDiscountOffer.getProdBuyId();
+                freeProductId = productDiscountOffer.getProdFreeId();
+            }
+            TextView textView = findViewById(R.id.text_action);
+            textView.setText("Update");
+        }
     }
 
-    private void createOffer() {
+    private void searchProduct(){
+        BottomSearchFragment bottomSearchFragment = new BottomSearchFragment();
+        bottomSearchFragment.setCallingActivityName("productList");
+        Bundle bundle = new Bundle();
+        bundle.putString("flag","searchCartProduct");
+        bottomSearchFragment.setArguments(bundle);
+        bottomSearchFragment.setMyItemClickListener(this);
+        bottomSearchFragment.show(getSupportFragmentManager(), "Search Product Bottom Sheet");
+    }
+
+    private void createUpdateOffer() {
         String offer_name = edit_offer_name.getText().toString();
         String buying_product = edit_buying_product.getText().toString();
         String free_product = edit_free_product.getText().toString();
@@ -198,16 +254,26 @@ public class FreeProductOfferActivity extends NetworkBaseActivity {
         params.put("startDate", offer_start_date);
         params.put("endDate", offer_end_date);
         params.put("status", "1");
-        params.put("userName","Suraj");
+        params.put("userName",sharedPreferences.getString(Constants.FULL_NAME, ""));
         params.put("dbName", sharedPreferences.getString(Constants.DB_NAME, ""));
         params.put("dbUserName", sharedPreferences.getString(Constants.DB_USER_NAME, ""));
         params.put("dbPassword", sharedPreferences.getString(Constants.DB_PASSWORD, ""));
         JSONArray dataArray = new JSONArray();
         JSONObject dataObject = new JSONObject(params);
         dataArray.put(dataObject);
-        String url = getResources().getString(R.string.url) + Constants.CREATE_FREE_PRODUCT_OFFER;
+        String url ="";
+        String api = "";
+        if(flag != null && flag.equals("edit")){
+            params.put("id", ""+productDiscountOffer.getId());
+            url = getResources().getString(R.string.url) + Constants.UPDATE_FREE_PRODUCT_OFFER;
+            api = "updateFreeProductOffer";
+
+        }else{
+            url = getResources().getString(R.string.url) + Constants.CREATE_FREE_PRODUCT_OFFER;
+            api = "createFreeProductOffer";
+        }
         showProgress(true);
-        jsonObjectApiRequest(Request.Method.POST, url, new JSONObject(params), "createFreeProductOffer");
+        jsonObjectApiRequest(Request.Method.POST, url, new JSONObject(params), api);
     }
 
     @Override
@@ -217,7 +283,13 @@ public class FreeProductOfferActivity extends NetworkBaseActivity {
             Log.d("response", response.toString());
             if(apiName.equals("createFreeProductOffer")){
                 if(response.getString("status").equals("true")||response.getString("status").equals(true)){
-                    Log.d(TAG, "" );
+                    showMyDialog("Offer created successfully.");
+                }else {
+                    DialogAndToast.showToast(response.getString("message"),FreeProductOfferActivity.this);
+                }
+            }else if(apiName.equals("updateFreeProductOffer")){
+                if(response.getString("status").equals("true")||response.getString("status").equals(true)){
+                    showMyDialog("Offer updated successfully.");
                 }else {
                     DialogAndToast.showToast(response.getString("message"),FreeProductOfferActivity.this);
                 }
@@ -251,6 +323,24 @@ public class FreeProductOfferActivity extends NetworkBaseActivity {
                 edit_free_product.setText(productItem.getProdName());
                 freeProductId = productItem.getProdId();
             }
+        }
+    }
+
+    public void onDialogPositiveClicked(){
+        Intent intent = new Intent(FreeProductOfferActivity.this,MyOffersActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onItemClicked(int prodId) {
+        MyProductItem item = dbHelper.getProductDetails(prodId);
+        if(searchType == 0){
+            buyingProductId = item.getProdId();
+            edit_buying_product.setText(item.getProdName());
+        }else{
+            freeProductId = item.getProdId();
+            edit_free_product.setText(item.getProdName());
         }
     }
 }

@@ -78,11 +78,6 @@ public class MyOffersActivity extends NetworkBaseActivity {
         myItemAdapter=new ShopOfferListAdapter(this,itemList);
         recyclerView.setAdapter(myItemAdapter);
 
-        if (ConnectionDetector.isNetworkAvailable(this)){
-            getItemList();
-        }else{
-            showNoNetwork(true);
-        }
         tv_top_parent = findViewById(R.id.text_left_label);
         text_second_label = findViewById(R.id.text_second_label);
 
@@ -93,6 +88,16 @@ public class MyOffersActivity extends NetworkBaseActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (ConnectionDetector.isNetworkAvailable(this)){
+            getItemList();
+        }else{
+            showNoNetwork(true);
+        }
     }
 
     //ems simulation iq
@@ -114,6 +119,7 @@ public class MyOffersActivity extends NetworkBaseActivity {
         try {
             if (apiName.equals("offerList")) {
                 if (response.getBoolean("status")) {
+                    itemList.clear();
                     JSONObject jsonObject = response.getJSONObject("result");
                     JSONArray freeArray = jsonObject.getJSONArray("freeOfferList");
                     JSONArray comboArray = jsonObject.getJSONArray("comboOfferList");
