@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
+    tools:context=".activities.settings.FreeProductOfferActivity">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/relative_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:id="@+id/text_left_label"
+            android:text="Offers"
+            android:textColor="?attr/secondaryTextColor"
+            android:textSize="@dimen/small_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:id="@+id/view_seperator"
+            android:layout_width="2dp"
+            android:layout_height="20dp"
+            android:background="?attr/separatorColor"/>
+        <TextView
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:id="@+id/text_right_label"
+            android:text="Create Offer"
+            android:textColor="?attr/secondaryTextColor"
+            android:textSize="@dimen/small_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/relative_top"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:id="@+id/text_header"
+        android:text="Free Product Offer"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/very_large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+        <EditText
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/text_header"
+            android:textColorHint="?attr/secondaryTextColor"
+            android:textColor="?attr/primaryTextColor"
+            android:id="@+id/edit_offer_name"
+            android:hint="Offer Name"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:textSize="@dimen/edit_text_small_text_size"
+            android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+            android:paddingTop="@dimen/edit_text_small_vertical_padding"
+            android:paddingLeft="@dimen/edit_text_horizontal_padding"
+            android:paddingRight="@dimen/edit_text_horizontal_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"/>
+
+    <View
+        android:id="@+id/seperator_header"
+        android:layout_below="@+id/edit_offer_name"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/separatorColor"/>
+
+        <ImageView
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/seperator_header"
+            android:id="@+id/iv_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_camera_black_24dp"
+            android:tint="?attr/primaryTextColor"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+        <EditText
+            android:layout_below="@+id/seperator_header"
+            android:layout_toLeftOf="@+id/iv_camera"
+            android:textColorHint="?attr/secondaryTextColor"
+            android:textColor="?attr/primaryTextColor"
+            android:id="@+id/edit_buying_product"
+            android:hint="Buying Product"
+            android:imeOptions="actionDone"
+            android:textSize="@dimen/edit_text_small_text_size"
+            android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+            android:paddingTop="@dimen/edit_text_small_vertical_padding"
+            android:paddingLeft="@dimen/edit_text_horizontal_padding"
+            android:paddingRight="@dimen/edit_text_horizontal_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"/>
+
+    <View
+        android:id="@+id/seperator_header_buy"
+        android:layout_below="@+id/edit_buying_product"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/separatorColor"/>
+
+        <ImageView
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/seperator_header_buy"
+            android:id="@+id/iv_free_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_camera_black_24dp"
+            android:tint="?attr/primaryTextColor"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+        <EditText
+            android:layout_below="@+id/seperator_header_buy"
+            android:layout_toLeftOf="@+id/iv_free_camera"
+            android:textColorHint="?attr/secondaryTextColor"
+            android:textColor="?attr/primaryTextColor"
+            android:id="@+id/edit_free_product"
+            android:hint="Free Product"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:textSize="@dimen/edit_text_small_text_size"
+            android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+            android:paddingTop="@dimen/edit_text_small_vertical_padding"
+            android:paddingLeft="@dimen/edit_text_horizontal_padding"
+            android:paddingRight="@dimen/edit_text_horizontal_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"/>
+
+    <View
+        android:id="@+id/seperator_header_free"
+        android:layout_below="@+id/edit_free_product"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/separatorColor"/>
+
+    <LinearLayout
+        android:id="@+id/linear_qty"
+        android:layout_below="@+id/seperator_header_free"
+        android:layout_marginTop="@dimen/edit_text_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_below="@+id/seperator_header_free"
+            android:textColorHint="?attr/secondaryTextColor"
+            android:textColor="?attr/primaryTextColor"
+            android:id="@+id/edit_buy_qty_product"
+            android:hint="Buy Qyantity Product"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:textSize="@dimen/edit_text_small_text_size"
+            android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+            android:paddingTop="@dimen/edit_text_small_vertical_padding"
+            android:paddingLeft="@dimen/edit_text_horizontal_padding"
+            android:paddingRight="@dimen/edit_text_horizontal_padding"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@null"/>
+
+
+        <EditText
+            android:layout_below="@+id/edit_buy_qty_product"
+            android:textColorHint="?attr/secondaryTextColor"
+            android:textColor="?attr/primaryTextColor"
+            android:id="@+id/edit_free_qty_product"
+            android:hint="Free Qyantity Product"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:textSize="@dimen/edit_text_small_text_size"
+            android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+            android:paddingTop="@dimen/edit_text_small_vertical_padding"
+            android:paddingLeft="@dimen/edit_text_horizontal_padding"
+            android:paddingRight="@dimen/edit_text_horizontal_padding"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@null"/>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/seperator_header_qty"
+        android:layout_below="@+id/linear_qty"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/separatorColor"/>
+
+
+    <LinearLayout
+        android:id="@+id/linear_date"
+        android:layout_below="@+id/seperator_header_qty"
+        android:layout_marginTop="@dimen/edit_text_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/edit_offer_start_date"
+                android:hint="Offer Start Date"
+                android:textColor="?attr/primaryTextColor"
+                android:textColorHint="?attr/secondaryTextColor"
+                android:inputType="none"
+                android:focusable="false"
+                android:textSize="@dimen/edit_text_small_text_size"
+                android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                android:paddingRight="@dimen/edit_text_horizontal_padding"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:background="@null"/>
+
+            <EditText
+                android:id="@+id/edit_offer_end_date"
+                android:hint="Offer End Date"
+                android:textColor="?attr/primaryTextColor"
+                android:textColorHint="?attr/secondaryTextColor"
+                android:inputType="none"
+                android:focusable="false"
+                android:textSize="@dimen/edit_text_small_text_size"
+                android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                android:paddingRight="@dimen/edit_text_horizontal_padding"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:background="@null"/>
+    </LinearLayout>
+
+    <View
+        android:layout_below="@+id/linear_date"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/separatorColor"/>
+
+    <include layout="@layout/footer_action_layout"/>
+
+</RelativeLayout>

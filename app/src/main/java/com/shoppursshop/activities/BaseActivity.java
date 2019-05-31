@@ -22,6 +22,8 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.payment.mPos.MPayTransactionDetailsActivity;
 import com.shoppursshop.activities.settings.AddCategoryActivity;
 import com.shoppursshop.activities.settings.AddSubCatActivity;
+import com.shoppursshop.activities.settings.ComboProductOfferActivity;
+import com.shoppursshop.activities.settings.FreeProductOfferActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.activities.settings.SyncProductActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
@@ -158,6 +160,10 @@ public class BaseActivity extends AppCompatActivity {
             tv.setText("Deliver Order");
         }else if(context instanceof DeliveryAddressActivity){
             tv.setText("Update Delivery Address");
+        }else if(context instanceof FreeProductOfferActivity){
+            tv.setText("Save");
+        }else if(context instanceof ComboProductOfferActivity){
+            tv.setText("Save");
         }
     }
 

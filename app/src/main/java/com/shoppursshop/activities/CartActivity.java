@@ -358,7 +358,6 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                         }
                     }
 
-
                     shopObject.put("shopCode", shopCode);
                     shopObject.put("orderDate", Utility.getTimeStamp());
                     shopObject.put("orderDeliveryNote","Note");

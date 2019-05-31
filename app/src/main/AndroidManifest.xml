@@ -33,7 +33,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.DeliveryAddressActivity"></activity>
+        <activity android:name=".activities.settings.ProductPriceOfferActivity"></activity>
+        <activity android:name=".activities.settings.ComboProductOfferActivity" />
+        <activity android:name=".activities.settings.FreeProductOfferActivity" />
+        <activity android:name=".activities.settings.CreateOfferActivity" />
+        <activity android:name=".activities.DeliveryAddressActivity" />
         <activity
             android:name="com.pnsol.epay.sdk.PaymentPage"
             android:screenOrientation="portrait" />
@@ -76,7 +80,7 @@
         <activity
             android:name=".activities.CartActivity"
             android:label="@string/title_activity_cart"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -100,6 +104,10 @@
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.MyOrdersActivity"
+            android:label="@string/title_activity_my_orders"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".activities.settings.MyOffersActivity"
             android:label="@string/title_activity_my_orders"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
