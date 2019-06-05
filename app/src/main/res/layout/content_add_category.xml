@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.settings.AddCategoryActivity"
+    tools:showIn="@layout/activity_add_category">
+
+    <TextView
+        android:id="@+id/text_left_label"
+        android:text="Settings"
+        android:textColor="?attr/secondaryTextColor"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_below="@+id/text_left_label"
+        android:id="@+id/text_second_label"
+        android:text="Categories "
+        android:textColor="?attr/primaryTextColor"
+        android:textStyle="bold"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/list_very_large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/text_select_category_label"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:textSize="@dimen/large_text_size"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_category" />
+
+    <Button
+        android:id="@+id/btn_select_all"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:text="@string/select_all"
+        android:layout_below="@+id/text_select_category_label"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_alignParentRight="true"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/small_text_size"
+        android:background="@drawable/accent_color_3_solid_round_backgground"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_below="@+id/text_second_label"
+        android:layout_above="@+id/relative_footer_action"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
+
+    <include layout="@layout/footer_action_layout"/>
+
+    <TextView
+        android:textColor="?attr/primaryTextColor"
+        android:id="@+id/text_no_data"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="All categories are synced"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

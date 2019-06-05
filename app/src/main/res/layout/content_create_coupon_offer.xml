@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.settings.CreateCouponOfferActivity"
+    tools:showIn="@layout/activity_create_coupon_offer">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/relative_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:id="@+id/text_left_label"
+            android:text="Offers"
+            android:textColor="?attr/secondaryTextColor"
+            android:textSize="@dimen/small_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:id="@+id/view_seperator"
+            android:layout_width="2dp"
+            android:layout_height="20dp"
+            android:background="?attr/separatorColor"/>
+        <TextView
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:id="@+id/text_right_label"
+            android:text="Create Offer"
+            android:textColor="?attr/secondaryTextColor"
+            android:textSize="@dimen/small_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/relative_top"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:id="@+id/text_header"
+        android:text="Coupon Offer"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/very_large_text_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_above="@+id/relative_footer_action"
+        android:layout_below="@+id/text_header"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_offer_name"
+                android:textColorHint="?attr/secondaryTextColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:textColorHint="?attr/secondaryTextColor"
+                    android:textColor="?attr/primaryTextColor"
+                    android:id="@+id/edit_offer_name"
+                    android:hint="Coupon Name"
+                    android:inputType="text"
+                    android:imeOptions="actionDone"
+                    android:textSize="@dimen/edit_text_small_text_size"
+                    android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                    android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                    android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                    android:paddingRight="@dimen/edit_text_horizontal_padding"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <View
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/separatorColor"/>
+
+            <LinearLayout
+                android:id="@+id/linear_discount_per_amount_layout"
+                android:layout_marginTop="@dimen/edit_text_margin"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    android:textColorHint="?attr/secondaryTextColor"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/edit_offer_percentage"
+                        android:hint="Percentage"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textColorHint="?attr/secondaryTextColor"
+                        android:inputType="numberDecimal"
+                        android:imeOptions="actionNext"
+                        android:textSize="@dimen/edit_text_small_text_size"
+                        android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                        android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                        android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                        android:paddingRight="@dimen/edit_text_horizontal_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:textColorHint="?attr/secondaryTextColor"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/edit_offer_amount"
+                        android:hint="Max Discount"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textColorHint="?attr/secondaryTextColor"
+                        android:inputType="number"
+                        android:imeOptions="actionDone"
+                        android:textSize="@dimen/edit_text_small_text_size"
+                        android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                        android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                        android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                        android:paddingRight="@dimen/edit_text_horizontal_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/separatorColor"/>
+
+
+            <LinearLayout
+                android:id="@+id/linear_date"
+                android:layout_marginTop="@dimen/edit_text_margin"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    android:textColorHint="?attr/secondaryTextColor"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/edit_offer_start_date"
+                        android:hint="Offer Start Date"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textColorHint="?attr/secondaryTextColor"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:textSize="@dimen/edit_text_small_text_size"
+                        android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                        android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                        android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                        android:paddingRight="@dimen/edit_text_horizontal_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:textColorHint="?attr/secondaryTextColor"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/edit_offer_end_date"
+                        android:hint="Offer End Date"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textColorHint="?attr/secondaryTextColor"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:textSize="@dimen/edit_text_small_text_size"
+                        android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                        android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                        android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                        android:paddingRight="@dimen/edit_text_horizontal_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <include layout="@layout/footer_action_layout"/>
+
+</RelativeLayout>
