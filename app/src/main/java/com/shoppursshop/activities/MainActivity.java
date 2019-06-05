@@ -1,5 +1,6 @@
 package com.shoppursshop.activities;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,6 +62,10 @@ public class MainActivity extends NetworkBaseActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+
+        Log.i(TAG,"available memory "+ activityManager.getMemoryClass());
 
         itemList = new ArrayList<>();
         preItemList = new ArrayList<>();
@@ -143,6 +148,8 @@ public class MainActivity extends NetworkBaseActivity {
         fabNewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,CustomerInfoActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -150,7 +157,8 @@ public class MainActivity extends NetworkBaseActivity {
         btnNewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(MainActivity.this,CustomerInfoActivity.class);
+                startActivity(intent);
             }
         });
 

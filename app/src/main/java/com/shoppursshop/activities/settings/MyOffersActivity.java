@@ -16,6 +16,7 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.adapters.OrderAdapter;
 import com.shoppursshop.adapters.ShopOfferListAdapter;
+import com.shoppursshop.models.Coupon;
 import com.shoppursshop.models.MyProduct;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.OrderItem;
@@ -124,11 +125,13 @@ public class MyOffersActivity extends NetworkBaseActivity {
                     JSONArray freeArray = jsonObject.getJSONArray("freeOfferList");
                     JSONArray comboArray = jsonObject.getJSONArray("comboOfferList");
                     JSONArray priceArray = jsonObject.getJSONArray("priceOfferList");
+                    JSONArray couponArray = jsonObject.getJSONArray("couponOfferList");
                     JSONObject dataObject = null;
                     ShopOfferItem offerItem= null;
                     ProductComboOffer productComboOffer = null;
                     ProductComboDetails productComboDetails = null;
                     ProductDiscountOffer productDiscountOffer = null;
+                    Coupon coupon = null;
                     int len = freeArray.length();
                     for (int i = 0; i < len; i++) {
                         dataObject = freeArray.getJSONObject(i);
@@ -152,6 +155,9 @@ public class MyOffersActivity extends NetworkBaseActivity {
                     }
 
                     len = comboArray.length();
+                    JSONArray productComboArray = null;
+                    List<ProductComboDetails> productComboOfferDetails = null;
+                    int innerLen = 0;
                     for (int i = 0; i < len; i++) {
                         dataObject = comboArray.getJSONObject(i);
                         offerItem = new ShopOfferItem();
@@ -159,6 +165,29 @@ public class MyOffersActivity extends NetworkBaseActivity {
                         offerItem.setProductName("Combo Product Offer");
                         offerItem.setProductLocalImage(R.drawable.thumb_12);
                         offerItem.setOfferType("combo");
+                        productComboOffer = new ProductComboOffer();
+                        productComboOffer.setId(dataObject.getInt("id"));
+                        productComboOffer.setOfferName(dataObject.getString("offerName"));
+                        productComboOffer.setStatus(dataObject.getString("status"));
+                        productComboOffer.setStartDate(dataObject.getString("startDate"));
+                        productComboOffer.setEndDate(dataObject.getString("endDate"));
+                        productComboArray = dataObject.getJSONArray("productComboOfferDetails");
+                        productComboOfferDetails = new ArrayList<>();
+                        innerLen = productComboArray.length();
+                        for (int k = 0; k < innerLen; k++) {
+                            dataObject = productComboArray.getJSONObject(k);
+                            productComboDetails = new ProductComboDetails();
+                            productComboDetails.setId(dataObject.getInt("id"));
+                            productComboDetails.setPcodPcoId(dataObject.getInt("pcodPcoId"));
+                            productComboDetails.setPcodProdId(dataObject.getInt("pcodProdId"));
+                            productComboDetails.setPcodProdQty(dataObject.getInt("pcodProdQty"));
+                            productComboDetails.setPcodPrice((float)dataObject.getDouble("pcodPrice"));
+                            productComboDetails.setStatus(dataObject.getString("status"));
+                            productComboOfferDetails.add(productComboDetails);
+                        }
+                        productComboOffer.setProductComboOfferDetails(productComboOfferDetails);
+
+                        offerItem.setProductObject(productComboOffer);
                         itemList.add(offerItem);
                     }
 
@@ -170,10 +199,54 @@ public class MyOffersActivity extends NetworkBaseActivity {
                         offerItem.setProductName("Product Price Offer");
                         offerItem.setProductLocalImage(R.drawable.thumb_12);
                         offerItem.setOfferType("price");
+
+                        productComboOffer = new ProductComboOffer();
+                        productComboOffer.setId(dataObject.getInt("id"));
+                        productComboOffer.setProdId(dataObject.getInt("prodId"));
+                        productComboOffer.setOfferName(dataObject.getString("offerName"));
+                        productComboOffer.setStatus(dataObject.getString("status"));
+                        productComboOffer.setStartDate(dataObject.getString("startDate"));
+                        productComboOffer.setEndDate(dataObject.getString("endDate"));
+                        productComboArray = dataObject.getJSONArray("productComboOfferDetails");
+                        productComboOfferDetails = new ArrayList<>();
+                        innerLen = productComboArray.length();
+                        for (int k = 0; k < innerLen; k++) {
+                            dataObject = productComboArray.getJSONObject(k);
+                            productComboDetails = new ProductComboDetails();
+                            productComboDetails.setId(dataObject.getInt("id"));
+                            productComboDetails.setPcodPcoId(dataObject.getInt("pcodPcoId"));
+                            productComboDetails.setPcodProdQty(dataObject.getInt("pcodProdQty"));
+                            productComboDetails.setPcodPrice((float)dataObject.getDouble("pcodPrice"));
+                            productComboDetails.setStatus(dataObject.getString("status"));
+                            productComboOfferDetails.add(productComboDetails);
+                        }
+                        productComboOffer.setProductComboOfferDetails(productComboOfferDetails);
+                        offerItem.setProductObject(productComboOffer);
                         itemList.add(offerItem);
                     }
 
-                    if(len == 0){
+                    len = couponArray.length();
+                    for (int i = 0; i < len; i++) {
+                        dataObject = couponArray.getJSONObject(i);
+                        offerItem = new ShopOfferItem();
+                        offerItem.setOfferName(dataObject.getString("name"));
+                        offerItem.setProductName("Coupon Offer");
+                        offerItem.setProductLocalImage(R.drawable.thumb_12);
+                        offerItem.setOfferType("coupon");
+                        coupon = new Coupon();
+                        coupon.setId(dataObject.getInt("id"));
+                        coupon.setPercentage(dataObject.getInt("percentage"));
+                        coupon.setAmount((float)dataObject.getDouble("amount"));
+                        coupon.setName(dataObject.getString("name"));
+                        coupon.setStatus(dataObject.getString("status"));
+                        coupon.setStartDate(dataObject.getString("startDate"));
+                        coupon.setEndDate(dataObject.getString("endDate"));
+                        offerItem.setProductObject(coupon);
+                        itemList.add(offerItem);
+                    }
+
+                    if(freeArray.length() == 0 && comboArray.length() == 0 && priceArray.length() == 0 &&
+                            couponArray.length() == 0){
                         showNoData(true);
                     }else{
                         showNoData(false);

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.shoppursshop.R;
 import com.shoppursshop.activities.settings.ComboProductOfferActivity;
+import com.shoppursshop.activities.settings.CreateCouponOfferActivity;
 import com.shoppursshop.activities.settings.FreeProductOfferActivity;
 import com.shoppursshop.activities.settings.ProductPriceOfferActivity;
 
@@ -91,6 +92,8 @@ public class ShopOfferTypeAdapter extends RecyclerView.Adapter<ShopOfferTypeAdap
                     intent = new Intent(context, ComboProductOfferActivity.class);
                 }else if(item.equals("Product Price Offer")){
                     intent = new Intent(context, ProductPriceOfferActivity.class);
+                }else if(item.equals("Coupon Offer")){
+                    intent = new Intent(context, CreateCouponOfferActivity.class);
                 }
                 intent.putExtra("myoffer",item);
                 intent.putExtra("flag","shoppurs_offer");

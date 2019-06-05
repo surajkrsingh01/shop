@@ -115,6 +115,9 @@
     <dimen name="customer_list_image_width">90dp</dimen>
     <dimen name="customer_list_image_height">80dp</dimen>
 
+    <!--Customer List. -->
+    <dimen name="customer_list_image_size">50dp</dimen>
+
     <!-- List. -->
     <dimen name="list_very_large_text_size">30sp</dimen>
     <dimen name="list_large_text_size">22sp</dimen>

@@ -32,6 +32,7 @@ public class CreateOfferActivity extends NetworkBaseActivity {
         itemList.add("Free Product Offer");
         itemList.add("Combo Product Offer");
         itemList.add("Product Price Offer");
+        itemList.add("Coupon Offer");
     }
 
     private void init(){

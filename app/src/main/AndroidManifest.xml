@@ -27,47 +27,88 @@
     <application
         android:name=".utilities.AppController"
         android:allowBackup="false"
+        android:largeHeap="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.settings.ProductPriceOfferActivity"
-            android:windowSoftInputMode="stateAlwaysHidden">
-        </activity>
-        <activity android:name=".activities.settings.ComboProductOfferActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity android:name=".activities.settings.FreeProductOfferActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity android:name=".activities.settings.CreateOfferActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activities.settings.CreateCouponOfferActivity"
+            android:label="@string/title_activity_create_coupon_offer"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+        <activity
+            android:name=".activities.settings.ProductPriceOfferActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+        <activity
+            android:name=".activities.settings.ComboProductOfferActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activities.settings.FreeProductOfferActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activities.settings.CreateOfferActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activities.DeliveryAddressActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name="com.pnsol.epay.sdk.PaymentPage"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.payment.ePay.EPayPayswiffActivity"
             android:label="@string/title_activity_epay_payswiff"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".activities.TransactionDetailsActivity"
+            android:label="@string/title_activity_transaction_details"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".activities.settings.MyOrderDetailsActivity"
+            android:label="@string/title_activity_my_order_details"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.MyProductListActivity"
             android:label="@string/title_activity_my_product_list"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.MySubCategoriesActivity"
             android:label="@string/title_activity_my_sub_categories"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.MyCategoriesActivity"
             android:label="@string/title_activity_my_categories"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".activities.settings.MySalesActivity"
+            android:label="@string/title_activity_my_sales"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.BuyUserLicenceActivity"
             android:label="@string/title_activity_buy_user_licence"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.AddPaymentDevice"
             android:label="@string/title_activity_add_payment_device"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".activities.CartActivity"
+            android:label="@string/title_activity_cart"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
 
         <uses-library
@@ -77,35 +118,58 @@
         <activity
             android:name=".activities.payment.mPos.MPaymentTransactionActivity"
             android:label="@string/title_activity_mpayment_transaction"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.payment.mPos.RKIProcessActivity"
             android:label="@string/title_activity_rkip_process"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.payment.mPos.MPayTransactionDetailsActivity"
             android:label="@string/title_activity_mpay_activation"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.payment.mPos.MPayActivity"
             android:label="@string/title_activity_mpay"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.MyOrdersActivity"
             android:label="@string/title_activity_my_orders"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.MyOffersActivity"
             android:label="@string/title_activity_my_orders"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".activities.settings.SyncProductActivity"
+            android:label="@string/title_activity_sync_product"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".activities.settings.AddSubCatActivity"
+            android:label="@string/title_activity_add_sub_cat"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".activities.settings.AddCategoryActivity"
+            android:label="@string/title_activity_add_category"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.profile.KYCActivity"
             android:label="@string/title_activity_kyc"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.payment.gPay.PaymentActivity"
             android:label="@string/title_activity_payment"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
 
         <meta-data
@@ -115,10 +179,12 @@
         <activity
             android:name=".activities.settings.profile.BankDetailsActivity"
             android:label="@string/title_activity_bank_details"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.profile.DeliveryActivity"
             android:label="@string/title_activity_delivery"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
@@ -129,20 +195,29 @@
         <activity
             android:name=".activities.settings.profile.AddressActivity"
             android:label="@string/title_activity_address"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.settings.profile.BasicProfileActivity"
             android:label="@string/title_activity_basic_profile"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.settings.ProfileActivity"
             android:label="@string/title_activity_profile"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.DisplaySettingsActivity"
             android:label="@string/title_activity_display_settings"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.InvoiceActivity"
+            android:label="@string/title_activity_invoice"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
@@ -158,6 +233,7 @@
         <activity
             android:name=".activities.BaseImageActivity"
             android:label="@string/title_activity_base_image"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
 
         <service android:name=".services.MyFirebaseMessagingService">
@@ -166,6 +242,21 @@
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".activities.OrderSelectProductListActivity"
+            android:label="@string/title_activity_order_select_product_list"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".activities.OrderDetailActivity"
+            android:label="@string/title_activity_order_detail"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".activities.CustomerInfoActivity"
+            android:label="@string/title_activity_customer_info"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -178,26 +269,83 @@
         <activity
             android:name=".activities.RegisterActivity"
             android:label="@string/title_activity_register"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.BaseActivity" />
         <activity
             android:name=".activities.settings.SettingActivity"
             android:label="@string/title_activity_setting"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.NetworkBaseActivity" />
         <activity
+            android:name=".activities.OffersActivity"
+            android:label="@string/title_activity_offers"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.CategoryListActivity"
+            android:label="@string/title_activity_products"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.CustomerListActivity"
+            android:label="@string/title_activity_customer_list"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.SubCatListActivity"
+            android:label="@string/title_activity_sub_cat_list"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.ProductListActivity"
+            android:label="@string/title_activity_product_list"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activities.ForgotPasswordActivity"
+            android:label="@string/title_activity_forgot_password"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.ProductDetailActivity"
+            android:label="@string/title_activity_product_detail"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.CustomerProfileActivity"
+            android:label="@string/title_activity_customer_profile"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.AddProductActivity"
+            android:label="@string/title_activity_add_product"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activities.AddCustomerActivity"
+            android:label="@string/title_activity_add_customer"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activities.ScannarActivity"
             android:label="@string/title_activity_scannar"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

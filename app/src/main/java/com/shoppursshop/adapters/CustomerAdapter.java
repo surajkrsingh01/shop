@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -24,12 +27,18 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
+import com.shoppursshop.activities.AddCustomerActivity;
+import com.shoppursshop.activities.CustomerProfileActivity;
+import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTouchListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyCustomer;
 import com.shoppursshop.models.MyHeader;
 import com.shoppursshop.models.MyItem;
+import com.shoppursshop.utilities.Utility;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -98,6 +107,9 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @Override
         public void onClick(View view) {
             if(view == btnAdd){
+                Intent intent = new Intent(context,AddCustomerActivity.class);
+                intent.putExtra("flag","manual");
+                context.startActivity(intent);
             }
         }
     }
@@ -106,7 +118,8 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public class MyCustomerListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
 
         private TextView textInitial,textCustName,textAddress,textStateCity,textMobile,textEmail;
-        private ImageView imageView,imageMenu;
+        private CircleImageView imageView;
+        private ImageView imageMenu;
         private View rootView;
 
         public MyCustomerListViewHolder(View itemView) {
@@ -178,7 +191,18 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 case MotionEvent.ACTION_UP:
                     // Log.i("Adapter","onPressUp");
                     MyCustomer item = (MyCustomer)itemList.get(getAdapterPosition());
-
+                    Intent intent = new Intent(context,CustomerProfileActivity.class);
+                    intent.putExtra("name",item.getName());
+                    intent.putExtra("address",item.getAddress());
+                    intent.putExtra("mobile",item.getMobile());
+                    intent.putExtra("stateCity",item.getState()+", "+item.getCity());
+                    intent.putExtra("customerImage",item.getImage());
+                    intent.putExtra("isFav",item.getIsFav());
+                    intent.putExtra("custCode",item.getCode());
+                    intent.putExtra("custId",item.getId());
+                    intent.putExtra("ratings",item.getRatings());
+                    context.startActivity(intent);
+                    zoomAnimation(false,rootView);
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     Log.i("Adapter","onPressCancel");
@@ -309,9 +333,9 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             String initials = "";
             if(item.getName().contains(" ")){
                 String[] name = item.getName().split(" ");
-                initials = name[0].substring(0,1)+name[1].substring(0,1);
+                initials = name[0].substring(0,1);
             }else{
-                initials = item.getName().substring(0,2);
+                initials = item.getName().substring(0,1);
             }
 
             myViewHolder.textInitial.setText(initials);
@@ -322,7 +346,9 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }else{
                 myViewHolder.textInitial.setVisibility(View.VISIBLE);
                 myViewHolder.imageView.setVisibility(View.GONE);
-                myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+              //  myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+                Utility.setColorFilter(myViewHolder.textInitial.getBackground(),getTvColor(counter));
+
                 counter++;
                 if(counter == 12){
                     counter = 0;

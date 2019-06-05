@@ -32,8 +32,8 @@ import java.util.Map;
 public class DeliveryActivity extends NetworkBaseActivity {
 
     private Switch switchDelivery;
-    private EditText editTextMinAmount;
-    private int amount;
+    private EditText editTextMinAmount,etEstTimeForDelivery,etMinDistance,etChargeAfterMinDistance;
+    private int amount,estTime,minDeliveryDistance,chargeAfterMinDistance;
     private TextView tv_top_parent, tv_parent;
 
     @Override
@@ -52,6 +52,9 @@ public class DeliveryActivity extends NetworkBaseActivity {
     private void init(){
         switchDelivery = findViewById(R.id.switch_delivery);
         editTextMinAmount = findViewById(R.id.edit_min_delivery_amount);
+        etEstTimeForDelivery = findViewById(R.id.edit_time_delivery_amount);
+        etMinDistance = findViewById(R.id.edit_distance_delivery_amount);
+        etChargeAfterMinDistance = findViewById(R.id.edit_charge_per_km_amount);
         RelativeLayout btnUpdate = findViewById(R.id.relative_footer_action);
 
         boolean delivery = sharedPreferences.getBoolean(Constants.IS_DELIVERY_AVAILABLE,false);
@@ -60,6 +63,9 @@ public class DeliveryActivity extends NetworkBaseActivity {
         }
 
         editTextMinAmount.setText(""+sharedPreferences.getInt(Constants.MIN_DELIVERY_AMOUNT,0));
+        etMinDistance.setText(""+sharedPreferences.getInt(Constants.MIN_DELIVERY_DISTANCE,0));
+        etEstTimeForDelivery.setText(""+sharedPreferences.getInt(Constants.DELIVERY_EST_TIME,0));
+        etChargeAfterMinDistance.setText(""+sharedPreferences.getInt(Constants.CHARGE_AFTER_MIN_DISTANCE,0));
 
         /*switchDelivery.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -96,9 +102,23 @@ public class DeliveryActivity extends NetworkBaseActivity {
     }
 
     private void updateDeliveryDetails(){
-        String amountTemp = editTextMinAmount.getText().toString();
         try {
-            amount = Integer.parseInt(amountTemp);
+            amount = Integer.parseInt(editTextMinAmount.getText().toString());
+        }catch (NumberFormatException nfe){
+            nfe.printStackTrace();
+        }
+        try {
+            minDeliveryDistance = Integer.parseInt(etMinDistance.getText().toString());
+        }catch (NumberFormatException nfe){
+            nfe.printStackTrace();
+        }
+        try {
+            estTime = Integer.parseInt(etEstTimeForDelivery.getText().toString());
+        }catch (NumberFormatException nfe){
+            nfe.printStackTrace();
+        }
+        try {
+            chargeAfterMinDistance = Integer.parseInt(etChargeAfterMinDistance.getText().toString());
         }catch (NumberFormatException nfe){
             nfe.printStackTrace();
         }
@@ -111,6 +131,9 @@ public class DeliveryActivity extends NetworkBaseActivity {
             params.put("deliveryStatus","N");
         }
         params.put("amount",""+amount);
+        params.put("minDeliveryDistance",""+minDeliveryDistance);
+        params.put("estDeliveryTime",""+estTime);
+        params.put("chargeAfterMinDistance",""+chargeAfterMinDistance);
         params.put("id",sharedPreferences.getString(Constants.USER_ID,""));
         params.put("mobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
@@ -136,6 +159,9 @@ public class DeliveryActivity extends NetworkBaseActivity {
                     }
 
                     editor.putInt(Constants.MIN_DELIVERY_AMOUNT,amount);
+                    editor.putInt(Constants.MIN_DELIVERY_DISTANCE,minDeliveryDistance);
+                    editor.putInt(Constants.DELIVERY_EST_TIME,estTime);
+                    editor.putInt(Constants.CHARGE_AFTER_MIN_DISTANCE,chargeAfterMinDistance);
                     editor.commit();
                     DialogAndToast.showToast(response.getString("message"),this);
                 }else{

@@ -19,11 +19,16 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
+import com.shoppursshop.activities.CustomerProfileActivity;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyCustomer;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.Utility;
+
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -89,7 +94,7 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
             String initials = "";
             if(item.getName().contains(" ")){
                 String[] name = item.getName().split(" ");
-                initials = name[0].substring(0,1)+name[1].substring(0,1);
+                initials = name[0].substring(0,1);
             }else{
                 initials = item.getName().substring(0,1);
             }
@@ -102,7 +107,8 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
             }else{
                 myViewHolder.textInitial.setVisibility(View.VISIBLE);
                 myViewHolder.imageView.setVisibility(View.GONE);
-                myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+               // myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+                Utility.setColorFilter(myViewHolder.textInitial.getBackground(),getTvColor(counter));
                 counter++;
                 if(counter == 13){
                     counter = 0;
@@ -135,7 +141,8 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView textInitial,textCustName,textAddress,textStateCity,textMobile,textEmail;
-        private ImageView imageView,imageMenu;
+        private CircleImageView imageView;
+        private ImageView imageMenu;
         private View rootView;
 
 
@@ -160,6 +167,16 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
                     myItemTypeClickListener.onItemClicked(getAdapterPosition(),2);
                 }else{
                     MyCustomer item = (MyCustomer)itemList.get(getAdapterPosition());
+                    Intent intent = new Intent(context, CustomerProfileActivity.class);
+                    intent.putExtra("name",item.getName());
+                    intent.putExtra("address",item.getAddress());
+                    intent.putExtra("stateCity",item.getState()+", "+item.getCity());
+                    intent.putExtra("customerImage",item.getLocalImage());
+                    intent.putExtra("isFav",item.getIsFav());
+                    intent.putExtra("custCode",item.getCode());
+                    intent.putExtra("custId",item.getId());
+                    intent.putExtra("ratings",item.getRatings());
+                    context.startActivity(intent);
                 }
 
             }else if(v == imageMenu){

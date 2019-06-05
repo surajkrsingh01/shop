@@ -99,7 +99,7 @@
                 android:id="@+id/edit_min_delivery_amount"
                 android:hint="Minimum Amount for delivery"
                 android:inputType="number"
-                android:imeOptions="actionDone"
+                android:imeOptions="actionNext"
                 android:textSize="@dimen/edit_text_small_text_size"
                 android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                 android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -121,8 +121,8 @@
                 android:textColor="?attr/primaryTextColor"
                 android:id="@+id/edit_time_delivery_amount"
                 android:hint="Estimated Time for delivery (mins)"
-                android:inputType="numberDecimal"
-                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:imeOptions="actionNext"
                 android:textSize="@dimen/edit_text_small_text_size"
                 android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                 android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -144,7 +144,30 @@
                 android:textColor="?attr/primaryTextColor"
                 android:id="@+id/edit_distance_delivery_amount"
                 android:hint="Delivered up to distance (kms)"
-                android:inputType="numberDecimal"
+                android:inputType="number"
+                android:imeOptions="actionNext"
+                android:textSize="@dimen/edit_text_small_text_size"
+                android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+                android:paddingTop="@dimen/edit_text_small_vertical_padding"
+                android:paddingLeft="@dimen/edit_text_horizontal_padding"
+                android:paddingRight="@dimen/edit_text_horizontal_padding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:textColorHint="?attr/secondaryTextColor"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:textColorHint="?attr/secondaryTextColor"
+                android:textColor="?attr/primaryTextColor"
+                android:id="@+id/edit_charge_per_km_amount"
+                android:hint="Charge after minimum distance(per km)"
+                android:inputType="number"
                 android:imeOptions="actionDone"
                 android:textSize="@dimen/edit_text_small_text_size"
                 android:paddingBottom="@dimen/edit_text_small_vertical_padding"

@@ -131,6 +131,12 @@ public class ScannarActivity extends NetworkBaseActivity {
                    DialogAndToast.showToast("Product does not exist in database.",this);
                    finish();
                }else{
+                   Intent intent = new Intent(this,ProductDetailActivity.class);
+                   intent.putExtra("id",id);
+                   intent.putExtra("subCatName","");
+                   intent.putExtra("flag","scan");
+                   startActivity(intent);
+                   finish();
                }
             }
         }catch (Exception e){

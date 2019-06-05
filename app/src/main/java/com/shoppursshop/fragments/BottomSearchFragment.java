@@ -29,6 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.shoppursshop.R;
+import com.shoppursshop.activities.ProductDetailActivity;
 import com.shoppursshop.adapters.SearchProductAdapter;
 import com.shoppursshop.adapters.SearchCustomerAdapter;
 import com.shoppursshop.database.DbHelper;
@@ -323,7 +324,16 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
 
     @Override
     public void onItemClicked(int position) {
-        myItemClickListener.onItemClicked(myProductList.get(position).getProdId());
+        if(myItemClickListener != null){
+            myItemClickListener.onItemClicked(myProductList.get(position).getProdId());
+        }else{
+            MyProductItem item = (MyProductItem) myProductList.get(position);
+            Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+            intent.putExtra("id",item.getProdId());
+            intent.putExtra("subCatName","");
+            intent.putExtra("flag","search");
+            startActivity(intent);
+        }
         this.dismiss();
     }
 
@@ -339,6 +349,7 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
             bundle.putString("custImage",customer.getImage());
             bundle.putString("custUserCreateStatus",customer.getCustUserCreateStatus());
             myListItemClickListener.onItemClicked(bundle);
+            this.dismiss();
         }else if(type == 3){
            makeCall(customer.getMobile());
         }else if(type == 4){

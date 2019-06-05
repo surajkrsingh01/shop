@@ -35,7 +35,11 @@ public class ProductPriceOfferAdapter extends RecyclerView.Adapter<ProductPriceO
     @Override
     public void onBindViewHolder(@NonNull MyProductPriceViewHolder holder, int position) {
         MyProductItem productItem = myProductItems.get(position);
-        holder.edit_offer_price.setText(productItem.getProdName());
+        if(productItem.getQty() > 0){
+            holder.edit_offer_price.setText(String.format("%.02f",productItem.getProdSp()));
+            holder.editTextOfferPrice.setText(String.format("%.02f",productItem.getOfferPrice()));
+            holder.editTextQty.setText(""+productItem.getQty());
+        }
     }
 
     @Override
@@ -44,11 +48,14 @@ public class ProductPriceOfferAdapter extends RecyclerView.Adapter<ProductPriceO
     }
 
     public class MyProductPriceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private EditText edit_offer_price;
+
+        private EditText edit_offer_price,editTextQty,editTextOfferPrice;
 
         public MyProductPriceViewHolder(View itemView) {
             super(itemView);
-            edit_offer_price = itemView.findViewById(R.id.edit_offer_price);
+            edit_offer_price = itemView.findViewById(R.id.edit_price);
+            editTextQty = itemView.findViewById(R.id.edit_quantity);
+            editTextOfferPrice = itemView.findViewById(R.id.edit_offer_price);
         }
 
         @Override

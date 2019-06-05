@@ -27,6 +27,8 @@ import com.shoppursshop.activities.ScannarActivity;
 import com.shoppursshop.fragments.BottomSearchFragment;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.models.ProductComboDetails;
+import com.shoppursshop.models.ProductComboOffer;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
@@ -53,6 +55,8 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
     private RelativeLayout relative_footer_action;
     private EditText edit_offer_name, edit_product_name, edit_offer_start_date, edit_offer_end_date;
 
+    private String flag;
+    private ProductComboOffer productComboOffer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,7 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
     }
 
     private void init(){
+        flag = getIntent().getStringExtra("flag");
         tv_top_parent = findViewById(R.id.text_left_label);
         tv_parent = findViewById(R.id.text_right_label);
         image_scan = findViewById(R.id.image_scan);
@@ -185,6 +190,33 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         priceOfferAdapter=new ProductPriceOfferAdapter(this,myProductItems);
         recyclerView.setAdapter(priceOfferAdapter);
+
+        if (flag != null && flag.equals("edit")) {
+            productComboOffer = (ProductComboOffer)getIntent().getSerializableExtra("data");
+            edit_offer_name.setText(productComboOffer.getOfferName());
+            edit_offer_start_date.setText(productComboOffer.getStartDate());
+            edit_offer_end_date.setText(productComboOffer.getEndDate());
+            MyProductItem item = dbHelper.getProductDetails(productComboOffer.getProdId());
+            product_id = item.getProdId();
+            edit_product_name.setText(item.getProdName());
+            myProductItems.clear();
+            for(ProductComboDetails details : productComboOffer.getProductComboOfferDetails()){
+                productItem = new MyProductItem();
+                productItem.setId(details.getId());
+                productItem.setPcoId(details.getPcodPcoId());
+                productItem.setQty(details.getPcodProdQty());
+                productItem.setProdSp(item.getProdSp());
+                productItem.setOfferPrice(details.getPcodPrice());
+                productItem.setStatus("1");
+                myProductItems.add(productItem);
+                Log.i(TAG," pcoId "+details.getPcodPcoId()+" qty "+details.getPcodProdQty()+" price "+details.getPcodPrice());
+            }
+
+            priceOfferAdapter.notifyDataSetChanged();
+
+            TextView textView = findViewById(R.id.text_action);
+            textView.setText("Update");
+        }
     }
 
     private void createOffer() {
@@ -230,10 +262,17 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
             jsonObject.put("pcodProdId",product_id);
             for(MyProductItem item : myProductItems){
                 productObject = new JSONObject();
+                if(flag != null && flag.equals("edit")){
+                    productObject.put("id",item.getId());
+                    productObject.put("pcodPcoId",item.getPcoId());
+                }
                 productObject.put("pcodProdQty",item.getQty());
                 productObject.put("pcodPrice",item.getProdSp());
                 productObject.put("status","1");
                 jsonArray.put(productObject);
+            }
+            if(flag != null && flag.equals("edit")){
+                jsonObject.put("id",productComboOffer.getId());
             }
             jsonObject.put("productComboOfferDetails",jsonArray);
             jsonObject.put("userName",sharedPreferences.getString(Constants.FULL_NAME,""));
@@ -258,9 +297,19 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
         JSONArray dataArray = new JSONArray();
         JSONObject dataObject = new JSONObject(params);
         dataArray.put(dataObject);
-        String url = getResources().getString(R.string.url) + Constants.CREATE_PRODUCT_PRICE_OFFER;
+        String url ="";
+        String api = "";
+        if(flag != null && flag.equals("edit")){
+            // params.put("id", ""+productDiscountOffer.getId());
+            url = getResources().getString(R.string.url) + Constants.UPDATE_PRODUCT_PRICE_OFFER;
+            api = "updateProductPriceOffer";
+
+        }else{
+            url = getResources().getString(R.string.url) + Constants.CREATE_PRODUCT_PRICE_OFFER;
+            api = "createProductPriceOffer";
+        }
         showProgress(true);
-        jsonObjectApiRequest(Request.Method.POST, url, jsonObject, "createProductPriceOffer");
+        jsonObjectApiRequest(Request.Method.POST, url, jsonObject, api);
     }
 
     @Override
@@ -270,7 +319,13 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
             Log.d("response", response.toString());
             if(apiName.equals("createProductPriceOffer")){
                 if(response.getString("status").equals("true")||response.getString("status").equals(true)){
-                    Log.d(TAG, "" );
+                    showMyDialog("Offer created successfully.");
+                }else {
+                    DialogAndToast.showToast(response.getString("message"),ProductPriceOfferActivity.this);
+                }
+            }else if(apiName.equals("updateProductPriceOffer")){
+                if(response.getString("status").equals("true")||response.getString("status").equals(true)){
+                    showMyDialog("Offer updated successfully.");
                 }else {
                     DialogAndToast.showToast(response.getString("message"),ProductPriceOfferActivity.this);
                 }
@@ -307,5 +362,11 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
         MyProductItem productItem = dbHelper.getProductDetails(prodId);
         edit_product_name.setText(productItem.getProdName());
         product_id = productItem.getProdId();
+    }
+
+    public void onDialogPositiveClicked(){
+        Intent intent = new Intent(ProductPriceOfferActivity.this,MyOffersActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

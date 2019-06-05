@@ -104,6 +104,8 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
             finish();
         }
         else if(name.equals("Store Sales")){
+            Intent intent = new Intent(this, MySalesActivity.class);
+            startActivity(intent);
         }else if(name.equals("Payment Device")){
             Intent intent = new Intent(this, AddPaymentDevice.class);
             startActivity(intent);

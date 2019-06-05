@@ -34,6 +34,9 @@ public class Constants {
     public static String ADDRESS="address";
     public static String IS_DELIVERY_AVAILABLE="isDeliveryAvailable";
     public static String MIN_DELIVERY_AMOUNT="minDeliveryAmount";
+    public static String MIN_DELIVERY_DISTANCE="minDeliveryDistance";
+    public static String DELIVERY_EST_TIME="deliveryEstTime";
+    public static String CHARGE_AFTER_MIN_DISTANCE="chargeAfterMinDistance";
     public static String DB_NAME="dbName";
     public static String DB_USER_NAME="dbUserName";
     public static String DB_PASSWORD="dbPassword";
@@ -145,6 +148,10 @@ public class Constants {
     public static String CREATE_FREE_PRODUCT_OFFER="/api/offers/create_product_discount_offer";
     public static String UPDATE_FREE_PRODUCT_OFFER="/api/offers/update_product_discount_offer";
     public static String CREATE_COMBO_PRODUCT_OFFER="/api/offers/create_product_combo_offer";
+    public static String UPDATE_COMBO_PRODUCT_OFFER="/api/offers/update_product_combo_offer";
     public static String CREATE_PRODUCT_PRICE_OFFER = "/api/offers/create_product_price_offer";
+    public static String UPDATE_PRODUCT_PRICE_OFFER = "/api/offers/update_product_price_offer";
+    public static String CREATE_COUPON_OFFER="/api/offers/create_coupon_offer";
+    public static String UPDATE_COUPON_OFFER="/api/offers/update_coupon_offer";
 
 }

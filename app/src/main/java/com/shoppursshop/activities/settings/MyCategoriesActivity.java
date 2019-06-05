@@ -73,6 +73,8 @@ public class MyCategoriesActivity extends NetworkBaseActivity implements MyItemC
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(MyCategoriesActivity.this, AddCategoryActivity.class);
+                startActivityForResult(intent,2);
             }
         });
 

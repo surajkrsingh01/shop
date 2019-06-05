@@ -3,6 +3,7 @@ package com.shoppursshop.activities.settings;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,15 +14,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
+import com.shoppursshop.activities.AddProductActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.ScannarActivity;
+import com.shoppursshop.adapters.PaymentSchemeAdapter;
 import com.shoppursshop.fragments.BottomSearchFragment;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.models.ProductComboDetails;
+import com.shoppursshop.models.ProductComboOffer;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
@@ -32,7 +38,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ComboProductOfferActivity extends NetworkBaseActivity implements MyItemClickListener, MyItemTypeClickListener {
 
@@ -48,6 +56,10 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
 
     private EditText edit_offer_name,edit_offer_start_date,edit_offer_end_date;
 
+    private String flag;
+    private ProductComboOffer productComboOffer;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +69,7 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
     }
 
     private void init(){
+        flag = getIntent().getStringExtra("flag");
         myProductItems = new ArrayList<>();
         MyProductItem productItem = new MyProductItem();
         productItem.setProdName("");
@@ -145,6 +158,28 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
         comboOfferAdapter.setMyItemClickListener(this);
         comboOfferAdapter.setMyItemTypeClickListener(this);
         recyclerView.setAdapter(comboOfferAdapter);
+
+        if (flag != null && flag.equals("edit")) {
+            productComboOffer = (ProductComboOffer)getIntent().getSerializableExtra("data");
+            edit_offer_name.setText(productComboOffer.getOfferName());
+            edit_offer_start_date.setText(productComboOffer.getStartDate());
+            edit_offer_end_date.setText(productComboOffer.getEndDate());
+            myProductItems.clear();
+            for(ProductComboDetails details : productComboOffer.getProductComboOfferDetails()){
+                productItem = dbHelper.getProductDetails(details.getPcodProdId());
+                productItem.setId(details.getId());
+                productItem.setPcoId(details.getPcodPcoId());
+                productItem.setQty(details.getPcodProdQty());
+                productItem.setProdSp(details.getPcodPrice());
+                productItem.setStatus("1");
+                myProductItems.add(productItem);
+            }
+
+            comboOfferAdapter.notifyDataSetChanged();
+            TextView textView = findViewById(R.id.text_action);
+            textView.setText("Update");
+        }
+
     }
 
     private void createComboOffer(){
@@ -177,11 +212,18 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
             jsonObject.put("endDate",endDate);
             for(MyProductItem item : myProductItems){
                 productObject = new JSONObject();
+                if(flag != null && flag.equals("edit")){
+                    productObject.put("id",item.getId());
+                    productObject.put("pcodPcoId",item.getPcoId());
+                }
                 productObject.put("pcodProdId",item.getProdId());
                 productObject.put("pcodProdQty",item.getQty());
                 productObject.put("pcodPrice",item.getProdSp());
                 productObject.put("status","1");
                 jsonArray.put(productObject);
+            }
+            if(flag != null && flag.equals("edit")){
+                jsonObject.put("id",productComboOffer.getId());
             }
             jsonObject.put("productComboOfferDetails",jsonArray);
             jsonObject.put("userName",sharedPreferences.getString(Constants.FULL_NAME,""));
@@ -192,9 +234,19 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
             e.printStackTrace();
         }
         Log.i(TAG,"params "+jsonObject.toString());
-        String url=getResources().getString(R.string.url)+ Constants.CREATE_COMBO_PRODUCT_OFFER;
+        String url ="";
+        String api = "";
+        if(flag != null && flag.equals("edit")){
+           // params.put("id", ""+productDiscountOffer.getId());
+            url = getResources().getString(R.string.url) + Constants.UPDATE_COMBO_PRODUCT_OFFER;
+            api = "updateComboOffer";
+
+        }else{
+            url = getResources().getString(R.string.url) + Constants.CREATE_COMBO_PRODUCT_OFFER;
+            api = "comboOffer";
+        }
         showProgress(true);
-        jsonObjectApiRequest(Request.Method.POST,url,jsonObject,"comboOffer");
+        jsonObjectApiRequest(Request.Method.POST,url,jsonObject,api);
     }
 
     @Override
@@ -206,6 +258,12 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
                 if(response.getString("status").equals("true")||response.getString("status").equals(true)){
                     showMyDialog("Offer created successfully.");
 
+                }else {
+                    DialogAndToast.showToast(response.getString("message"),ComboProductOfferActivity.this);
+                }
+            }else if(apiName.equals("updateComboOffer")){
+                if(response.getString("status").equals("true")||response.getString("status").equals(true)){
+                    showMyDialog("Offer updated successfully.");
                 }else {
                     DialogAndToast.showToast(response.getString("message"),ComboProductOfferActivity.this);
                 }

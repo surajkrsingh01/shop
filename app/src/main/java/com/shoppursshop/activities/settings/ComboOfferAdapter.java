@@ -76,6 +76,7 @@ public class ComboOfferAdapter extends RecyclerView.Adapter<ComboOfferAdapter.My
             edit_prodName = itemView.findViewById(R.id.edit_name);
             edit_quantity = itemView.findViewById(R.id.edit_quantity);
             edit_price = itemView.findViewById(R.id.edit_price);
+            image_scan = itemView.findViewById(R.id.image_scan);
             edit_prodName.setOnClickListener(this);
             image_scan.setOnClickListener(this);
            // final MyProductItem item = myProductItems.get(getAdapterPosition());

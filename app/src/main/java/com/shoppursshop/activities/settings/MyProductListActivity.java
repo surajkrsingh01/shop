@@ -113,6 +113,8 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(MyProductListActivity.this, SyncProductActivity.class);
+                startActivityForResult(intent,2);
             }
         });
         tv_top_parent = findViewById(R.id.text_left_label);

@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
+import com.shoppursshop.activities.ProductDetailActivity;
 import com.shoppursshop.activities.settings.AddPaymentDevice;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.DialogAndToast;
@@ -171,6 +172,10 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
         public void onClick(View v) {
             if(v == rootView){
                 MyProductItem item = (MyProductItem) myProductsList.get(getAdapterPosition());
+                Intent intent = new Intent(context, ProductDetailActivity.class);
+                intent.putExtra("myProduct",item);
+                intent.putExtra("flag","shoppurs_product");
+                context.startActivity(intent);
             }
         }
     }

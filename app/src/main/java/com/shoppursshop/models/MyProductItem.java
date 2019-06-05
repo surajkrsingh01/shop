@@ -5,13 +5,37 @@ import java.util.List;
 
 public class MyProductItem implements Serializable {
 
-    private int prodId,prodCatId,prodSubCatId,prodReorderLevel,prodQoh,qty;
+    private int id,pcoId,prodId,prodCatId,prodSubCatId,prodReorderLevel,prodQoh,qty;
     private String prodName,prodCode,prodBarCode,prodDesc,prodHsnCode,prodMfgDate,prodExpiryDate,prodMfgBy,prodImage1,prodImage2,prodImage3,
             createdBy,updatedBy,createdDate,updatedDate,status,isBarCodeAvailable;
     private String retRetailerId,dbName,dbUserName,dbPassword;
-    private float prodCgst,prodIgst,prodSgst,prodWarranty,prodMrp,prodSp,totalAmount;
+    private float offerPrice,prodCgst,prodIgst,prodSgst,prodWarranty,prodMrp,prodSp,totalAmount;
     private boolean isSelected;
     private int position;
+
+    public float getOfferPrice() {
+        return offerPrice;
+    }
+
+    public void setOfferPrice(float offerPrice) {
+        this.offerPrice = offerPrice;
+    }
+
+    public int getPcoId() {
+        return pcoId;
+    }
+
+    public void setPcoId(int pcoId) {
+        this.pcoId = pcoId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     private List<Barcode> barcodeList;
 
