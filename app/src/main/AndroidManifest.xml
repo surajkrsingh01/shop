@@ -27,21 +27,31 @@
     <application
         android:name=".utilities.AppController"
         android:allowBackup="false"
-        android:largeHeap="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activities.settings.ApplyOffersActivity"
+            android:label="@string/title_activity_apply_offers"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+        <activity
+            android:name=".activities.CouponOffersActivity"
+            android:label="@string/title_activity_coupon_offers"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
             android:name=".activities.settings.CreateCouponOfferActivity"
             android:label="@string/title_activity_create_coupon_offer"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.ProductPriceOfferActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.settings.ComboProductOfferActivity"
             android:launchMode="singleTask"
