@@ -4,6 +4,7 @@
     <dimen name="activity_vertical_margin">10dp</dimen>
     <dimen name="view_horizontal_margin">10dp</dimen>
     <dimen name="view_vertical_margin">10dp</dimen>
+    <dimen name="cart_view_vertical_margin">20dp</dimen>
     <dimen name="view_related_vertical_margin">5dp</dimen>
     <dimen name="container_view_vertical_margin">20dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
@@ -19,6 +20,9 @@
     <dimen name="kyc_image_size">160dp</dimen>
     <dimen name="camera_default_size">80dp</dimen>
     <dimen name="footer_action_text_size">17sp</dimen>
+    <dimen name="separator_size">1dp</dimen>
+    <dimen name="rupees_icon_size">12dp</dimen>
+    <dimen name="big_separator_size">5dp</dimen>
 
     <dimen name="edit_large_text_size">18sp</dimen>
 

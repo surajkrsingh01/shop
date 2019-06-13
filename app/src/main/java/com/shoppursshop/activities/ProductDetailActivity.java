@@ -66,6 +66,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
     private ImageView imageView2,imageView3,imageView4;
     private Button btnLoadMoreReviews;
     private MyProductItem myProductItem;
+    private View viewAddBarcodeSeparator;
 
     private CheckBox checkBoxMultipleBarcode;
     private Button buttonAddMultipleBarcode;
@@ -106,6 +107,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
         textViewNoReviews = findViewById(R.id.text_no_reviews);
         tvReadMore = findViewById(R.id.text_more);
         textTotalSale = findViewById(R.id.text_total_sale);
+        viewAddBarcodeSeparator = findViewById(R.id.view_add_barcode_sparator);
         btnLoadMoreReviews = findViewById(R.id.btn_load_more_review);
         buttonAddMultipleBarcode = findViewById(R.id.btn_add_multiple_barcode);
         checkBoxMultipleBarcode = findViewById(R.id.checkbox_multiple_barcode);
@@ -133,6 +135,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                 linear_amount_division.setVisibility(View.GONE);
                 text_sale_trend_Label.setVisibility(View.GONE);
                 text_reviews_Label.setVisibility(View.GONE);
+                viewAddBarcodeSeparator.setVisibility(View.GONE);
                 //myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
                 myProductItem = (MyProductItem) getIntent().getSerializableExtra("myProduct");
             } else{

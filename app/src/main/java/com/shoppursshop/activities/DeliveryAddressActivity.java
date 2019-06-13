@@ -102,6 +102,9 @@ public class DeliveryAddressActivity extends NetworkBaseActivity {
         intent.putExtra("state", state);
         intent.putExtra("city", city);
         intent.putExtra("zip", pincode);
+        intent.putExtra("latitude", sharedPreferences.getString(Constants.USER_LAT,"0.0"));
+        intent.putExtra("longitude", sharedPreferences.getString(Constants.USER_LONG,"0.0"));
+        intent.putExtra("distance", 20.3f);
         setResult(101, intent);
         finish();
     }

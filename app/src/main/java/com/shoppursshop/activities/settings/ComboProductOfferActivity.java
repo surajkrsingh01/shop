@@ -178,6 +178,7 @@ public class ComboProductOfferActivity extends NetworkBaseActivity implements My
             comboOfferAdapter.notifyDataSetChanged();
             TextView textView = findViewById(R.id.text_action);
             textView.setText("Update");
+            add_combo.setVisibility(View.GONE);
         }
 
     }

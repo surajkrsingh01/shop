@@ -96,6 +96,7 @@ public class ComboOfferAdapter extends RecyclerView.Adapter<ComboOfferAdapter.My
                     if(!TextUtils.isEmpty(editable.toString())){
                         MyProductItem item = myProductItems.get(getAdapterPosition());
                         item.setQty(Integer.parseInt(editable.toString()));
+                       // notifyItemChanged(getAdapterPosition());
                     }
 
                 }

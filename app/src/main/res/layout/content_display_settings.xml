@@ -221,13 +221,13 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/relative_grey"
+                android:id="@+id/relative_indigo"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/image_color_grey"
+                    android:id="@+id/image_color_indigo"
                     android:tint="@color/white"
                     android:layout_centerInParent="true"
                     android:background="@drawable/black_circle_background"
@@ -245,7 +245,7 @@
 
                 <ImageView
                     android:id="@+id/image_color_teal"
-                    android:tint="@color/teal_500"
+                    android:tint="@color/white"
                     android:layout_centerInParent="true"
                     android:background="@drawable/teal_solid_circle"
                     android:padding="6dp"
@@ -262,7 +262,7 @@
 
                 <ImageView
                     android:id="@+id/image_color_purple"
-                    android:tint="@color/purple500"
+                    android:tint="@color/white"
                     android:layout_centerInParent="true"
                     android:background="@drawable/purple_solid_circle"
                     android:padding="6dp"

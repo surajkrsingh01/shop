@@ -24,15 +24,20 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.payment.mPos.MPayActivity;
+import com.shoppursshop.activities.settings.ApplyOffersActivity;
 import com.shoppursshop.activities.settings.profile.DeliveryActivity;
 import com.shoppursshop.adapters.CartAdapter;
+import com.shoppursshop.adapters.OfferDescAdapter;
 import com.shoppursshop.adapters.ProductAdapter;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.fragments.BottomSearchFragment;
+import com.shoppursshop.fragments.OfferDescriptionFragment;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.models.ProductComboDetails;
+import com.shoppursshop.models.ProductComboOffer;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
@@ -49,27 +54,31 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     private RecyclerView recyclerView;
     private CartAdapter myItemAdapter;
     private List<MyProductItem> itemList;
-    private Button buttonScan;
 
     private RelativeLayout relativeLayoutCartFooter;
-    private TextView tvItemCount,tvItemPrice,tvCheckout;
-    private RelativeLayout relativeLayoutPayOptionLayout;
+    private LinearLayout rlAddressBilling;
+    private TextView tvItemCount,tvItemPrice,tvCheckout,tvItemTotal,tvTotalTaxes,tvSgst,tvTotalDiscount,
+            tvDeliveryCharges,tvNetPayable,tvOfferName;
+    private RelativeLayout relativeLayoutPayOptionLayout,rlDiscount,rlDelivery,rl_offer_applied_layout,rlOfferLayout;
     private TextView tvCash,tvCard,tvMPos,tvAndroidPos;
 
-    private ImageView imageViewScan,imageViewSearch;
+    private ImageView imageViewScan,imageViewSearch,imageViewRemoveOffer;
 
-    private float totalPrice;
+    private float totalPrice,offerPer,offerMaxAmount,deliveryDistance;
+    private int offerId,deliveryTypeId;
 
-    private String paymentMode,orderNumber;
+    private String offerName,paymentMode,orderNumber;
     private String deviceType;
 
     private JSONArray shopArray;
     List <MyProductItem> cartItemList;
 
-    private TextView tv_mode, tv_self_status, tv_address_label, tv_address;
+    private TextView tv_mode, tv_self_status, tv_address_label, tv_address,tvApplyCoupon;
     private View seperator_delivery_address;
     private RadioGroup rg_delivery;
     private RadioButton rb_home_delivery, rb_self_delivery;
+    private LinearLayout linearLayoutScanCenter;
+    private RelativeLayout rlOfferDesc;
 
     private BottomSearchFragment bottomSearchFragment;
 
@@ -90,7 +99,6 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         itemList = new ArrayList<>();
         imageViewScan = findViewById(R.id.image_scan);
         imageViewSearch = findViewById(R.id.image_search);
-        buttonScan = findViewById(R.id.btn_scan);
         tvItemCount=findViewById(R.id.itemCount);
         tvItemPrice=findViewById(R.id.itemPrice);
         tvCheckout=findViewById(R.id.viewCart);
@@ -98,7 +106,27 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         tvCash = findViewById(R.id.tv_pay_cash);
         tvMPos = findViewById(R.id.tv_mpos);
         tvAndroidPos = findViewById(R.id.tv_android_pos);
+        linearLayoutScanCenter = findViewById(R.id.linear_action);
+
+        tvApplyCoupon = findViewById(R.id.tv_coupon_label);
+        tvItemTotal = findViewById(R.id.tv_item_total);
+        tvTotalTaxes = findViewById(R.id.tv_total_taxes);
+        tvSgst = findViewById(R.id.tv_sgst);
+        tvTotalDiscount = findViewById(R.id.tv_total_discount);
+        tvDeliveryCharges = findViewById(R.id.tv_delivery_charges);
+        tvNetPayable = findViewById(R.id.tv_net_pay);
+        tvOfferName = findViewById(R.id.tv_offer_name);
+        rlDelivery = findViewById(R.id.relative_delivery_layout);
+        rlDiscount = findViewById(R.id.relative_discount);
+        rl_offer_applied_layout = findViewById(R.id.rl_offer_applied_layout);
+        rlOfferDesc = findViewById(R.id.rl_offer_desc);
+        rlOfferLayout = findViewById(R.id.rl_offer_layout);
+        imageViewRemoveOffer = findViewById(R.id.image_remove_offer);
+
+        Utility.setColorFilter(imageViewRemoveOffer.getDrawable(),colorTheme);
+
         relativeLayoutPayOptionLayout = findViewById(R.id.relative_pay_layout);
+        rlAddressBilling = findViewById(R.id.linear_billing);
         relativeLayoutCartFooter=findViewById(R.id.rlfooterviewcart);
         relativeLayoutCartFooter.setBackgroundColor(colorTheme);
         recyclerView=findViewById(R.id.recycler_view);
@@ -109,6 +137,9 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         myItemAdapter=new CartAdapter(this,itemList);
         myItemAdapter.setMyItemTypeClickListener(this);
         recyclerView.setAdapter(myItemAdapter);
+
+        tvCheckout.setText("Make Payment");
+
 
         tvCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,6 +198,12 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 openScannar();
             }
         });
+        linearLayoutScanCenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openScannar();
+            }
+        });
 
         imageViewSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,21 +218,17 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             }
         });
 
-        buttonScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openScannar();
-            }
-        });
         boolean isDeliveryAvailable = sharedPreferences.getBoolean(Constants.IS_DELIVERY_AVAILABLE, false);
         tv_mode = findViewById(R.id.tv_mode);
         tv_self_status = findViewById(R.id.tv_self_status);
         rg_delivery = findViewById(R.id.rg_delivery);
         tv_address_label = findViewById(R.id.tv_address_label);
         tv_address = findViewById(R.id.tv_address);
-        seperator_delivery_address = findViewById(R.id.seperator_delivery_address);
+       // seperator_delivery_address = findViewById(R.id.seperator_delivery_address);
         rb_home_delivery = findViewById(R.id.rb_home_delivery);
         rb_self_delivery = findViewById(R.id.rb_self_delivery);
+
+        rb_self_delivery.setChecked(true);
 
         if(!isDeliveryAvailable){ // home delivery not available
             tv_self_status.setText("Self Delivery");
@@ -209,15 +242,75 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(checkedId == R.id.rb_self_delivery){
+                    deliveryTypeId = checkedId;
                     tv_self_status.setText("Self Delivery");
                     //tv_self_status.setVisibility(View.VISIBLE);
                     tv_address_label.setVisibility(View.GONE);
-                    seperator_delivery_address.setVisibility(View.GONE);
+                   // seperator_delivery_address.setVisibility(View.GONE);
                     tv_address.setVisibility(View.GONE);
+                    tvDeliveryCharges.setText("0.00");
+                    deliveryDistance = 0;
+                    rlDelivery.setVisibility(View.GONE);
                 }else{
-                    startActivityForResult(new Intent(CartActivity.this, DeliveryAddressActivity.class), 101);
-                    tv_self_status.setVisibility(View.GONE);
+                    if(totalPrice > sharedPreferences.getInt(Constants.MIN_DELIVERY_AMOUNT,0)){
+                        startActivityForResult(new Intent(CartActivity.this, DeliveryAddressActivity.class), 101);
+                        tv_self_status.setVisibility(View.GONE);
+                    }else{
+                        rb_self_delivery.setChecked(true);
+                        DialogAndToast.showDialog("Minimum amount should be more than Rs."
+                                +sharedPreferences.getInt(Constants.MIN_DELIVERY_AMOUNT,0)+" for home delivery.",CartActivity.this);
+                    }
+
                 }
+            }
+        });
+
+        tv_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(new Intent(CartActivity.this, DeliveryAddressActivity.class), 101);
+                tv_self_status.setVisibility(View.GONE);
+            }
+        });
+
+        tv_address_label.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(new Intent(CartActivity.this, DeliveryAddressActivity.class), 101);
+                tv_self_status.setVisibility(View.GONE);
+            }
+        });
+
+        tvApplyCoupon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CartActivity.this,CouponOffersActivity.class);
+                intent.putExtra("custCode",getIntent().getStringExtra("custCode"));
+                intent.putExtra("flag","coupons");
+                startActivityForResult(intent,5);
+            }
+        });
+
+        imageViewRemoveOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rl_offer_applied_layout.setVisibility(View.GONE);
+                tvApplyCoupon.setVisibility(View.VISIBLE);
+                offerId = 0;
+                offerMaxAmount = 0f;
+                offerPer = 0f;
+                offerName = "";
+                setFooterValues();
+            }
+        });
+
+        rlOfferLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CartActivity.this, ApplyOffersActivity.class);
+                intent.putExtra("custCode",getIntent().getStringExtra("custCode"));
+                intent.putExtra("flag","offers");
+               // startActivityForResult(intent,6);
             }
         });
     }
@@ -230,12 +323,24 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             String state = intent.getStringExtra("state");
             String city = intent.getStringExtra("city");
             String zip = intent.getStringExtra("zip");
-
-            Log.d("addr ", address +country + state + city +zip);
+            deliveryDistance = intent.getFloatExtra("distance",0f);
+            Log.d("addr ", address +country + state + city +zip+deliveryDistance);
             tv_address_label.setVisibility(View.VISIBLE);
             tv_address.setVisibility(View.VISIBLE);
             tv_address.setText(address.concat(zip));
-            seperator_delivery_address.setVisibility(View.VISIBLE);
+            setFooterValues();
+           // seperator_delivery_address.setVisibility(View.VISIBLE);
+        }else if(requestCode == 5){
+            if(intent != null){
+                offerName = intent.getStringExtra("name");
+                offerId = intent.getIntExtra("id",0);
+                offerPer = intent.getFloatExtra("per",0f);
+                offerMaxAmount = intent.getFloatExtra("amount",0f);
+                rl_offer_applied_layout.setVisibility(View.VISIBLE);
+                tvOfferName.setText(offerName);
+                tvApplyCoupon.setVisibility(View.GONE);
+                setFooterValues();
+            }
         }
     }
 
@@ -283,6 +388,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             itemList.clear();
             List<MyProductItem> cartList =  dbHelper.getCartProducts();
             for(MyProductItem ob : cartList){
+                ob.setProductPriceOfferList(dbHelper.getProductPriceOffer(""+ob.getProdId()));
+                Log.i(TAG,"offer sizze "+ob.getProductPriceOfferList().size());
                 itemList.add(ob);
             }
         }
@@ -293,19 +400,67 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             myItemAdapter.notifyDataSetChanged();
         }else{
             relativeLayoutCartFooter.setVisibility(View.GONE);
+            linearLayoutScanCenter.setVisibility(View.VISIBLE);
         }
     }
 
     private void setFooterValues(){
+        recyclerView.setVisibility(View.VISIBLE);
+        linearLayoutScanCenter.setVisibility(View.GONE);
         if(itemList.size() == 1){
             tvItemCount.setText(itemList.size()+" item");
         }else{
             tvItemCount.setText(itemList.size()+" items");
         }
 
-        tvItemPrice.setText("Rs "+Utility.numberFormat(dbHelper.getTotalPriceCart()));
+
+        tvItemTotal.setText(Utility.numberFormat(dbHelper.getTotalMrpPriceCart()));
+        tvTotalTaxes.setText(Utility.numberFormat(dbHelper.getTotalTaxesart()));
+        totalPrice = dbHelper.getTotalPriceCart() + dbHelper.getTotalTaxesart();
+        float totalDis = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
+        float dis = 0f;
+        if(offerPer > 0f){
+            dis = totalPrice * offerPer / 100;
+            totalDis = totalDis + dis ;
+        }
+
+        Log.i(TAG," diff "+totalDis+" offerPer "+offerPer+" totalPrice "+totalPrice);
+
+        if(totalDis == 0f){
+            rlDiscount.setVisibility(View.GONE);
+        }else{
+            rlDiscount.setVisibility(View.VISIBLE);
+            tvTotalDiscount.setText(Utility.numberFormat(totalDis));
+        }
+
+        totalPrice = totalPrice - dis;
+        float deliveryCharges = 0f;
+        if(deliveryTypeId == R.id.rb_self_delivery){
+            rlDelivery.setVisibility(View.GONE);
+        }else{
+            rlDelivery.setVisibility(View.VISIBLE);
+            Log.i(TAG,"Min Delivery Distance "+sharedPreferences.getInt(Constants.MIN_DELIVERY_DISTANCE,0));
+            Log.i(TAG,"Charges after Delivery Distance "+sharedPreferences.getInt(Constants.CHARGE_AFTER_MIN_DISTANCE,0));
+            Log.i(TAG,"Delivery Distance "+deliveryDistance);
+            if(deliveryDistance > sharedPreferences.getInt(Constants.MIN_DELIVERY_DISTANCE,0)){
+               float diffKms = deliveryDistance -  sharedPreferences.getInt(Constants.MIN_DELIVERY_DISTANCE,0);
+               int intKms = (int)diffKms;
+               float decimalKms = diffKms - intKms;
+
+                int chargesPerKm = sharedPreferences.getInt(Constants.CHARGE_AFTER_MIN_DISTANCE,0);
+                deliveryCharges = intKms * chargesPerKm + decimalKms * chargesPerKm;
+                tvDeliveryCharges.setText(Utility.numberFormat(deliveryCharges));
+            }else{
+                tvDeliveryCharges.setText("0.00");
+            }
+        }
+
+        totalPrice = totalPrice + deliveryCharges;
+        tvItemPrice.setText("Rs "+Utility.numberFormat(totalPrice));
+        tvNetPayable.setText("Rs "+Utility.numberFormat(totalPrice));
 
         tvCheckout.setVisibility(View.VISIBLE);
+        rlAddressBilling.setVisibility(View.VISIBLE);
 
     }
 
@@ -380,7 +535,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     shopObject.put("orderImage",getIntent().getStringExtra("custImage"));
                     shopObject.put("custUserCreateStatus",getIntent().getStringExtra("custUserCreateStatus"));
                     shopObject.put("totalQuantity",String.valueOf(dbHelper.getTotalQuantityCart()));
-                    shopObject.put("toalAmount",String.valueOf(dbHelper.getTotalPriceCart()));
+                    shopObject.put("toalAmount",String.valueOf(totalPrice));
                     shopObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
                     shopObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
                     shopObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
@@ -428,7 +583,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 if(response.getString("status").equals("true")||response.getString("status").equals(true)){
                     Log.d(TAG, "Ordeer Generated" );
                     orderNumber = response.getJSONObject("result").getString("orderNumber");
-                    totalPrice = dbHelper.getTotalPriceCart();
+                    //totalPrice = dbHelper.getTotalPriceCart();
                    // dbHelper.deleteTable(DbHelper.CART_TABLE);
                     itemList.clear();
                     myItemAdapter.notifyDataSetChanged();
@@ -445,7 +600,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     }else{
                         Log.d(TAG, "orderId "+orderNumber );
                         Intent intent = new Intent(CartActivity.this, MPayActivity.class);
-                        intent.putExtra("totalAmount",String.format("%.02f",dbHelper.getTotalPriceCart()));
+                        intent.putExtra("totalAmount",String.format("%.02f",totalPrice));
                         intent.putExtra("orderNumber",orderNumber);
                         intent.putExtra("custCode", getIntent().getStringExtra("custCode"));
                         intent.putExtra("custId", getIntent().getIntExtra("custId",0));
@@ -489,6 +644,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
     @Override
     public void onItemClicked(int position, int type) {
+        Log.i(TAG,"onItemClicked "+position+" type "+type);
         MyProductItem item = (MyProductItem)itemList.get(position);
         if(type == 1){
             if(itemList.size() == 1 && item.getQty() == 1){
@@ -496,11 +652,24 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 dbHelper.removeProductFromCart(item.getProdBarCode());
                 dbHelper.removeProductFromCart(item.getProdId());
                 relativeLayoutCartFooter.setVisibility(View.GONE);
+                rlAddressBilling.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                linearLayoutScanCenter.setVisibility(View.VISIBLE);
                 myItemAdapter.notifyDataSetChanged();
+                offerPer = 0f;
+                offerName = "";
+                offerMaxAmount = 0f;
+                offerId = 0;
+                deliveryDistance = 0;
+
             }else{
                 int qty = item.getQty() - 1;
+                float netSellingPrice = getOfferAmount(item);
                 item.setQty(qty);
-                float amount = item.getTotalAmount() - item.getProdMrp();
+                Log.i(TAG,"netSellingPrice "+netSellingPrice);
+                float amount = item.getTotalAmount() - netSellingPrice;
+                Log.i(TAG,"tot amount "+amount);
+                item.setTotalAmount(amount);
                 dbHelper.updateCartData(item.getProdBarCode(),qty,amount);
                 dbHelper.updateCartData(item.getProdId(),qty,amount);
                 setFooterValues();
@@ -509,14 +678,19 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 }
                 myItemAdapter.notifyItemChanged(position);
             }
-        }else{
+        }else if(type == 2){
             if(item.getIsBarCodeAvailable().equals("Y")){
                 if(item.getQty() == item.getBarcodeList().size()){
                     DialogAndToast.showDialog("There are no more stocks",this);
                 }else{
                     int qty = item.getQty() + 1;
                     item.setQty(qty);
-                    float amount = item.getTotalAmount() + item.getProdMrp();
+                    Log.i(TAG,"qty "+qty);
+                    float netSellingPrice = getOfferAmount(item);
+                    Log.i(TAG,"netSellingPrice "+netSellingPrice);
+                    float amount = item.getTotalAmount() + netSellingPrice;
+                    Log.i(TAG,"tot amount "+amount);
+                    item.setTotalAmount(amount);
                     dbHelper.updateCartData(item.getProdBarCode(),qty,amount);
                     if(itemList.size() == 1){
                         relativeLayoutCartFooter.setVisibility(View.VISIBLE);
@@ -531,7 +705,12 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 }else{
                     int qty = item.getQty() + 1;
                     item.setQty(qty);
-                    float amount = item.getTotalAmount() + item.getProdMrp();
+                    Log.i(TAG,"qty "+qty);
+                    float netSellingPrice = getOfferAmount(item);
+                    Log.i(TAG,"netSellingPrice "+netSellingPrice);
+                    float amount = item.getTotalAmount() + netSellingPrice;
+                    Log.i(TAG,"tot amount "+amount);
+                    item.setTotalAmount(amount);
                     dbHelper.updateCartData(item.getProdId(),qty,amount);
                     if(itemList.size() == 1){
                         relativeLayoutCartFooter.setVisibility(View.VISIBLE);
@@ -541,7 +720,94 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 }
             }
 
+        }else if(type == 3){
+            String offerName = item.getProductPriceOfferList().get(0).getOfferName();
+           /* OfferDescriptionFragment offerDescriptionFragment = new OfferDescriptionFragment();
+            offerDescriptionFragment.setFlag("productPriceOffer");
+            offerDescriptionFragment.setColorTheme(colorTheme);
+            Bundle bundle = new Bundle();
+            bundle.putString("offerName",offerName);
+            offerDescriptionFragment.setArguments(bundle);
+            offerDescriptionFragment.setMyItemTypeClickListener(CartActivity.this);
+            offerDescriptionFragment.show(getSupportFragmentManager(), "Product Price Offer");*/
+
+            rlOfferDesc.setVisibility(View.VISIBLE);
+            ImageView iv_clear = findViewById(R.id.iv_clear);
+            //Utility.setColorFilter(iv_clear.getDrawable(),colorTheme);
+            TextView tvOfferName = findViewById(R.id.text_offer_name);
+            findViewById(R.id.relative_footer_action).setBackgroundColor(colorTheme);
+            TextView tv = findViewById(R.id.text_action);
+            tv.setText("OKAY! GOT IT");
+
+            tvOfferName.setText(offerName);
+
+            iv_clear.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    rlOfferDesc.setVisibility(View.GONE);
+                }
+            });
+            findViewById(R.id.relative_footer_action).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    rlOfferDesc.setVisibility(View.GONE);
+                }
+            });
+
+            List<String> offerDescList = new ArrayList<>();
+            ProductComboOffer productComboOffer = item.getProductPriceOfferList().get(0);
+            float totOfferAmt = 0f;
+            for(ProductComboDetails productComboDetails : productComboOffer.getProductComboOfferDetails()){
+                totOfferAmt = totOfferAmt + productComboDetails.getPcodPrice();
+                offerDescList.add("Buy "+productComboDetails.getPcodProdQty()+" at Rs "+
+                        Utility.numberFormat(totOfferAmt));
+            }
+
+            offerDescList.add("Offer valid till "+Utility.parseDate(productComboOffer.getEndDate(),"yyyy-MM-dd",
+                    "EEE dd MMMM, yyyy")+" 23:59 PM");
+
+            RecyclerView recyclerViewOfferDesc=findViewById(R.id.recycler_view_offer_desc);
+            recyclerViewOfferDesc.setHasFixedSize(true);
+            final RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
+            recyclerViewOfferDesc.setLayoutManager(layoutManager);
+            recyclerViewOfferDesc.setItemAnimator(new DefaultItemAnimator());
+            OfferDescAdapter offerDescAdapter =new OfferDescAdapter(this,offerDescList);
+            recyclerViewOfferDesc.setAdapter(offerDescAdapter);
+            recyclerViewOfferDesc.setNestedScrollingEnabled(false);
         }
+    }
+
+    private float getOfferAmount(MyProductItem item){
+        float amount = 0f;
+        int qty = item.getQty();
+        ProductComboOffer productComboOffer = item.getProductPriceOfferList().get(0);
+        if(qty > 1){
+            int maxSize = productComboOffer.getProductComboOfferDetails().size();
+            int mod = qty % maxSize;
+            Log.i(TAG,"mod "+mod);
+            if(mod == 0){
+                mod = maxSize;
+            }
+            amount = getOfferPrice(mod,item.getProdSp(),productComboOffer.getProductComboOfferDetails());
+        }else{
+            amount = item.getProdSp();
+        }
+        return amount;
+    }
+
+    private float getOfferPrice(int qty,float sp,List<ProductComboDetails> productComboDetailsList){
+        float amount = 0f;
+        for(ProductComboDetails productComboDetails:productComboDetailsList){
+            if(productComboDetails.getPcodProdQty() == qty){
+                amount = productComboDetails.getPcodPrice();
+                Log.i(TAG,"offer price "+amount);
+                break;
+            }else{
+                amount = sp;
+            }
+        }
+        Log.i(TAG,"final selling price "+amount);
+        return amount;
     }
 
     @Override
@@ -585,15 +851,17 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         Log.i(TAG,"item clicked "+prodId+" "+dbHelper.getBarCodesForCart(prodId).size());
 
         MyProductItem item = dbHelper.getProductDetails(prodId);
+        item.setProductPriceOfferList(dbHelper.getProductPriceOffer(""+item.getProdId()));
+        Log.i(TAG,"offer sizze "+item.getProductPriceOfferList().size());
 
         if(item.getIsBarCodeAvailable().equals("Y")){
             item.setBarcodeList(dbHelper.getBarCodesForCart(prodId));
             if(item.getBarcodeList() != null && item.getBarcodeList().size() > 0){
                 item.setQty(1);
-                item.setTotalAmount(item.getProdMrp());
+                item.setTotalAmount(item.getProdSp());
                 dbHelper.addProductToCart(item);
                 itemList.add(item);
-                myItemAdapter.notifyItemChanged(itemList.size() -1 );
+                myItemAdapter.notifyDataSetChanged();
                 if(itemList.size() > 0){
                     setFooterValues();
                     relativeLayoutCartFooter.setVisibility(View.VISIBLE);
@@ -605,10 +873,11 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         }else{
             if(item.getProdQoh() > 0){
                 item.setQty(1);
-                item.setTotalAmount(item.getProdMrp());
+                item.setTotalAmount(item.getProdSp());
                 dbHelper.addProductToCart(item);
                 itemList.add(item);
-                myItemAdapter.notifyItemChanged(itemList.size() -1 );
+                //myItemAdapter.notifyItemChanged(itemList.size() -1 );
+                myItemAdapter.notifyDataSetChanged();
                 if(itemList.size() > 0){
                     setFooterValues();
                     relativeLayoutCartFooter.setVisibility(View.VISIBLE);

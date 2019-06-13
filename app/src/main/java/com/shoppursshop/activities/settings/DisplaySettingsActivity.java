@@ -26,10 +26,10 @@ import com.shoppursshop.utilities.Constants;
 public class DisplaySettingsActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView imageViewRed,imageViewGreen,imageViewBlue,imageViewPink,imageViewYellow,imageViewAmber,
-            imageViewTeal,imageViewGrey,imageViewPurple,imageViewTemp;
+            imageViewTeal,imageViewPurple,imageViewIndigo,imageViewTemp;
     private RelativeLayout relativeLayoutRed,relativeLayoutGreen,relativeLayoutBlue,relativeLayoutPink,
             relativeLayoutYellow,relativeLayoutAmber,
-            relativeLayoutTeal,relativeLayoutGrey,relativeLayoutPurple;
+            relativeLayoutTeal,relativeLayoutIndigo,relativeLayoutPurple;
 
     private TextView textViewDarkLabel,textViewEnableDarkLabel,textViewColorLabel;
 
@@ -71,7 +71,7 @@ public class DisplaySettingsActivity extends BaseActivity implements View.OnClic
         relativeLayoutYellow = findViewById(R.id.relative_yellow);
         relativeLayoutAmber = findViewById(R.id.relative_amber);
         relativeLayoutTeal = findViewById(R.id.relative_teal);
-        relativeLayoutGrey = findViewById(R.id.relative_grey);
+        relativeLayoutIndigo = findViewById(R.id.relative_indigo);
         relativeLayoutPurple = findViewById(R.id.relative_purple);
 
 
@@ -82,7 +82,7 @@ public class DisplaySettingsActivity extends BaseActivity implements View.OnClic
         imageViewYellow = findViewById(R.id.image_color_yellow);
         imageViewAmber = findViewById(R.id.image_color_amber);
         imageViewTeal = findViewById(R.id.image_color_teal);
-        imageViewGrey = findViewById(R.id.image_color_grey);
+        imageViewIndigo = findViewById(R.id.image_color_indigo);
         imageViewPurple = findViewById(R.id.image_color_purple);
 
         changeColor(imageViewRed.getBackground(),getResources().getColor(R.color.red_500));
@@ -90,8 +90,9 @@ public class DisplaySettingsActivity extends BaseActivity implements View.OnClic
         changeColor(imageViewGreen.getBackground(),getResources().getColor(R.color.green500));
         changeColor(imageViewPink.getBackground(),getResources().getColor(R.color.pink500));
         changeColor(imageViewYellow.getBackground(),getResources().getColor(R.color.yellow500));
-        changeColor(imageViewGrey.getBackground(),getResources().getColor(R.color.grey600));
+      //  changeColor(imageViewGrey.getBackground(),getResources().getColor(R.color.grey600));
         changeColor(imageViewAmber.getBackground(),getResources().getColor(R.color.amber600));
+        changeColor(imageViewIndigo.getBackground(),getResources().getColor(R.color.indigo_500));
 
         if(isDarkTheme){
             themeSwitch.setChecked(true);
@@ -123,7 +124,7 @@ public class DisplaySettingsActivity extends BaseActivity implements View.OnClic
         relativeLayoutYellow.setOnClickListener(this);
         relativeLayoutAmber.setOnClickListener(this);
         relativeLayoutPurple.setOnClickListener(this);
-        relativeLayoutGrey.setOnClickListener(this);
+        relativeLayoutIndigo.setOnClickListener(this);
         relativeLayoutTeal.setOnClickListener(this);
 
         tv_top_parent = findViewById(R.id.text_left_label);
@@ -200,15 +201,15 @@ public class DisplaySettingsActivity extends BaseActivity implements View.OnClic
         }else if(colorTheme == getResources().getColor(R.color.amber600)){
             imageViewTemp = imageViewAmber;
             imageViewAmber.setImageResource(R.drawable.ic_check_black_24dp);
-        }else if(colorTheme == getResources().getColor(R.color.grey600)){
-            imageViewTemp = imageViewGrey;
-            imageViewGrey.setImageResource(R.drawable.ic_check_black_24dp);
         }else if(colorTheme == getResources().getColor(R.color.teal_500)){
             imageViewTemp = imageViewTeal;
             imageViewTeal.setImageResource(R.drawable.ic_check_black_24dp);
         }else if(colorTheme == getResources().getColor(R.color.purple500)){
             imageViewTemp = imageViewPurple;
             imageViewPurple.setImageResource(R.drawable.ic_check_black_24dp);
+        }else if(colorTheme == getResources().getColor(R.color.indigo_500)){
+            imageViewTemp = imageViewIndigo;
+            imageViewIndigo.setImageResource(R.drawable.ic_check_black_24dp);
         }
     }
 
@@ -249,11 +250,11 @@ public class DisplaySettingsActivity extends BaseActivity implements View.OnClic
             imageViewTeal.setImageResource(R.drawable.ic_check_black_24dp);
             imageViewTemp.setImageResource(0);
             imageViewTemp  = imageViewTeal;
-        }else if(view == relativeLayoutGrey){
-            editor.putInt(Constants.COLOR_THEME,getResources().getColor(R.color.grey600));
-            imageViewGrey.setImageResource(R.drawable.ic_check_black_24dp);
+        }else if(view == relativeLayoutIndigo){
+            editor.putInt(Constants.COLOR_THEME,getResources().getColor(R.color.indigo_500));
+            imageViewIndigo.setImageResource(R.drawable.ic_check_black_24dp);
             imageViewTemp.setImageResource(0);
-            imageViewTemp  = imageViewGrey;
+            imageViewTemp  = imageViewIndigo;
         }else if(view == relativeLayoutPurple){
             editor.putInt(Constants.COLOR_THEME,getResources().getColor(R.color.purple500));
             imageViewPurple.setImageResource(R.drawable.ic_check_black_24dp);

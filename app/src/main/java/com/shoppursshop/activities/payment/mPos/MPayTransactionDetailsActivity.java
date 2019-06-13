@@ -375,7 +375,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
                     }
 
                     shopObject.put("totalQuantity",String.valueOf(dbHelper.getTotalQuantityCart()));
-                    shopObject.put("toalAmount",String.valueOf(dbHelper.getTotalPriceCart()));
+                    shopObject.put("toalAmount",getIntent().getStringExtra("totalAmount"));
                     shopObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
                     shopObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
                     shopObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));

@@ -759,8 +759,8 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
                     editor.putString(Constants.STATE,stateList.get(spinnerState.getSelectedItemPosition()));
                     editor.putString(Constants.CITY,cityList.get(spinnerCity.getSelectedItemPosition()));
                     if(shopLatLng != null){
-                        editor.putLong(Constants.USER_LAT,(long) shopLatLng.latitude);
-                        editor.putLong(Constants.USER_LONG,(long)shopLatLng.longitude);
+                        editor.putString(Constants.USER_LAT,""+shopLatLng.latitude);
+                        editor.putString(Constants.USER_LONG,""+shopLatLng.longitude);
                     }
                     editor.commit();
                     DialogAndToast.showToast(response.getString("message"),this);

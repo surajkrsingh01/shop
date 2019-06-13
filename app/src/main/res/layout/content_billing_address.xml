@@ -184,7 +184,7 @@
                 android:layout_below="@+id/linear_state"
                 android:gravity="center_vertical"
                 android:inputType="number"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                 android:paddingTop="@dimen/edit_text_small_vertical_padding"
                 android:paddingLeft="@dimen/edit_text_horizontal_padding"

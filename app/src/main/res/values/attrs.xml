@@ -5,6 +5,7 @@
 	</declare-styleable>
 
 	<attr name="backgroundColor" format="color"/>
+	<attr name="secondarySeparatorColor" format="color"/>
 	<attr name="reversePrimaryTextColor" format="color"/>
 	<attr name="primaryTextColor" format="color"/>
 	<attr name="secondaryTextColor" format="color"/>

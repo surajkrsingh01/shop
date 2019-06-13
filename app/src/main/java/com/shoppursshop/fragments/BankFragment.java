@@ -18,6 +18,7 @@ import com.android.volley.Request;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.RegisterActivity;
 import com.shoppursshop.interfaces.OnFragmentInteraction;
@@ -25,6 +26,7 @@ import com.shoppursshop.models.MyUser;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
+import com.shoppursshop.utilities.Utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -175,6 +177,7 @@ public class BankFragment extends NetworkBaseFragment {
         if(!TextUtils.isEmpty(sharedPreferences.getString(Constants.CHEQUE_IMAGE,""))){
             imageViewCheque.setVisibility(View.VISIBLE);
            // imageViewCamera.setVisibility(View.GONE);
+            requestOptions.signature(new ObjectKey(sharedPreferences.getString("bank_cheque_signature","")));
             Glide.with(this)
                     .load(sharedPreferences.getString(Constants.CHEQUE_IMAGE,""))
                     .apply(requestOptions)
@@ -290,7 +293,10 @@ public class BankFragment extends NetworkBaseFragment {
                     editor.putString(Constants.BRANCH_ADRESS,editTextBranchAddress.getText().toString());
                     editor.putString(Constants.IFSC_CODE,editTextIfscCode.getText().toString());
                     if(!imageBase64.equals("no")){
+                        String timestamp = Utility.getTimeStamp();
+                        requestOptions.signature(new ObjectKey(timestamp));
                         editor.putString(Constants.CHEQUE_IMAGE,response.getJSONObject("result").getString("chequeImage"));
+                        editor.putString("bank_cheque_signature",timestamp);
                         //Glide.get(getActivity()).clearDiskCache();
                     }
                     editor.commit();

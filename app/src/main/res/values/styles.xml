@@ -72,11 +72,12 @@
     <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Dark" parent="AppThemeDark.NoActionBar">
-        <item name="backgroundColor">@color/dark_color</item>
+        <item name="backgroundColor">@color/dark_color</item>cartViewBackgroundColor
         <item name="primaryTextColor">@color/white</item>
         <item name="reversePrimaryTextColor">@color/primary_text_color</item>
         <item name="secondaryTextColor">@color/secondary_text_color</item>
         <item name="separatorColor">@color/dark_separator_color</item>
+        <item name="secondarySeparatorColor">@color/grey800</item>
 
         <item name="borderBottomSolidBackground">
             @drawable/dark_theme_grey_border_bottom_background
@@ -91,6 +92,7 @@
 
     <style name="Light" parent="AppTheme.NoActionBar">
         <item name="backgroundColor">@color/white</item>
+        <item name="secondarySeparatorColor">@color/grey200</item>
         <item name="reversePrimaryTextColor">@color/white</item>
         <item name="primaryTextColor">@color/primary_text_color</item>
         <item name="secondaryTextColor">@color/secondary_text_color</item>
@@ -162,6 +164,33 @@
         <item name="colorControlActivated">@color/amber600</item>
         <item name="colorControlHighlight">@color/amber600</item>
         <item name="colorAccent">@color/amber600</item>
+    </style>
+
+    <style name="MyTealViewTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/grey400</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/teal_500</item>
+        <item name="colorControlHighlight">@color/teal_500</item>
+        <item name="colorAccent">@color/teal_500</item>
+    </style>
+
+    <style name="MyPurpleViewTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/grey400</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/purple500</item>
+        <item name="colorControlHighlight">@color/purple500</item>
+        <item name="colorAccent">@color/purple500</item>
+    </style>
+
+    <style name="MyIndigoViewTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/grey400</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/indigo_500</item>
+        <item name="colorControlHighlight">@color/indigo_500</item>
+        <item name="colorAccent">@color/indigo_500</item>
     </style>
 
     <style name="MyGreyViewTheme">

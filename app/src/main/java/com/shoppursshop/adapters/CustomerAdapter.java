@@ -340,7 +340,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             myViewHolder.textInitial.setText(initials);
 
-            if(item.getImage().contains("http")){
+            if(item.getImage() != null && item.getImage().contains("http")){
                 myViewHolder.textInitial.setVisibility(View.GONE);
                 myViewHolder.imageView.setVisibility(View.VISIBLE);
             }else{
@@ -393,6 +393,10 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private int getTvColor(int position){
+        if(position >= 12){
+            position = 0;
+        }
+
         int[] tvColor={context.getResources().getColor(R.color.light_blue500),
                 context.getResources().getColor(R.color.yellow500),context.getResources().getColor(R.color.green500),
                 context.getResources().getColor(R.color.orange500),context.getResources().getColor(R.color.red_500),

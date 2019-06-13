@@ -90,7 +90,7 @@
         android:layout_height="1dp"
         android:background="?attr/separatorColor"/>
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_above="@+id/relative_footer_action"
         android:layout_below="@+id/seperator_offer_name"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -244,7 +244,7 @@
                 android:layout_height="1dp"
                 android:background="?attr/separatorColor"/>
     </RelativeLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
     <include layout="@layout/footer_action_layout"/>
 
 </RelativeLayout>

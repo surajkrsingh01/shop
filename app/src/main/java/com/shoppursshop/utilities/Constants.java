@@ -144,7 +144,8 @@ public class Constants {
 
     public static String GET_USER_LICENSE="/api/user/user_licenses";
 
-    public static String GET_PRODUCT_OFFER="/api/offers/get_offer_list";
+    public static String GET_ALL_PRODUCT_OFFER="/api/offers/get_offer_list";
+    public static String GET_ACTIVE_PRODUCT_OFFER="/api/offers/get_active_offer_list";
     public static String CREATE_FREE_PRODUCT_OFFER="/api/offers/create_product_discount_offer";
     public static String UPDATE_FREE_PRODUCT_OFFER="/api/offers/update_product_discount_offer";
     public static String CREATE_COMBO_PRODUCT_OFFER="/api/offers/create_product_combo_offer";
@@ -153,5 +154,11 @@ public class Constants {
     public static String UPDATE_PRODUCT_PRICE_OFFER = "/api/offers/update_product_price_offer";
     public static String CREATE_COUPON_OFFER="/api/offers/create_coupon_offer";
     public static String UPDATE_COUPON_OFFER="/api/offers/update_coupon_offer";
+    public static String GET_COUPON_OFFER="/api/offers/get_coupon_offer";
+
+    public static String CHANGE_FREE_PRODUCT_OFFER="/api/offers/status_product_discount_offer";
+    public static String CHANGE_COMBO_PRODUCT_OFFER="/api/offers/status_product_combo_offer";
+    public static String CHANGE_PRODUCT_PRICE_OFFER="/api/offers/status_product_price_offer";
+    public static String CHANGE_COUPON_OFFER="/api/offers/status_coupon_offer";
 
 }

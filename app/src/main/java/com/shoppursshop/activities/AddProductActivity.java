@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 import com.shoppursshop.R;
 import com.shoppursshop.fragments.NetworkBaseFragment;
 import com.shoppursshop.models.Barcode;
@@ -354,6 +355,7 @@ public class AddProductActivity extends BaseImageActivity {
 
             if(myProductItem.getProdImage1().contains("http")){
                 imageView1.setVisibility(View.VISIBLE);
+                requestOptions.signature(new ObjectKey(sharedPreferences.getString("product_signature"+myProductItem.getProdId()+"_1","")));
                 Glide.with(this)
                         .load(myProductItem.getProdImage1())
                         .apply(requestOptions)
@@ -362,6 +364,7 @@ public class AddProductActivity extends BaseImageActivity {
             }
             if(myProductItem.getProdImage2().contains("http")){
                 imageView2.setVisibility(View.VISIBLE);
+                requestOptions.signature(new ObjectKey(sharedPreferences.getString("product_signature"+myProductItem.getProdId()+"_2","")));
                 Glide.with(this)
                         .load(myProductItem.getProdImage2())
                         .apply(requestOptions)
@@ -371,6 +374,7 @@ public class AddProductActivity extends BaseImageActivity {
 
             if(myProductItem.getProdImage3().contains("http")){
                 imageView3.setVisibility(View.VISIBLE);
+                requestOptions.signature(new ObjectKey(sharedPreferences.getString("product_signature"+myProductItem.getProdId()+"_3","")));
                 Glide.with(this)
                         .load(myProductItem.getProdImage3())
                         .apply(requestOptions)
@@ -860,7 +864,25 @@ public class AddProductActivity extends BaseImageActivity {
                     productItem.setUpdatedBy(jsonObject.getString("updatedBy"));
                     productItem.setUpdatedDate(jsonObject.getString("updatedDate"));
                     dbHelper.updateProduct(productItem,Utility.getTimeStamp());
-                   // clearData();
+                   // "product_signature"+myProductItem.getProdId()+"_3"
+                    String timestamp = Utility.getTimeStamp();
+                    if(!imageList.get(0).equals("no")){
+                        timestamp = timestamp + "_1";
+                        editor.putString("product_signature"+productItem.getProdId()+"_1",timestamp);
+                    }
+
+                    if(!imageList.get(1).equals("no")){
+                        timestamp = Utility.getTimeStamp();
+                        timestamp = timestamp + "_2";
+                        editor.putString("product_signature"+productItem.getProdId()+"_2",timestamp);
+                    }
+
+                    if(!imageList.get(2).equals("no")){
+                        timestamp = Utility.getTimeStamp();
+                        timestamp = timestamp + "_3";
+                        editor.putString("product_signature"+productItem.getProdId()+"_3",timestamp);
+                    }
+
                     showMyDialog(response.getString("message"));
                     finish();
                 }else{

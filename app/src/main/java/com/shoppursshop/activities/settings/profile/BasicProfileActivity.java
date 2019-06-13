@@ -20,6 +20,7 @@ import com.android.volley.Request;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.BaseActivity;
 import com.shoppursshop.activities.BaseImageActivity;
@@ -27,6 +28,7 @@ import com.shoppursshop.activities.settings.ProfileActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
+import com.shoppursshop.utilities.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -79,7 +81,7 @@ public class BasicProfileActivity extends BaseImageActivity {
         etMobile.setText(sharedPreferences.getString(Constants.MOBILE_NO,""));
         etEmail.setText(sharedPreferences.getString(Constants.EMAIL,""));
 
-
+        requestOptions.signature(new ObjectKey(sharedPreferences.getString("profile_image_signature","")));
         Glide.with(this)
                 .load(sharedPreferences.getString(Constants.PROFILE_PIC,""))
                 .apply(requestOptions)
@@ -184,9 +186,14 @@ public class BasicProfileActivity extends BaseImageActivity {
                    editor.putString(Constants.MOBILE_NO,etMobile.getText().toString());
                    editor.putString(Constants.EMAIL,etEmail.getText().toString());
                    editor.putString(Constants.GST_NO,etGstNo.getText().toString());
-                   if(!imageBase64.equals("no"))
-                   editor.putString(Constants.PROFILE_PIC,getResources().getString(R.string.base_image_url)+
-                           "/shops/"+sharedPreferences.getString(Constants.SHOP_CODE,"")+"/photo.jpg");
+                   if(!imageBase64.equals("no")){
+                       String timestamp = Utility.getTimeStamp();
+                       requestOptions.signature(new ObjectKey(timestamp));
+                       editor.putString(Constants.PROFILE_PIC,getResources().getString(R.string.base_image_url)+
+                               "/shops/"+sharedPreferences.getString(Constants.SHOP_CODE,"")+"/photo.jpg");
+                       editor.putString("profile_image_signature",timestamp);
+                   }
+
                    editor.commit();
                    DialogAndToast.showToast(response.getString("message"),this);
                }else{

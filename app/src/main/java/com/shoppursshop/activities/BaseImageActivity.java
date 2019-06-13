@@ -40,6 +40,8 @@ import java.util.List;
 
 public class BaseImageActivity extends NetworkBaseActivity {
 
+    private final int DEST_WIDTH = 400;
+
     private int PICK_IMAGE_REQUEST=1;
     private int REQUEST_CAMERA = 0;
     private Uri mHighQualityImageUri;
@@ -149,9 +151,15 @@ public class BaseImageActivity extends NetworkBaseActivity {
         //convertToBase64(new File(imagePath));
         try {
             File file = new File(imagePath);
+
+            Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
+            Bitmap compressedBitmap = compressImage(b);
             if(file.exists()){
-                imageAdded();
+                file.delete();
             }
+            saveBitmap(compressedBitmap);
+            imageAdded();
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -161,6 +169,9 @@ public class BaseImageActivity extends NetworkBaseActivity {
     }
 
     public void saveBitmap(Bitmap bitmap){
+
+        Bitmap b = compressImage(bitmap);
+
         FileOutputStream out = null;
         File filename = getFile();
 
@@ -168,7 +179,7 @@ public class BaseImageActivity extends NetworkBaseActivity {
             out = new FileOutputStream(filename);
 
 //          write the compressed bitmap at the destination specified by filename.
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            b.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -304,6 +315,30 @@ public class BaseImageActivity extends NetworkBaseActivity {
 
     protected void imageAdded(){
 
+    }
+
+
+    private Bitmap compressImage(Bitmap bitmap){
+        int origWidth = bitmap.getWidth();
+        int origHeight = bitmap.getHeight();
+        Log.i(TAG,"width "+origWidth);
+        Bitmap returnBitmap = null;
+        if(origWidth > DEST_WIDTH){
+            // picture is wider than we want it, we calculate its target height
+            int destHeight = origHeight/( origWidth / DEST_WIDTH ) ;
+            // we create an scaled bitmap so it reduces the image, not just trim it
+            returnBitmap = Bitmap.createScaledBitmap(bitmap, DEST_WIDTH, destHeight, false);
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            // compress to the format you want, JPEG, PNG...
+            // 70 is the 0-100 quality percentage
+            returnBitmap.compress(Bitmap.CompressFormat.JPEG,70 , outStream);
+            Log.i(TAG,"image compressed");
+
+        }else{
+            returnBitmap = bitmap;
+        }
+
+        return returnBitmap;
     }
 
 }

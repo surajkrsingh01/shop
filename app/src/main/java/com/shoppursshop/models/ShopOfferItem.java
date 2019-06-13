@@ -8,8 +8,9 @@ public class ShopOfferItem implements Serializable {
     private String offerName;
     private String productName;
     private String productId;
-    private String productImage;
+    private String productImage,offerStatus;
     private int productLocalImage;
+
 
     private Object productObject;
 
@@ -19,6 +20,14 @@ public class ShopOfferItem implements Serializable {
 
     public void setProductObject(Object productObject) {
         this.productObject = productObject;
+    }
+
+    public String getOfferStatus() {
+        return offerStatus;
+    }
+
+    public void setOfferStatus(String offerStatus) {
+        this.offerStatus = offerStatus;
     }
 
     public String getOfferType() {

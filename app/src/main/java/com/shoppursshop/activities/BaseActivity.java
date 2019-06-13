@@ -111,6 +111,12 @@ public class BaseActivity extends AppCompatActivity {
             getTheme().applyStyle(R.style.MyWhiteViewTheme, true);
         }else if(colorTheme == getResources().getColor(R.color.black)){
             getTheme().applyStyle(R.style.MyBlackViewTheme, true);
+        }else if(colorTheme == getResources().getColor(R.color.teal_500)){
+            getTheme().applyStyle(R.style.MyTealViewTheme, true);
+        }else if(colorTheme == getResources().getColor(R.color.purple500)){
+            getTheme().applyStyle(R.style.MyPurpleViewTheme, true);
+        }else if(colorTheme == getResources().getColor(R.color.indigo_500)){
+            getTheme().applyStyle(R.style.MyIndigoViewTheme, true);
         }
     }
 

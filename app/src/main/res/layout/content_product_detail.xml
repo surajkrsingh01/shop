@@ -389,6 +389,7 @@
             </RelativeLayout>
 
             <View
+                android:id="@+id/view_add_barcode_sparator"
                 android:layout_marginTop="@dimen/view_vertical_margin"
                 android:background="?attr/separatorColor"
                 android:layout_width="match_parent"

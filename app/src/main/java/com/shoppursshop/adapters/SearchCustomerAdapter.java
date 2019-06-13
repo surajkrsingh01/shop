@@ -110,7 +110,7 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
                // myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
                 Utility.setColorFilter(myViewHolder.textInitial.getBackground(),getTvColor(counter));
                 counter++;
-                if(counter == 13){
+                if(counter == 12){
                     counter = 0;
                 }
             }
@@ -213,6 +213,9 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
     }
 
     private int getTvColor(int position){
+        if(position >= 12){
+            position = 0;
+        }
         int[] tvColor={context.getResources().getColor(R.color.light_blue500),
                 context.getResources().getColor(R.color.yellow500),context.getResources().getColor(R.color.green500),
                 context.getResources().getColor(R.color.orange500),context.getResources().getColor(R.color.red_500),

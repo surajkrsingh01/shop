@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.shoppursshop.activities.settings.ComboProductOfferActivity;
 import com.shoppursshop.activities.settings.CreateCouponOfferActivity;
 import com.shoppursshop.activities.settings.FreeProductOfferActivity;
 import com.shoppursshop.activities.settings.ProductPriceOfferActivity;
+import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.ShopOfferItem;
 import com.shoppursshop.utilities.DialogAndToast;
@@ -44,6 +46,13 @@ public class ShopOfferListAdapter extends RecyclerView.Adapter<ShopOfferListAdap
     private List<ShopOfferItem> myItemList = new ArrayList<>();
     private Context context;
     private int colorTheme;
+
+    private MyItemTypeClickListener myItemTypeClickListener;
+
+
+    public void setMyItemTypeClickListener(MyItemTypeClickListener myItemTypeClickListener) {
+        this.myItemTypeClickListener = myItemTypeClickListener;
+    }
 
     public ShopOfferListAdapter(Context context, List<ShopOfferItem> myItemList) {
         super();
@@ -134,6 +143,11 @@ public class ShopOfferListAdapter extends RecyclerView.Adapter<ShopOfferListAdap
 
                 PopupMenu popupMenu = new PopupMenu(view.getContext(), iv_three_dot);
                 ((Activity)context).getMenuInflater().inflate(R.menu.offer_list_popup_menu, popupMenu.getMenu());
+                if(shopOfferItem.getOfferStatus().equals("2")){
+                    popupMenu.getMenu().getItem(1).setVisible(false);
+                    popupMenu.getMenu().getItem(2).setVisible(true);
+                    Log.i("Adapter","Enable button is showing...");
+                }
                 popupMenu.show();
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -156,11 +170,26 @@ public class ShopOfferListAdapter extends RecyclerView.Adapter<ShopOfferListAdap
                             context.startActivity(intent);
                         }else if(item.getItemId() == R.id.action_remove){
                             DialogAndToast.showToast("Remove Clicked", context);
-                            //myItemClickListener.onItemClicked(getAdapterPosition());
-                            //itemList.remove(getAdapterPosition());
-                            // notifyItemRemoved(getAdapterPosition());
+                            myItemTypeClickListener.onItemClicked(getAdapterPosition(),1);
+                        }else if(item.getItemId() == R.id.action_disable){
+                            myItemTypeClickListener.onItemClicked(getAdapterPosition(),2);
+                            //DialogAndToast.showToast("Disable Clicked", context);
                         }else{
-                            DialogAndToast.showToast("Disable Clicked", context);
+                            Intent intent = null;
+                            if(shopOfferItem.getOfferType().equals("free")){
+                                intent = new Intent(context, FreeProductOfferActivity.class);
+                                intent.putExtra("flag","edit");
+                                intent.putExtra("data",(Serializable) shopOfferItem.getProductObject());
+                            }else if(shopOfferItem.getOfferType().equals("combo")){
+                                intent = new Intent(context, ComboProductOfferActivity.class);
+                                intent.putExtra("flag","edit");
+                                intent.putExtra("data",(Serializable) shopOfferItem.getProductObject());
+                            }else if(shopOfferItem.getOfferType().equals("price")){
+                                intent = new Intent(context, ProductPriceOfferActivity.class);
+                                intent.putExtra("flag","edit");
+                                intent.putExtra("data",(Serializable) shopOfferItem.getProductObject());
+                            }
+                            context.startActivity(intent);
                         }
 
                         return false;

@@ -106,7 +106,7 @@
                 android:id="@+id/image_scan"
                 android:layout_gravity="center_horizontal"
                 android:tint="?attr/primaryTextColor"
-                android:src="@drawable/ic_camera_black_24dp"
+                android:src="@drawable/ic_camera_black_300dp"
                 android:layout_width="100dp"
                 android:layout_height="100dp" />
 

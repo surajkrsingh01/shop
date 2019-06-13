@@ -11,7 +11,25 @@ public class MyProductItem implements Serializable {
     private String retRetailerId,dbName,dbUserName,dbPassword;
     private float offerPrice,prodCgst,prodIgst,prodSgst,prodWarranty,prodMrp,prodSp,totalAmount;
     private boolean isSelected;
-    private int position;
+    private int position,offerCounter;
+
+    public int getOfferCounter() {
+        return offerCounter;
+    }
+
+    public void setOfferCounter(int offerCounter) {
+        this.offerCounter = offerCounter;
+    }
+
+    private List<ProductComboOffer> productPriceOfferList;
+
+    public List<ProductComboOffer> getProductPriceOfferList() {
+        return productPriceOfferList;
+    }
+
+    public void setProductPriceOfferList(List<ProductComboOffer> productPriceOfferList) {
+        this.productPriceOfferList = productPriceOfferList;
+    }
 
     public float getOfferPrice() {
         return offerPrice;

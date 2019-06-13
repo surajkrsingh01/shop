@@ -52,6 +52,7 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
     private ImageView image_scan;
     private TextView tv_parent, tv_top_parent;
     private int product_id;
+    private float prodSp;
     private RelativeLayout relative_footer_action;
     private EditText edit_offer_name, edit_product_name, edit_offer_start_date, edit_offer_end_date;
 
@@ -161,6 +162,11 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
 
         myProductItems = new ArrayList<>();
         MyProductItem productItem = new MyProductItem();
+        productItem.setQty(1);
+        productItem.setProdName("");
+        myProductItems.add(productItem);
+        productItem = new MyProductItem();
+        productItem.setQty(2);
         productItem.setProdName("");
         myProductItems.add(productItem);
 
@@ -170,9 +176,13 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
             @Override
             public void onClick(View v) {
                 MyProductItem productItem = new MyProductItem();
-                productItem.setProdName("");
+                productItem.setQty(myProductItems.size()+1);
+                productItem.setProdSp(prodSp);
+                productItem.setProdSp(prodSp);
+                productItem.setOfferPrice(0f);
                 myProductItems.add(productItem);
                 priceOfferAdapter.notifyDataSetChanged();
+              //  priceOfferAdapter.notifyItemInserted(myProductItems.size());
             }
         });
 
@@ -190,6 +200,7 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         priceOfferAdapter=new ProductPriceOfferAdapter(this,myProductItems);
         recyclerView.setAdapter(priceOfferAdapter);
+        recyclerView.setNestedScrollingEnabled(false);
 
         if (flag != null && flag.equals("edit")) {
             productComboOffer = (ProductComboOffer)getIntent().getSerializableExtra("data");
@@ -197,6 +208,7 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
             edit_offer_start_date.setText(productComboOffer.getStartDate());
             edit_offer_end_date.setText(productComboOffer.getEndDate());
             MyProductItem item = dbHelper.getProductDetails(productComboOffer.getProdId());
+            priceOfferAdapter.setSp(item.getProdSp());
             product_id = item.getProdId();
             edit_product_name.setText(item.getProdName());
             myProductItems.clear();
@@ -216,10 +228,12 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
 
             TextView textView = findViewById(R.id.text_action);
             textView.setText("Update");
+            add_combo.setVisibility(View.GONE);
         }
     }
 
     private void createOffer() {
+        Log.i(TAG,"in create prod id "+product_id);
         String offer_name = edit_offer_name.getText().toString();
         String buying_product = edit_product_name.getText().toString();
         //String buy_qty_product = edit_buy_qty_product.getText().toString();
@@ -260,6 +274,7 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
             jsonObject.put("startDate",offer_start_date);
             jsonObject.put("endDate",offer_end_date);
             jsonObject.put("pcodProdId",product_id);
+            jsonObject.put("prodId",product_id);
             for(MyProductItem item : myProductItems){
                 productObject = new JSONObject();
                 if(flag != null && flag.equals("edit")){
@@ -267,7 +282,7 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
                     productObject.put("pcodPcoId",item.getPcoId());
                 }
                 productObject.put("pcodProdQty",item.getQty());
-                productObject.put("pcodPrice",item.getProdSp());
+                productObject.put("pcodPrice",item.getOfferPrice());
                 productObject.put("status","1");
                 jsonArray.put(productObject);
             }
@@ -351,8 +366,12 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
         if (data != null) {
             if (requestCode == 1) {
                 MyProductItem productItem = dbHelper.getProductDetails(data.getIntExtra("prod_id", 0));
+                prodSp = productItem.getProdSp();
+                priceOfferAdapter.setSp(prodSp);
+                priceOfferAdapter.notifyDataSetChanged();
                 edit_product_name.setText(productItem.getProdName());
                 product_id = productItem.getProdId();
+                Log.i(TAG,"prod id "+product_id);
             }
         }
     }
@@ -360,8 +379,12 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
     @Override
     public void onItemClicked(int prodId) {
         MyProductItem productItem = dbHelper.getProductDetails(prodId);
+        prodSp = productItem.getProdSp();
+        priceOfferAdapter.setSp(prodSp);
         edit_product_name.setText(productItem.getProdName());
         product_id = productItem.getProdId();
+        priceOfferAdapter.notifyDataSetChanged();
+        Log.i(TAG,"prod id "+product_id);
     }
 
     public void onDialogPositiveClicked(){

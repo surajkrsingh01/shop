@@ -31,6 +31,7 @@ import com.shoppursshop.activities.settings.AddCategoryActivity;
 import com.shoppursshop.activities.settings.MyCategoriesActivity;
 import com.shoppursshop.adapters.CustomerAdapter;
 import com.shoppursshop.adapters.OrderAdapter;
+import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.fragments.BottomSearchFragment;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
@@ -80,63 +81,8 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.grey900), PorterDuff.Mode.SRC_ATOP);
 
-        itemList = new ArrayList<>();
-        itemListFav = new ArrayList<>();
-        //setHeaders();
-
-       /* MyCustomer myCustomer = new MyCustomer();
-        myCustomer.setName("Sonam Kapoor");
-        myCustomer.setMobile("9718181697");
-        myCustomer.setAddress("M-180, Kendriya Vihar, Sector-56");
-        myCustomer.setState("Haryana");
-        myCustomer.setCity("Gurugram");
-        myCustomer.setLocalImage(R.drawable.author_1);
-        itemList.add(myCustomer);
-
-        myCustomer = new MyCustomer();
-        myCustomer.setName("Katie Perry");
-        myCustomer.setMobile("9718181698");
-        myCustomer.setAddress("M-181, Kendriya Vihar, Sector-56");
-        myCustomer.setState("Haryana");
-        myCustomer.setCity("Gurugram");
-        myCustomer.setLocalImage(R.drawable.author_2);
-        itemList.add(myCustomer);
-
-        myCustomer = new MyCustomer();
-        myCustomer.setName("Himani Saraswat");
-        myCustomer.setMobile("9718181699");
-        myCustomer.setAddress("M-182, Kendriya Vihar, Sector-56");
-        myCustomer.setState("Haryana");
-        myCustomer.setCity("Gurugram");
-        myCustomer.setLocalImage(R.drawable.author_3);
-        itemList.add(myCustomer);
-
-        myCustomer = new MyCustomer();
-        myCustomer.setName("Miley Cirus");
-        myCustomer.setMobile("9718181610");
-        myCustomer.setAddress("M-183, Kendriya Vihar, Sector-56");
-        myCustomer.setState("Haryana");
-        myCustomer.setCity("Gurugram");
-        myCustomer.setLocalImage(R.drawable.author_4);
-        itemList.add(myCustomer);
-
-        myCustomer = new MyCustomer();
-        myCustomer.setName("Sachin Kumar");
-        myCustomer.setMobile("9718181611");
-        myCustomer.setAddress("M-184, Kendriya Vihar, Sector-56");
-        myCustomer.setState("Haryana");
-        myCustomer.setCity("Gurugram");
-        myCustomer.setLocalImage(R.drawable.author_5);
-        itemList.add(myCustomer);
-
-        myCustomer = new MyCustomer();
-        myCustomer.setName("Sumit Kumar");
-        myCustomer.setMobile("9718181612");
-        myCustomer.setAddress("M-185, Kendriya Vihar, Sector-56");
-        myCustomer.setState("Haryana");
-        myCustomer.setCity("Gurugram");
-        myCustomer.setLocalImage(R.drawable.author_6);
-        itemList.add(myCustomer);*/
+        itemList = dbHelper.getCustomerList("N");
+        itemListFav = dbHelper.getCustomerList("Y");
 
         swipeRefreshLayout=findViewById(R.id.swipe_refresh);
         progressBar=findViewById(R.id.progress_bar);
@@ -176,7 +122,7 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(false);
-                getItemList();
+              //  getItemList();
             }
         });
 
@@ -204,6 +150,11 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
             window.setStatusBarColor(getResources().getColor(R.color.yellow500));
         }*/
 
+        if(itemList.size() == 0 && itemListFav.size() == 0){
+            if (ConnectionDetector.isNetworkAvailable(this)){
+                getItemList();
+            }
+        }
         initFooter(this,2);
     }
 
@@ -213,10 +164,6 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
 
         if(bottomSearchFragment != null){
             bottomSearchFragment.dismiss();
-        }
-
-        if (ConnectionDetector.isNetworkAvailable(this)){
-            getItemList();
         }
     }
 
@@ -266,6 +213,7 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
                     MyCustomer myCustomer= null;
                     itemList.clear();
                     itemListFav.clear();
+                    dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
                     //setHeaders();
                     for (int i = 0; i < len; i++) {
                         jsonObject = dataArray.getJSONObject(i);
@@ -281,12 +229,17 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
                         myCustomer.setImage(jsonObject.getString("photo"));
                         myCustomer.setIsFav(jsonObject.getString("isFav"));
                         myCustomer.setRatings((float)jsonObject.getDouble("ratings"));
+                        myCustomer.setStatus(jsonObject.getString("isActive"));
+                        myCustomer.setCustUserCreateStatus(jsonObject.getString("userCreateStatus"));
                         myCustomer.setLocalImage(R.drawable.author_1);
                         if(myCustomer.getIsFav().equals("Y")){
                             itemListFav.add(myCustomer);
                         }else{
+                            myCustomer.setIsFav("N");
                             itemList.add(myCustomer);
                         }
+
+                        dbHelper.addCustomerInfo(myCustomer,Utility.getTimeStamp(),Utility.getTimeStamp());
 
                     }
 

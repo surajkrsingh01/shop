@@ -11,9 +11,13 @@ import com.shoppursshop.activities.CategoryListActivity;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.CatListItem;
 import com.shoppursshop.models.Category;
+import com.shoppursshop.models.MyCustomer;
 import com.shoppursshop.models.MyProduct;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MySimpleItem;
+import com.shoppursshop.models.ProductComboDetails;
+import com.shoppursshop.models.ProductComboOffer;
+import com.shoppursshop.models.ProductDiscountOffer;
 import com.shoppursshop.models.SpinnerItem;
 import com.shoppursshop.models.SubCategory;
 import com.shoppursshop.utilities.Constants;
@@ -27,11 +31,17 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = Constants.APP_NAME+".db";
+    public static final String CUSTOMER_INFO_TABLE = "CUSTOMER_INFO";
     public static final String CAT_TABLE = "CATEGORY";
     public static final String SUB_CAT_TABLE = "SUB_CATEGORY";
     public static final String PRODUCT_TABLE = "PRODUCT_TABLE";
     public static final String PRODUCT_BARCODE_TABLE = "PRODUCT_BARCODE_TABLE";
     public static final String CART_TABLE = "CART_TABLE";
+    public static final String PROD_FREE_OFFER_TABLE = "PROD_FREE_OFFER_TABLE";
+    public static final String PROD_PRICE_TABLE = "PROD_PRICE_TABLE";
+    public static final String PROD_PRICE_DETAIL_TABLE = "PROD_PRICE_DETAIL_TABLE";
+    public static final String PROD_COMBO_TABLE = "PROD_COMBO_TABLE";
+    public static final String PROD_COMBO_DETAIL_TABLE = "PROD_COMBO_DETAIL_TABLE";
     public static final String ID = "id";
     public static final String CAT_ID = "cat_id";
     public static final String NAME = "name";
@@ -59,6 +69,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String PROD_IMAGE_2 = "PROD_IMAGE_2";
     public static final String PROD_IMAGE_3 = "PROD_IMAGE_3";
     public static final String TOTAL_AMOUNT = "totalAmount";
+    public static final String TOTAL_MRP_AMOUNT = "totalMRPAmount";
     public static final String TOTAL_QTY = "totalQty";
     public static final String SIZE = "size";
     public static final String COLOR = "color";
@@ -66,6 +77,42 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String UPDATED_BY = "UPDATED_BY";
     public static final String UPDATED_AT = "updatedAt";
     public static final String CREATED_AT = "createdAt";
+    public static final String COUPON_ID = "couponId";
+    public static final String COUPON_NAME = "couponName";
+    public static final String COUPON_PER = "couponPer";
+    public static final String COUPON_MAX_AMOUNT = "couponMaxAmount";
+    public static final String DELIVERY_ADDRESS = "deliveryAddress";
+    public static final String DELIVERY_PIN = "deliveryPin";
+    public static final String DELIVERY_STATE = "deliveryState";
+    public static final String DELIVERY_CITY = "deliveryCity";
+    public static final String DELIVERY_COUNTRY = "deliveryCountry";
+    public static final String DELIVERY_CHARGES= "deliveryCharges";
+    public static final String LATITUDE= "latitude";
+    public static final String LONGITUDE= "longitude";
+
+    public static final String PROD_ID= "prodId";
+    public static final String PROD_BUY_ID= "prodBuyId";
+    public static final String PROD_FREE_ID= "prodFreeId";
+    public static final String PROD_BUY_QTY= "prodBuyQty";
+    public static final String PROD_FREE_QTY= "prodFreeQty";
+    public static final String OFFER_ID= "offerId";
+    public static final String START_DATE= "startDate";
+    public static final String END_DATE= "endDate";
+    public static final String STATUS= "status";
+
+    public static final String CODE= "code";
+    public static final String MOBILE_NO= "mobileNo";
+    public static final String EMAIL= "email";
+    public static final String ADDRESS= "address";
+    public static final String COUNTRY= "country";
+    public static final String STATE= "state";
+    public static final String CITY= "city";
+    public static final String PHOTO= "photo";
+    public static final String IS_FAV= "isFav";
+    public static final String RATINGS= "ratings";
+    public static final String USER_CREATE_STATUS= "userCreateStatus";
+
+
     private Context context;
 
     public static final String CREATE_CAT_TABLE = "create table "+CAT_TABLE +
@@ -117,6 +164,18 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_CART_TABLE = "create table "+CART_TABLE +
             "("+ID+" TEXT NOT NULL, " +
+            " "+COUPON_ID+" TEXT, " +
+            " "+COUPON_NAME+" TEXT, " +
+            " "+COUPON_PER+" TEXT, " +
+            " "+COUPON_MAX_AMOUNT+" TEXT , " +
+            " "+DELIVERY_ADDRESS+" TEXT , " +
+            " "+DELIVERY_PIN+" TEXT , " +
+            " "+DELIVERY_COUNTRY+" TEXT , " +
+            " "+DELIVERY_STATE+" TEXT , " +
+            " "+DELIVERY_CITY+" TEXT, " +
+            " "+DELIVERY_CHARGES+" TEXT, " +
+            " "+LONGITUDE+" TEXT, " +
+            " "+LATITUDE+" TEXT , " +
             " "+PROD_SUB_CAT_ID+" TEXT NOT NULL, " +
             " "+PROD_CAT_ID+" TEXT NOT NULL, " +
             " "+PROD_NAME+" TEXT NOT NULL, " +
@@ -138,9 +197,67 @@ public class DbHelper extends SQLiteOpenHelper {
             " "+PROD_IMAGE_2+" TEXT, " +
             " "+PROD_IMAGE_3+" TEXT)";
 
+    public static final String CREATE_PROD_FREE_OFFER_TABLE = "create table "+PROD_FREE_OFFER_TABLE +
+            "("+ID+" TEXT NOT NULL, " +
+            " "+NAME+" TEXT NOT NULL, " +
+            " "+PROD_BUY_ID+" TEXT NOT NULL, " +
+            " "+PROD_FREE_ID+" TEXT NOT NULL, " +
+            " "+PROD_BUY_QTY+" TEXT NOT NULL, " +
+            " "+PROD_FREE_QTY+" TEXT NOT NULL, " +
+            " "+START_DATE+" TEXT, " +
+            " "+END_DATE+" TEXT, " +
+            " "+STATUS+" TEXT, " +
+            " "+CREATED_BY+" TEXT, " +
+            " "+UPDATED_BY+" TEXT, " +
+            " "+CREATED_AT+" TEXT, " +
+            " "+UPDATED_AT+" TEXT)";
+
+    public static final String CREATE_PROD_PRICE_TABLE = "create table "+PROD_PRICE_TABLE +
+            "("+ID+" TEXT NOT NULL, " +
+            " "+PROD_ID+" TEXT NOT NULL, " +
+            " "+NAME+" TEXT NOT NULL, " +
+            " "+START_DATE+" TEXT, " +
+            " "+END_DATE+" TEXT, " +
+            " "+STATUS+" TEXT, " +
+            " "+CREATED_BY+" TEXT, " +
+            " "+UPDATED_BY+" TEXT, " +
+            " "+CREATED_AT+" TEXT, " +
+            " "+UPDATED_AT+" TEXT)";
+
+    public static final String CREATE_PROD_PRICE_DETAIL_TABLE = "create table "+PROD_PRICE_DETAIL_TABLE +
+            "("+ID+" TEXT NOT NULL, " +
+            " "+OFFER_ID+" TEXT NOT NULL, " +
+            " "+TOTAL_QTY+" TEXT NOT NULL, " +
+            " "+PROD_SP+" TEXT, " +
+            " "+STATUS+" TEXT, " +
+            " "+CREATED_BY+" TEXT, " +
+            " "+UPDATED_BY+" TEXT, " +
+            " "+CREATED_AT+" TEXT, " +
+            " "+UPDATED_AT+" TEXT)";
+
+    public static final String CREATE_CUSTOMER_INFO_TABLE = "create table "+CUSTOMER_INFO_TABLE +
+            "("+ID+" TEXT NOT NULL, " +
+            " "+NAME+" TEXT NOT NULL, " +
+            " "+CODE+" TEXT NOT NULL, " +
+            " "+MOBILE_NO+" TEXT, " +
+            " "+EMAIL+" TEXT, " +
+            " "+ADDRESS+" TEXT, " +
+            " "+COUNTRY+" TEXT, " +
+            " "+STATE+" TEXT, " +
+            " "+CITY+" TEXT, " +
+            " "+PHOTO+" TEXT, " +
+            " "+IS_FAV+" TEXT, " +
+            " "+RATINGS+" TEXT, " +
+            " "+USER_CREATE_STATUS+" TEXT, " +
+            " "+STATUS+" TEXT, " +
+            " "+CREATED_BY+" TEXT, " +
+            " "+UPDATED_BY+" TEXT, " +
+            " "+CREATED_AT+" TEXT, " +
+            " "+UPDATED_AT+" TEXT)";
+
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME, null, 12);
+        super(context, DATABASE_NAME, null, 17);
         this.context=context;
     }
 
@@ -151,19 +268,23 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_PRODUCT_TABLE);
         db.execSQL(CREATE_PRODUCT_BARCODE_TABLE);
         db.execSQL(CREATE_CART_TABLE);
+        db.execSQL(CREATE_PROD_FREE_OFFER_TABLE);
+        db.execSQL(CREATE_PROD_PRICE_TABLE);
+        db.execSQL(CREATE_PROD_PRICE_DETAIL_TABLE);
+        db.execSQL(CREATE_CUSTOMER_INFO_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        /*db.execSQL("DROP TABLE IF EXISTS "+CAT_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+SUB_CAT_TABLE);*/
-        db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_BARCODE_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+CART_TABLE);
-        db.execSQL(CREATE_PRODUCT_TABLE);
-        db.execSQL(CREATE_PRODUCT_BARCODE_TABLE);
-        db.execSQL(CREATE_CART_TABLE);
-      //  onCreate(db);
+
+        db.execSQL("DROP TABLE IF EXISTS "+PROD_FREE_OFFER_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+PROD_PRICE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+PROD_PRICE_DETAIL_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+CUSTOMER_INFO_TABLE);
+        db.execSQL(CREATE_PROD_FREE_OFFER_TABLE);
+        db.execSQL(CREATE_PROD_PRICE_TABLE);
+        db.execSQL(CREATE_PROD_PRICE_DETAIL_TABLE);
+        db.execSQL(CREATE_CUSTOMER_INFO_TABLE);
     }
 
     public boolean addCategory(MySimpleItem item, String createdAt, String updatedAt){
@@ -293,6 +414,82 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.i("DbHelper","Barcode Row is added "+barCode+" id "+ id);
         return true;
     }
+
+
+    public boolean addProductFreeOffer(ProductDiscountOffer item, String createdAt, String updatedAt){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID, item.getId());
+        contentValues.put(NAME, item.getOfferName());
+        contentValues.put(PROD_BUY_ID, item.getProdBuyId());
+        contentValues.put(PROD_FREE_ID, item.getProdFreeId());
+        contentValues.put(PROD_BUY_QTY, item.getProdBuyQty());
+        contentValues.put(PROD_FREE_QTY, item.getProdFreeQty());
+        contentValues.put(START_DATE, item.getStartDate());
+        contentValues.put(END_DATE, item.getEndDate());
+        contentValues.put(STATUS, item.getStatus());
+        contentValues.put(CREATED_AT, createdAt);
+        contentValues.put(UPDATED_AT, updatedAt);
+        db.insert(PROD_FREE_OFFER_TABLE, null, contentValues);
+        Log.i("DbHelper","Row is added");
+        return true;
+    }
+
+
+    public boolean addProductPriceOffer(ProductComboOffer item, String createdAt, String updatedAt){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID, item.getId());
+        contentValues.put(PROD_ID, item.getProdId());
+        contentValues.put(NAME, item.getOfferName());
+        contentValues.put(START_DATE, item.getStartDate());
+        contentValues.put(END_DATE, item.getEndDate());
+        contentValues.put(STATUS, item.getStatus());
+        contentValues.put(CREATED_AT, createdAt);
+        contentValues.put(UPDATED_AT, updatedAt);
+        db.insert(PROD_PRICE_TABLE, null, contentValues);
+        Log.i("DbHelper","Row is added");
+        return true;
+    }
+
+    public boolean addProductPriceDetailOffer(ProductComboDetails item, String createdAt, String updatedAt){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID, item.getId());
+        contentValues.put(OFFER_ID, item.getPcodPcoId());
+        contentValues.put(TOTAL_QTY, item.getPcodProdQty());
+        contentValues.put(PROD_SP, item.getPcodPrice());
+        contentValues.put(STATUS, item.getStatus());
+        contentValues.put(CREATED_AT, createdAt);
+        contentValues.put(UPDATED_AT, updatedAt);
+        db.insert(PROD_PRICE_DETAIL_TABLE, null, contentValues);
+        Log.i("DbHelper","Row is added");
+        return true;
+    }
+
+    public boolean addCustomerInfo(MyCustomer item, String createdAt, String updatedAt){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID, item.getId());
+        contentValues.put(CODE, item.getCode());
+        contentValues.put(NAME, item.getName());
+        contentValues.put(MOBILE_NO, item.getMobile());
+        contentValues.put(EMAIL, item.getEmail());
+        contentValues.put(ADDRESS, item.getAddress());
+        contentValues.put(COUNTRY, item.getCountry());
+        contentValues.put(STATE, item.getState());
+        contentValues.put(CITY, item.getCity());
+        contentValues.put(IS_FAV, item.getIsFav());
+        contentValues.put(RATINGS, item.getRatings());
+        contentValues.put(USER_CREATE_STATUS, item.getCustUserCreateStatus());
+        contentValues.put(STATUS, item.getStatus());
+        contentValues.put(CREATED_AT, createdAt);
+        contentValues.put(UPDATED_AT, updatedAt);
+        db.insert(CUSTOMER_INFO_TABLE, null, contentValues);
+        Log.i("DbHelper","Row is added");
+        return true;
+    }
+
 
     public String getCategoryName(String catId){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -993,6 +1190,36 @@ public class DbHelper extends SQLiteOpenHelper {
         return amount;
     }
 
+    public float getTotalMrpPriceCart(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select sum("+PROD_MRP+" * "+TOTAL_QTY+") as totalAmount from "+CART_TABLE;
+        Cursor res =  db.rawQuery(query, null);
+        float amount = 0f;
+        if(res.moveToFirst()){
+            do{
+                amount = amount + res.getFloat(res.getColumnIndex(TOTAL_AMOUNT));
+            }while (res.moveToNext());
+
+        }
+
+        return amount;
+    }
+
+    public float getTotalTaxesart(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select sum("+PROD_CGST+" * "+PROD_SP+" * "+TOTAL_QTY+"/100) as totalAmount from "+CART_TABLE;
+        Cursor res =  db.rawQuery(query, null);
+        float amount = 0f;
+        if(res.moveToFirst()){
+            do{
+                amount = amount + res.getFloat(res.getColumnIndex(TOTAL_AMOUNT));
+            }while (res.moveToNext());
+
+        }
+
+        return amount;
+    }
+
     public int getTotalQuantityCart(){
         SQLiteDatabase db = this.getReadableDatabase();
         final String query="select sum("+TOTAL_QTY+") as totalQty from "+CART_TABLE;
@@ -1037,6 +1264,134 @@ public class DbHelper extends SQLiteOpenHelper {
 
         return dis;
     }
+
+
+
+    public List<ProductComboOffer> getProductPriceOffer(String prodId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+PROD_PRICE_TABLE+" where "+PROD_ID+" IN(?)";
+        final String detailQuery="select * from "+PROD_PRICE_DETAIL_TABLE+" where "+OFFER_ID+" IN(?)";
+        Cursor res =  db.rawQuery(query, new String[]{prodId});
+        Cursor detailsRes =  null;
+        ArrayList<ProductComboOffer> itemList=new ArrayList<>();
+        ArrayList<ProductComboDetails> productComboOfferDetails=null;
+        ProductComboDetails productComboDetails = null;
+        ProductComboOffer productComboOffer = null;
+        if(res.moveToFirst()){
+            do{
+                productComboOffer = new ProductComboOffer();
+                productComboOffer.setId(res.getInt(res.getColumnIndex(ID)));
+                productComboOffer.setProdId(res.getInt(res.getColumnIndex(PROD_ID)));
+                productComboOffer.setOfferName(res.getString(res.getColumnIndex(NAME)));
+                productComboOffer.setStatus(res.getString(res.getColumnIndex(STATUS)));
+                productComboOffer.setStartDate(res.getString(res.getColumnIndex(START_DATE)));
+                productComboOffer.setEndDate(res.getString(res.getColumnIndex(END_DATE)));
+                productComboOfferDetails=new ArrayList<>();
+                detailsRes =  db.rawQuery(detailQuery, new String[]{String.valueOf(productComboOffer.getId())});
+                if(detailsRes.moveToFirst()){
+                    do{
+                        productComboDetails = new ProductComboDetails();
+                        productComboDetails.setId(detailsRes.getInt(detailsRes.getColumnIndex(ID)));
+                        productComboDetails.setPcodPcoId(detailsRes.getInt(detailsRes.getColumnIndex(OFFER_ID)));
+                        productComboDetails.setPcodProdQty(detailsRes.getInt(detailsRes.getColumnIndex(TOTAL_QTY)));
+                        productComboDetails.setPcodPrice(detailsRes.getFloat(detailsRes.getColumnIndex(PROD_SP)));
+                        productComboDetails.setStatus(detailsRes.getString(detailsRes.getColumnIndex(STATUS)));
+                        productComboOfferDetails.add(productComboDetails);
+                    }while (detailsRes.moveToNext());
+                }
+                productComboOffer.setProductComboOfferDetails(productComboOfferDetails);
+                itemList.add(productComboOffer);
+
+            }while (res.moveToNext());
+        }
+
+        return itemList;
+    }
+
+    public List<Object> getProductFreeOffer(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+PROD_FREE_OFFER_TABLE;
+        Cursor res =  db.rawQuery(query, null);
+        List<Object> productDiscountOfferList = new ArrayList<>();
+        ProductDiscountOffer productDiscountOffer = null;
+        if(res.moveToFirst()){
+            do{
+                productDiscountOffer = new ProductDiscountOffer();
+                productDiscountOffer.setId(res.getInt(res.getColumnIndex(ID)));
+                productDiscountOffer.setOfferName(res.getString(res.getColumnIndex(NAME)));
+                productDiscountOffer.setProdBuyId(res.getInt(res.getColumnIndex(PROD_BUY_ID)));
+                productDiscountOffer.setProdFreeId(res.getInt(res.getColumnIndex(PROD_FREE_ID)));
+                productDiscountOffer.setProdBuyQty(res.getInt(res.getColumnIndex(PROD_BUY_QTY)));
+                productDiscountOffer.setProdFreeQty(res.getInt(res.getColumnIndex(PROD_FREE_QTY)));
+                productDiscountOffer.setStatus(res.getString(res.getColumnIndex(STATUS)));
+                productDiscountOffer.setStartDate(res.getString(res.getColumnIndex(START_DATE)));
+                productDiscountOffer.setEndDate(res.getString(res.getColumnIndex(END_DATE)));
+                productDiscountOfferList.add(productDiscountOffer);
+            }while (res.moveToNext());
+
+        }
+
+        return productDiscountOfferList;
+    }
+
+
+    public List<ProductDiscountOffer> getProductFreeOffer(String prodId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+PROD_FREE_OFFER_TABLE +" where "+PROD_BUY_ID+" = ?";
+        Cursor res =  db.rawQuery(query, new String[]{prodId});
+        List<ProductDiscountOffer> productDiscountOfferList = new ArrayList<>();
+        ProductDiscountOffer productDiscountOffer = null;
+        if(res.moveToFirst()){
+            do{
+                productDiscountOffer = new ProductDiscountOffer();
+                productDiscountOffer.setId(res.getInt(res.getColumnIndex(ID)));
+                productDiscountOffer.setOfferName(res.getString(res.getColumnIndex(NAME)));
+                productDiscountOffer.setProdBuyId(res.getInt(res.getColumnIndex(PROD_BUY_ID)));
+                productDiscountOffer.setProdFreeId(res.getInt(res.getColumnIndex(PROD_FREE_ID)));
+                productDiscountOffer.setProdBuyQty(res.getInt(res.getColumnIndex(PROD_BUY_QTY)));
+                productDiscountOffer.setProdFreeQty(res.getInt(res.getColumnIndex(PROD_FREE_QTY)));
+                productDiscountOffer.setStatus(res.getString(res.getColumnIndex(STATUS)));
+                productDiscountOffer.setStartDate(res.getString(res.getColumnIndex(START_DATE)));
+                productDiscountOffer.setEndDate(res.getString(res.getColumnIndex(END_DATE)));
+                productDiscountOfferList.add(productDiscountOffer);
+            }while (res.moveToNext());
+
+        }
+
+        return productDiscountOfferList;
+    }
+
+    public List<Object> getCustomerList(String isFav){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+CUSTOMER_INFO_TABLE+" where "+IS_FAV+" = ?";
+        Cursor res =  db.rawQuery(query, new String[]{isFav});
+        List<Object> myCustomerList = new ArrayList<>();
+        MyCustomer myCustomer = null;
+        if(res.moveToFirst()){
+            do{
+                myCustomer = new MyCustomer();
+                myCustomer.setId(res.getString(res.getColumnIndex(ID)));
+                myCustomer.setCode(res.getString(res.getColumnIndex(CODE)));
+                myCustomer.setName(res.getString(res.getColumnIndex(NAME)));
+                myCustomer.setMobile(res.getString(res.getColumnIndex(MOBILE_NO)));
+                myCustomer.setEmail(res.getString(res.getColumnIndex(EMAIL)));
+                myCustomer.setAddress(res.getString(res.getColumnIndex(ADDRESS)));
+                myCustomer.setCountry(res.getString(res.getColumnIndex(COUNTRY)));
+                myCustomer.setState(res.getString(res.getColumnIndex(STATE)));
+                myCustomer.setCity(res.getString(res.getColumnIndex(CITY)));
+                myCustomer.setImage(res.getString(res.getColumnIndex(PHOTO)));
+                myCustomer.setIsFav(res.getString(res.getColumnIndex(IS_FAV)));
+                myCustomer.setRatings(res.getFloat(res.getColumnIndex(RATINGS)));
+                myCustomer.setStatus(res.getString(res.getColumnIndex(STATUS)));
+                myCustomer.setCustUserCreateStatus(res.getString(res.getColumnIndex(USER_CREATE_STATUS)));
+                myCustomerList.add(myCustomer);
+            }while (res.moveToNext());
+
+        }
+
+        return myCustomerList;
+    }
+
 
     public void deleteCategory(int id){
         SQLiteDatabase db = this.getWritableDatabase();
