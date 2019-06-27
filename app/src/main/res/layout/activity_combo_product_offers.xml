@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_offer_name"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:background="@null"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
 
@@ -102,7 +102,7 @@
         android:layout_height="1dp"
         android:background="?attr/separatorColor"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_below="@+id/seperator_header"
         android:layout_width="match_parent"
@@ -110,7 +110,7 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin">
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
             <Button
                 android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -146,7 +146,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:textColorHint="?attr/secondaryTextColor"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -168,9 +168,9 @@
                 android:layout_height="wrap_content"
                 android:background="@null"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:textColorHint="?attr/secondaryTextColor"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -192,7 +192,7 @@
                 android:layout_height="wrap_content"
                 android:background="@null"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
     </LinearLayout>

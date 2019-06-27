@@ -8,10 +8,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -241,6 +241,10 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
                     i.putExtra("paymentResponseObject", detailObject.toString());
                     i.putExtra("orderNumber", getIntent().getStringExtra("orderNumber"));
                     i.putExtra("totalAmount", amount);
+                    i.putExtra("ordCouponId",getIntent().getStringExtra("ordCouponId"));
+                    i.putExtra("totalTax",getIntent().getFloatExtra("totalTax",0f));
+                    i.putExtra("deliveryCharges",getIntent().getFloatExtra("deliveryCharges",0f));
+                    i.putExtra("totDiscount",getIntent().getFloatExtra("totDiscount",0f));
                     i.putExtra("custCode", getIntent().getStringExtra("custCode"));
                     i.putExtra("custId", getIntent().getIntExtra("custId", 0));
                     i.putExtra("custName", getIntent().getStringExtra("custName"));

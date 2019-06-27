@@ -1,8 +1,8 @@
 package com.shoppursshop.adapters;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,12 +75,30 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             InvoiceItem item= itemList.get(position);
             myViewHolder.tvName.setText(item.getItemName());
             myViewHolder.tvHsn.setText(item.getHsn());
-            myViewHolder.tvQty.setText(""+item.getQty());
+            if(item.getUnit() == null || item.getUnit().toLowerCase().equals("null") || item.getUnit().equals("")){
+                myViewHolder.tvQty.setText(""+item.getQty());
+            }else{
+              String[] unitArray = item.getUnit().split(" ");
+              float totalUnit = Float.parseFloat(unitArray[0]) * item.getQty();
+              myViewHolder.tvQty.setText(String.format("%.00f",totalUnit)+" "+unitArray[1]);
+            }
             myViewHolder.tvMrp.setText(Utility.numberFormat(item.getMrp()));
             myViewHolder.tvRate.setText(Utility.numberFormat(item.getRate()));
           //  myViewHolder.tvGst.setText(Utility.numberFormat(item.getGst())+"%");
             float amt = item.getQty() * item.getRate();
             myViewHolder.tvAmt.setText(Utility.numberFormat(amt));
+
+            if(item.getFreeItems() > 0){
+                if(item.getOfferType().equals("free")){
+                    if(item.getFreeItems() == 1){
+                        myViewHolder.tvName.setText(item.getItemName()+" ("+item.getFreeItems()+" free item)");
+                    }else{
+                        myViewHolder.tvName.setText(item.getItemName()+" ("+item.getFreeItems()+" free items)");
+                    }
+
+                }
+            }
+
         }
     }
 

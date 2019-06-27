@@ -9,10 +9,12 @@
     <RelativeLayout
         android:paddingLeft="@dimen/view_horizontal_margin"
         android:paddingRight="@dimen/view_horizontal_margin"
+        android:paddingTop="@dimen/view_vertical_margin"
+        android:paddingBottom="@dimen/view_vertical_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card_view"
@@ -26,10 +28,10 @@
                 android:id="@+id/image_view"
                 android:src="@drawable/thumb_12"
                 android:scaleType="centerCrop"
-                android:layout_width="@dimen/home_list_image_width_4"
-                android:layout_height="@dimen/home_list_image_height_4" />
+                android:layout_width="@dimen/cart_list_image_width"
+                android:layout_height="@dimen/cart_list_image_height" />
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
 
 
@@ -107,36 +109,78 @@
             <RelativeLayout
                 android:background="?attr/backgroundColor"
                 android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/image_minus"
+                <RelativeLayout
+                    android:id="@+id/relative_unit"
+                    android:layout_toLeftOf="@+id/rl_plus_minus"
+                    android:layout_marginRight="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/cart_action_size"
                     android:background="?attr/solidPrimaryStrokeBorderBackground"
-                    android:src="@drawable/ic_remove_black_24dp"
-                    android:tint="?attr/primaryTextColor"
-                    android:layout_width="@dimen/cart_action_size"
-                    android:layout_height="@dimen/cart_action_size" />
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp">
 
-                <TextView
-                    android:id="@+id/tv_counter"
-                    android:text="1"
-                    android:textSize="18sp"
-                    android:textColor="?attr/primaryTextColor"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:layout_toRightOf="@+id/image_minus"
-                    android:layout_width="@dimen/cart_action_size"
-                    android:layout_height="wrap_content" />
+                    <Spinner
+                        android:id="@+id/spinner_unit"
+                        android:layout_toLeftOf="@+id/image_spinner_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null">
 
-                <ImageView
-                    android:id="@+id/image_add"
-                    android:background="?attr/solidPrimaryStrokeBorderBackground"
-                    android:layout_toRightOf="@+id/tv_counter"
-                    android:src="@drawable/ic_add_black_24dp"
-                    android:tint="?attr/primaryTextColor"
-                    android:layout_width="@dimen/cart_action_size"
-                    android:layout_height="@dimen/cart_action_size" />
+                    </Spinner>
+
+                    <ImageView
+                        android:id="@+id/image_spinner_1"
+                        android:layout_alignParentRight="true"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginRight="5dp"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_arrow_drop_down_black_24dp"
+                        android:tint="?attr/primaryTextColor" />
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/rl_plus_minus"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/image_minus"
+                        android:background="?attr/solidPrimaryStrokeBorderBackground"
+                        android:src="@drawable/ic_remove_black_24dp"
+                        android:tint="?attr/primaryTextColor"
+                        android:layout_width="@dimen/cart_action_size"
+                        android:layout_height="@dimen/cart_action_size" />
+
+                    <TextView
+                        android:id="@+id/tv_counter"
+                        android:text="1"
+                        android:textSize="18sp"
+                        android:textColor="?attr/primaryTextColor"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:layout_toRightOf="@+id/image_minus"
+                        android:layout_width="@dimen/cart_action_size"
+                        android:layout_height="wrap_content" />
+
+                    <ImageView
+                        android:id="@+id/image_add"
+                        android:background="?attr/solidPrimaryStrokeBorderBackground"
+                        android:layout_toRightOf="@+id/tv_counter"
+                        android:src="@drawable/ic_add_black_24dp"
+                        android:tint="?attr/primaryTextColor"
+                        android:layout_width="@dimen/cart_action_size"
+                        android:layout_height="@dimen/cart_action_size" />
+
+                </RelativeLayout>
+
+
 
             </RelativeLayout>
 

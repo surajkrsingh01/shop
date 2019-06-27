@@ -6,12 +6,87 @@ import java.util.List;
 public class MyProductItem implements Serializable {
 
     private int id,pcoId,prodId,prodCatId,prodSubCatId,prodReorderLevel,prodQoh,qty;
-    private String prodName,prodCode,prodBarCode,prodDesc,prodHsnCode,prodMfgDate,prodExpiryDate,prodMfgBy,prodImage1,prodImage2,prodImage3,
+    private String offerId,offerType,comboProductIds,prodName,prodCode,prodBarCode,prodDesc,prodHsnCode,prodMfgDate,prodExpiryDate,prodMfgBy,prodImage1,prodImage2,prodImage3,
             createdBy,updatedBy,createdDate,updatedDate,status,isBarCodeAvailable;
-    private String retRetailerId,dbName,dbUserName,dbPassword;
+    private String unit,color,size,retRetailerId,dbName,dbUserName,dbPassword;
     private float offerPrice,prodCgst,prodIgst,prodSgst,prodWarranty,prodMrp,prodSp,totalAmount;
     private boolean isSelected;
-    private int position,offerCounter;
+    private int position,freeProductPosition,offerCounter;
+
+    private List<ProductUnit> productUnitList;
+    private List<ProductSize> productSizeList;
+
+    public List<ProductUnit> getProductUnitList() {
+        return productUnitList;
+    }
+
+    public void setProductUnitList(List<ProductUnit> productUnitList) {
+        this.productUnitList = productUnitList;
+    }
+
+    public List<ProductSize> getProductSizeList() {
+        return productSizeList;
+    }
+
+    public void setProductSizeList(List<ProductSize> productSizeList) {
+        this.productSizeList = productSizeList;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getOfferType() {
+        return offerType;
+    }
+
+    public void setOfferType(String offerType) {
+        this.offerType = offerType;
+    }
+
+    public String getOfferId() {
+        return offerId;
+    }
+
+    public void setOfferId(String offerId) {
+        this.offerId = offerId;
+    }
+
+    public String getComboProductIds() {
+        return comboProductIds;
+    }
+
+    public void setComboProductIds(String comboProductIds) {
+        this.comboProductIds = comboProductIds;
+    }
+
+    public int getFreeProductPosition() {
+        return freeProductPosition;
+    }
+
+    public void setFreeProductPosition(int freeProductPosition) {
+        this.freeProductPosition = freeProductPosition;
+    }
 
     public int getOfferCounter() {
         return offerCounter;
@@ -21,7 +96,17 @@ public class MyProductItem implements Serializable {
         this.offerCounter = offerCounter;
     }
 
+    private Object productOffer;
+
     private List<ProductComboOffer> productPriceOfferList;
+
+    public Object getProductOffer() {
+        return productOffer;
+    }
+
+    public void setProductOffer(Object productOffer) {
+        this.productOffer = productOffer;
+    }
 
     public List<ProductComboOffer> getProductPriceOfferList() {
         return productPriceOfferList;

@@ -1,15 +1,16 @@
 package com.shoppursshop.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -26,6 +27,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.shoppursshop.R;
 import com.shoppursshop.adapters.InvoiceItemAdapter;
+import com.shoppursshop.models.Coupon;
 import com.shoppursshop.models.Invoice;
 import com.shoppursshop.models.InvoiceDetail;
 import com.shoppursshop.models.InvoiceItem;
@@ -55,6 +57,9 @@ public class InvoiceActivity extends NetworkBaseActivity {
     private TextView tvShopName,tvShopAddress,tvShopEmail,tvShopPhone,tvShopGSTIN,tvInvoiceNo,tvDate,tvCustomerName,
                       tvSubTotAmt,tvGrossTotAmt,tvTotSgst,tvTotCgst,tvTotIgst,tvShortExcess,tvNetPayableAmt,tvNetPayableWords,
                       tvPaidAmt,tvBalAmt,tvTotQty,tvDiscount,tvPaymentMethod,tvPaymentBrand,tvTransId,tvPaymentAmount,tvTotSavings;
+
+    private RelativeLayout rlCouponLayout;
+    private TextView tvCouponOfferName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +114,9 @@ public class InvoiceActivity extends NetworkBaseActivity {
         tvTotSavings = findViewById(R.id.text_total_savings);
         tvTotQty = findViewById(R.id.text_total_qty);
 
+        rlCouponLayout = findViewById(R.id.rl_coupon_layout);
+        tvCouponOfferName = findViewById(R.id.tv_offer_name);
+
         ImageView ivClose = findViewById(R.id.image_close);
 
         ivClose.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +164,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                    // tvShortExcess.setText(Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
                     float netPayable = (float) Math.round(jsonObject.getDouble("invTotNetPayable"));
                     tvNetPayableAmt.setText(Utility.numberFormat(netPayable));
-                    tvShortExcess.setText(Utility.numberFormat(jsonObject.getDouble("invTotNetPayable") - netPayable));
+                    tvShortExcess.setText(Utility.numberFormat(netPayable - (float)jsonObject.getDouble("invTotNetPayable")));
                     tvPaidAmt.setText(Utility.numberFormat(netPayable));
                     tvNetPayableWords.setText(EnglishNumberToWords.convert((int)netPayable)+" rupees");
                     tvPaymentMethod.setText(jsonObject.getString("paymentMethod"));
@@ -165,6 +173,15 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     tvPaymentAmount.setText(Utility.numberFormat(netPayable));
                     tvTotSavings.setText("Total Savings(Rupees) "+Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
                     tvDiscount.setText(Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
+
+                    int couponId = jsonObject.getInt("invCoupenId");
+                    if(couponId == 0){
+                        rlCouponLayout.setVisibility(View.GONE);
+                    }else{
+                        rlCouponLayout.setVisibility(View.VISIBLE);
+                        Coupon coupon = dbHelper.getCouponOffer(String.valueOf(couponId));
+                        tvCouponOfferName.setText(coupon.getName());
+                    }
 
                     int len = invoiceDetailsArray.length();
                   //  InvoiceDetail invoiceDetail= null;
@@ -180,6 +197,12 @@ public class InvoiceActivity extends NetworkBaseActivity {
                         item.setGst(jsonObject.getInt("invDIGST"));
                         item.setMrp((float) jsonObject.getDouble("invDMrp"));
                         item.setRate(Float.parseFloat(jsonObject.getString("invDSp")));
+                        item.setFreeItems(jsonObject.getInt("invDFreeItems"));
+                        item.setOfferId(jsonObject.getString("invdOfferId"));
+                        item.setOfferType(jsonObject.getString("invdOfferType"));
+                        item.setUnit(jsonObject.getString("invdProdUnit"));
+                        item.setColor(jsonObject.getString("invdProdColor"));
+                        item.setSize(jsonObject.getString("invdProdSize"));
                         itemList.add(item);
                         totQty = totQty + item.getQty();
                     }

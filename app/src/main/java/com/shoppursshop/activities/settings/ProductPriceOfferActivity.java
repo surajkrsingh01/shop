@@ -4,11 +4,11 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Network;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -334,12 +334,63 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
             Log.d("response", response.toString());
             if(apiName.equals("createProductPriceOffer")){
                 if(response.getString("status").equals("true")||response.getString("status").equals(true)){
+                    JSONObject dataObject = response.getJSONObject("result");
+                    JSONArray productComboArray = dataObject.getJSONArray("productComboOfferDetails");
+                    ProductComboDetails productComboDetails = null;
+                    List<ProductComboDetails> productComboOfferDetails = new ArrayList<>();
+                    productComboOffer = new ProductComboOffer();
+                    productComboOffer.setId(dataObject.getInt("id"));
+                    productComboOffer.setOfferName(dataObject.getString("offerName"));
+                    productComboOffer.setProdId(dataObject.getInt("prodId"));
+                    productComboOffer.setStatus(dataObject.getString("status"));
+                    productComboOffer.setStartDate(dataObject.getString("startDate"));
+                    productComboOffer.setEndDate(dataObject.getString("endDate"));
+                    dbHelper.addProductComboOffer(productComboOffer,Utility.getTimeStamp(),Utility.getTimeStamp());
+                    productComboOfferDetails = new ArrayList<>();
+                    int innerLen = productComboArray.length();
+                    for (int k = 0; k < innerLen; k++) {
+                        dataObject = productComboArray.getJSONObject(k);
+                        productComboDetails = new ProductComboDetails();
+                        productComboDetails.setId(dataObject.getInt("id"));
+                        productComboDetails.setPcodPcoId(dataObject.getInt("pcodPcoId"));
+                        productComboDetails.setPcodProdQty(dataObject.getInt("pcodProdQty"));
+                        productComboDetails.setPcodPrice((float)dataObject.getDouble("pcodPrice"));
+                        productComboDetails.setStatus(dataObject.getString("status"));
+                        productComboOfferDetails.add(productComboDetails);
+                        dbHelper.addProductComboDetailOffer(productComboDetails,
+                                Utility.getTimeStamp(),Utility.getTimeStamp());
+                    }
                     showMyDialog("Offer created successfully.");
                 }else {
                     DialogAndToast.showToast(response.getString("message"),ProductPriceOfferActivity.this);
                 }
             }else if(apiName.equals("updateProductPriceOffer")){
                 if(response.getString("status").equals("true")||response.getString("status").equals(true)){
+                    JSONObject dataObject = response.getJSONObject("result");
+                    JSONArray productComboArray = dataObject.getJSONArray("productComboOfferDetails");
+                    ProductComboDetails productComboDetails = null;
+                    List<ProductComboDetails> productComboOfferDetails = new ArrayList<>();
+                    productComboOffer = new ProductComboOffer();
+                    productComboOffer.setId(dataObject.getInt("id"));
+                    productComboOffer.setOfferName(dataObject.getString("offerName"));
+                    productComboOffer.setProdId(dataObject.getInt("prodId"));
+                    productComboOffer.setStatus(dataObject.getString("status"));
+                    productComboOffer.setStartDate(dataObject.getString("startDate"));
+                    productComboOffer.setEndDate(dataObject.getString("endDate"));
+                    dbHelper.updateProductComboOffer(productComboOffer,Utility.getTimeStamp());
+                    productComboOfferDetails = new ArrayList<>();
+                    int innerLen = productComboArray.length();
+                    for (int k = 0; k < innerLen; k++) {
+                        dataObject = productComboArray.getJSONObject(k);
+                        productComboDetails = new ProductComboDetails();
+                        productComboDetails.setId(dataObject.getInt("id"));
+                        productComboDetails.setPcodPcoId(dataObject.getInt("pcodPcoId"));
+                        productComboDetails.setPcodProdQty(dataObject.getInt("pcodProdQty"));
+                        productComboDetails.setPcodPrice((float)dataObject.getDouble("pcodPrice"));
+                        productComboDetails.setStatus(dataObject.getString("status"));
+                        productComboOfferDetails.add(productComboDetails);
+                        dbHelper.updateProductComboDetailOffer(productComboDetails, Utility.getTimeStamp());
+                    }
                     showMyDialog("Offer updated successfully.");
                 }else {
                     DialogAndToast.showToast(response.getString("message"),ProductPriceOfferActivity.this);

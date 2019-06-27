@@ -1,11 +1,11 @@
 package com.shoppursshop.adapters;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.constraint.ConstraintSet;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.constraintlayout.widget.ConstraintSet;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;

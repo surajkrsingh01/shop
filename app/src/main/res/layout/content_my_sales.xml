@@ -118,7 +118,7 @@
 
     </LinearLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_below="@+id/linear_date_layout"
         android:layout_marginTop="@dimen/view_vertical_margin"
         android:scrollbars="none"
@@ -282,13 +282,13 @@
 
                 </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:layout_toRightOf="@id/linear_amount_division"
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/profile_graph_size">
 
-                </android.support.v7.widget.RecyclerView>
+                </androidx.recyclerview.widget.RecyclerView>
 
             </RelativeLayout>
 
@@ -304,7 +304,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_below="@id/text_customer_sale_label"
                 android:id="@+id/recyclerViewCustomerSaleReport"
@@ -313,11 +313,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
         </RelativeLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <TextView
         android:visibility="gone"

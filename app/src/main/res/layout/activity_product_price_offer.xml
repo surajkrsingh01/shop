@@ -55,7 +55,7 @@
         android:layout_height="wrap_content" />
 
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_1"
         android:textColorHint="?attr/secondaryTextColor"
         android:layout_marginTop="@dimen/register_container_margin_top"
@@ -80,7 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"/>
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <View
         android:id="@+id/seperator_offer_name"
@@ -90,7 +90,7 @@
         android:layout_height="1dp"
         android:background="?attr/separatorColor"/>
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_above="@+id/relative_footer_action"
         android:layout_below="@+id/seperator_offer_name"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -121,7 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_2"
             android:textColorHint="?attr/secondaryTextColor"
             android:layout_marginTop="@dimen/register_container_margin_top"
@@ -145,7 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"/>
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
     </RelativeLayout>
             <View
                 android:id="@+id/seperator_header"
@@ -155,7 +155,7 @@
                 android:layout_height="1dp"
                 android:background="?attr/separatorColor"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_below="@+id/seperator_header"
         android:layout_width="match_parent"
@@ -163,7 +163,7 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin">
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
             <Button
                 android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -189,7 +189,7 @@
                 android:weightSum="2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:textColorHint="?attr/secondaryTextColor"
                     android:layout_marginTop="@dimen/register_container_margin_top"
                     android:layout_width="0dp"
@@ -210,9 +210,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"/>
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:textColorHint="?attr/secondaryTextColor"
                     android:layout_marginTop="@dimen/register_container_margin_top"
                     android:layout_width="0dp"
@@ -234,7 +234,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"/>
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
             <View
@@ -244,7 +244,7 @@
                 android:layout_height="1dp"
                 android:background="?attr/separatorColor"/>
     </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
     <include layout="@layout/footer_action_layout"/>
 
 </RelativeLayout>

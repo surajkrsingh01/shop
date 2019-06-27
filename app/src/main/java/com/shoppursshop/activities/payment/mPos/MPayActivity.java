@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -191,6 +191,10 @@ public class MPayActivity extends NetworkBaseActivity implements MyItemClickList
         i.putExtra("custImage", getIntent().getStringExtra("custImage"));
         i.putExtra("custUserCreateStatus", getIntent().getStringExtra("custUserCreateStatus"));
         i.putExtra("amount", ordAmount);
+        i.putExtra("ordCouponId",getIntent().getStringExtra("ordCouponId"));
+        i.putExtra("totalTax",getIntent().getFloatExtra("totalTax",0f));
+        i.putExtra("deliveryCharges",getIntent().getFloatExtra("deliveryCharges",0f));
+        i.putExtra("totDiscount",getIntent().getFloatExtra("totDiscount",0f));
         i.putExtra("referanceno", sharedPreferences.getString(Constants.MERCHANT_REF_NO,"null"));
         startActivity(i);
 

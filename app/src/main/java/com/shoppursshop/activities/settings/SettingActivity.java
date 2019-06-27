@@ -2,10 +2,10 @@ package com.shoppursshop.activities.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.shoppursshop.R;
@@ -124,7 +124,16 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
             dbHelper.deleteTable(DbHelper.SUB_CAT_TABLE);
             dbHelper.deleteTable(DbHelper.PRODUCT_TABLE);
             dbHelper.deleteTable(DbHelper.PRODUCT_BARCODE_TABLE);
+            dbHelper.deleteTable(DbHelper.PRODUCT_UNIT_TABLE);
+            dbHelper.deleteTable(DbHelper.PRODUCT_SIZE_TABLE);
+            dbHelper.deleteTable(DbHelper.PRODUCT_COLOR_TABLE);
             dbHelper.deleteTable(DbHelper.CART_TABLE);
+            dbHelper.deleteTable(DbHelper.PROD_COMBO_TABLE);
+            dbHelper.deleteTable(DbHelper.PROD_COMBO_DETAIL_TABLE);
+            dbHelper.deleteTable(DbHelper.PROD_PRICE_TABLE);
+            dbHelper.deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
+            dbHelper.deleteTable(DbHelper.PROD_FREE_OFFER_TABLE);
+            dbHelper.deleteTable(DbHelper.COUPON_TABLE);
             Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);

@@ -43,13 +43,13 @@
         android:layout_width="36dp"
         android:layout_height="36dp" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_below="@+id/text_desc"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:id="@+id/recycler_view"
         android:paddingLeft="@dimen/view_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 </RelativeLayout>

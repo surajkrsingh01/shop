@@ -31,7 +31,7 @@
         android:textSize="@dimen/list_very_large_text_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="10dp"
         android:layout_below="@+id/text_second_label"
         android:id="@+id/recycler_view"
@@ -40,6 +40,6 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
     <include layout="@layout/footer_layout"/>
 </RelativeLayout>

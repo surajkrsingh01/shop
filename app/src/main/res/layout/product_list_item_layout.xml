@@ -16,7 +16,7 @@
         android:layout_height="36dp" />
 
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
@@ -33,7 +33,7 @@
             android:layout_width="@dimen/home_list_image_width_4"
             android:layout_height="@dimen/home_list_image_height_4" />
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 
 

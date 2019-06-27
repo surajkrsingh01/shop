@@ -55,7 +55,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <android.support.v4.widget.NestedScrollView
+    <Button
+        android:id="@+id/btn_store_offers"
+        android:background="@drawable/red_solid_round_corner_background"
+        android:textColor="@color/white"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_alignTop="@id/text_sub_header"
+        android:text="Store Offers"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/home_list_header_text_size"
+        android:textAllCaps="false"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp" />
+
+    <androidx.core.widget.NestedScrollView
         android:layout_below="@id/text_sub_header"
         android:scrollbars="none"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
@@ -70,17 +86,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:visibility="gone"
                 android:background="?attr/solidPrimaryStrokeBorderBackground"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:paddingTop="@dimen/view_vertical_margin"
-                android:paddingBottom="@dimen/view_vertical_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
 
         <LinearLayout
@@ -154,6 +168,7 @@
             <RelativeLayout
                 android:id="@+id/rl_offer_layout"
                 android:layout_marginTop="@dimen/cart_view_vertical_margin"
+                android:visibility="gone"
                 android:background="?attr/solidPrimaryStrokeBorderBackground"
                 android:paddingLeft="@dimen/view_horizontal_margin"
                 android:paddingRight="@dimen/view_horizontal_margin"
@@ -511,7 +526,7 @@
 
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
     <RelativeLayout

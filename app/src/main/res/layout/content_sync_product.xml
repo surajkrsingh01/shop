@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_below="@+id/text_second_label"
         android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -50,7 +50,7 @@
         android:layout_above="@+id/relative_footer_action"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <include layout="@layout/footer_action_layout"/>
 

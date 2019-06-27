@@ -2,13 +2,13 @@ package com.shoppursshop.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +38,7 @@ import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.ProductComboDetails;
 import com.shoppursshop.models.ProductComboOffer;
+import com.shoppursshop.models.ProductDiscountOffer;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
@@ -64,7 +65,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
     private ImageView imageViewScan,imageViewSearch,imageViewRemoveOffer;
 
-    private float totalPrice,offerPer,offerMaxAmount,deliveryDistance;
+    private float totalPrice,totalTax,totDiscount,offerPer,offerMaxAmount,deliveryDistance,deliveryCharges;
     private int offerId,deliveryTypeId;
 
     private String offerName,paymentMode,orderNumber;
@@ -79,6 +80,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     private RadioButton rb_home_delivery, rb_self_delivery;
     private LinearLayout linearLayoutScanCenter;
     private RelativeLayout rlOfferDesc;
+    private Button btnStoreOffers;
+    private int position;
 
     private BottomSearchFragment bottomSearchFragment;
 
@@ -122,8 +125,10 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         rlOfferDesc = findViewById(R.id.rl_offer_desc);
         rlOfferLayout = findViewById(R.id.rl_offer_layout);
         imageViewRemoveOffer = findViewById(R.id.image_remove_offer);
+        btnStoreOffers = findViewById(R.id.btn_store_offers);
 
         Utility.setColorFilter(imageViewRemoveOffer.getDrawable(),colorTheme);
+        Utility.setColorFilter(btnStoreOffers.getBackground(),colorTheme);
 
         relativeLayoutPayOptionLayout = findViewById(R.id.relative_pay_layout);
         rlAddressBilling = findViewById(R.id.linear_billing);
@@ -135,8 +140,10 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         myItemAdapter=new CartAdapter(this,itemList);
+        myItemAdapter.setDarkTheme(isDarkTheme);
         myItemAdapter.setMyItemTypeClickListener(this);
         recyclerView.setAdapter(myItemAdapter);
+        recyclerView.setNestedScrollingEnabled(false);
 
         tvCheckout.setText("Make Payment");
 
@@ -304,13 +311,13 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             }
         });
 
-        rlOfferLayout.setOnClickListener(new View.OnClickListener() {
+        btnStoreOffers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CartActivity.this, ApplyOffersActivity.class);
                 intent.putExtra("custCode",getIntent().getStringExtra("custCode"));
                 intent.putExtra("flag","offers");
-               // startActivityForResult(intent,6);
+                startActivityForResult(intent,6);
             }
         });
     }
@@ -388,8 +395,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             itemList.clear();
             List<MyProductItem> cartList =  dbHelper.getCartProducts();
             for(MyProductItem ob : cartList){
-                ob.setProductPriceOfferList(dbHelper.getProductPriceOffer(""+ob.getProdId()));
-                Log.i(TAG,"offer sizze "+ob.getProductPriceOfferList().size());
+                if(ob.getProdSp() != 0f)
+                setOffer(ob);
                 itemList.add(ob);
             }
         }
@@ -415,26 +422,29 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
 
         tvItemTotal.setText(Utility.numberFormat(dbHelper.getTotalMrpPriceCart()));
-        tvTotalTaxes.setText(Utility.numberFormat(dbHelper.getTotalTaxesart()));
-        totalPrice = dbHelper.getTotalPriceCart() + dbHelper.getTotalTaxesart();
-        float totalDis = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
+        totalTax = dbHelper.getTotalTaxesart();
+        tvTotalTaxes.setText(Utility.numberFormat(totalTax));
+        totalPrice = dbHelper.getTotalPriceCart() + totalTax;
+        totDiscount = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
         float dis = 0f;
         if(offerPer > 0f){
             dis = totalPrice * offerPer / 100;
-            totalDis = totalDis + dis ;
+            totDiscount = totDiscount + dis ;
         }
 
-        Log.i(TAG," diff "+totalDis+" offerPer "+offerPer+" totalPrice "+totalPrice);
+        Log.i(TAG," Taxes "+dbHelper.getTotalTaxesart());
+        Log.i(TAG," MRP "+dbHelper.getTotalMrpPriceCart()
+                +" Price "+dbHelper.getTotalPriceCart());
+        Log.i(TAG," diff "+totDiscount+" offerPer "+offerPer+" totalPrice "+totalPrice);
 
-        if(totalDis == 0f){
+        if(totDiscount == 0f){
             rlDiscount.setVisibility(View.GONE);
         }else{
             rlDiscount.setVisibility(View.VISIBLE);
-            tvTotalDiscount.setText(Utility.numberFormat(totalDis));
+            tvTotalDiscount.setText(Utility.numberFormat(totDiscount));
         }
 
         totalPrice = totalPrice - dis;
-        float deliveryCharges = 0f;
         if(deliveryTypeId == R.id.rb_self_delivery){
             rlDelivery.setVisibility(View.GONE);
         }else{
@@ -519,6 +529,9 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     shopObject.put("orderDeliveryMode","Self");
                     shopObject.put("paymentMode",paymentMode);
                     shopObject.put("deliveryAddress","");
+                    shopObject.put("deliveryCountry","");
+                    shopObject.put("deliveryState","");
+                    shopObject.put("deliveryCity","");
                     shopObject.put("pinCode","");
                     shopObject.put("createdBy",sharedPreferences.getString(Constants.FULL_NAME,""));
                     shopObject.put("updateBy",sharedPreferences.getString(Constants.FULL_NAME,""));
@@ -536,30 +549,89 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     shopObject.put("custUserCreateStatus",getIntent().getStringExtra("custUserCreateStatus"));
                     shopObject.put("totalQuantity",String.valueOf(dbHelper.getTotalQuantityCart()));
                     shopObject.put("toalAmount",String.valueOf(totalPrice));
+                    shopObject.put("ordCouponId",String.valueOf(offerId));
+                    shopObject.put("totCgst",String.valueOf(dbHelper.getTaxesCart("cgst")));
+                    shopObject.put("totSgst",String.valueOf(dbHelper.getTaxesCart("sgst")));
+                    shopObject.put("totIgst",String.valueOf(dbHelper.getTaxesCart("igst")));
+                    shopObject.put("totTax",String.valueOf(totalTax));
+                    shopObject.put("deliveryCharges",String.valueOf(deliveryCharges));
+                    shopObject.put("totDiscount",String.valueOf(totDiscount));
                     shopObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
                     shopObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
                     shopObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
 
                     productObject.put("prodCode", cartItem.getProdCode());
+                    productObject.put("prodHsnCode", cartItem.getProdHsnCode());
                     productObject.put("prodId", cartItem.getProdId());
+
+                    if(cartItem.getComboProductIds() != null)
+                    productObject.put("comboProdIds", cartItem.getComboProductIds());
+
                     if(cartItem.getIsBarCodeAvailable().equals("Y")){
                         productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
                         productObject.put("barcodeList",  tempbarcodeArray);
                     }
 
                     productObject.put("qty", cartItem.getQty());
+                    productObject.put("prodName",cartItem.getProdName());
+                    productObject.put("prodUnit",cartItem.getUnit());
+                    productObject.put("prodSize",cartItem.getSize());
+                    productObject.put("prodColor",cartItem.getColor());
+                    productObject.put("prodDesc",cartItem.getProdDesc());
+                    productObject.put("prodMrp",cartItem.getProdMrp());
+                    productObject.put("prodSp", cartItem.getProdSp());
+                    productObject.put("prodCgst", cartItem.getProdCgst());
+                    productObject.put("prodSgst", cartItem.getProdSgst());
+                    productObject.put("prodIgst", cartItem.getProdIgst());
+                    productObject.put("prodImage1",cartItem.getProdImage1());
+                    productObject.put("prodImage2",cartItem.getProdImage2());
+                    productObject.put("prodImage3",cartItem.getProdImage3());
+                    productObject.put("isBarcodeAvailable",cartItem.getIsBarCodeAvailable());
+                    if(cartItem.getOfferCounter() > 0){
+                        productObject.put("offerId", cartItem.getOfferId());
+                        productObject.put("offerType", cartItem.getOfferType());
+                        productObject.put("freeItems", String.valueOf(cartItem.getOfferCounter()));
+                    }
                     productArray.put(productObject);
                     shopObject.put("myProductList", productArray);
                     shopArray.put(shopObject);
                 } else {
                     productObject = new JSONObject();
+                    if(cartItem.getComboProductIds() != null)
+                    productObject.put("comboProdIds", cartItem.getComboProductIds());
                     productObject.put("prodCode", cartItem.getProdCode());
+                    productObject.put("prodHsnCode", cartItem.getProdHsnCode());
                     productObject.put("prodId", cartItem.getProdId());
                     if(cartItem.getIsBarCodeAvailable().equals("Y")){
                         productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
                         productObject.put("barcodeList",  tempbarcodeArray);
                     }
                     productObject.put("qty", cartItem.getQty());
+                    productObject.put("prodName",cartItem.getProdName());
+                    productObject.put("prodUnit",cartItem.getUnit());
+                    productObject.put("prodSize",cartItem.getSize());
+                    productObject.put("prodColor",cartItem.getColor());
+                    productObject.put("prodDesc",cartItem.getProdDesc());
+                    productObject.put("prodMrp",cartItem.getProdMrp());
+                    productObject.put("prodSp", cartItem.getProdSp());
+                    productObject.put("prodCgst", cartItem.getProdCgst());
+                    productObject.put("prodSgst", cartItem.getProdSgst());
+                    productObject.put("prodIgst", cartItem.getProdIgst());
+                    productObject.put("prodImage1",cartItem.getProdImage1());
+                    productObject.put("prodImage2",cartItem.getProdImage2());
+                    productObject.put("prodImage3",cartItem.getProdImage3());
+                    productObject.put("isBarcodeAvailable",cartItem.getIsBarCodeAvailable());
+                    productObject.put("prodCgst", cartItem.getProdCgst());
+                    productObject.put("prodSgst", cartItem.getProdSgst());
+                    productObject.put("prodIgst", cartItem.getProdIgst());
+                    productObject.put("prodSp", cartItem.getProdSp());
+
+                    if(cartItem.getOfferCounter() > 0){
+                        productObject.put("offerId", cartItem.getOfferId());
+                        productObject.put("offerType", cartItem.getOfferType());
+                        productObject.put("freeItems", String.valueOf(cartItem.getOfferCounter()));
+                    }
+
                     productArray.put(productObject);
                     shopObject.put("myProductList", productArray);
                 }
@@ -589,7 +661,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     myItemAdapter.notifyDataSetChanged();
                     if(paymentMode.equals("Cash")){
                         for (MyProductItem cartItem : cartItemList) {
-                            dbHelper.setQoh(cartItem.getProdId(),cartItem.getQty());
+                            dbHelper.setQoh(cartItem.getProdId(),-cartItem.getQty());
                             if(cartItem.getIsBarCodeAvailable().equals("Y")){
                                 for(Barcode barcode : cartItem.getBarcodeList()){
                                     dbHelper.removeBarCode(barcode.getBarcode());
@@ -602,6 +674,10 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                         Intent intent = new Intent(CartActivity.this, MPayActivity.class);
                         intent.putExtra("totalAmount",String.format("%.02f",totalPrice));
                         intent.putExtra("orderNumber",orderNumber);
+                        intent.putExtra("ordCouponId",""+offerId);
+                        intent.putExtra("totalTax",totalTax);
+                        intent.putExtra("deliveryCharges",deliveryCharges);
+                        intent.putExtra("totDiscount",totDiscount);
                         intent.putExtra("custCode", getIntent().getStringExtra("custCode"));
                         intent.putExtra("custId", getIntent().getIntExtra("custId",0));
                         intent.putExtra("custName", getIntent().getStringExtra("custName"));
@@ -644,6 +720,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
     @Override
     public void onItemClicked(int position, int type) {
+        this.position = position;
         Log.i(TAG,"onItemClicked "+position+" type "+type);
         MyProductItem item = (MyProductItem)itemList.get(position);
         if(type == 1){
@@ -664,14 +741,14 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
             }else{
                 int qty = item.getQty() - 1;
-                float netSellingPrice = getOfferAmount(item);
-                item.setQty(qty);
+                float netSellingPrice = getOfferAmount(item,type);
+               // item.setQty(qty);
+                qty = item.getQty();
                 Log.i(TAG,"netSellingPrice "+netSellingPrice);
                 float amount = item.getTotalAmount() - netSellingPrice;
                 Log.i(TAG,"tot amount "+amount);
                 item.setTotalAmount(amount);
-                dbHelper.updateCartData(item.getProdBarCode(),qty,amount);
-                dbHelper.updateCartData(item.getProdId(),qty,amount);
+                dbHelper.updateCartData(item,qty,amount);
                 setFooterValues();
                 if(qty == 0){
                     itemList.remove(position);
@@ -686,12 +763,13 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     int qty = item.getQty() + 1;
                     item.setQty(qty);
                     Log.i(TAG,"qty "+qty);
-                    float netSellingPrice = getOfferAmount(item);
+                    float netSellingPrice = getOfferAmount(item,type);
+                    qty = item.getQty();
                     Log.i(TAG,"netSellingPrice "+netSellingPrice);
                     float amount = item.getTotalAmount() + netSellingPrice;
                     Log.i(TAG,"tot amount "+amount);
                     item.setTotalAmount(amount);
-                    dbHelper.updateCartData(item.getProdBarCode(),qty,amount);
+                    dbHelper.updateCartData(item,qty,amount);
                     if(itemList.size() == 1){
                         relativeLayoutCartFooter.setVisibility(View.VISIBLE);
                     }
@@ -705,13 +783,14 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 }else{
                     int qty = item.getQty() + 1;
                     item.setQty(qty);
-                    Log.i(TAG,"qty "+qty);
-                    float netSellingPrice = getOfferAmount(item);
+                    float netSellingPrice = getOfferAmount(item,type);
                     Log.i(TAG,"netSellingPrice "+netSellingPrice);
                     float amount = item.getTotalAmount() + netSellingPrice;
                     Log.i(TAG,"tot amount "+amount);
                     item.setTotalAmount(amount);
-                    dbHelper.updateCartData(item.getProdId(),qty,amount);
+                    qty = item.getQty();
+                    Log.i(TAG,"qty "+qty);
+                    dbHelper.updateCartData(item,qty,amount);
                     if(itemList.size() == 1){
                         relativeLayoutCartFooter.setVisibility(View.VISIBLE);
                     }
@@ -721,25 +800,13 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             }
 
         }else if(type == 3){
-            String offerName = item.getProductPriceOfferList().get(0).getOfferName();
-           /* OfferDescriptionFragment offerDescriptionFragment = new OfferDescriptionFragment();
-            offerDescriptionFragment.setFlag("productPriceOffer");
-            offerDescriptionFragment.setColorTheme(colorTheme);
-            Bundle bundle = new Bundle();
-            bundle.putString("offerName",offerName);
-            offerDescriptionFragment.setArguments(bundle);
-            offerDescriptionFragment.setMyItemTypeClickListener(CartActivity.this);
-            offerDescriptionFragment.show(getSupportFragmentManager(), "Product Price Offer");*/
-
+            String offerName = null;
             rlOfferDesc.setVisibility(View.VISIBLE);
             ImageView iv_clear = findViewById(R.id.iv_clear);
-            //Utility.setColorFilter(iv_clear.getDrawable(),colorTheme);
             TextView tvOfferName = findViewById(R.id.text_offer_name);
             findViewById(R.id.relative_footer_action).setBackgroundColor(colorTheme);
             TextView tv = findViewById(R.id.text_action);
             tv.setText("OKAY! GOT IT");
-
-            tvOfferName.setText(offerName);
 
             iv_clear.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -755,16 +822,22 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             });
 
             List<String> offerDescList = new ArrayList<>();
-            ProductComboOffer productComboOffer = item.getProductPriceOfferList().get(0);
-            float totOfferAmt = 0f;
-            for(ProductComboDetails productComboDetails : productComboOffer.getProductComboOfferDetails()){
-                totOfferAmt = totOfferAmt + productComboDetails.getPcodPrice();
-                offerDescList.add("Buy "+productComboDetails.getPcodProdQty()+" at Rs "+
-                        Utility.numberFormat(totOfferAmt));
+            if(item.getProductOffer() instanceof ProductComboOffer) {
+                ProductComboOffer productComboOffer = (ProductComboOffer) item.getProductOffer();
+                offerName = productComboOffer.getOfferName();
+                float totOfferAmt = 0f;
+                for(ProductComboDetails productComboDetails : productComboOffer.getProductComboOfferDetails()){
+                    totOfferAmt = totOfferAmt + productComboDetails.getPcodPrice();
+                    offerDescList.add("Buy "+productComboDetails.getPcodProdQty()+" at Rs "+
+                            Utility.numberFormat(totOfferAmt));
+                }
+                offerDescList.add("Offer valid till "+Utility.parseDate(productComboOffer.getEndDate(),"yyyy-MM-dd",
+                        "EEE dd MMMM, yyyy")+" 23:59 PM");
+            }else if(item.getProductOffer() instanceof ProductDiscountOffer) {
+                ProductDiscountOffer productDiscountOffer = (ProductDiscountOffer) item.getProductOffer();
+                offerName = productDiscountOffer.getOfferName();
             }
-
-            offerDescList.add("Offer valid till "+Utility.parseDate(productComboOffer.getEndDate(),"yyyy-MM-dd",
-                    "EEE dd MMMM, yyyy")+" 23:59 PM");
+            tvOfferName.setText(offerName);
 
             RecyclerView recyclerViewOfferDesc=findViewById(R.id.recycler_view_offer_desc);
             recyclerViewOfferDesc.setHasFixedSize(true);
@@ -774,24 +847,121 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             OfferDescAdapter offerDescAdapter =new OfferDescAdapter(this,offerDescList);
             recyclerViewOfferDesc.setAdapter(offerDescAdapter);
             recyclerViewOfferDesc.setNestedScrollingEnabled(false);
+        }else if(type == 4){
+
         }
     }
 
-    private float getOfferAmount(MyProductItem item){
+    private float getOfferAmount(MyProductItem item,int type){
         float amount = 0f;
         int qty = item.getQty();
-        ProductComboOffer productComboOffer = item.getProductPriceOfferList().get(0);
-        if(qty > 1){
-            int maxSize = productComboOffer.getProductComboOfferDetails().size();
-            int mod = qty % maxSize;
-            Log.i(TAG,"mod "+mod);
-            if(mod == 0){
-                mod = maxSize;
+        if(item.getProductOffer() instanceof ProductComboOffer){
+            ProductComboOffer productComboOffer = (ProductComboOffer)item.getProductOffer();
+            if(qty > 1){
+                int maxSize = productComboOffer.getProductComboOfferDetails().size();
+                int mod = qty % maxSize;
+                Log.i(TAG,"mod "+mod);
+                if(mod == 0){
+                    mod = maxSize;
+                }
+                amount = getOfferPrice(mod,item.getProdSp(),productComboOffer.getProductComboOfferDetails());
+            }else{
+                amount = item.getProdSp();
             }
-            amount = getOfferPrice(mod,item.getProdSp(),productComboOffer.getProductComboOfferDetails());
+
+            if(type == 1)
+            item.setQty(item.getQty() - 1);
+
+        }else if(item.getProductOffer() instanceof ProductDiscountOffer){
+
+            ProductDiscountOffer productDiscountOffer = (ProductDiscountOffer)item.getProductOffer();
+            amount = item.getProdSp();
+            if(type == 1){
+                if(productDiscountOffer.getProdBuyId() == productDiscountOffer.getProdFreeId()){
+                    Log.i(TAG,"item qty "+item.getQty()+" offer buy qty"+productDiscountOffer.getProdBuyQty());
+                    Log.i(TAG,"minus mode "+(item.getQty() - item.getOfferCounter()-1)% productDiscountOffer.getProdBuyQty());
+                    if((item.getQty() - item.getOfferCounter() -1)% productDiscountOffer.getProdBuyQty() ==
+                            (productDiscountOffer.getProdBuyQty()-1)){
+                        item.setQty(item.getQty() - 2);
+                        item.setOfferCounter(item.getOfferCounter() - 1);
+                        dbHelper.updateOfferCounterCartData(item.getOfferCounter(),item.getProdId());
+
+                    }else{
+                        item.setQty(item.getQty() - 1);
+                    }
+                }else{
+                    item.setQty(item.getQty() - 1);
+                    Log.i(TAG,"minus mode "+item.getQty() % productDiscountOffer.getProdBuyQty());
+                    if(item.getQty() % productDiscountOffer.getProdBuyQty() == (productDiscountOffer.getProdBuyQty()-1)){
+                        item.setOfferCounter(item.getOfferCounter() - 1);
+                        if(item.getOfferCounter() == 0){
+                            dbHelper.removeFreeProductFromCart(productDiscountOffer.getProdFreeId());
+                            itemList.remove(item.getFreeProductPosition());
+                          //  myItemAdapter.notifyItemRemoved(item.getFreeProductPosition());
+                            myItemAdapter.notifyDataSetChanged();
+                        }else{
+                            MyProductItem item1 = itemList.get(item.getFreeProductPosition());
+                            item1.setQty(item.getOfferCounter());
+                            dbHelper.updateFreeCartData(productDiscountOffer.getProdFreeId(),item.getOfferCounter(),0f);
+                            myItemAdapter.notifyItemChanged(item.getFreeProductPosition());
+                            dbHelper.updateOfferCounterCartData(item.getOfferCounter(),item.getProdId());
+                        }
+                    }
+
+                }
+            }else if(type == 2){
+                if(productDiscountOffer.getProdBuyId() == productDiscountOffer.getProdFreeId()){
+                    Log.i(TAG,"Same product");
+                    Log.i(TAG,"item qty "+item.getQty()+" offer buy qty"+productDiscountOffer.getProdBuyQty());
+                    Log.i(TAG,"plus mode "+(item.getQty() - item.getOfferCounter())% productDiscountOffer.getProdBuyQty());
+                    if((item.getQty() - item.getOfferCounter())% productDiscountOffer.getProdBuyQty() == 0){
+                        item.setQty(item.getQty() + 1);
+                        item.setOfferCounter(item.getOfferCounter() + 1);
+                        dbHelper.updateOfferCounterCartData(item.getOfferCounter(),item.getProdId());
+                    }else{
+
+                    }
+                }else{
+                    Log.i(TAG,"Different product");
+                   if(item.getQty() % productDiscountOffer.getProdBuyQty() == 0){
+                       item.setOfferCounter(item.getOfferCounter() + 1);
+                       MyProductItem item1 = null;
+                       if(item.getOfferCounter() == 1){
+                           item1 = dbHelper.getProductDetails(productDiscountOffer.getProdFreeId());
+                           item1.setProdSp(0f);
+                           item1.setQty(1);
+                           item1.setFreeProductPosition(position+1);
+                           dbHelper.addProductToCart(item1);
+                           itemList.add(position+1,item1);
+                           item.setFreeProductPosition(position+1);
+                           dbHelper.updateFreePositionCartData(item.getFreeProductPosition(),item.getProdId());
+                           dbHelper.updateOfferCounterCartData(item.getOfferCounter(),item.getProdId());
+                           //myItemAdapter.notifyItemInserted(itemList.size()-1);
+                           myItemAdapter.notifyDataSetChanged();
+                           Log.i(TAG,"Different product added to cart");
+                       }else{
+                           item1 = itemList.get(item.getFreeProductPosition());
+                           item1.setQty(item.getOfferCounter());
+                           dbHelper.updateFreeCartData(item1.getProdId(),item1.getQty(),0f);
+                           dbHelper.updateOfferCounterCartData(item.getOfferCounter(),item.getProdId());
+                           myItemAdapter.notifyItemChanged(item.getFreeProductPosition());
+                           Log.i(TAG,"Different product updated in cart");
+                       }
+                     //  myItemAdapter.notifyDataSetChanged();
+                   }
+
+                }
+
+            }else{
+                amount = item.getProdSp();
+            }
+
         }else{
             amount = item.getProdSp();
+            if(type == 1)
+                item.setQty(item.getQty() - 1);
         }
+
         return amount;
     }
 
@@ -851,8 +1021,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         Log.i(TAG,"item clicked "+prodId+" "+dbHelper.getBarCodesForCart(prodId).size());
 
         MyProductItem item = dbHelper.getProductDetails(prodId);
-        item.setProductPriceOfferList(dbHelper.getProductPriceOffer(""+item.getProdId()));
-        Log.i(TAG,"offer sizze "+item.getProductPriceOfferList().size());
+        setOffer(item);
+       // item.setProductPriceOfferList(dbHelper.getProductPriceOffer(""+item.getProdId()));
 
         if(item.getIsBarCodeAvailable().equals("Y")){
             item.setBarcodeList(dbHelper.getBarCodesForCart(prodId));
@@ -888,5 +1058,22 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         }
 
 
+    }
+
+    private void setOffer(MyProductItem item){
+        List<ProductComboOffer> comboOfferList = dbHelper.getProductPriceOffer(""+item.getProdId());
+        List<ProductDiscountOffer> productDiscountOfferList = dbHelper.getProductFreeOffer(""+item.getProdId());
+        Log.i(TAG,"comboOfferList size "+comboOfferList.size());
+        Log.i(TAG,"productDiscountOfferList size "+productDiscountOfferList.size());
+
+        if(comboOfferList.size() > 0){
+            item.setProductOffer(comboOfferList.get(0));
+            item.setOfferId(""+comboOfferList.get(0).getId());
+            item.setOfferType("price");
+        }else if(productDiscountOfferList.size() > 0){
+            item.setProductOffer(productDiscountOfferList.get(0));
+            item.setOfferId(""+productDiscountOfferList.get(0).getId());
+            item.setOfferType("free");
+        }
     }
 }

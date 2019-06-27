@@ -47,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_below="@+id/image_close"
         android:scrollbars="none"
         android:paddingTop="@dimen/activity_vertical_margin"
@@ -266,7 +266,7 @@
 
             </RelativeLayout>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
@@ -274,7 +274,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
             <RelativeLayout
                 android:layout_marginTop="20dp"
@@ -303,7 +303,7 @@
 
                 <TextView
                     android:id="@+id/text_sub_total_amount_label"
-                    android:text="Sub Total"
+                    android:text="Total Amount"
                     android:layout_toLeftOf="@+id/text_sub_total_amount"
                     android:layout_marginRight="10dp"
                     android:textSize="@dimen/invoice_sub_header_text_size"
@@ -469,35 +469,6 @@
 
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/rl_discount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/text_discount_label"
-                        android:text="Discount"
-                        android:layout_marginRight="10dp"
-                        android:layout_toLeftOf="@+id/text_discount"
-                        android:textSize="@dimen/invoice_sub_header_text_size"
-                        android:textColor="@color/primary_text_color"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/text_discount"
-                        android:layout_alignTop="@+id/text_discount_label"
-                        android:text="0.0"
-                        android:gravity="right"
-                        android:layout_alignParentRight="true"
-                        android:textSize="@dimen/invoice_sub_header_text_size"
-                        android:textColor="@color/primary_text_color"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content" />
-
-                </RelativeLayout>
-
-
             </LinearLayout>
 
             <RelativeLayout
@@ -525,6 +496,66 @@
                     android:textColor="@color/primary_text_color"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_discount"
+                android:padding="10dp"
+                android:background="@drawable/grey_border_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/text_discount_label"
+                    android:text="Total Discount"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/text_discount"
+                    android:textSize="@dimen/invoice_sub_header_text_size"
+                    android:textColor="@color/primary_text_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/text_discount"
+                    android:layout_alignTop="@+id/text_discount_label"
+                    android:text="0.0"
+                    android:gravity="right"
+                    android:layout_alignParentRight="true"
+                    android:textSize="@dimen/invoice_sub_header_text_size"
+                    android:textColor="@color/primary_text_color"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_coupon_layout"
+                android:padding="10dp"
+                android:visibility="gone"
+                android:background="@drawable/grey_border_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_offer_name"
+                    android:layout_toLeftOf="@+id/image_remove_offer"
+                    android:layout_marginRight="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/invoice_sub_header_text_size"
+                    android:textColor="@color/primary_text_color"
+                    android:text=""/>
+
+                <TextView
+                    android:id="@+id/tv_offer_desc"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@id/tv_offer_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/invoice_sub_header_text_size"
+                    android:textColor="@color/primary_text_color"
+                    android:text="Offer applied on this bill"/>
 
             </RelativeLayout>
 
@@ -733,6 +764,6 @@
 
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>

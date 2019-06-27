@@ -116,6 +116,13 @@
     <string name="add_photo1">Add Photo 1</string>
     <string name="add_photo2">Add Photo 2</string>
     <string name="add_photo3">Add Photo 3</string>
+    <string name="unit_name">Unit of measure</string>
+    <string name="unit_value">Unit value</string>
+    <string name="unit_price">Unit Price</string>
+    <string name="size">Enter Size</string>
+    <string name="color_name">Color Name</string>
+    <string name="choose_color">Choose Color</string>
+    <string name="save">Save</string>
 
     <!-- Add customer. -->
     <string name="add_customer">Add Customer</string>

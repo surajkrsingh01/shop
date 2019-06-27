@@ -2,13 +2,17 @@ package com.shoppursshop.activities;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +25,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,10 +33,18 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
+import com.google.android.material.textfield.TextInputLayout;
 import com.shoppursshop.R;
+import com.shoppursshop.adapters.SpecificationAdapter;
 import com.shoppursshop.fragments.NetworkBaseFragment;
+import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.Barcode;
+import com.shoppursshop.models.MyColor;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.models.MyUnitMeasure;
+import com.shoppursshop.models.ProductColor;
+import com.shoppursshop.models.ProductSize;
+import com.shoppursshop.models.ProductUnit;
 import com.shoppursshop.models.SpinnerItem;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
@@ -49,7 +62,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AddProductActivity extends BaseImageActivity {
+public class AddProductActivity extends BaseImageActivity implements View.OnClickListener, MyItemTypeClickListener {
+
+    private final int UNIT = 1,SIZE = 2,COLOR = 3;
 
     private EditText editTextName,editTextCode,editTextBarCode,editTextHSN,editTextDesc,editTextMRP,editTextSP,
             editTextRL,editTextQOH,editTextMfgBy,editTextWarranty,editTextCGST,editTextIGST,editTextSGST,editTextMfgDate,editTextExpiryDate;
@@ -59,10 +74,10 @@ public class AddProductActivity extends BaseImageActivity {
     private RelativeLayout btnPhoto1,btnPhoto2,btnPhoto3,relativeLayoutAction;
     private TextView tvAction;
     private ImageView imageView1,imageView2,imageView3;
-    private Spinner spinnerCategory,spinnerSubCategory;
+    private Spinner spinnerCategory,spinnerSubCategory,spinnerSize;
     List<SpinnerItem> categoryListObject,subCatListObject;
-    List<String> catList,subCatList;
-    private ArrayAdapter<String> catAdapter,subCatAdapter;
+    List<String> catList,subCatList,sizeSpinnerList;
+    private ArrayAdapter<String> catAdapter,subCatAdapter,sizeSpinnerAdapter;
     private List<String> imageList;
 
     private DatePickerDialog datePicker1,datePicker2;
@@ -72,6 +87,26 @@ public class AddProductActivity extends BaseImageActivity {
     private JSONObject dataObject;
     private boolean scanSelection;
     private int imagePosition;
+
+    private TextView tvUnitSizeColor;
+    private RelativeLayout rlProductSpecificationLayout;
+    private LinearLayout llUnit,llSize,llColor;
+    private EditText etUnitName,etUnitValue,etSize,etColorName;
+    private ImageView ivChooseColor;
+    private Button btnSave;
+    private RecyclerView recyclerView;
+    private SpecificationAdapter unitAdapter,sizeAdapter,colorAdapter;
+    List<Object> unitList,sizeList,colorList;
+    private int specificationType;
+    private ImageView imageViewRed,imageViewGreen,imageViewBlue,imageViewPink,imageViewYellow,imageViewAmber,
+            imageViewTeal,imageViewPurple,imageViewIndigo,imageViewTemp;
+    private RelativeLayout relativeLayoutRed,relativeLayoutGreen,relativeLayoutBlue,relativeLayoutPink,
+            relativeLayoutYellow,relativeLayoutAmber,
+            relativeLayoutTeal,relativeLayoutIndigo,relativeLayoutPurple;
+    private int colorValue;
+    private String colorName;
+    private boolean colorSelected;
+
 
     private MyProductItem myProductItem;
 
@@ -93,6 +128,7 @@ public class AddProductActivity extends BaseImageActivity {
         imageList.add("no");
         flag = getIntent().getStringExtra("flag");
         tvHeaderLabel = findViewById(R.id.text_sub_header);
+        tvUnitSizeColor = findViewById(R.id.tvUnitSizeColor);
         editTextName = findViewById(R.id.edit_product_name);
         editTextCode = findViewById(R.id.edit_product_code);
         editTextBarCode = findViewById(R.id.edit_product_barcode);
@@ -109,22 +145,71 @@ public class AddProductActivity extends BaseImageActivity {
         editTextSGST = findViewById(R.id.edit_product_sgst);
         editTextMfgDate = findViewById(R.id.edit_product_manufacture_date);
         editTextExpiryDate = findViewById(R.id.edit_product_expiry_date);
+
+        specificationType = UNIT;
+        etUnitName = findViewById(R.id.edit_unit_name);
+        etUnitValue = findViewById(R.id.edit_unit_value);
+        etSize = findViewById(R.id.edit_size);
+        btnSave = findViewById(R.id.btn_save);
+        relativeLayoutRed = findViewById(R.id.relative_red);
+        relativeLayoutBlue= findViewById(R.id.relative_blue);
+        relativeLayoutGreen = findViewById(R.id.relative_green);
+        relativeLayoutPink = findViewById(R.id.relative_pink);
+        relativeLayoutYellow = findViewById(R.id.relative_yellow);
+        relativeLayoutAmber = findViewById(R.id.relative_amber);
+        relativeLayoutTeal = findViewById(R.id.relative_teal);
+        relativeLayoutIndigo = findViewById(R.id.relative_indigo);
+        relativeLayoutPurple = findViewById(R.id.relative_purple);
+        imageViewRed = findViewById(R.id.image_color_red);
+        imageViewBlue= findViewById(R.id.image_color_blue);
+        imageViewGreen = findViewById(R.id.image_color_green);
+        imageViewPink = findViewById(R.id.image_color_pink);
+        imageViewYellow = findViewById(R.id.image_color_yellow);
+        imageViewAmber = findViewById(R.id.image_color_amber);
+        imageViewTeal = findViewById(R.id.image_color_teal);
+        imageViewIndigo = findViewById(R.id.image_color_indigo);
+        imageViewPurple = findViewById(R.id.image_color_purple);
+        changeColor(imageViewRed.getBackground(),getResources().getColor(R.color.red_500));
+        changeColor(imageViewBlue.getBackground(),getResources().getColor(R.color.blue500));
+        changeColor(imageViewGreen.getBackground(),getResources().getColor(R.color.green500));
+        changeColor(imageViewPink.getBackground(),getResources().getColor(R.color.pink500));
+        changeColor(imageViewYellow.getBackground(),getResources().getColor(R.color.yellow500));
+        //  changeColor(imageViewGrey.getBackground(),getResources().getColor(R.color.grey600));
+        changeColor(imageViewAmber.getBackground(),getResources().getColor(R.color.amber600));
+        changeColor(imageViewIndigo.getBackground(),getResources().getColor(R.color.indigo_500));
+        relativeLayoutRed.setOnClickListener(this);
+        relativeLayoutBlue.setOnClickListener(this);
+        relativeLayoutGreen.setOnClickListener(this);
+        relativeLayoutPink.setOnClickListener(this);
+        relativeLayoutYellow.setOnClickListener(this);
+        relativeLayoutAmber.setOnClickListener(this);
+        relativeLayoutPurple.setOnClickListener(this);
+        relativeLayoutIndigo.setOnClickListener(this);
+        relativeLayoutTeal.setOnClickListener(this);
+        recyclerView = findViewById(R.id.recycler_view);
+
         tipBarcode = findViewById(R.id.til_barcode);
         checkBoxIsBarAvaialble = findViewById(R.id.checkbox_is_barcode_available);
         imageView1 = findViewById(R.id.image_view_1);
         imageView2 = findViewById(R.id.image_view_2);
         imageView3 = findViewById(R.id.image_view_3);
         relativeLayoutAction = findViewById(R.id.relative_footer_action);
+        rlProductSpecificationLayout = findViewById(R.id.rl_product_specification_layout);
         tvAction = findViewById(R.id.text_action);
         btnPhoto1 = findViewById(R.id.relative_image_1);
         btnPhoto2 = findViewById(R.id.relative_image_2);
         btnPhoto3 = findViewById(R.id.relative_image_3);
+        llUnit = findViewById(R.id.ll_unit_layout);
+        llSize = findViewById(R.id.ll_size_layout);
+        llColor = findViewById(R.id.ll_color_layout);
         spinnerCategory = findViewById(R.id.spinner_category);
         spinnerSubCategory = findViewById(R.id.spinner_sub_category);
+        spinnerSize = findViewById(R.id.spinner_size);
         categoryListObject = dbHelper.getCategoriesAddProduct();
         catList = new ArrayList<>();
         subCatListObject = new ArrayList<>();
         subCatList = new ArrayList<>();
+        sizeSpinnerList = new ArrayList<>();
 
         for(SpinnerItem item : categoryListObject){
             catList.add(item.getName());
@@ -241,6 +326,78 @@ public class AddProductActivity extends BaseImageActivity {
         };
 
         spinnerSubCategory.setAdapter(subCatAdapter);
+
+        sizeSpinnerAdapter = new ArrayAdapter<String>(this, R.layout.simple_dropdown_list_item, sizeSpinnerList){
+            @Override
+            public boolean isEnabled(int position){
+                if(position == 0){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+            @Override
+            public View getView(int position, View convertView,
+                                ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if(position == 0){
+                    // Set the hint text color gray
+                    tv.setTextColor(getResources().getColor(R.color.grey500));
+                }else{
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
+                }
+                return view;
+            }
+            @Override
+            public View getDropDownView(int position, View convertView,
+                                        ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                if(isDarkTheme){
+                    view.setBackgroundColor(getResources().getColor(R.color.dark_color));
+                }else{
+                    view.setBackgroundColor(getResources().getColor(R.color.white));
+                }
+                TextView tv = (TextView) view;
+                if(position == 0){
+                    // Set the hint text color gray
+                    tv.setTextColor(getResources().getColor(R.color.grey500));
+                }else{
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
+                }
+                tv.setPadding(20,20,20,20);
+                return view;
+            }
+        };
+
+        spinnerSize.setAdapter(sizeSpinnerAdapter);
+
+        spinnerSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i > 0){
+                    colorList.clear();
+                    ProductSize size = (ProductSize)sizeList.get(i);
+                    for(ProductColor color : size.getProductColorList()){
+                        colorList.add(color);
+                    }
+                    colorAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -462,7 +619,82 @@ public class AddProductActivity extends BaseImageActivity {
             tvAction.setText("Add Product");
         }
 
+        tvUnitSizeColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rlProductSpecificationLayout.setVisibility(View.VISIBLE);
+            }
+        });
 
+        ImageView ivClear = findViewById(R.id.iv_clear);
+        ivClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rlProductSpecificationLayout.setVisibility(View.GONE);
+            }
+        });
+
+
+
+        LinearLayout llContainer = findViewById(R.id.container);
+        llContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //rlProductSpecificationLayout.setVisibility(View.GONE);
+            }
+        });
+
+        TextView tvUnit = findViewById(R.id.tvUnit);
+        tvUnit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                specificationType = UNIT;
+                llUnit.setVisibility(View.VISIBLE);
+                llSize.setVisibility(View.GONE);
+                llColor.setVisibility(View.GONE);
+                initUnitList();
+            }
+        });
+
+        TextView tvSize = findViewById(R.id.tvSize);
+        tvSize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                specificationType = SIZE;
+                llUnit.setVisibility(View.GONE);
+                llSize.setVisibility(View.VISIBLE);
+                llColor.setVisibility(View.GONE);
+                initSizeList();
+            }
+        });
+
+        TextView tvColor = findViewById(R.id.tvColor);
+        tvColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                specificationType = COLOR;
+                llUnit.setVisibility(View.GONE);
+                llSize.setVisibility(View.GONE);
+                llColor.setVisibility(View.VISIBLE);
+                initColorList();
+            }
+        });
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(specificationType == UNIT){
+                    saveUnit();
+                }else if(specificationType == SIZE){
+                    saveSize();
+                }if(specificationType == COLOR){
+                    saveColor();
+                }
+            }
+        });
+
+        initUnitColorSizeList();
+        initUnitList();
         //initFooter(this,1);
 
     }
@@ -622,6 +854,7 @@ public class AddProductActivity extends BaseImageActivity {
            params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
            params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
            params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+
            JSONArray dataArray = new JSONArray();
            JSONObject dataObject = new JSONObject(params);
            if(!TextUtils.isEmpty(barCode)){
@@ -635,7 +868,63 @@ public class AddProductActivity extends BaseImageActivity {
                    e.printStackTrace();
                }
            }
+
+           try{
+
+               if(unitList.size() > 0){
+                   JSONArray unitArray = new JSONArray();
+                   JSONObject unitObject = null;
+                   ProductUnit productUnit = null;
+                   for(Object ob : unitList){
+                       unitObject = new JSONObject();
+                       productUnit = (ProductUnit)ob;
+                       unitObject.put("id",productUnit.getId());
+                       unitObject.put("unitName",productUnit.getUnitName());
+                       unitObject.put("unitValue",productUnit.getUnitValue());
+                       unitObject.put("status",productUnit.getStatus());
+                       unitArray.put(unitObject);
+                   }
+                   dataObject.put("productUnitList", unitArray);
+               }
+
+               if(sizeList != null && sizeList.size() > 0){
+                   JSONArray sizeArray = new JSONArray();
+                   JSONObject sizeObject = null;
+                   ProductSize productSize = null;
+                   for(Object ob : sizeList){
+                       sizeObject = new JSONObject();
+                       productSize = (ProductSize)ob;
+                       sizeObject.put("id",productSize.getId());
+                       sizeObject.put("size",productSize.getSize());
+                       sizeObject.put("status",productSize.getStatus());
+
+                       JSONArray colorArray = new JSONArray();
+                       JSONObject colorObject = null;
+                       //ProductColor productColor = null;
+                       for(ProductColor productColor : productSize.getProductColorList()){
+                           colorObject = new JSONObject();
+                           colorObject.put("id",productColor.getId());
+                           colorObject.put("sizeId",productColor.getSizeId());
+                           colorObject.put("colorName",productColor.getColorName());
+                           colorObject.put("colorValue",productColor.getColorValue());
+                           colorObject.put("status",productColor.getStatus());
+                           colorArray.put(colorObject);
+                       }
+
+                       if(colorArray.length() > 0)
+                           sizeObject.put("productColorList", colorArray);
+
+                       sizeArray.put(sizeObject);
+                   }
+                   dataObject.put("productSizeList", sizeArray);
+               }
+
+           }catch (JSONException e){
+               e.fillInStackTrace();
+           }
+
            dataArray.put(dataObject);
+
            String url=getResources().getString(R.string.url)+"/api/products/addProduct";
            showProgress(true);
            jsonArrayV2ApiRequest(Request.Method.POST,url,dataArray,"addProduct");
@@ -749,38 +1038,94 @@ public class AddProductActivity extends BaseImageActivity {
             focus.requestFocus();
             return;
         }else {
-            Map<String, String> params = new HashMap<>();
-            params.put("prodId", ""+myProductItem.getProdId());
-            params.put("prodCatId", subCatId);
-            params.put("prodReorderLevel", reorderLevel);
-            params.put("prodQoh", qoh);
-            params.put("prodName", prodName);
-            params.put("prodCode", prodCode);
-            params.put("prodDesc", desc);
-            params.put("prodCgst", cgst);
-            params.put("prodIgst", igst);
-            params.put("prodSgst", sgst);
-            params.put("prodWarranty", warranty);
-            params.put("prodMrp", mrp);
-            params.put("prodSp", sp);
-            params.put("prodHsnCode", hsnCode);
-            params.put("prodMfgDate", mfgDate);
-            params.put("prodExpiryDate", expiryDate);
-            params.put("prodMfgBy", mfgBy);
-            params.put("action", "3");
-            params.put("prodImage1", imageList.get(0));
-            params.put("prodImage2", imageList.get(1));
-            params.put("prodImage3", imageList.get(2));
-            params.put("shopCode", sharedPreferences.getString(Constants.SHOP_CODE, ""));
-            params.put("createdBy", sharedPreferences.getString(Constants.FULL_NAME, ""));
-            params.put("updatedBy", sharedPreferences.getString(Constants.FULL_NAME, ""));
-            params.put("retRetailerId", sharedPreferences.getString(Constants.USER_ID, ""));
-            params.put("dbName", sharedPreferences.getString(Constants.DB_NAME, ""));
-            params.put("dbUserName", sharedPreferences.getString(Constants.DB_USER_NAME, ""));
-            params.put("dbPassword", sharedPreferences.getString(Constants.DB_PASSWORD, ""));
+            JSONObject dataObject = new JSONObject();
+            try {
+                dataObject.put("prodId", ""+myProductItem.getProdId());
+                dataObject.put("prodCatId", subCatId);
+                dataObject.put("prodReorderLevel", reorderLevel);
+                dataObject.put("prodQoh", qoh);
+                dataObject.put("prodName", prodName);
+                dataObject.put("prodCode", prodCode);
+                dataObject.put("prodDesc", desc);
+                dataObject.put("prodCgst", cgst);
+                dataObject.put("prodIgst", igst);
+                dataObject.put("prodSgst", sgst);
+                dataObject.put("prodWarranty", warranty);
+                dataObject.put("prodMrp", mrp);
+                dataObject.put("prodSp", sp);
+                dataObject.put("prodHsnCode", hsnCode);
+                dataObject.put("prodMfgDate", mfgDate);
+                dataObject.put("prodExpiryDate", expiryDate);
+                dataObject.put("prodMfgBy", mfgBy);
+                dataObject.put("action", "3");
+                dataObject.put("prodImage1", imageList.get(0));
+                dataObject.put("prodImage2", imageList.get(1));
+                dataObject.put("prodImage3", imageList.get(2));
+                dataObject.put("shopCode", sharedPreferences.getString(Constants.SHOP_CODE, ""));
+                dataObject.put("createdBy", sharedPreferences.getString(Constants.FULL_NAME, ""));
+                dataObject.put("updatedBy", sharedPreferences.getString(Constants.FULL_NAME, ""));
+                dataObject.put("retRetailerId", sharedPreferences.getString(Constants.USER_ID, ""));
+                dataObject.put("dbName", sharedPreferences.getString(Constants.DB_NAME, ""));
+                dataObject.put("dbUserName", sharedPreferences.getString(Constants.DB_USER_NAME, ""));
+                dataObject.put("dbPassword", sharedPreferences.getString(Constants.DB_PASSWORD, ""));
+
+
+                if(unitList.size() > 0){
+                    JSONArray unitArray = new JSONArray();
+                    JSONObject unitObject = null;
+                    ProductUnit productUnit = null;
+                    for(Object ob : unitList){
+                        unitObject = new JSONObject();
+                        productUnit = (ProductUnit)ob;
+                        unitObject.put("id",productUnit.getId());
+                        unitObject.put("unitName",productUnit.getUnitName());
+                        unitObject.put("unitValue",productUnit.getUnitValue());
+                        unitObject.put("status",productUnit.getStatus());
+                        unitArray.put(unitObject);
+                    }
+                    dataObject.put("productUnitList", unitArray);
+                }
+
+                if(sizeList != null && sizeList.size() > 0){
+                    JSONArray sizeArray = new JSONArray();
+                    JSONObject sizeObject = null;
+                    ProductSize productSize = null;
+                    for(Object ob : sizeList){
+                        sizeObject = new JSONObject();
+                        productSize = (ProductSize)ob;
+                        sizeObject.put("id",productSize.getId());
+                        sizeObject.put("size",productSize.getSize());
+                        sizeObject.put("status",productSize.getStatus());
+
+                        JSONArray colorArray = new JSONArray();
+                        JSONObject colorObject = null;
+                        //ProductColor productColor = null;
+                        for(ProductColor productColor : productSize.getProductColorList()){
+                            colorObject = new JSONObject();
+                            colorObject.put("id",productColor.getId());
+                            colorObject.put("sizeId",productColor.getSizeId());
+                            colorObject.put("colorName",productColor.getColorName());
+                            colorObject.put("colorValue",productColor.getColorValue());
+                            colorObject.put("status",productColor.getStatus());
+                            colorArray.put(colorObject);
+                        }
+
+                        if(colorArray.length() > 0)
+                        sizeObject.put("productColorList", colorArray);
+
+                        sizeArray.put(sizeObject);
+                    }
+                    dataObject.put("productSizeList", sizeArray);
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             String url = getResources().getString(R.string.url) + "/api/products/updateProduct";
             showProgress(true);
-            jsonObjectApiRequest(Request.Method.POST, url, new JSONObject(params), "updateProduct");
+            jsonObjectApiRequest(Request.Method.POST, url, dataObject, "updateProduct");
         }
     }
 
@@ -791,6 +1136,11 @@ public class AddProductActivity extends BaseImageActivity {
                   if(response.getBoolean("status")){
                       JSONObject jsonObject = response.getJSONObject("result");
                       JSONArray barArray = null;
+                      JSONArray tempArray = null;
+                      JSONObject tempObject = null;
+                      ProductUnit productUnit = null;
+                      ProductSize productSize = null;
+                      ProductColor productColor = null;
                       int barLen = 0;
                       MyProductItem productItem = new MyProductItem();
                       productItem.setProdId(jsonObject.getInt("prodId"));
@@ -826,13 +1176,58 @@ public class AddProductActivity extends BaseImageActivity {
                               dbHelper.addProductBarcode(productItem.getProdId(),barArray.getJSONObject(j).getString("barcode"));
                           }
                       }
+
+                      if(!jsonObject.getString("productUnitList").equals("null")){
+                          tempArray = jsonObject.getJSONArray("productUnitList");
+                          int tempLen = tempArray.length();
+
+                          for(int unitCounter = 0; unitCounter < tempLen ; unitCounter++){
+                              tempObject = tempArray.getJSONObject(unitCounter);
+                              productUnit = new ProductUnit();
+                              productUnit.setId(tempObject.getInt("id"));
+                              productUnit.setUnitName(tempObject.getString("unitName"));
+                              productUnit.setUnitValue(tempObject.getString("unitValue"));
+                              productUnit.setStatus(tempObject.getString("status"));
+                              dbHelper.addProductUnit(productUnit,productItem.getProdId());
+                          }
+                      }
+
+                      if(!jsonObject.getString("productSizeList").equals("null")){
+                          tempArray = jsonObject.getJSONArray("productSizeList");
+                          int tempLen = tempArray.length();
+
+                          for(int unitCounter = 0; unitCounter < tempLen ; unitCounter++){
+                              tempObject = tempArray.getJSONObject(unitCounter);
+                              productSize = new ProductSize();
+                              productSize.setId(tempObject.getInt("id"));
+                              productSize.setSize(tempObject.getString("size"));
+                              productSize.setStatus(tempObject.getString("status"));
+                              dbHelper.addProductSize(productSize,productItem.getProdId());
+                              if(!tempObject.getString("productSizeList").equals("null")){
+                                  JSONArray colorArray = tempObject.getJSONArray("productColorList");
+                                  for(int colorCounter = 0; colorCounter < colorArray.length() ; colorCounter++){
+                                      tempObject = colorArray.getJSONObject(colorCounter);
+                                      productColor = new ProductColor();
+                                      productColor.setId(tempObject.getInt("id"));
+                                      productColor.setSizeId(tempObject.getInt("sizeId"));
+                                      productColor.setColorName(tempObject.getString("colorName"));
+                                      productColor.setColorValue(tempObject.getString("colorValue"));
+                                      productColor.setStatus(tempObject.getString("status"));
+                                      dbHelper.addProductColor(productColor,productItem.getId());
+                                  }
+                              }
+
+                          }
+                      }
+
+
                       clearData();
                       DialogAndToast.showToast(response.getString("message"),AddProductActivity.this);
                   }else{
                       DialogAndToast.showDialog(response.getString("message"),AddProductActivity.this);
                   }
             }catch (JSONException e){
-
+                e.printStackTrace();
             }
         }else if(apiName.equals("updateProduct")){
             try {
@@ -881,6 +1276,39 @@ public class AddProductActivity extends BaseImageActivity {
                         timestamp = Utility.getTimeStamp();
                         timestamp = timestamp + "_3";
                         editor.putString("product_signature"+productItem.getProdId()+"_3",timestamp);
+                    }
+
+                    ProductUnit unit = null;
+                    for(Object ob : unitList){
+                        unit = (ProductUnit)ob;
+                        if(unit.getStatus().equals("A")){
+                            unit.setStatus("N");
+                            Log.i(TAG,"Adding unit..."+unit.getUnitValue());
+                            dbHelper.addProductUnit(unit,productItem.getProdId());
+                        }else if(unit.getStatus().equals("D")){
+                            Log.i(TAG,"Removing unit..."+unit.getUnitValue());
+                            dbHelper.removeUnit(unit.getId());
+                        }
+                    }
+
+                    ProductSize size = null;
+                    for(Object ob : sizeList){
+                        size = (ProductSize)ob;
+                        if(size.getStatus().equals("A")){
+                            dbHelper.addProductSize(size,productItem.getProdId());
+                        }else if(size.getStatus().equals("D")){
+                            dbHelper.removeSize(unit.getId());
+                        }
+                    }
+
+                    ProductColor color = null;
+                    for(Object ob : colorList){
+                        color = (ProductColor)ob;
+                        if(color.getStatus().equals("A")){
+                            dbHelper.addProductColor(color,productItem.getProdId());
+                        }else if(color.getStatus().equals("D")){
+                            dbHelper.removeColor(unit.getId());
+                        }
                     }
 
                     showMyDialog(response.getString("message"));
@@ -1013,4 +1441,268 @@ public class AddProductActivity extends BaseImageActivity {
          Log.i(TAG,"added image is "+imageList.get(imagePosition-1));
     }
 
+    private void initUnitColorSizeList(){
+        unitList = new ArrayList<>();
+        if(flag.equals("editProduct")){
+            for(ProductUnit unit : myProductItem.getProductUnitList()){
+                unitList.add(unit);
+            }
+        }
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        unitAdapter=new SpecificationAdapter(this,unitList,"unit");
+        unitAdapter.setMyItemTypeClickListener(this);
+
+        sizeList = new ArrayList<>();
+        if(flag.equals("editProduct")){
+            for(ProductSize size : myProductItem.getProductSizeList()){
+                sizeList.add(size);
+            }
+        }
+        sizeAdapter=new SpecificationAdapter(this,sizeList,"size");
+        sizeAdapter.setMyItemTypeClickListener(this);
+
+        sizeSpinnerList.clear();
+        sizeSpinnerList.add("Select Size");
+        ProductSize productSize = null;
+        for(Object ob : sizeList){
+            productSize = (ProductSize)ob;
+            sizeSpinnerList.add(productSize.getSize());
+        }
+
+        sizeSpinnerAdapter.notifyDataSetChanged();
+        colorList = new ArrayList<>();
+        colorAdapter=new SpecificationAdapter(this,colorList,"color");
+        colorAdapter.setMyItemTypeClickListener(this);
+
+    }
+    private void initUnitList(){
+        Log.i(TAG,"unit size "+unitList.size());
+        recyclerView.setAdapter(unitAdapter);
+    }
+
+    private void initSizeList(){
+        recyclerView.setAdapter(sizeAdapter);
+    }
+
+    private void initColorList(){
+        recyclerView.setAdapter(colorAdapter);
+    }
+
+    private void saveUnit(){
+        String name = etUnitName.getText().toString();
+        String value = etUnitValue.getText().toString();
+
+        if(TextUtils.isEmpty(name)){
+           DialogAndToast.showDialog("Please enter unit name",this);
+           return;
+        }
+
+        if(TextUtils.isEmpty(value)){
+            DialogAndToast.showDialog("Please enter unit value",this);
+            return;
+        }
+
+        ProductUnit myUnitMeasure = new ProductUnit();
+        myUnitMeasure.setUnitName(name);
+        myUnitMeasure.setUnitValue(value);
+        myUnitMeasure.setStatus("A");
+        unitList.add(myUnitMeasure);
+        unitAdapter.notifyDataSetChanged();
+
+        etUnitName.setText("");
+        etUnitValue.setText("");
+    }
+
+    private void saveSize(){
+        String name = etSize.getText().toString();
+
+        if(TextUtils.isEmpty(name)){
+            DialogAndToast.showDialog("Please enter size",this);
+            return;
+        }
+
+        ProductSize productSize = new ProductSize();
+        productSize.setSize(name);
+        productSize.setStatus("A");
+        sizeList.add(productSize);
+        sizeAdapter.notifyDataSetChanged();
+
+        etSize.setText("");
+    }
+
+    private void saveColor(){
+
+        int selectedPosition = spinnerSize.getSelectedItemPosition();
+
+        if(selectedPosition == 0){
+            DialogAndToast.showDialog("Please select size",this);
+            return;
+        }
+
+        ProductSize productSize = (ProductSize)sizeList.get(selectedPosition);
+
+
+        if(!colorSelected){
+            DialogAndToast.showDialog("Please select color",this);
+            return;
+        }
+
+        ProductColor item = new ProductColor();
+        item.setColorName(colorName);
+        item.setColorValue(""+colorValue);
+        item.setSize(productSize.getSize());
+        item.setSizeId(productSize.getId());
+        item.setStatus("A");
+        colorList.add(item);
+
+        List<ProductColor> productColorList = productSize.getProductColorList();
+        if(productColorList == null){
+            productColorList = new ArrayList<>();
+        }
+        productColorList.add(item);
+
+        colorAdapter.notifyDataSetChanged();
+        colorSelected = false;
+        if(imageViewTemp != null){
+            imageViewTemp.setImageResource(0);
+        }
+    }
+
+    private void changeColor(Drawable drawable, int color){
+        drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view == relativeLayoutRed){
+            imageViewRed.setImageResource(R.drawable.ic_check_black_24dp);
+            if(imageViewTemp != null){
+                imageViewTemp.setImageResource(0);
+            }
+            imageViewTemp  = imageViewRed;
+            colorName = "Red";
+            colorValue = getResources().getColor(R.color.red_500);
+        }else if(view == relativeLayoutBlue){
+            colorName = "Blue";
+            colorValue = getResources().getColor(R.color.blue500);
+            imageViewBlue.setImageResource(R.drawable.ic_check_black_24dp);
+            if(imageViewTemp != null){
+                imageViewTemp.setImageResource(0);
+            }
+            imageViewTemp  = imageViewBlue;
+        }else if(view == relativeLayoutGreen){
+            imageViewGreen.setImageResource(R.drawable.ic_check_black_24dp);
+            if(imageViewTemp != null){
+                imageViewTemp.setImageResource(0);
+            }
+            imageViewTemp  = imageViewGreen;
+            colorName = "Green";
+            colorValue = getResources().getColor(R.color.green500);
+        }else if(view == relativeLayoutPink){
+            imageViewPink.setImageResource(R.drawable.ic_check_black_24dp);
+            if(imageViewTemp != null){
+                imageViewTemp.setImageResource(0);
+            }
+            imageViewTemp  = imageViewPink;
+            colorName = "Pink";
+            colorValue = getResources().getColor(R.color.pink500);
+        }else if(view == relativeLayoutYellow){
+            imageViewYellow.setImageResource(R.drawable.ic_check_black_24dp);
+            if(imageViewTemp != null){
+                imageViewTemp.setImageResource(0);
+            }
+            imageViewTemp  = imageViewYellow;
+            colorName = "Yellow";
+            colorValue = getResources().getColor(R.color.yellow500);
+        }else if(view == relativeLayoutAmber){
+            imageViewAmber.setImageResource(R.drawable.ic_check_black_24dp);
+            if(imageViewTemp != null){
+                imageViewTemp.setImageResource(0);
+            }
+            imageViewTemp  = imageViewAmber;
+            colorName = "Amber";
+            colorValue = getResources().getColor(R.color.amber600);
+        }else if(view == relativeLayoutTeal){
+            editor.putInt(Constants.COLOR_THEME,getResources().getColor(R.color.teal_500));
+            imageViewTeal.setImageResource(R.drawable.ic_check_black_24dp);
+            if(imageViewTemp != null){
+                imageViewTemp.setImageResource(0);
+            }
+            imageViewTemp  = imageViewTeal;
+        }else if(view == relativeLayoutIndigo){
+            imageViewIndigo.setImageResource(R.drawable.ic_check_black_24dp);
+            if(imageViewTemp != null){
+                imageViewTemp.setImageResource(0);
+            }
+            imageViewTemp  = imageViewIndigo;
+            colorName = "Indigo";
+            colorValue = getResources().getColor(R.color.indigo_500);
+        }else if(view == relativeLayoutPurple){
+            imageViewPurple.setImageResource(R.drawable.ic_check_black_24dp);
+            if(imageViewTemp != null){
+                imageViewTemp.setImageResource(0);
+            }
+            imageViewTemp  = imageViewPurple;
+            colorName = "Purple";
+            colorValue = getResources().getColor(R.color.purple500);
+        }
+        colorSelected = true;
+    }
+
+    @Override
+    public void onItemClicked(int position, int type) {
+       if(type == 1){
+           ProductUnit unit = (ProductUnit)unitList.get(position);
+           if(unit.getStatus().equals("A")){
+               unitList.remove(position);
+               unitAdapter.notifyDataSetChanged();
+           }else{
+               unit.setStatus("D");
+               unitAdapter.notifyDataSetChanged();
+           }
+       }else if(type == 2){
+           ProductSize size = (ProductSize)sizeList.get(position);
+           if(size.getStatus().equals("A")){
+               sizeList.remove(position);
+               sizeAdapter.notifyDataSetChanged();
+           }else{
+               size.setStatus("D");
+               for(ProductColor color : size.getProductColorList()){
+                   color.setStatus("D");
+               }
+               sizeAdapter.notifyDataSetChanged();
+           }
+       }else if(type == 3){
+           ProductColor color = (ProductColor) colorList.get(position);
+           if(color.getStatus().equals("A")){
+               colorList.remove(position);
+               colorAdapter.notifyDataSetChanged();
+           }else{
+               color.setStatus("D");
+               colorAdapter.notifyDataSetChanged();
+           }
+           String selectedSize = (String) spinnerSize.getSelectedItem();
+           ProductSize size = null;
+           for(Object ob : sizeList){
+               size = (ProductSize)ob;
+               if(size.getSize().equals(selectedSize)){
+                   break;
+               }
+           }
+
+           for(ProductColor color1 : size.getProductColorList()){
+              if(color.getId() == color1.getId()){
+                  if(color.getStatus().equals("A")){
+                      size.getProductColorList().remove(color1);
+                  }else{
+                      color1.setStatus("D");
+                  }
+                  break;
+              }
+           }
+       }
+    }
 }

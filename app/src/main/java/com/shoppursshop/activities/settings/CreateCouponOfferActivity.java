@@ -3,10 +3,10 @@ package com.shoppursshop.activities.settings;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -210,6 +210,15 @@ public class CreateCouponOfferActivity extends NetworkBaseActivity {
             Log.d("response", response.toString());
             if(apiName.equals("createCouponOffer")){
                 if(response.getString("status").equals("true")||response.getString("status").equals(true)){
+                    JSONObject dataObject = response.getJSONObject("result");
+                    coupon = new Coupon();
+                    coupon.setId(dataObject.getInt("id"));
+                    coupon.setPercentage(dataObject.getInt("percentage"));
+                    coupon.setAmount((float)dataObject.getDouble("amount"));
+                    coupon.setName(dataObject.getString("name"));
+                    coupon.setStatus(dataObject.getString("status"));
+                    coupon.setStartDate(dataObject.getString("startDate"));
+                    coupon.setEndDate(dataObject.getString("endDate"));
                     showMyDialog("Offer created successfully.");
                 }else {
                     DialogAndToast.showToast(response.getString("message"),CreateCouponOfferActivity.this);

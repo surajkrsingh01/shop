@@ -2,11 +2,11 @@ package com.shoppursshop.activities.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -230,6 +230,9 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
                         productComboOffer.setStartDate(dataObject.getString("startDate"));
                         productComboOffer.setEndDate(dataObject.getString("endDate"));
                         productComboArray = dataObject.getJSONArray("productComboOfferDetails");
+                        dbHelper.deleteTable(DbHelper.PROD_COMBO_TABLE);
+                        dbHelper.deleteTable(DbHelper.PROD_COMBO_DETAIL_TABLE);
+                        dbHelper.addProductComboOffer(productComboOffer,Utility.getTimeStamp(),Utility.getTimeStamp());
                         productComboOfferDetails = new ArrayList<>();
                         innerLen = productComboArray.length();
                         for (int k = 0; k < innerLen; k++) {
@@ -242,6 +245,8 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
                             productComboDetails.setPcodPrice((float)dataObject.getDouble("pcodPrice"));
                             productComboDetails.setStatus(dataObject.getString("status"));
                             productComboOfferDetails.add(productComboDetails);
+                            dbHelper.addProductComboDetailOffer(productComboDetails,
+                                    Utility.getTimeStamp(),Utility.getTimeStamp());
                         }
                         productComboOffer.setProductComboOfferDetails(productComboOfferDetails);
 
@@ -291,6 +296,7 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
                     }
 
                     len = couponArray.length();
+                    dbHelper.deleteTable(DbHelper.COUPON_TABLE);
                     for (int i = 0; i < len; i++) {
                         dataObject = couponArray.getJSONObject(i);
                         offerItem = new ShopOfferItem();
@@ -309,6 +315,7 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
                         coupon.setStartDate(dataObject.getString("startDate"));
                         coupon.setEndDate(dataObject.getString("endDate"));
                         offerItem.setProductObject(coupon);
+                        dbHelper.addCouponOffer(coupon, Utility.getTimeStamp(),Utility.getTimeStamp());
                         itemList.add(offerItem);
                     }
 

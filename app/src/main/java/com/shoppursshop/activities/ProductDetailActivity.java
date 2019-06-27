@@ -3,22 +3,27 @@ package com.shoppursshop.activities;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -29,6 +34,7 @@ import com.shoppursshop.R;
 import com.shoppursshop.adapters.MonthlyGraphAdapter;
 import com.shoppursshop.adapters.MyItemAdapter;
 import com.shoppursshop.adapters.MyReviewAdapter;
+import com.shoppursshop.adapters.SpecificationAdapter;
 import com.shoppursshop.fragments.DescBottomFragment;
 import com.shoppursshop.fragments.MultipleBarcodeBottomFragment;
 import com.shoppursshop.models.Bar;
@@ -36,6 +42,10 @@ import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.models.MyCustomer;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MyReview;
+import com.shoppursshop.models.ProductColor;
+import com.shoppursshop.models.ProductSize;
+import com.shoppursshop.models.ProductUnit;
+import com.shoppursshop.models.SpinnerItem;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.Utility;
 
@@ -50,6 +60,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductDetailActivity extends NetworkBaseActivity {
+
+    private final int UNIT = 1,SIZE = 2,COLOR = 3;
 
     private RecyclerView recyclerViewMonthlyGraph,recyclerViewReview,recyclerViewOffers;
     private RecyclerView.Adapter monthlyGraphAdapter;
@@ -75,7 +87,19 @@ public class ProductDetailActivity extends NetworkBaseActivity {
 
     private String flag ;
 
+    private TextView tvUnitSizeColor;
+    private RelativeLayout rlProductSpecificationLayout;
+    private RecyclerView recyclerView;
+    private SpecificationAdapter unitAdapter,sizeAdapter,colorAdapter;
+    List<Object> unitList,sizeList,colorList;
+    private int specificationType;
+    private Spinner spinnerSize;
+    List<String> sizeSpinnerList;
+    private ArrayAdapter<String> sizeSpinnerAdapter;
+
     private int limit = 5,offset = 0;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +168,13 @@ public class ProductDetailActivity extends NetworkBaseActivity {
         }else{
             myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
         }
+
+        if(myProductItem.getProductUnitList() != null){
+            Log.i(TAG,"unit size "+myProductItem.getProductUnitList().size());
+        }else{
+            Log.i(TAG,"unit size null");
+        }
+
 
 
         textViewProductName.setText(myProductItem.getProdName());
@@ -261,6 +292,102 @@ public class ProductDetailActivity extends NetworkBaseActivity {
             recyclerViewReview.setVisibility(View.GONE);
             buttonAddMultipleBarcode.setVisibility(View.GONE);
         }
+
+        sizeSpinnerList = new ArrayList<>();
+        spinnerSize = findViewById(R.id.spinner_size);
+        tvUnitSizeColor = findViewById(R.id.tvUnitSizeColor);
+        rlProductSpecificationLayout = findViewById(R.id.rl_product_specification_layout);
+        specificationType = UNIT;
+
+        sizeSpinnerAdapter = new ArrayAdapter<String>(this, R.layout.simple_dropdown_list_item, sizeSpinnerList){
+            @Override
+            public boolean isEnabled(int position){
+                if(position == 0){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+            @Override
+            public View getView(int position, View convertView,
+                                ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if(position == 0){
+                    // Set the hint text color gray
+                    tv.setTextColor(getResources().getColor(R.color.grey500));
+                }else{
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
+                }
+                return view;
+            }
+            @Override
+            public View getDropDownView(int position, View convertView,
+                                        ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                if(isDarkTheme){
+                    view.setBackgroundColor(getResources().getColor(R.color.dark_color));
+                }else{
+                    view.setBackgroundColor(getResources().getColor(R.color.white));
+                }
+                TextView tv = (TextView) view;
+                if(position == 0){
+                    // Set the hint text color gray
+                    tv.setTextColor(getResources().getColor(R.color.grey500));
+                }else{
+                    if(isDarkTheme){
+                        tv.setTextColor(getResources().getColor(R.color.white));
+                    }else{
+                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                    }
+                }
+                tv.setPadding(20,20,20,20);
+                return view;
+            }
+        };
+
+        spinnerSize.setAdapter(sizeSpinnerAdapter);
+
+        spinnerSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i > 0){
+                    colorList.clear();
+                    ProductSize size = (ProductSize)sizeList.get(i);
+                    for(ProductColor color : size.getProductColorList()){
+                        colorList.add(color);
+                    }
+                    colorAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        tvUnitSizeColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rlProductSpecificationLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+        ImageView ivClear = findViewById(R.id.iv_clear);
+        ivClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rlProductSpecificationLayout.setVisibility(View.GONE);
+            }
+        });
+
+        initUnitColorSizeList();
+        initUnitList();
 
         setReviews();
         //getOffers();
@@ -507,6 +634,53 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                 getResources().getColor(R.color.light_green500)};
 
         return barColor[month];
+    }
+
+    private void initUnitColorSizeList(){
+        unitList = new ArrayList<>();
+        for(ProductUnit unit : myProductItem.getProductUnitList()){
+            unitList.add(unit);
+        }
+        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        unitAdapter=new SpecificationAdapter(this,unitList,"unitDetail");
+      //  unitAdapter.setMyItemTypeClickListener(this);
+
+        sizeList = new ArrayList<>();
+        for(ProductSize size : myProductItem.getProductSizeList()){
+            sizeList.add(size);
+        }
+        sizeAdapter=new SpecificationAdapter(this,sizeList,"sizeDetail");
+       // sizeAdapter.setMyItemTypeClickListener(this);
+
+        sizeSpinnerList.clear();
+        sizeSpinnerList.add("Select Size");
+        ProductSize productSize = null;
+        for(Object ob : sizeList){
+            productSize = (ProductSize)ob;
+            sizeSpinnerList.add(productSize.getSize());
+        }
+
+        sizeSpinnerAdapter.notifyDataSetChanged();
+        colorList = new ArrayList<>();
+        colorAdapter=new SpecificationAdapter(this,colorList,"colorDetail");
+        //colorAdapter.setMyItemTypeClickListener(this);
+
+    }
+    private void initUnitList(){
+        Log.i(TAG,"unit size "+unitList.size());
+        recyclerView.setAdapter(unitAdapter);
+    }
+
+    private void initSizeList(){
+        recyclerView.setAdapter(sizeAdapter);
+    }
+
+    private void initColorList(){
+        recyclerView.setAdapter(colorAdapter);
     }
 
 }

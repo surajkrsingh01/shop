@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -359,6 +359,9 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
                     shopObject.put("orderDeliveryMode","Self");
                     shopObject.put("paymentMode",paymentMode);
                     shopObject.put("deliveryAddress","");
+                    shopObject.put("deliveryCountry","");
+                    shopObject.put("deliveryState","");
+                    shopObject.put("deliveryCity","");
                     shopObject.put("pinCode","");
                     shopObject.put("createdBy",sharedPreferences.getString(Constants.FULL_NAME,""));
                     shopObject.put("updateBy",sharedPreferences.getString(Constants.FULL_NAME,""));
@@ -376,29 +379,80 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
 
                     shopObject.put("totalQuantity",String.valueOf(dbHelper.getTotalQuantityCart()));
                     shopObject.put("toalAmount",getIntent().getStringExtra("totalAmount"));
+                    shopObject.put("ordCouponId",getIntent().getStringExtra("ordCouponId"));
+                    shopObject.put("totCgst",String.valueOf(dbHelper.getTaxesCart("cgst")));
+                    shopObject.put("totSgst",String.valueOf(dbHelper.getTaxesCart("sgst")));
+                    shopObject.put("totIgst",String.valueOf(dbHelper.getTaxesCart("igst")));
+                    shopObject.put("totTax",String.valueOf(getIntent().getFloatExtra("totalTax",0f)));
+                    shopObject.put("deliveryCharges",String.valueOf(getIntent().getFloatExtra("deliveryCharges",0f)));
+                    shopObject.put("totDiscount",String.valueOf(getIntent().getFloatExtra("totDiscount",0f)));
                     shopObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
                     shopObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
                     shopObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
 
                     productObject.put("prodCode", cartItem.getProdCode());
+                    productObject.put("prodHsnCode", cartItem.getProdHsnCode());
                     productObject.put("prodId", cartItem.getProdId());
+                    if(cartItem.getComboProductIds() != null)
+                        productObject.put("comboProdIds", cartItem.getComboProductIds());
                     if(cartItem.getIsBarCodeAvailable().equals("Y")){
                         productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
                         productObject.put("barcodeList",  tempbarcodeArray);
                     }
                     productObject.put("qty", cartItem.getQty());
+                    productObject.put("prodName",cartItem.getProdName());
+                    productObject.put("prodUnit",cartItem.getUnit());
+                    productObject.put("prodSize",cartItem.getSize());
+                    productObject.put("prodColor",cartItem.getColor());
+                    productObject.put("prodDesc",cartItem.getProdDesc());
+                    productObject.put("prodMrp",cartItem.getProdMrp());
+                    productObject.put("prodSp", cartItem.getProdSp());
+                    productObject.put("prodCgst", cartItem.getProdCgst());
+                    productObject.put("prodSgst", cartItem.getProdSgst());
+                    productObject.put("prodIgst", cartItem.getProdIgst());
+                    productObject.put("prodImage1",cartItem.getProdImage1());
+                    productObject.put("prodImage2",cartItem.getProdImage2());
+                    productObject.put("prodImage3",cartItem.getProdImage3());
+                    productObject.put("isBarcodeAvailable",cartItem.getIsBarCodeAvailable());
+                    if(cartItem.getOfferCounter() > 0){
+                        productObject.put("offerId", cartItem.getOfferId());
+                        productObject.put("offerType", cartItem.getOfferType());
+                        productObject.put("freeItems", String.valueOf(cartItem.getOfferCounter()));
+                    }
                     productArray.put(productObject);
                     shopObject.put("myProductList", productArray);
                     shopArray.put(shopObject);
                 } else {
                     productObject = new JSONObject();
                     productObject.put("prodCode", cartItem.getProdCode());
+                    productObject.put("prodHsnCode", cartItem.getProdHsnCode());
                     productObject.put("prodId", cartItem.getProdId());
+                    if(cartItem.getComboProductIds() != null)
+                        productObject.put("comboProdIds", cartItem.getComboProductIds());
                     if(cartItem.getIsBarCodeAvailable().equals("Y")){
                         productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
                         productObject.put("barcodeList",  tempbarcodeArray);
                     }
                     productObject.put("qty", cartItem.getQty());
+                    productObject.put("prodName",cartItem.getProdName());
+                    productObject.put("prodUnit",cartItem.getUnit());
+                    productObject.put("prodSize",cartItem.getSize());
+                    productObject.put("prodColor",cartItem.getColor());
+                    productObject.put("prodDesc",cartItem.getProdDesc());
+                    productObject.put("prodMrp",cartItem.getProdMrp());
+                    productObject.put("prodSp", cartItem.getProdSp());
+                    productObject.put("prodCgst", cartItem.getProdCgst());
+                    productObject.put("prodSgst", cartItem.getProdSgst());
+                    productObject.put("prodIgst", cartItem.getProdIgst());
+                    productObject.put("prodImage1",cartItem.getProdImage1());
+                    productObject.put("prodImage2",cartItem.getProdImage2());
+                    productObject.put("prodImage3",cartItem.getProdImage3());
+                    productObject.put("isBarcodeAvailable",cartItem.getIsBarCodeAvailable());
+                    if(cartItem.getOfferCounter() > 0){
+                        productObject.put("offerId", cartItem.getOfferId());
+                        productObject.put("offerType", cartItem.getOfferType());
+                        productObject.put("freeItems", String.valueOf(cartItem.getOfferCounter()));
+                    }
                     productArray.put(productObject);
                     shopObject.put("myProductList", productArray);
                 }

@@ -3,7 +3,7 @@ package com.shoppursshop.activities.settings;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.media.Image;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -283,12 +283,34 @@ public class FreeProductOfferActivity extends NetworkBaseActivity implements MyI
             Log.d("response", response.toString());
             if(apiName.equals("createFreeProductOffer")){
                 if(response.getString("status").equals("true")||response.getString("status").equals(true)){
+                    JSONObject dataObject = response.getJSONObject("result");
+                    productDiscountOffer.setId(dataObject.getInt("id"));
+                    productDiscountOffer.setOfferName(dataObject.getString("offerName"));
+                    productDiscountOffer.setProdBuyId(dataObject.getInt("prodBuyId"));
+                    productDiscountOffer.setProdFreeId(dataObject.getInt("prodFreeId"));
+                    productDiscountOffer.setProdBuyQty(dataObject.getInt("prodBuyQty"));
+                    productDiscountOffer.setProdFreeQty(dataObject.getInt("prodFreeQty"));
+                    productDiscountOffer.setStatus(dataObject.getString("status"));
+                    productDiscountOffer.setStartDate(dataObject.getString("startDate"));
+                    productDiscountOffer.setEndDate(dataObject.getString("endDate"));
+                    dbHelper.addProductFreeOffer(productDiscountOffer,Utility.getTimeStamp(),Utility.getTimeStamp());
                     showMyDialog("Offer created successfully.");
                 }else {
                     DialogAndToast.showToast(response.getString("message"),FreeProductOfferActivity.this);
                 }
             }else if(apiName.equals("updateFreeProductOffer")){
                 if(response.getString("status").equals("true")||response.getString("status").equals(true)){
+                    JSONObject dataObject = response.getJSONObject("result");
+                    productDiscountOffer.setId(dataObject.getInt("id"));
+                    productDiscountOffer.setOfferName(dataObject.getString("offerName"));
+                    productDiscountOffer.setProdBuyId(dataObject.getInt("prodBuyId"));
+                    productDiscountOffer.setProdFreeId(dataObject.getInt("prodFreeId"));
+                    productDiscountOffer.setProdBuyQty(dataObject.getInt("prodBuyQty"));
+                    productDiscountOffer.setProdFreeQty(dataObject.getInt("prodFreeQty"));
+                    productDiscountOffer.setStatus(dataObject.getString("status"));
+                    productDiscountOffer.setStartDate(dataObject.getString("startDate"));
+                    productDiscountOffer.setEndDate(dataObject.getString("endDate"));
+                    dbHelper.updateProductFreeOffer(productDiscountOffer,Utility.getTimeStamp());
                     showMyDialog("Offer updated successfully.");
                 }else {
                     DialogAndToast.showToast(response.getString("message"),FreeProductOfferActivity.this);

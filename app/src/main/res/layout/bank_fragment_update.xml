@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content" />
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:textColorHint="?attr/secondaryTextColor"
                 android:layout_marginTop="30dp"
                 android:layout_width="match_parent"
@@ -92,9 +92,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:textColorHint="?attr/secondaryTextColor"
                 android:layout_marginTop="@dimen/register_view_margin_top"
                 android:layout_width="match_parent"
@@ -116,9 +116,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:textColorHint="?attr/secondaryTextColor"
                 android:layout_marginTop="@dimen/register_view_margin_top"
                 android:layout_width="match_parent"
@@ -140,9 +140,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:textColorHint="?attr/secondaryTextColor"
                 android:layout_marginTop="@dimen/register_view_margin_top"
                 android:layout_width="match_parent"
@@ -164,9 +164,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:textColorHint="?attr/secondaryTextColor"
                 android:layout_marginTop="@dimen/register_view_margin_top"
                 android:layout_width="match_parent"
@@ -189,7 +189,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
         </LinearLayout>
