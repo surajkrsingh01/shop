@@ -51,6 +51,8 @@ public class AddPaymentDevice extends NetworkBaseActivity {
     private List<Barcode> barCodeList;
     private TextView tv_top_parent;
 
+    private float totalTax,totDiscount,deliveryDistance,deliveryCharges;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +101,7 @@ public class AddPaymentDevice extends NetworkBaseActivity {
     }
 
     private JSONArray shopArray;
+
     private void generateJson(){
         try {
             List<String> tempShopList = new ArrayList<>();
@@ -131,6 +134,9 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     shopObject.put("orderDeliveryMode","Self");
                     shopObject.put("paymentMode","Online");
                     shopObject.put("deliveryAddress",sharedPreferences.getString(Constants.ADDRESS, ""));
+                    shopObject.put("deliveryCountry",sharedPreferences.getString(Constants.COUNTRY, ""));
+                    shopObject.put("deliveryState",sharedPreferences.getString(Constants.STATE, ""));
+                    shopObject.put("deliveryCity",sharedPreferences.getString(Constants.CITY, ""));
                     shopObject.put("pinCode",sharedPreferences.getString(Constants.ZIP,""));
                     shopObject.put("createdBy",sharedPreferences.getString(Constants.FULL_NAME,""));
                     shopObject.put("updateBy",sharedPreferences.getString(Constants.FULL_NAME,""));
@@ -142,15 +148,40 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     shopObject.put("orderImage",sharedPreferences.getString(Constants.PHOTO,""));
                     shopObject.put("totalQuantity",total_quantity);
                     shopObject.put("toalAmount",total_amount);
+                   // shopObject.put("ordCouponId","");
+                    shopObject.put("totCgst",String.valueOf(dbHelper.getTaxesCart("cgst")));
+                    shopObject.put("totSgst",String.valueOf(dbHelper.getTaxesCart("sgst")));
+                    shopObject.put("totIgst",String.valueOf(dbHelper.getTaxesCart("igst")));
+                    shopObject.put("totTax",String.valueOf(totalTax));
+                    shopObject.put("deliveryCharges",String.valueOf(0f));
+                    shopObject.put("totDiscount",String.valueOf(totDiscount));
                     shopObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
                     shopObject.put("dbUserName",dbUserName);
                     shopObject.put("dbPassword",dbPassword);
+
+                    productObject.put("prodCode", cartItem.getProdCode());
+                    productObject.put("prodHsnCode", cartItem.getProdHsnCode());
                     productObject.put("prodId", cartItem.getProdId());
                     if(cartItem.getIsBarCodeAvailable().equals("Y")){
                         productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
                         productObject.put("barcodeList",  tempbarcodeArray);
                     }
                     productObject.put("qty", cartItem.getQty());
+                    productObject.put("prodName",cartItem.getProdName());
+                    productObject.put("prodUnit",cartItem.getUnit());
+                    productObject.put("prodSize",cartItem.getSize());
+                    productObject.put("prodColor",cartItem.getColor());
+                    productObject.put("prodDesc",cartItem.getProdDesc());
+                    productObject.put("prodMrp",cartItem.getProdMrp());
+                    productObject.put("prodSp", cartItem.getProdSp());
+                    productObject.put("prodCgst", cartItem.getProdCgst());
+                    productObject.put("prodSgst", cartItem.getProdSgst());
+                    productObject.put("prodIgst", cartItem.getProdIgst());
+                    productObject.put("prodImage1",cartItem.getProdImage1());
+                    productObject.put("prodImage2",cartItem.getProdImage2());
+                    productObject.put("prodImage3",cartItem.getProdImage3());
+                    productObject.put("isBarcodeAvailable",cartItem.getIsBarCodeAvailable());
+
                     productArray.put(productObject);
                     shopObject.put("myProductList", productArray);
                     shopArray.put(shopObject);
@@ -158,12 +189,27 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     productObject = new JSONObject();
 
                     productObject.put("prodCode", cartItem.getProdCode());
+                    productObject.put("prodHsnCode", cartItem.getProdHsnCode());
                     productObject.put("prodId", cartItem.getProdId());
                     if(cartItem.getIsBarCodeAvailable().equals("Y")){
                         productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
                         productObject.put("barcodeList",  tempbarcodeArray);
                     }
                     productObject.put("qty", cartItem.getQty());
+                    productObject.put("prodName",cartItem.getProdName());
+                    productObject.put("prodUnit",cartItem.getUnit());
+                    productObject.put("prodSize",cartItem.getSize());
+                    productObject.put("prodColor",cartItem.getColor());
+                    productObject.put("prodDesc",cartItem.getProdDesc());
+                    productObject.put("prodMrp",cartItem.getProdMrp());
+                    productObject.put("prodSp", cartItem.getProdSp());
+                    productObject.put("prodCgst", cartItem.getProdCgst());
+                    productObject.put("prodSgst", cartItem.getProdSgst());
+                    productObject.put("prodIgst", cartItem.getProdIgst());
+                    productObject.put("prodImage1",cartItem.getProdImage1());
+                    productObject.put("prodImage2",cartItem.getProdImage2());
+                    productObject.put("prodImage3",cartItem.getProdImage3());
+                    productObject.put("isBarcodeAvailable",cartItem.getIsBarCodeAvailable());
                     productArray.put(productObject);
                     shopObject.put("myProductList", productArray);
                 }
@@ -319,6 +365,11 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                 cartSize = cartSize + 1;
             }else viewCart.setVisibility(View.GONE);
         }
+
+        totalTax = dbHelper.getTotalTaxesart();
+        total_amount = total_amount + totalTax;
+        totDiscount = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
+
         tv_total.setText("Amount " + String.valueOf(Utility.numberFormat(total_amount)));
         tv_totalItems.setText("Items(" + cartSize + ")");
         //shoppursProductAdapter.notifyDataSetChanged();

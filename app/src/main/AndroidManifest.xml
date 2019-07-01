@@ -36,6 +36,10 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activities.payment.ccavenue.activities.CCAvenueWebViewActivity"
+            android:label="@string/title_activity_CCAvenueWebViewActivity"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+        <activity
             android:name=".activities.settings.ApplyOffersActivity"
             android:label="@string/title_activity_apply_offers"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>

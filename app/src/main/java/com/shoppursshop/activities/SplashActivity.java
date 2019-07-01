@@ -13,6 +13,8 @@ import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
+import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
+import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.activities.payment.mPos.MPayActivity;
 import com.shoppursshop.activities.payment.mPos.MPayTransactionDetailsActivity;
 import com.shoppursshop.database.DbHelper;
@@ -41,16 +43,21 @@ public class SplashActivity extends BaseActivity {
                 intent=new Intent(SplashActivity.this,MainActivity.class);
             }*/
 
-            intent = new Intent(SplashActivity.this, MainActivity.class);
+            intent = new Intent(SplashActivity.this, CCAvenueWebViewActivity.class);
+            intent.putExtra("flag", "wallet");
+            intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",100.00f));
+          //  intent.putExtra(AvenuesParams.ORDER_ID, orderID);
+            intent.putExtra(AvenuesParams.CURRENCY, "INR");
+            startActivityForResult(intent,1);
         } else {
             intent = new Intent(SplashActivity.this, LoginActivity.class);
         }
 
-        if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
+     /*   if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
             getMacID();
         } else {
             moveToNextActivity();
-        }
+        }*/
 
 
     }
@@ -98,5 +105,24 @@ public class SplashActivity extends BaseActivity {
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.i(TAG,"requestCode code "+requestCode+" "+resultCode+" "+RESULT_OK);
+
+        if (requestCode == 1)
+            if(data != null){
+                String status = data.getStringExtra("transStatus");
+                Log.i(TAG,"Transaction status "+status);
+                if(status.equals("false")){
+                    showMyDialog(data.getStringExtra("message"));
+                }else{
+                    showMyDialog("Payment is unsuccessful. Please try again later.");
+                }
+            }
+
     }
 }
