@@ -1,5 +1,6 @@
 package com.shoppursshop.activities;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -8,6 +9,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
@@ -33,6 +37,7 @@ import com.shoppursshop.models.InvoiceDetail;
 import com.shoppursshop.models.InvoiceItem;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.EnglishNumberToWords;
 import com.shoppursshop.utilities.Utility;
 
@@ -40,10 +45,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,6 +126,16 @@ public class InvoiceActivity extends NetworkBaseActivity {
         tvCouponOfferName = findViewById(R.id.tv_offer_name);
 
         ImageView ivClose = findViewById(R.id.image_close);
+        ImageView ivShare = findViewById(R.id.image_share);
+        ImageView ivPrint = findViewById(R.id.image_print);
+        ImageView ivDownload = findViewById(R.id.image_download);
+
+        ivPrint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createPdf();
+            }
+        });
 
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,7 +255,29 @@ public class InvoiceActivity extends NetworkBaseActivity {
         itemAdapter.notifyDataSetChanged();
     }
 
+    public String getFile() {
+        String date=new SimpleDateFormat("yyyy_MM_dd").format(new Date());
+        String time=new SimpleDateFormat("HH:mm:ss").format(new Date());
+
+        String root="";
+        if(BaseImageActivity.isExternalStorageAvailable()){
+            root = Environment.getExternalStoragePublicDirectory("").toString();
+        }
+        File myDir = new File(root+"/Shoppurs/Shoppurs documents");
+        myDir.mkdirs();
+        String fname="";
+        fname = date+time+".pdf";
+
+        String imagePath=root+"/Shoppurs/Shoppurs documents/"+fname;
+       // File file = new File (myDir, fname);
+        return imagePath;
+
+    }
+
+
     private void createPdf(){
+
+        String fileName = getFile();
 
         /***
          * Variables for further use....
@@ -264,10 +304,11 @@ public class InvoiceActivity extends NetworkBaseActivity {
         lineSeparator.setLineColor(new BaseColor(0, 0, 0, 68));
 
         // create a new document
-        PdfDocument document = new PdfDocument();
+        //PdfDocument document = new PdfDocument();
+        Document document = new Document();
         // Location to save
         try {
-            PdfWriter.getInstance(document, new FileOutputStream(""));
+            PdfWriter.getInstance(document, new FileOutputStream(fileName));
             // Open to write
             document.open();
             // Document Settings
@@ -279,26 +320,62 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
             // Title Order Details...
 // Adding Title....
-            Font mOrderDetailsTitleFont = new Font(baseFont, 36.0f, Font.NORMAL, BaseColor.BLACK);
+            Font headerFont = new Font(baseFont, 20.0f, Font.NORMAL, BaseColor.BLACK);
+            Font descFont = new Font(baseFont, 15.0f, Font.NORMAL, BaseColor.BLACK);
+
+            String shopName = sharedPreferences.getString(Constants.SHOP_NAME,"");
+            shopName = shopName.toUpperCase();
 
 // Creating Chunk
-            Chunk mOrderDetailsTitleChunk = new Chunk("Order Details", mOrderDetailsTitleFont);
-
+            Chunk shopNameChunk = new Chunk(shopName, headerFont);
 // Creating Paragraph to add...
-            Paragraph mOrderDetailsTitleParagraph = new Paragraph(mOrderDetailsTitleChunk);
-
+            Paragraph shopNameParagraph = new Paragraph(shopNameChunk);
 // Setting Alignment for Heading
-            mOrderDetailsTitleParagraph.setAlignment(Element.ALIGN_CENTER);
-
+            shopNameParagraph.setAlignment(Element.ALIGN_CENTER);
 // Finally Adding that Chunk
-            document.add(mOrderDetailsTitleParagraph);
+            document.add(shopNameParagraph);
+
+            document.add(new Paragraph(""));
+            document.add(new Paragraph(""));
+
+            String shopAddress = sharedPreferences.getString(Constants.ADDRESS,"");
+            Chunk shopAddressChunk = new Chunk(shopAddress, descFont);
+            Paragraph shopAddressParagraph = new Paragraph(shopAddressChunk);
+            shopAddressParagraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(shopAddressParagraph);
+
+            String shopPhone = "Ph: "+sharedPreferences.getString(Constants.MOBILE_NO,"");
+            Chunk shopPhoneChunk = new Chunk(shopPhone, descFont);
+            Paragraph shopMobileParagraph = new Paragraph(shopPhoneChunk);
+            shopMobileParagraph.setSpacingBefore(20);
+            shopMobileParagraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(shopMobileParagraph);
+
+            String shopEmail = "Email: "+sharedPreferences.getString(Constants.EMAIL,"");
+            Chunk shopEmailChunk = new Chunk(shopEmail, descFont);
+            Paragraph shopEmailParagraph = new Paragraph(shopEmailChunk);
+            shopEmailParagraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(shopEmailParagraph);
+
+            String shopGSTIN = "GSTIN: "+sharedPreferences.getString(Constants.GST_NO,"");
+            Chunk shopGSTINChunk = new Chunk(shopGSTIN, descFont);
+            Paragraph shopGSTINParagraph = new Paragraph(shopGSTINChunk);
+            shopGSTINParagraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(shopGSTINParagraph);
+
+            Chunk taxInvoiceChunk = new Chunk("Tax Invoice", descFont);
+            Paragraph taxInvoiceParagraph = new Paragraph(taxInvoiceChunk);
+            shopMobileParagraph.setSpacingBefore(10);
+            shopMobileParagraph.setSpacingAfter(10);
+            taxInvoiceParagraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(taxInvoiceParagraph);
 
             // Fields of Order Details...
 // Adding Chunks for Title and value
-            Font mOrderIdFont = new Font(baseFont, mHeadingFontSize, Font.NORMAL, mColorAccent);
+          /*  Font mOrderIdFont = new Font(baseFont, mHeadingFontSize, Font.NORMAL, mColorAccent);
             Chunk mOrderIdChunk = new Chunk("Order No:", mOrderIdFont);
             Paragraph mOrderIdParagraph = new Paragraph(mOrderIdChunk);
-            document.add(mOrderIdParagraph);
+            document.add(mOrderIdParagraph);*/
 
             document.add(new Paragraph(""));
             document.add(new Chunk(lineSeparator));
@@ -306,10 +383,14 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
             document.close();
 
+            DialogAndToast.showToast("Pdf created successfully.",this);
+
         } catch (DocumentException e) {
             e.printStackTrace();
+            DialogAndToast.showToast("Error in creating pdf.",this);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            DialogAndToast.showToast("Error in creating pdf.",this);
         }
 
     }

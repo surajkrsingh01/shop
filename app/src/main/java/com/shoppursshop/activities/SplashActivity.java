@@ -43,7 +43,7 @@ public class SplashActivity extends BaseActivity {
                 intent=new Intent(SplashActivity.this,MainActivity.class);
             }*/
 
-            intent = new Intent(SplashActivity.this, CCAvenueWebViewActivity.class);
+            intent = new Intent(SplashActivity.this, MainActivity.class);
             intent.putExtra("flag", "wallet");
             intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",100.00f));
           //  intent.putExtra(AvenuesParams.ORDER_ID, orderID);
