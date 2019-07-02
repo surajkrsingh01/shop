@@ -613,7 +613,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
                     editor.commit();
                     mListener.onFragmentInteraction(myUser, RegisterActivity.PERSONAL);
                 } else {
-
+                    DialogAndToast.showDialog(response.getString("message"), getActivity());
                 }
             }
         } catch (JSONException e) {
