@@ -237,6 +237,9 @@ public class LoginActivity extends NetworkBaseActivity{
                     }
 
                     editor.putInt(Constants.MIN_DELIVERY_AMOUNT,dataObject.getInt("minDeliveryAmount"));
+                    editor.putInt(Constants.DELIVERY_EST_TIME,dataObject.getInt("minDeliverytime"));
+                    editor.putInt(Constants.MIN_DELIVERY_DISTANCE,dataObject.getInt("minDeliverydistance"));
+                    editor.putInt(Constants.CHARGE_AFTER_MIN_DISTANCE,dataObject.getInt("chargesAfterMinDistance"));
                    // editor.putBoolean(Constants.IS_LOGGED_IN,true);
                     editor.commit();
                     syncData();
