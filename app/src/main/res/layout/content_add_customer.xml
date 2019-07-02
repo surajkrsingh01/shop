@@ -86,7 +86,7 @@
                 android:textColor="?attr/primaryTextColor"
                 android:id="@+id/edit_customer_mobile"
                 android:hint="@string/mobile"
-                android:inputType="phone"
+                android:inputType="number"
                 android:maxLength="10"
                 android:imeOptions="actionNext"
                 android:layout_marginTop="@dimen/edit_text_margin"

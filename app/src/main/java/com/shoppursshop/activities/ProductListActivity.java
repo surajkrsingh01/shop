@@ -62,6 +62,8 @@ public class ProductListActivity extends BaseActivity {
         subCatName = getIntent().getStringExtra("subCatName");
         subCatID = getIntent().getStringExtra("subCatID");
 
+        Log.d("subCatId ", subCatID);
+
         textViewSubCatName = findViewById(R.id.text_sub_cat);
         btnAddProduct = findViewById(R.id.btn_add);
         textViewSubCatName.setText(subCatName);
