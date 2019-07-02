@@ -25,10 +25,14 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfDocument;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
+import com.itextpdf.text.pdf.draw.VerticalPositionMark;
 import com.shoppursshop.R;
 import com.shoppursshop.adapters.InvoiceItemAdapter;
 import com.shoppursshop.models.Coupon;
@@ -365,21 +369,102 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
             Chunk taxInvoiceChunk = new Chunk("Tax Invoice", descFont);
             Paragraph taxInvoiceParagraph = new Paragraph(taxInvoiceChunk);
-            shopMobileParagraph.setSpacingBefore(10);
-            shopMobileParagraph.setSpacingAfter(10);
+            taxInvoiceParagraph.setSpacingBefore(10);
+           // taxInvoiceParagraph.setSpacingAfter(10);
             taxInvoiceParagraph.setAlignment(Element.ALIGN_CENTER);
             document.add(taxInvoiceParagraph);
 
-            // Fields of Order Details...
-// Adding Chunks for Title and value
-          /*  Font mOrderIdFont = new Font(baseFont, mHeadingFontSize, Font.NORMAL, mColorAccent);
-            Chunk mOrderIdChunk = new Chunk("Order No:", mOrderIdFont);
-            Paragraph mOrderIdParagraph = new Paragraph(mOrderIdChunk);
-            document.add(mOrderIdParagraph);*/
 
-            document.add(new Paragraph(""));
             document.add(new Chunk(lineSeparator));
-            document.add(new Paragraph(""));
+
+            Chunk invoiceNoChunk = new Chunk(tvInvoiceNo.getText().toString(), headerFont);
+            Paragraph invoiceNoParagraph = new Paragraph(invoiceNoChunk);
+            invoiceNoParagraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(invoiceNoParagraph);
+
+            Chunk glue = new Chunk(new VerticalPositionMark());
+            Chunk dateChunk = new Chunk(tvDate.getText().toString(), headerFont);
+            Chunk nameChunk = new Chunk(tvCustomerName.getText().toString(), headerFont);
+            Paragraph dateParagraph = new Paragraph(dateChunk);
+            dateParagraph.add(new Chunk(glue));
+            dateParagraph.add(nameChunk);
+            document.add(dateParagraph);
+
+            document.add(new Chunk(lineSeparator));
+
+            PdfPTable pdfPTable = new PdfPTable(6);
+            pdfPTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            pdfPTable.setWidthPercentage(100);
+
+            Chunk itemNameChunk = new Chunk("Item Name", descFont);
+            PdfPCell itemNameCell = new PdfPCell();
+            itemNameCell.setUseAscender(true);
+            itemNameCell.setVerticalAlignment(Element.ALIGN_TOP);
+            itemNameCell.setBorder(Rectangle.NO_BORDER);
+            itemNameCell.addElement(itemNameChunk);
+           // itemNameCell.setColspan(2);
+            pdfPTable.addCell(itemNameCell);
+
+           // Paragraph itemMenuParagraph = new Paragraph(itemNameChunk);
+            Chunk hsnCodeChunk = new Chunk("HSN", descFont);
+            PdfPCell hsnCodeCell = new PdfPCell();
+            hsnCodeCell.setUseAscender(true);
+            hsnCodeCell.setVerticalAlignment(Element.ALIGN_TOP);
+            Paragraph hsnParagraph = new Paragraph(hsnCodeChunk);
+            hsnParagraph.setAlignment(Element.ALIGN_RIGHT);
+            hsnCodeCell.setBorder(Rectangle.NO_BORDER);
+            hsnCodeCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            hsnCodeCell.addElement(hsnParagraph);
+            pdfPTable.addCell(hsnCodeCell);
+
+
+            Chunk qtyCodeChunk = new Chunk("QTY", descFont);
+            PdfPCell qtyCell = new PdfPCell();
+            qtyCell.setUseAscender(true);
+            qtyCell.setVerticalAlignment(Element.ALIGN_TOP);
+            Paragraph qtyParagraph = new Paragraph(qtyCodeChunk);
+            qtyParagraph.setAlignment(Element.ALIGN_RIGHT);
+            qtyCell.setBorder(Rectangle.NO_BORDER);
+            qtyCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            qtyCell.addElement(qtyParagraph);
+            pdfPTable.addCell(qtyCell);
+
+            Chunk mrpChunk = new Chunk("MRP", descFont);
+            PdfPCell mrpCell = new PdfPCell();
+            Paragraph mrpParagraph = new Paragraph(mrpChunk);
+            mrpParagraph.setAlignment(Element.ALIGN_RIGHT);
+            mrpCell.setBorder(Rectangle.NO_BORDER);
+            mrpCell.setUseAscender(true);
+            mrpCell.setVerticalAlignment(Element.ALIGN_TOP);
+            mrpCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            mrpCell.addElement(mrpParagraph);
+            pdfPTable.addCell(mrpCell);
+
+            Chunk rateChunk = new Chunk("RATE", descFont);
+            PdfPCell rateCell = new PdfPCell();
+            Paragraph rateParagraph = new Paragraph(rateChunk);
+            rateParagraph.setAlignment(Element.ALIGN_RIGHT);
+            rateCell.setBorder(Rectangle.NO_BORDER);
+            rateCell.setUseAscender(true);
+            rateCell.setVerticalAlignment(Element.ALIGN_TOP);
+            rateCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            rateCell.addElement(rateParagraph);
+            pdfPTable.addCell(rateCell);
+
+            Chunk amtChunk = new Chunk("AMT", descFont);
+            PdfPCell amtCell = new PdfPCell();
+            Paragraph amtParagraph = new Paragraph(amtChunk);
+            amtParagraph.setAlignment(Element.ALIGN_RIGHT);
+            amtCell.setBorder(Rectangle.NO_BORDER);
+            amtCell.setUseAscender(true);
+            amtCell.setVerticalAlignment(Element.ALIGN_TOP);
+            amtCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            amtCell.addElement(amtParagraph);
+            pdfPTable.addCell(amtCell);
+
+
+            document.add(pdfPTable);
+
 
             document.close();
 
