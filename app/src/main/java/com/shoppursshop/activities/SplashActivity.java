@@ -32,6 +32,13 @@ public class SplashActivity extends BaseActivity {
 
         // sharedPreferences=getSharedPreferences(Constants.MYPREFERENCEKEY,MODE_PRIVATE);
 
+        if(Utility.checkLocationPermission(this)){
+            init();
+        }
+
+    }
+
+    private void init(){
         String IMEI = sharedPreferences.getString(Constants.IMEI_NO,"");
         Log.i(TAG,"IMEI NO "+IMEI);
 
@@ -46,20 +53,18 @@ public class SplashActivity extends BaseActivity {
             intent = new Intent(SplashActivity.this, MainActivity.class);
             intent.putExtra("flag", "wallet");
             intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",100.00f));
-          //  intent.putExtra(AvenuesParams.ORDER_ID, orderID);
+            //  intent.putExtra(AvenuesParams.ORDER_ID, orderID);
             intent.putExtra(AvenuesParams.CURRENCY, "INR");
             startActivityForResult(intent,1);
         } else {
             intent = new Intent(SplashActivity.this, LoginActivity.class);
         }
 
-       if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
+        if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
             getMacID();
         } else {
             moveToNextActivity();
         }
-
-
     }
 
     private void moveToNextActivity() {
@@ -100,6 +105,13 @@ public class SplashActivity extends BaseActivity {
             case Utility.MY_PERMISSIONS_REQUEST_PHONE_STATE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getMacID();
+                }else{
+                    finish();
+                }
+                break;
+            case Utility.MY_PERMISSIONS_REQUEST_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    init();
                 }else{
                     finish();
                 }
