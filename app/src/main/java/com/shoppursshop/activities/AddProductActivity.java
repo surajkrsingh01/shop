@@ -385,7 +385,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i > 0){
                     colorList.clear();
-                    ProductSize size = (ProductSize)sizeList.get(i);
+                    ProductSize size = (ProductSize)sizeList.get(i-1);
                     for(ProductColor color : size.getProductColorList()){
                         colorList.add(color);
                     }
@@ -1145,6 +1145,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
                       MyProductItem productItem = new MyProductItem();
                       productItem.setProdId(jsonObject.getInt("prodId"));
                       productItem.setProdCatId(jsonObject.getInt("prodCatId"));
+                      productItem.setProdSubCatId(jsonObject.getInt("prodSubCatId"));
                       productItem.setProdName(jsonObject.getString("prodName"));
                       productItem.setProdCode(jsonObject.getString("prodCode"));
                       productItem.setProdDesc(jsonObject.getString("prodDesc"));
@@ -1529,7 +1530,8 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
         productSize.setStatus("A");
         sizeList.add(productSize);
         sizeAdapter.notifyDataSetChanged();
-
+        sizeSpinnerList.add(productSize.getSize());
+        sizeSpinnerAdapter.notifyDataSetChanged();
         etSize.setText("");
     }
 
