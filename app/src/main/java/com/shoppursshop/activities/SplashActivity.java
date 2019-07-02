@@ -53,11 +53,11 @@ public class SplashActivity extends BaseActivity {
             intent = new Intent(SplashActivity.this, LoginActivity.class);
         }
 
-     /*   if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
+       if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
             getMacID();
         } else {
             moveToNextActivity();
-        }*/
+        }
 
 
     }

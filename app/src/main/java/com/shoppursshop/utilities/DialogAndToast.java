@@ -2,8 +2,9 @@ package com.shoppursshop.utilities;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import androidx.appcompat.app.AlertDialog;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 /**
  * Created by Shweta on 8/22/2016.
