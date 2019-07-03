@@ -155,6 +155,7 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/relative_social_login"
             android:layout_below="@+id/relative_or_layout"
             android:layout_marginTop="@dimen/or_layout_margin"
