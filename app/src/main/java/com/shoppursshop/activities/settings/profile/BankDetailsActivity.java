@@ -41,8 +41,7 @@ public class BankDetailsActivity extends BaseImageActivity implements OnFragment
     private void init(){
         bankFragment = BankFragment.newInstance("update","");
 
-        FragmentTransaction trans = getSupportFragmentManager()
-                .beginTransaction();
+        FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
         trans.replace(R.id.container, bankFragment,"bankFragment");
         /*
          * IMPORTANT: The following lines allow us to add the fragment

@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -378,8 +379,10 @@ public class LoginActivity extends NetworkBaseActivity{
                         dbHelper.addProductBarcode(jsonObject.getInt("prodId"),jsonObject.getString("prodBarCode"));
                     }
 
+                    len = freeArray.length();
                     for (int i = 0; i < len; i++) {
                         dataObject = freeArray.getJSONObject(i);
+                        Log.d("index ", ""+len);
                         productDiscountOffer = new ProductDiscountOffer();
                         productDiscountOffer.setId(dataObject.getInt("id"));
                         productDiscountOffer.setOfferName(dataObject.getString("offerName"));
