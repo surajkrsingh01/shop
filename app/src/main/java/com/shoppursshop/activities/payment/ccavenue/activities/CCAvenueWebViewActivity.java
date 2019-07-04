@@ -60,7 +60,7 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
     String encVal;
     String vResponse;
     private String flag;
-    private String name,address,mobileNo,email;
+    private String name,address,mobileNo,email,zip;
 
     private WebView webview;
 
@@ -77,6 +77,7 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
         address= sharedPreferences.getString(com.shoppursshop.utilities.Constants.ADDRESS,"");
         email= sharedPreferences.getString(com.shoppursshop.utilities.Constants.EMAIL,"");
         mobileNo= sharedPreferences.getString(com.shoppursshop.utilities.Constants.MOBILE_NO,"");
+        zip= sharedPreferences.getString(com.shoppursshop.utilities.Constants.ZIP,"");
 
         if(name.equals("null") || name.equals("Not Available")){
             name = "";
@@ -94,11 +95,15 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
            email = "";
         }
 
+        if(zip.equals("null") || zip.equals("Not Available")){
+            zip = "";
+        }
+
         mainIntent = getIntent();
         flag = mainIntent.getStringExtra("flag");
 
-        REDIRECT_URL = getResources().getString(R.string.url)+"/paymentResponseHandler";
-        CANCEL_URL = getResources().getString(R.string.url)+"/paymentResponseHandler";
+        REDIRECT_URL = getResources().getString(R.string.url)+"/web/payment/paymentResponseHandler";
+        CANCEL_URL = getResources().getString(R.string.url)+"/web/payment/paymentResponseHandler";
 
         Integer randomNum = ServiceUtility.randInt(0, 9999999);
        // orderId = mainIntent.getStringExtra(AvenuesParams.ORDER_ID);
@@ -150,7 +155,7 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
                 @JavascriptInterface
                 public void processHTML(final String html) {
                     // process the html source code to get final status of transaction
-                   // Log.i(TAG,"response "+html);
+                    Log.i(TAG,"response "+html);
                     Intent intent = new Intent();
                     try {
                         String response = html.substring(html.indexOf("{"),(html.lastIndexOf("}")+1));
@@ -216,7 +221,7 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
                         + "&" + AvenuesParams.ENC_VAL + "=" + URLEncoder.encode(encVal, "UTF-8")
                         + "&" + "billing_name" + "=" + URLEncoder.encode(name, "UTF-8")
                         + "&" + "billing_address" + "=" + URLEncoder.encode(address, "UTF-8")
-                        // + "&" + "billing_zip" + "=" + URLEncoder.encode("Vipin Dhama", "UTF-8")
+                        + "&" + "billing_zip" + "=" + URLEncoder.encode(zip, "UTF-8")
                         + "&" + "billing_tel" + "=" + URLEncoder.encode(mobileNo, "UTF-8")
                         + "&" + "billing_email" + "=" + URLEncoder.encode(email, "UTF-8")
                         + "&" + "delivery_name" + "=" + URLEncoder.encode(name, "UTF-8")
@@ -237,11 +242,11 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
     public void get_RSA() {
 
         Log.i(TAG,"Getting RSA...");
-        String url=getResources().getString(R.string.url)+"/api/getRSAKey?orderid="+orderId;
+        String url=getResources().getString(R.string.url)+"/api/getRSAKey?orderId="+orderId+"&accessCode="+ACCESS_CODE;
         progressDialog.setMessage("Loading...");
         showProgress(true);
         // Log.i(TAG,"params "+params.toString());
-        stringApiRequest(Request.Method.POST,url,"getRSAKey");
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(),"getRSAKey");
 
     }
 
@@ -323,9 +328,19 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
     @Override
     public void onJsonObjectResponse(JSONObject response, String apiName) {
         try {
-             if(apiName.equals("getRsa")){
-                if(!response.getBoolean("error")){
-                    JSONObject jsonObject = response.getJSONObject("result");
+             if(apiName.equals("getRSAKey")){
+                if(response.getBoolean("status")){
+                    String jsonObject = response.getString("result");
+                    if (jsonObject != null && !jsonObject.equals("")) {
+                        vResponse = jsonObject;
+                        ///save retrived rsa key
+                        if (vResponse.contains("!ERROR!")) {
+                            DialogAndToast.showDialog(vResponse,CCAvenueWebViewActivity.this);
+                        } else {
+                            showProgress(true);
+                            new RenderView().execute();
+                        }
+                    }
 
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
@@ -336,6 +351,7 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public void onStringResponse(String response, String apiName) {
