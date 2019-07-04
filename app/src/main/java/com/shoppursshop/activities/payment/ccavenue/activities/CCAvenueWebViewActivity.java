@@ -353,7 +353,7 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
                      Intent intent = new Intent(CCAvenueWebViewActivity.this, TransactionDetailsActivity.class);
                      intent.putExtra("responseData",dataObject.toString());
                      intent.putExtra("shopArray",getIntent().getStringExtra("shopArray"));
-                     intent.putExtra("response", responseData);
+                     intent.putExtra("response", dataObject.toString());
                      startActivity(intent);
                      CCAvenueWebViewActivity.this.finish();
                  }else{
