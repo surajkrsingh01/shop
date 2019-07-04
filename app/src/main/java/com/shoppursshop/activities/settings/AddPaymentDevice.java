@@ -18,6 +18,7 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.MainActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.SplashActivity;
+import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.activities.payment.ePay.EPayPayswiffActivity;
 import com.shoppursshop.adapters.ShoppursProductAdapter;
@@ -329,12 +330,14 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     String orderNumber = response.getJSONObject("result").getString("orderNumber");
                     Log.d(TAG, "orderNumber "+orderNumber );
                     //placeOrder(shopArray, orderId);  // open payment option
-                    Intent intent = new Intent(AddPaymentDevice.this, MainActivity.class);
+                    Intent intent = new Intent(AddPaymentDevice.this, CCAvenueWebViewActivity.class);
                     intent.putExtra("flag", "wallet");
                     intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",total_amount));
                     intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);
                     intent.putExtra(AvenuesParams.CURRENCY, "INR");
-                    startActivityForResult(intent,1);
+                    intent.putExtra("shopArray",shopArray.toString());
+                    startActivity(intent);
+                    finish();
 
                     /*Intent intent = new Intent(AddPaymentDevice.this, EPayPayswiffActivity.class);
                     intent.putExtra("orderNumber",orderNumber);
@@ -392,12 +395,20 @@ public class AddPaymentDevice extends NetworkBaseActivity {
 
         if (requestCode == 1)
             if(data != null){
-                String status = data.getStringExtra("transStatus");
-                Log.i(TAG,"Transaction status "+status);
-                if(status.equals("false")){
-                    showMyDialog(data.getStringExtra("message"));
-                }else{
-                    showMyDialog("Payment is unsuccessful. Please try again later.");
+                try {
+                    JSONObject jsonObject = new JSONObject(data.getStringExtra("response"));
+                   // Log.i(TAG,"Transaction status "+jsonObject.getString("order_status"));
+                    String statusCode = jsonObject.getString("response_code");
+                    if(statusCode.equals("0")){
+                        //showMyDialog(data.getStringExtra("message"));
+
+
+
+                    }else{
+                        showMyDialog("Payment is unsuccessful. Please try again later.");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
 
