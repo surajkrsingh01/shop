@@ -52,10 +52,10 @@ public class SplashActivity extends BaseActivity {
 
             intent = new Intent(SplashActivity.this, MainActivity.class);
             intent.putExtra("flag", "wallet");
-            intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",100.00f));
+            intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",1.00f));
             //  intent.putExtra(AvenuesParams.ORDER_ID, orderID);
             intent.putExtra(AvenuesParams.CURRENCY, "INR");
-            startActivityForResult(intent,1);
+            //startActivityForResult(intent,1);
         } else {
             intent = new Intent(SplashActivity.this, LoginActivity.class);
         }

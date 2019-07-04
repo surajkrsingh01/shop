@@ -123,6 +123,7 @@
             android:id="@+id/relative_or_layout"
             android:layout_below="@+id/btn_login"
             android:layout_marginTop="@dimen/or_layout_margin"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -157,6 +158,7 @@
         <LinearLayout
             android:visibility="gone"
             android:id="@+id/relative_social_login"
+            android:visibility="gone"
             android:layout_below="@+id/relative_or_layout"
             android:layout_marginTop="@dimen/or_layout_margin"
             android:gravity="center_horizontal"

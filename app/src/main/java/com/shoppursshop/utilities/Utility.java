@@ -16,8 +16,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.util.TypedValue;
+
+import com.shoppursshop.activities.ForgotPasswordActivity;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -36,6 +39,7 @@ public class Utility {
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACT = 127;
     public static final int MY_PERMISSIONS_REQUEST_PHONE_STATE = 128;
     public static final int MY_PERMISSIONS_CAMERA = 129;
+    public static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 130;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static boolean verifyStoragePermissions(final Context context)
@@ -201,6 +205,25 @@ public class Utility {
                 ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static boolean verifySendSmsPermissions(final Context context)
+    {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if(currentAPIVersion>= Build.VERSION_CODES.M)
+        {
+            if (ContextCompat.checkSelfPermission((Activity)context, Manifest.permission.SEND_SMS) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.SEND_SMS},
+                        MY_PERMISSIONS_REQUEST_SEND_SMS);
                 return false;
             } else {
                 return true;

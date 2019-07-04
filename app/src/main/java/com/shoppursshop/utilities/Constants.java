@@ -91,6 +91,7 @@ public class Constants {
 
     //api
     public static String LOGIN="/api/user/loginRetailer";
+    public static String GET_PASSWORD="/api/user/getPassword";
     public static String SYNC="/api/syncdata";
     public static String MANAGE_REGISTRATION="/api/user/manageRegistration";
     public static String GET_COUNTRIES="/api/countries";
