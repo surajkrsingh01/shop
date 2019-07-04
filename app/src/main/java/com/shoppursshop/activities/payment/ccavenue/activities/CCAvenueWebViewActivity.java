@@ -172,7 +172,13 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
                       //  intent.putExtra("transStatus", "true");
                     }
 
-                    saveResponse();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveResponse();
+                        }
+                    });
+
                 //    setResult(-1,intent);
                //     finish();
                //     CCAvenueWebViewActivity.this.finish();
