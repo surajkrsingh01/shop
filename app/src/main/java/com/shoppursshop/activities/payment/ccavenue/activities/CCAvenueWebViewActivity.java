@@ -160,7 +160,7 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
                 public void processHTML(final String html) {
                     // process the html source code to get final status of transaction
                     Log.i(TAG,"response "+html);
-                    Intent intent = new Intent();
+                    final Intent intent = new Intent();
                     try {
                         responseData = html.substring(html.indexOf("{"),(html.lastIndexOf("}")+1));
                         Log.i(TAG,"response "+responseData);
@@ -356,12 +356,22 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
                 }
             }else if (apiName.equals("updatePaymentStatus")) {
                  if (response.getBoolean("status")) {
-                     Intent intent = new Intent(CCAvenueWebViewActivity.this, TransactionDetailsActivity.class);
-                     intent.putExtra("responseData",dataObject.toString());
-                     intent.putExtra("shopArray",getIntent().getStringExtra("shopArray"));
-                     intent.putExtra("response", dataObject.toString());
-                     startActivity(intent);
-                     CCAvenueWebViewActivity.this.finish();
+
+                     if(flag.equals("buyUserLicense")){
+                         Intent intent = new Intent();
+                         intent.putExtra("response",dataObject.toString());
+                         setResult(-1,intent);
+                         finish();
+                         CCAvenueWebViewActivity.this.finish();
+                     }else{
+                         Intent intent = new Intent(CCAvenueWebViewActivity.this, TransactionDetailsActivity.class);
+                         intent.putExtra("responseData",dataObject.toString());
+                         intent.putExtra("shopArray",getIntent().getStringExtra("shopArray"));
+                         intent.putExtra("response", dataObject.toString());
+                         startActivity(intent);
+                         CCAvenueWebViewActivity.this.finish();
+                     }
+
                  }else{
                      DialogAndToast.showDialog(response.getString("message"),this);
                  }

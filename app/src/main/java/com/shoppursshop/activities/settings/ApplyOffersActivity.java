@@ -60,6 +60,7 @@ public class ApplyOffersActivity extends BaseActivity implements MyItemTypeClick
         rlOfferDesc = findViewById(R.id.rl_offer_desc);
         itemList = new ArrayList<>();
         List<ProductComboOffer> comboOffer = dbHelper.getProductComboOffer();
+        Log.i(TAG,"combo offer  "+comboOffer.size());
         List<ProductComboOffer> priceOffer = dbHelper.getProductPriceOffer();
         List<Object> freeOffer = dbHelper.getProductFreeOffer();
         MyProductItem myProductItem = null;

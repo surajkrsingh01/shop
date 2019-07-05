@@ -3,9 +3,25 @@ package com.shoppursshop.models;
 public class UserLicense {
 
 	private int id,numOfUsers;
-	private String shopCode,shopMobile,scheme,purchaseDate,expiryDate,renewdDate,licenseType,userName,dbName,dbUserName,dbPassword;
+	private String shopCode,shopMobile,scheme,purchaseDate,expiryDate,renewdDate,
+			licenseType,paymentStatus,status,userName,dbName,dbUserName,dbPassword;
 	private float amount;
 
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	public String getShopMobile() {
 		return shopMobile;

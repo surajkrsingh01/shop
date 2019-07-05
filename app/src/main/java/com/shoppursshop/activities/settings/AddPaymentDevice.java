@@ -347,6 +347,7 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",total_amount));
                     intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);
                     intent.putExtra(AvenuesParams.CURRENCY, "INR");
+                    intent.putExtra("flag", "addPaymentDevice");
                     intent.putExtra("shopArray",shopArray.toString());
                     startActivity(intent);
                     finish();

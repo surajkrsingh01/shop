@@ -214,6 +214,8 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
                     JSONArray productComboArray = null;
                     List<ProductComboDetails> productComboOfferDetails = null;
                     int innerLen = 0;
+                    dbHelper.deleteTable(DbHelper.PROD_COMBO_TABLE);
+                    dbHelper.deleteTable(DbHelper.PROD_COMBO_DETAIL_TABLE);
                     for (int i = 0; i < len; i++) {
                         dataObject = comboArray.getJSONObject(i);
                         offerItem = new ShopOfferItem();
@@ -230,8 +232,6 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
                         productComboOffer.setStartDate(dataObject.getString("startDate"));
                         productComboOffer.setEndDate(dataObject.getString("endDate"));
                         productComboArray = dataObject.getJSONArray("productComboOfferDetails");
-                        dbHelper.deleteTable(DbHelper.PROD_COMBO_TABLE);
-                        dbHelper.deleteTable(DbHelper.PROD_COMBO_DETAIL_TABLE);
                         dbHelper.addProductComboOffer(productComboOffer,Utility.getTimeStamp(),Utility.getTimeStamp());
                         productComboOfferDetails = new ArrayList<>();
                         innerLen = productComboArray.length();
@@ -255,6 +255,8 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
                     }
 
                     len = priceArray.length();
+                    dbHelper.deleteTable(DbHelper.PROD_PRICE_TABLE);
+                    dbHelper.deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
                     for (int i = 0; i < len; i++) {
                         dataObject = priceArray.getJSONObject(i);
                         offerItem = new ShopOfferItem();
@@ -273,8 +275,6 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
                         productComboOffer.setStartDate(dataObject.getString("startDate"));
                         productComboOffer.setEndDate(dataObject.getString("endDate"));
                         productComboArray = dataObject.getJSONArray("productComboOfferDetails");
-                        dbHelper.deleteTable(DbHelper.PROD_PRICE_TABLE);
-                        dbHelper.deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
                         dbHelper.addProductPriceOffer(productComboOffer,Utility.getTimeStamp(),Utility.getTimeStamp());
                         productComboOfferDetails = new ArrayList<>();
                         innerLen = productComboArray.length();
