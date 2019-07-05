@@ -47,7 +47,7 @@ public class AddPaymentDevice extends NetworkBaseActivity {
     private RecyclerView recyclerView;
     private ShoppursProductAdapter shoppursProductAdapter;
     private RelativeLayout rlfooterviewcart;
-    private float total_amount;
+    private float total_amount,totCGST,totSGST,totIGST;
     private int total_quantity, cartSize;
     private TextView tv_total,tv_totalItems, tv_placeorder, tvnoData, viewCart;
     private LinearLayout linear_details;
@@ -162,9 +162,9 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     //shopObject.put("totCgst",String.valueOf(dbHelper.getTaxesCart("cgst")));
                     //shopObject.put("totSgst",String.valueOf(dbHelper.getTaxesCart("sgst")));
                     //shopObject.put("totIgst",String.valueOf(dbHelper.getTaxesCart("igst")));
-                    shopObject.put("totCgst",String.valueOf(0));
-                    shopObject.put("totSgst",String.valueOf(0));
-                    shopObject.put("totIgst",String.valueOf(0));
+                    shopObject.put("totCgst",String.valueOf(totCGST));
+                    shopObject.put("totSgst",String.valueOf(totSGST));
+                    shopObject.put("totIgst",String.valueOf(totIGST));
                     shopObject.put("totTax",String.valueOf(totalTax));
                     shopObject.put("deliveryCharges",String.valueOf(0f));
                     shopObject.put("totDiscount",String.valueOf(totDiscount));
@@ -382,16 +382,22 @@ public class AddPaymentDevice extends NetworkBaseActivity {
         total_amount = 0;
         total_quantity = 0;
         cartSize = 0;
+        totalTax = 0;totSGST = 0;totCGST = 0;totIGST = 0;
+
         for (MyProductItem myProductItem : myProductList) {
             total_amount = total_amount + myProductItem.getTotalAmount();
             total_quantity = total_quantity + myProductItem.getQty();
+            totCGST = totCGST + (myProductItem.getProdCgst() * myProductItem.getProdSp() * myProductItem.getQty()) /100;
+            totSGST = totSGST + (myProductItem.getProdSgst() * myProductItem.getProdSp() * myProductItem.getQty()) /100;
+            totIGST = totIGST + (myProductItem.getProdIgst() * myProductItem.getProdSp() * myProductItem.getQty()) /100;
             if(myProductItem.getTotalAmount()>0) {
                 viewCart.setVisibility(View.VISIBLE);
                 cartSize = cartSize + 1;
             }else viewCart.setVisibility(View.GONE);
         }
 
-        //totalTax = dbHelper.getTotalTaxesart();
+        totalTax = totCGST + totSGST;
+
         total_amount = total_amount + totalTax;
         //totDiscount = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
 

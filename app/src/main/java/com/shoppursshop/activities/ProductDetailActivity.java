@@ -638,9 +638,14 @@ public class ProductDetailActivity extends NetworkBaseActivity {
 
     private void initUnitColorSizeList(){
         unitList = new ArrayList<>();
-        for(ProductUnit unit : myProductItem.getProductUnitList()){
-            unitList.add(unit);
+        try {
+            for(ProductUnit unit : myProductItem.getProductUnitList()){
+                unitList.add(unit);
+            }
+        }catch (NullPointerException npe){
+            npe.fillInStackTrace();
         }
+
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
@@ -650,9 +655,16 @@ public class ProductDetailActivity extends NetworkBaseActivity {
       //  unitAdapter.setMyItemTypeClickListener(this);
 
         sizeList = new ArrayList<>();
-        for(ProductSize size : myProductItem.getProductSizeList()){
-            sizeList.add(size);
+
+        try {
+            for(ProductSize size : myProductItem.getProductSizeList()){
+                sizeList.add(size);
+            }
+        }catch (NullPointerException npe){
+            npe.fillInStackTrace();
         }
+
+
         sizeAdapter=new SpecificationAdapter(this,sizeList,"sizeDetail");
        // sizeAdapter.setMyItemTypeClickListener(this);
 
