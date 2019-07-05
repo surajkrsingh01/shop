@@ -96,7 +96,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
     private Spinner spinnerSize;
     List<String> sizeSpinnerList;
     private ArrayAdapter<String> sizeSpinnerAdapter;
-
+    private RelativeLayout relative_size;
     private int limit = 5,offset = 0;
 
 
@@ -140,6 +140,8 @@ public class ProductDetailActivity extends NetworkBaseActivity {
         linear_amount_division = findViewById(R.id.linear_amount_division);
         text_sale_trend_Label = findViewById(R.id.text_sale_trend_Label);
         text_reviews_Label = findViewById(R.id.text_reviews_Label);
+        relative_size = findViewById(R.id.relative_size);
+
 
         imageView2 = findViewById(R.id.image_view_2);
         imageView3 = findViewById(R.id.image_view_3);
@@ -383,6 +385,36 @@ public class ProductDetailActivity extends NetworkBaseActivity {
             @Override
             public void onClick(View view) {
                 rlProductSpecificationLayout.setVisibility(View.GONE);
+            }
+        });
+
+        TextView tvUnit = findViewById(R.id.tvUnit);
+        tvUnit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                specificationType = UNIT;
+                relative_size.setVisibility(View.GONE);
+                initUnitList();
+            }
+        });
+
+        TextView tvSize = findViewById(R.id.tvSize);
+        tvSize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                specificationType = SIZE;
+                relative_size.setVisibility(View.VISIBLE);
+                initSizeList();
+            }
+        });
+
+        TextView tvColor = findViewById(R.id.tvColor);
+        tvColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                specificationType = COLOR;
+                relative_size.setVisibility(View.GONE);
+                initColorList();
             }
         });
 
@@ -641,6 +673,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
         try {
             for(ProductUnit unit : myProductItem.getProductUnitList()){
                 unitList.add(unit);
+                Log.i(TAG,"unit added "+unit.getUnitName()+" status "+unit.getStatus());
             }
         }catch (NullPointerException npe){
             npe.fillInStackTrace();
@@ -652,6 +685,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         unitAdapter=new SpecificationAdapter(this,unitList,"unitDetail");
+        recyclerView.setAdapter(unitAdapter);
       //  unitAdapter.setMyItemTypeClickListener(this);
 
         sizeList = new ArrayList<>();
@@ -685,14 +719,17 @@ public class ProductDetailActivity extends NetworkBaseActivity {
     private void initUnitList(){
         Log.i(TAG,"unit size "+unitList.size());
         recyclerView.setAdapter(unitAdapter);
+        //unitAdapter.notifyDataSetChanged();
     }
 
     private void initSizeList(){
         recyclerView.setAdapter(sizeAdapter);
+       // sizeAdapter.notifyDataSetChanged();
     }
 
     private void initColorList(){
         recyclerView.setAdapter(colorAdapter);
+       // colorAdapter.notifyDataSetChanged();
     }
 
 }

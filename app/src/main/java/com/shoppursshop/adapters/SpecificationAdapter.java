@@ -57,11 +57,14 @@ public class SpecificationAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         @Override
         public void onClick(View view) {
-            if(type.equals("unit")){
-                myItemTypeClickListener.onItemClicked(getAdapterPosition(),1);
-            }else{
-                myItemTypeClickListener.onItemClicked(getAdapterPosition(),2);
+            if(view == imageDelete){
+                if(type.equals("unit")){
+                    myItemTypeClickListener.onItemClicked(getAdapterPosition(),1);
+                }else{
+                    myItemTypeClickListener.onItemClicked(getAdapterPosition(),2);
+                }
             }
+
 
         }
     }
@@ -85,7 +88,10 @@ public class SpecificationAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         @Override
         public void onClick(View view) {
-             myItemTypeClickListener.onItemClicked(getAdapterPosition(),3);
+            if(view == imageDelete){
+                myItemTypeClickListener.onItemClicked(getAdapterPosition(),3);
+            }
+
         }
     }
 
@@ -128,7 +134,7 @@ public class SpecificationAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MyUnitViewHolder){
             MyUnitViewHolder myViewHolder = (MyUnitViewHolder)holder;
-            if(type.equals("unit")){
+            if(type.equals("unit") || type.equals("unitDetail")){
                 ProductUnit item = (ProductUnit)itemList.get(position);
                 if(item.getStatus().equals("D")){
                     myViewHolder.container.setVisibility(View.GONE);
@@ -136,7 +142,7 @@ public class SpecificationAdapter extends RecyclerView.Adapter<RecyclerView.View
                     myViewHolder.container.setVisibility(View.VISIBLE);
                 }
                 myViewHolder.textHeader.setText(item.getUnitValue()+" "+item.getUnitName());
-            }else if(type.equals("size")){
+            }else if(type.equals("size") || type.equals("sizeDetail")){
                 ProductSize item = (ProductSize)itemList.get(position);
                 if(item.getStatus().equals("D")){
                     myViewHolder.container.setVisibility(View.GONE);
