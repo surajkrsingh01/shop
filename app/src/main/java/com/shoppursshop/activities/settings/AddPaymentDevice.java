@@ -18,6 +18,7 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.MainActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.SplashActivity;
+import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.activities.payment.ePay.EPayPayswiffActivity;
 import com.shoppursshop.adapters.ShoppursProductAdapter;
@@ -86,10 +87,16 @@ public class AddPaymentDevice extends NetworkBaseActivity {
         viewCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //generateJson();
+                generateJson();
 
-                Intent intent = new Intent(AddPaymentDevice.this, EPayPayswiffActivity.class);
+                /*Intent intent = new Intent(AddPaymentDevice.this, CCAvenueWebViewActivity.class);
+                intent.putExtra("flag", "wallet");
+                intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",total_amount));
+                intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);
+                intent.putExtra(AvenuesParams.CURRENCY, "INR");
+                intent.putExtra("shopArray",shopArray.toString());
                 startActivity(intent);
+                finish();*/
             }
         });
 
@@ -152,9 +159,12 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     shopObject.put("totalQuantity",total_quantity);
                     shopObject.put("toalAmount",total_amount);
                    // shopObject.put("ordCouponId","");
-                    shopObject.put("totCgst",String.valueOf(dbHelper.getTaxesCart("cgst")));
-                    shopObject.put("totSgst",String.valueOf(dbHelper.getTaxesCart("sgst")));
-                    shopObject.put("totIgst",String.valueOf(dbHelper.getTaxesCart("igst")));
+                    //shopObject.put("totCgst",String.valueOf(dbHelper.getTaxesCart("cgst")));
+                    //shopObject.put("totSgst",String.valueOf(dbHelper.getTaxesCart("sgst")));
+                    //shopObject.put("totIgst",String.valueOf(dbHelper.getTaxesCart("igst")));
+                    shopObject.put("totCgst",String.valueOf(0));
+                    shopObject.put("totSgst",String.valueOf(0));
+                    shopObject.put("totIgst",String.valueOf(0));
                     shopObject.put("totTax",String.valueOf(totalTax));
                     shopObject.put("deliveryCharges",String.valueOf(0f));
                     shopObject.put("totDiscount",String.valueOf(totDiscount));
@@ -283,6 +293,8 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                 for(int i=0;i<productJArray.length();i++){
                     MyProductItem myProduct = new MyProductItem();
                     myProduct.setProdId(productJArray.getJSONObject(i).getInt("prodId"));
+                    myProduct.setProdCatId(productJArray.getJSONObject(i).getInt("prodCatId"));
+                    myProduct.setProdSubCatId(productJArray.getJSONObject(i).getInt("prodSubCatId"));
                     myProduct.setProdName(productJArray.getJSONObject(i).getString("prodName"));
                     myProduct.setProdQoh(productJArray.getJSONObject(i).getInt("prodQoh"));
                     myProduct.setProdMrp(Float.parseFloat(productJArray.getJSONObject(i).getString("prodMrp")));
@@ -295,6 +307,7 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     myProduct.setProdImage2(productJArray.getJSONObject(i).getString("prodImage2"));
                     myProduct.setProdImage3(productJArray.getJSONObject(i).getString("prodImage3"));
                     myProduct.setProdHsnCode(productJArray.getJSONObject(i).getString("prodHsnCode"));
+                    myProduct.setIsBarCodeAvailable(productJArray.getJSONObject(i).getString("isBarcodeAvailable"));
                     myProduct.setProdMfgDate(productJArray.getJSONObject(i).getString("prodMfgDate"));
                     myProduct.setProdExpiryDate(productJArray.getJSONObject(i).getString("prodExpiryDate"));
                     myProduct.setProdMfgBy(productJArray.getJSONObject(i).getString("prodMfgBy"));
@@ -329,12 +342,14 @@ public class AddPaymentDevice extends NetworkBaseActivity {
                     String orderNumber = response.getJSONObject("result").getString("orderNumber");
                     Log.d(TAG, "orderNumber "+orderNumber );
                     //placeOrder(shopArray, orderId);  // open payment option
-                    Intent intent = new Intent(AddPaymentDevice.this, MainActivity.class);
+                    Intent intent = new Intent(AddPaymentDevice.this, CCAvenueWebViewActivity.class);
                     intent.putExtra("flag", "wallet");
                     intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",total_amount));
                     intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);
                     intent.putExtra(AvenuesParams.CURRENCY, "INR");
-                    startActivityForResult(intent,1);
+                    intent.putExtra("shopArray",shopArray.toString());
+                    startActivity(intent);
+                    finish();
 
                     /*Intent intent = new Intent(AddPaymentDevice.this, EPayPayswiffActivity.class);
                     intent.putExtra("orderNumber",orderNumber);
@@ -375,9 +390,9 @@ public class AddPaymentDevice extends NetworkBaseActivity {
             }else viewCart.setVisibility(View.GONE);
         }
 
-        totalTax = dbHelper.getTotalTaxesart();
+        //totalTax = dbHelper.getTotalTaxesart();
         total_amount = total_amount + totalTax;
-        totDiscount = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
+        //totDiscount = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
 
         tv_total.setText("Amount " + String.valueOf(Utility.numberFormat(total_amount)));
         tv_totalItems.setText("Items(" + cartSize + ")");
@@ -392,12 +407,20 @@ public class AddPaymentDevice extends NetworkBaseActivity {
 
         if (requestCode == 1)
             if(data != null){
-                String status = data.getStringExtra("transStatus");
-                Log.i(TAG,"Transaction status "+status);
-                if(status.equals("false")){
-                    showMyDialog(data.getStringExtra("message"));
-                }else{
-                    showMyDialog("Payment is unsuccessful. Please try again later.");
+                try {
+                    JSONObject jsonObject = new JSONObject(data.getStringExtra("response"));
+                   // Log.i(TAG,"Transaction status "+jsonObject.getString("order_status"));
+                    String statusCode = jsonObject.getString("response_code");
+                    if(statusCode.equals("0")){
+                        //showMyDialog(data.getStringExtra("message"));
+
+
+
+                    }else{
+                        showMyDialog("Payment is unsuccessful. Please try again later.");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
 

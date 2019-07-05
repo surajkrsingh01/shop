@@ -21,6 +21,11 @@ import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.Utility;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static com.dspread.xnpos.EmvAppTag.status;
+
 public class SplashActivity extends BaseActivity {
 
     // private SharedPreferences sharedPreferences;
@@ -52,10 +57,10 @@ public class SplashActivity extends BaseActivity {
 
             intent = new Intent(SplashActivity.this, MainActivity.class);
             intent.putExtra("flag", "wallet");
-            intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",1.00f));
+            intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",51.00f));
             //  intent.putExtra(AvenuesParams.ORDER_ID, orderID);
             intent.putExtra(AvenuesParams.CURRENCY, "INR");
-            //startActivityForResult(intent,1);
+          //  startActivityForResult(intent,1);
         } else {
             intent = new Intent(SplashActivity.this, LoginActivity.class);
         }
@@ -127,14 +132,19 @@ public class SplashActivity extends BaseActivity {
 
         if (requestCode == 1)
             if(data != null){
-                String status = data.getStringExtra("transStatus");
-                Log.i(TAG,"Transaction status "+status);
-                if(status.equals("false")){
-                    showMyDialog(data.getStringExtra("message"));
-                }else{
-                    showMyDialog("Payment is unsuccessful. Please try again later.");
+                try {
+                    JSONObject jsonObject = new JSONObject(data.getStringExtra("response"));
+                    Log.i(TAG,"Transaction status "+jsonObject.getString("order_status"));
+                    String statusCode = jsonObject.getString("response_code");
+                    if(statusCode.equals("0")){
+                        showMyDialog(data.getStringExtra("message"));
+                    }else{
+                        showMyDialog("Payment is unsuccessful. Please try again later.");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            }
 
+            }
     }
 }

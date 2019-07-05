@@ -22,6 +22,7 @@ import com.android.volley.toolbox.Volley;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.BaseActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.TransactionDetailsActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.activities.payment.ccavenue.utility.Constants;
 import com.shoppursshop.activities.payment.ccavenue.utility.LoadingDialog;
@@ -60,8 +61,8 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
     String encVal;
     String vResponse;
     private String flag;
-    private String name,address,mobileNo,email,zip;
-
+    private String name,address,mobileNo,email,zip,responseData;
+    private JSONObject dataObject;
     private WebView webview;
 
 
@@ -104,6 +105,9 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
 
         REDIRECT_URL = getResources().getString(R.string.url)+"/web/payment/paymentResponseHandler";
         CANCEL_URL = getResources().getString(R.string.url)+"/web/payment/paymentResponseHandler";
+
+      //  REDIRECT_URL = getResources().getString(R.string.url)+"/api/paymentResponseHandler";
+     //   CANCEL_URL = getResources().getString(R.string.url)+"/api/paymentResponseHandler";
 
         Integer randomNum = ServiceUtility.randInt(0, 9999999);
        // orderId = mainIntent.getStringExtra(AvenuesParams.ORDER_ID);
@@ -158,21 +162,26 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
                     Log.i(TAG,"response "+html);
                     Intent intent = new Intent();
                     try {
-                        String response = html.substring(html.indexOf("{"),(html.lastIndexOf("}")+1));
-                        Log.i(TAG,"response "+response);
-                        JSONObject dataObject = new JSONObject(response);
-                        intent.putExtra("transStatus", dataObject.getString("error"));
-                        intent.putExtra("message", dataObject.getString("message"));
-                    } catch (JSONException e) {
+                        responseData = html.substring(html.indexOf("{"),(html.lastIndexOf("}")+1));
+                        Log.i(TAG,"response "+responseData);
+                      //  JSONObject dataObject = new JSONObject(response);
+                        intent.putExtra("response", responseData);
+                       // intent.putExtra("message", dataObject.getString("status_message"));
+                    } catch (Exception e){
                         e.printStackTrace();
-                        intent.putExtra("transStatus", "true");
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        intent.putExtra("transStatus", "true");
+                      //  intent.putExtra("transStatus", "true");
                     }
 
-                    setResult(-1,intent);
-                    finish();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveResponse();
+                        }
+                    });
+
+                //    setResult(-1,intent);
+               //     finish();
+               //     CCAvenueWebViewActivity.this.finish();
                 }
 
                 @JavascriptInterface
@@ -345,7 +354,18 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }
-            }
+            }else if (apiName.equals("updatePaymentStatus")) {
+                 if (response.getBoolean("status")) {
+                     Intent intent = new Intent(CCAvenueWebViewActivity.this, TransactionDetailsActivity.class);
+                     intent.putExtra("responseData",dataObject.toString());
+                     intent.putExtra("shopArray",getIntent().getStringExtra("shopArray"));
+                     intent.putExtra("response", dataObject.toString());
+                     startActivity(intent);
+                     CCAvenueWebViewActivity.this.finish();
+                 }else{
+                     DialogAndToast.showDialog(response.getString("message"),this);
+                 }
+             }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -367,6 +387,48 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
                 new RenderView().execute();
 
             }
+        }
+    }
+
+    private void saveResponse(){
+        try{
+            dataObject = new JSONObject(responseData);
+            Log.i(TAG,"Save Response "+dataObject.toString());
+            try{
+                dataObject.put("orderNumber",orderId);
+                if(dataObject.getString("response_code").equals("0")){
+                    dataObject.put("status", "Done");
+                    dataObject.put("approved", true);
+                }else{
+                    dataObject.put("status", "Failed");
+                    dataObject.put("approved", false);
+                }
+                dataObject.put("transactionType", "NA");
+                dataObject.put("merchantId", MERCHANT_ID);
+                dataObject.put("paymentMethod", dataObject.getString("payment_mode"));
+                dataObject.put("paymentMode", "ePay");
+                dataObject.put("transactionId", dataObject.getString("tracking_id"));
+                dataObject.put("cardBrand", dataObject.getString("card_name"));
+                dataObject.put("responseCode", dataObject.getString("response_code"));
+                dataObject.put("responseMessage", dataObject.getString("status_message"));
+                dataObject.put("currencyCode", dataObject.getString("currency"));
+                dataObject.put("date", dataObject.getString("trans_date"));
+                //dataObject.put("status", dataObject.getString("order_status"));
+                dataObject.put("custCode",getIntent().getStringExtra("custCode"));
+                //dataObject.put("cardHolderName",dataObject.getString("Card Hodler Name"));
+                dataObject.put("userName",sharedPreferences.getString(com.shoppursshop.utilities.Constants.FULL_NAME,""));
+                dataObject.put("dbName",sharedPreferences.getString(com.shoppursshop.utilities.Constants.DB_NAME,""));
+                dataObject.put("dbUserName",sharedPreferences.getString(com.shoppursshop.utilities.Constants.DB_USER_NAME,""));
+                dataObject.put("dbPassword",sharedPreferences.getString(com.shoppursshop.utilities.Constants.DB_PASSWORD,""));
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+            String url=getResources().getString(R.string.url)+ com.shoppursshop.utilities.Constants.ADD_TRANS_DATA;
+            showProgress(true);
+            jsonObjectApiRequest(Request.Method.POST,url,dataObject,"updatePaymentStatus");
+
+        }catch (JSONException e){
+            e.printStackTrace();
         }
     }
 
