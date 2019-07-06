@@ -20,7 +20,6 @@ import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.SplashActivity;
 import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
-import com.shoppursshop.activities.payment.ePay.EPayPayswiffActivity;
 import com.shoppursshop.adapters.ShoppursProductAdapter;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.MyProductItem;

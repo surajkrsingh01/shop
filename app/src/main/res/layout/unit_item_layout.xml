@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/text_name"
-        android:layout_toLeftOf="@+id/image_selected"
+        android:layout_toLeftOf="@+id/image_delete"
         android:textColor="?attr/primaryTextColor"
         android:textSize="@dimen/simple_list_text_view_size"
         android:paddingLeft="@dimen/simple_list_text_view_horizontal_margin"

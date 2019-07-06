@@ -11,16 +11,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
-    <uses-permission android:name="android.permission.BATTERY_STATS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.MANAGE_NEWLAND" />
     <uses-permission android:name="android.permission.MANAGE_NEWLANDUART3" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.SEND_SMS" />
@@ -72,14 +68,6 @@
         <activity
             android:name=".activities.DeliveryAddressActivity"
             android:launchMode="singleTask" />
-        <activity
-            android:name="com.pnsol.epay.sdk.PaymentPage"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.payment.ePay.EPayPayswiffActivity"
-            android:label="@string/title_activity_epay_payswiff"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.TransactionDetailsActivity"
             android:label="@string/title_activity_transaction_details"
