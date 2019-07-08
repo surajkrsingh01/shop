@@ -231,6 +231,7 @@ public class LoginActivity extends NetworkBaseActivity{
                     editor.putString(Constants.DB_PASSWORD,dataObject.getString("dbPassword"));
                     editor.putString(Constants.USER_TYPE,"Seller");
                     editor.putString(Constants.TOKEN,dataObject.getString("token"));
+                    editor.putString(Constants.GOOGLE_MAP_API_KEY,dataObject.getString("googleMapApiKey"));
                     if(dataObject.getString("isDeliveryAvailable").equals("Y")){
                         editor.putBoolean(Constants.IS_DELIVERY_AVAILABLE,true);
                     }else{

@@ -13,20 +13,26 @@ import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
+import com.android.volley.Request;
+import com.shoppursshop.R;
 import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.activities.payment.mPos.MPayActivity;
 import com.shoppursshop.activities.payment.mPos.MPayTransactionDetailsActivity;
 import com.shoppursshop.database.DbHelper;
+import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.Utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.dspread.xnpos.EmvAppTag.status;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends NetworkBaseActivity {
 
     // private SharedPreferences sharedPreferences;
     private Intent intent;
@@ -49,28 +55,27 @@ public class SplashActivity extends BaseActivity {
         Log.i(TAG,"IMEI NO "+IMEI);
 
         if (sharedPreferences.getBoolean(Constants.IS_LOGGED_IN, false)) {
-          /* if(!sharedPreferences.getBoolean(Constants.IS_SUB_CAT_ADDED,false)){
-                intent=new Intent(SplashActivity.this,RegisterActivity.class);
-                intent.putExtra("type",RegisterActivity.SUB_CATEGORY);
-            }else{
-                intent=new Intent(SplashActivity.this,MainActivity.class);
-            }*/
-
             intent = new Intent(SplashActivity.this, MainActivity.class);
             intent.putExtra("flag", "wallet");
             intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",51.00f));
             //  intent.putExtra(AvenuesParams.ORDER_ID, orderID);
             intent.putExtra(AvenuesParams.CURRENCY, "INR");
           //  startActivityForResult(intent,1);
+            if(ConnectionDetector.isNetworkAvailable(this)){
+                authenticateUser();
+            }else{
+                showMyDialog(getResources().getString(R.string.no_internet));
+            }
         } else {
             intent = new Intent(SplashActivity.this, LoginActivity.class);
+            if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
+                getMacID();
+            } else {
+                moveToNextActivity();
+            }
         }
 
-        if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
-            getMacID();
-        } else {
-            moveToNextActivity();
-        }
+
     }
 
     private void moveToNextActivity() {
@@ -82,6 +87,11 @@ public class SplashActivity extends BaseActivity {
                 // overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
             }
         }, 2000);
+    }
+
+    @Override
+    public void onDialogPositiveClicked(){
+          finish();
     }
 
     /**
@@ -147,6 +157,42 @@ public class SplashActivity extends BaseActivity {
                 }
 
             }
+    }
+
+    private void authenticateUser(){
+        Map<String,String> params=new HashMap<>();
+        params.put("mobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.AUTHENTICATE;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"authenticate");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject response, String apiName) {
+        showProgress(false);
+        try {
+            // JSONObject jsonObject=response.getJSONObject("response");
+            if (apiName.equals("authenticate")) {
+                if (response.getBoolean("status")) {
+                  JSONObject dataObject = response.getJSONObject("result");
+                  int isActive = dataObject.getInt("isActive");
+                  if(isActive == 1){
+                      if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
+                          getMacID();
+                      } else {
+                          moveToNextActivity();
+                      }
+                  }else{
+
+                  }
+                }
+            }
+        }catch (JSONException error){
+            error.printStackTrace();
+        }
     }
 
 

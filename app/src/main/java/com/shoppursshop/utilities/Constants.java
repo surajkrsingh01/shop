@@ -45,7 +45,7 @@ public class Constants {
     public static String FULL_NAME="fullName";
     public static String USERNAME="username";
     public static String ROLE="role";
-    public static String ACTIVATE_KEY="activate_key";
+    public static String GOOGLE_MAP_API_KEY="googleMapApiKey";
     public static String GUID="guid";
     public static String TOKEN="token";
     public static String CREATED="created";
@@ -91,6 +91,7 @@ public class Constants {
 
     //api
     public static String LOGIN="/api/user/loginRetailer";
+    public static String AUTHENTICATE="/api/user/authenticate_user";
     public static String GET_PASSWORD="/api/user/getPassword";
     public static String SYNC="/api/syncdata";
     public static String MANAGE_REGISTRATION="/api/user/manageRegistration";
