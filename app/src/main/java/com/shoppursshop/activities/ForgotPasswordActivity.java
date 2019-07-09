@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.shoppursshop.R;
+import com.shoppursshop.services.NotificationService;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
@@ -80,7 +81,8 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
                     if(ConnectionDetector.isNetworkAvailable(ForgotPasswordActivity.this)) {
                         Map<String,String> params=new HashMap<>();
                         params.put("mobile",editMobile.getText().toString());
-                        String url=getResources().getString(R.string.url)+ Constants.GET_PASSWORD+"?mobile="+editMobile.getText().toString();
+                        String url=getResources().getString(R.string.url)+ Constants.GET_PASSWORD+
+                                "?mobile="+editMobile.getText().toString()+"&imeiNo="+sharedPreferences.getString(Constants.IMEI_NO,"");
                         showProgress(true);
                         jsonObjectApiRequest(Request.Method.GET,url,new JSONObject(params),"getPassword");
                     }else {
@@ -112,7 +114,7 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
                     message = "Hi your password is "+dataObject.getString("password");
                     if(deviceID != null){
                         if(mobile.equals(editMobile.getText().toString()) && deviceID.equals(sharedPreferences.getString(Constants.IMEI_NO,"")))
-                            sendSMSMessage();
+                            NotificationService.displayNotification(this,message);
                         else
                             DialogAndToast.showDialog("You are not authorized. Please contact administration.",ForgotPasswordActivity.this);
                     }else
@@ -127,7 +129,7 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
 
     }
 
-    protected void sendSMSMessage() {
+   /* protected void sendSMSMessage() {
         // phoneNo = txtphoneNo.getText().toString();
         // message = txtMessage.getText().toString();
 
@@ -136,9 +138,9 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
             smsManager.sendTextMessage(editMobile.getText().toString(), null, message, null, null);
             DialogAndToast.showToast("SMS sent",ForgotPasswordActivity.this);
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_SEND_SMS: {
@@ -154,6 +156,6 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
             }
         }
 
-    }
+    }*/
 
 }
