@@ -386,9 +386,14 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
                 if(i > 0){
                     colorList.clear();
                     ProductSize size = (ProductSize)sizeList.get(i-1);
-                    for(ProductColor color : size.getProductColorList()){
-                        colorList.add(color);
+                    try {
+                        for(ProductColor color : size.getProductColorList()){
+                            colorList.add(color);
+                        }
+                    }catch (NullPointerException npe){
+                       npe.printStackTrace();
                     }
+
                     colorAdapter.notifyDataSetChanged();
                 }
             }
@@ -1543,6 +1548,8 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             DialogAndToast.showDialog("Please select size",this);
             return;
         }
+
+        selectedPosition = selectedPosition - 1;
 
         ProductSize productSize = (ProductSize)sizeList.get(selectedPosition);
 

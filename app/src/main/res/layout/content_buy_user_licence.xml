@@ -109,6 +109,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_below="@+id/text_mysubscription"
+        android:layout_above="@+id/rl_total_amt"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -117,6 +118,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/rl_total_amt"
         android:layout_above="@+id/btnProceed"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"

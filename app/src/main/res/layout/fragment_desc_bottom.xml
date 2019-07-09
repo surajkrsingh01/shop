@@ -20,7 +20,6 @@
             android:background="@drawable/accent_color_3_solid_round_backgground">
 
             <TextView
-                android:layout_toRightOf="@+id/iv_search"
                 android:layout_toLeftOf="@+id/iv_clear"
                 android:id="@+id/tv_desc_label"
                 android:layout_marginLeft="10dp"

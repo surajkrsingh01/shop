@@ -1,2 +1,0 @@
-configurations.maybeCreate("default")
-artifacts.add("default", file('epaysdk_integration_v-1.2.jar'))

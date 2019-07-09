@@ -127,6 +127,7 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
             Glide.with(context)
                     .load(item.getProdImage1())
                     .apply(requestOptions)
+                    .error(R.drawable.ic_photo_black_192dp)
                     .into(myViewHolder.imageView);
 
 

@@ -22,6 +22,8 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
+import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.adapters.MySubscriptionAdapter;
 import com.shoppursshop.adapters.PaymentSchemeAdapter;
 import com.shoppursshop.adapters.SettingsAdapter;
@@ -55,6 +57,8 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
     private MySubscriptionAdapter mySubscriptionAdapter;
     private MyProductItem item;
     private TextView tv_top_parent;
+    private String orderNumber;
+    private int userLicenseId,masterUserLicenseId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,19 +82,19 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
 
         mschemeList = new ArrayList<>();
         item = new MyProductItem();
-        item.setProdName("Monthly Payment ");
+        item.setProdName("Monthly Payment");
         item.setProdMrp(500);
         item.setSelected(false);
         mschemeList.add(item);
 
         item = new MyProductItem();
-        item.setProdName("Quarterly Payment ");
+        item.setProdName("Quarterly Payment");
         item.setProdMrp(2500);
         item.setSelected(false);
         mschemeList.add(item);
 
         item = new MyProductItem();
-        item.setProdName("Yearly Payment ");
+        item.setProdName("Yearly Payment");
         item.setProdMrp(4500);
         item.setSelected(false);
         mschemeList.add(item);
@@ -141,7 +145,7 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
                 else if(schemeCode == -1)
                     DialogAndToast.showDialog("Please Select Scheme", BuyUserLicenceActivity.this);
                 else
-                    buyUserLicense();
+                    getOrderNumber();
             }
         });
 
@@ -169,8 +173,60 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"userLicenses");
     }
 
-    private void buyUserLicense(){
+    private void getOrderNumber(){
+        MyProductItem item = mschemeList.get(schemeCode);
+        Map<String,String> params=new HashMap<>();
+        params.put("numOfUsers",""+noOfUser);
+        params.put("amount",""+totalAmount);
+        params.put("scheme",item.getProdName());
+        params.put("purchaseDate","");
+        params.put("expiryDate","");
+        params.put("renewdDate","");
+        params.put("licenseType","Standard");
+        params.put("userName",sharedPreferences.getString(Constants.FULL_NAME,""));
+        params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
+        params.put("shopMobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.GET_USER_LICENSE_ORDER;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"userLicensesOrder");
+    }
 
+    private void updateLicenseStatus(){
+        MyProductItem item = mschemeList.get(schemeCode);
+        Map<String,String> params=new HashMap<>();
+        params.put("numOfUsers",""+noOfUser);
+        params.put("amount",""+totalAmount);
+        params.put("scheme",item.getProdName());
+        params.put("purchaseDate","");
+        params.put("expiryDate","");
+        params.put("renewdDate","");
+        params.put("licenseType","Standard");
+        params.put("id",""+userLicenseId);
+        params.put("masterUserLicenseId",""+masterUserLicenseId);
+        params.put("userName",sharedPreferences.getString(Constants.FULL_NAME,""));
+        params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
+        params.put("shopMobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.BUY_USER_LICENSE;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"buyUserLicenses");
+    }
+
+    private void buyUserLicense(){
+        Intent intent = new Intent(BuyUserLicenceActivity.this, CCAvenueWebViewActivity.class);
+        intent.putExtra("flag", "wallet");
+        intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",totalAmount));
+        intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);
+        intent.putExtra(AvenuesParams.CURRENCY, "INR");
+        intent.putExtra("flag", "buyUserLicense");
+       // intent.putExtra("shopArray",shopArray.toString());
+        startActivityForResult(intent,110);
+        //finish();
     }
 
     @Override
@@ -183,6 +239,7 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
                     int len = jsonArray.length();
                     JSONObject jsonObject = null;
                     UserLicense item = null;
+                    userLicenseList.clear();
                     for(int i=0; i<len; i++){
                         jsonObject = jsonArray.getJSONObject(i);
                         item = new UserLicense();
@@ -193,11 +250,25 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
                         item.setNumOfUsers(jsonObject.getInt("numOfUsers"));
                         item.setAmount((float)jsonObject.getDouble("amount"));
                         item.setScheme(jsonObject.getString("scheme"));
+                        item.setStatus(jsonObject.getString("status"));
+                        item.setPaymentStatus(jsonObject.getString("paymentStatus"));
 
+                        if(item.getStatus().equals("Active"))
                         userLicenseList.add(item);
                     }
 
                     mySubscriptionAdapter.notifyDataSetChanged();
+                }
+            }else  if (apiName.equals("userLicensesOrder")) {
+                if (response.getBoolean("status")) {
+                    orderNumber = response.getJSONObject("result").getString("orderNumber");
+                    userLicenseId =response.getJSONObject("result").getInt("userLicenseId");
+                    masterUserLicenseId =response.getJSONObject("result").getInt("masterUserLicenseId");
+                    buyUserLicense();
+                }
+            }else  if (apiName.equals("buyUserLicenses")) {
+                if (response.getBoolean("status")) {
+                    getUserLicense();
                 }
             }
         }catch (JSONException e) {
@@ -222,5 +293,35 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
         }
         schemeCode = position;
         calculateTotal();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.i(TAG,"requestCode code "+requestCode+" "+resultCode+" "+RESULT_OK);
+
+        if (requestCode == 110)
+            if(data != null){
+                try {
+                    JSONObject jsonObject = new JSONObject(data.getStringExtra("response"));
+                    Log.i(TAG,"Transaction status "+jsonObject.getString("order_status"));
+                    String statusCode = jsonObject.getString("response_code");
+                    if(statusCode.equals("0")){
+                       // showMyDialog(data.getStringExtra("message"));
+                        updateLicenseStatus();
+                    }else{
+                        showMyDialog("Payment is unsuccessful. Please try again later.");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+    }
+
+    @Override
+    public void onDialogPositiveClicked(){
+        //updateLicenseStatus();
     }
 }

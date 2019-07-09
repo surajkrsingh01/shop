@@ -113,7 +113,7 @@ public class AddressActivity extends NetworkBaseActivity implements OnMapReadyCa
     private void init(){
 
         // Initialize Places.
-        Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
+        Places.initialize(getApplicationContext(), sharedPreferences.getString(Constants.GOOGLE_MAP_API_KEY,""));
 
 
         double latitude = Double.parseDouble(sharedPreferences.getString(Constants.USER_LAT,"0.0"));

@@ -76,9 +76,15 @@ public class TransactionDetailsActivity extends NetworkBaseActivity {
             custCode = dataObject.getString("custCode");
             orderNumber = dataObject.getString("orderNumber");
 
+            if(custCode == sharedPreferences.getString(Constants.SHOP_CODE,"")){
+                tvFooter.setText("Home");
+               // rlFooter.setVisibility(View.GONE);
+            }
+
             paymentStatus = dataObject.getString("responseMessage");
             if(paymentStatus.equals("Success")){
-                placeOrder();
+               // placeOrder();
+                setStatusLayout(true);
             }else{
                 setStatusLayout(false);
             }
@@ -92,10 +98,16 @@ public class TransactionDetailsActivity extends NetworkBaseActivity {
         rlFooter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isDelivered){
-                    openInvoiceActivity();
+                if(tvFooter.getText().toString().equals("Home")){
+                    Intent intent = new Intent(TransactionDetailsActivity.this,MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }else{
-                    deliverOrder();
+                    if(isDelivered){
+                        openInvoiceActivity();
+                    }else{
+                        deliverOrder();
+                    }
                 }
             }
         });
@@ -107,7 +119,7 @@ public class TransactionDetailsActivity extends NetworkBaseActivity {
             imageViewStatusFailure.setVisibility(View.GONE);
             textViewStatusHeader.setText("Congrats");
             tvStatus.setText("Order has been successfully placed.");
-            placeOrder();
+            //placeOrder();
 
         }else{
             imageStatusSuccess.setVisibility(View.GONE);

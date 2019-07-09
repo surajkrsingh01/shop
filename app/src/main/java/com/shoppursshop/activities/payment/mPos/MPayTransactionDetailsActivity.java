@@ -677,6 +677,11 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
         try{
             dataObject.put("orderNumber",getIntent().getStringExtra("orderNumber"));
             dataObject.put("payStatus", status);
+            if(status.equals("Done")){
+                dataObject.put("status_message", "SUCCESS");
+            }else{
+                dataObject.put("status_message", "FAILED");
+            }
             dataObject.put("paymentMode", "DevicePay");
           //  dataObject.put("approved", approved);
           //  dataObject.put("cardLevel", cardLevel);

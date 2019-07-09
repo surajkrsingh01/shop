@@ -45,7 +45,7 @@ public class Constants {
     public static String FULL_NAME="fullName";
     public static String USERNAME="username";
     public static String ROLE="role";
-    public static String ACTIVATE_KEY="activate_key";
+    public static String GOOGLE_MAP_API_KEY="googleMapApiKey";
     public static String GUID="guid";
     public static String TOKEN="token";
     public static String CREATED="created";
@@ -91,6 +91,7 @@ public class Constants {
 
     //api
     public static String LOGIN="/api/user/loginRetailer";
+    public static String AUTHENTICATE="/api/user/authenticate_user";
     public static String GET_PASSWORD="/api/user/getPassword";
     public static String SYNC="/api/syncdata";
     public static String MANAGE_REGISTRATION="/api/user/manageRegistration";
@@ -144,6 +145,8 @@ public class Constants {
     public static String GENERATE_QR_CODE="/api/shop/profile/generate_qrcode";
 
     public static String GET_USER_LICENSE="/api/user/user_licenses";
+    public static String BUY_USER_LICENSE="/api/user/buy_user_license";
+    public static String GET_USER_LICENSE_ORDER="/api/shop/order/generate_user_licence_order";
 
     public static String GET_ALL_PRODUCT_OFFER="/api/offers/get_offer_list";
     public static String GET_ACTIVE_PRODUCT_OFFER="/api/offers/get_active_offer_list";

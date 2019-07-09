@@ -262,7 +262,7 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 myViewHolder.spinnerUnit.setAdapter(unitAdapter);
 
             }else{
-                myViewHolder.relativeLayoutUnit.setVisibility(View.VISIBLE);
+                myViewHolder.relativeLayoutUnit.setVisibility(View.GONE);
             }
 
             RequestOptions requestOptions = new RequestOptions();
@@ -274,7 +274,9 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             Glide.with(context)
                     .load(item.getProdImage1())
                     .apply(requestOptions)
+                    .error(R.drawable.ic_photo_black_192dp)
                     .into(myViewHolder.imageView);
+
         }else if(holder instanceof MyFreeViewHolder){
             MyFreeViewHolder myViewHolder = (MyFreeViewHolder)holder;
             //  myViewHolder.textBarCode.setText(item.getProdBarCode());

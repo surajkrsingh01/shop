@@ -83,6 +83,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     private Button btnStoreOffers;
     private int position;
 
+    private FloatingActionButton fabScan;
+
     private BottomSearchFragment bottomSearchFragment;
 
     @Override
@@ -126,6 +128,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         rlOfferLayout = findViewById(R.id.rl_offer_layout);
         imageViewRemoveOffer = findViewById(R.id.image_remove_offer);
         btnStoreOffers = findViewById(R.id.btn_store_offers);
+        fabScan = findViewById(R.id.fab);
 
         Utility.setColorFilter(imageViewRemoveOffer.getDrawable(),colorTheme);
         Utility.setColorFilter(btnStoreOffers.getBackground(),colorTheme);
@@ -205,6 +208,15 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 openScannar();
             }
         });
+
+        fabScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openScannar();
+            }
+        });
+
+
         linearLayoutScanCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

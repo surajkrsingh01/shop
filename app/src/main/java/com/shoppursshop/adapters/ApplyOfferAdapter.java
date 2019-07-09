@@ -171,7 +171,7 @@ public class ApplyOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             myViewHolder.spinnerUnit.setAdapter(unitAdapter);
 
         }else{
-            myViewHolder.relativeLayoutUnit.setVisibility(View.VISIBLE);
+            myViewHolder.relativeLayoutUnit.setVisibility(View.GONE);
         }
 
         RequestOptions requestOptions = new RequestOptions();
@@ -183,6 +183,7 @@ public class ApplyOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Glide.with(context)
                 .load(item.getProdImage1())
                 .apply(requestOptions)
+                .error(R.drawable.ic_photo_black_192dp)
                 .into(myViewHolder.imageView);
     }
 
