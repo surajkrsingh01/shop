@@ -57,6 +57,8 @@ public class RegisterActivity extends BaseImageActivity implements OnFragmentInt
         subCatFragment = SubCatFragment.newInstance("","");
         productFragment = ProductFragment.newInstance("","");
 
+        language = "English";
+
         initType = getIntent().getIntExtra("type",0);
 
         FragmentTransaction trans = getSupportFragmentManager()
@@ -69,7 +71,7 @@ public class RegisterActivity extends BaseImageActivity implements OnFragmentInt
             trans.replace(R.id.container, bankFragment,"bankFragment");
             fragmentTag = "bankFragment";
         }else if(initType == CATEGORY){
-            trans.replace(R.id.container, categoryFragment,"bankFragment");
+            trans.replace(R.id.container, categoryFragment,"categoryFragment");
             fragmentTag = "categoryFragment";
         }else if(initType == SUB_CATEGORY){
             List<Object> selectedItemList = dbHelper.getCategories();
@@ -78,21 +80,14 @@ public class RegisterActivity extends BaseImageActivity implements OnFragmentInt
             trans.replace(R.id.container, subCatFragment,"subCatFragment");
             fragmentTag = "subCatFragment";
         }else if(initType == PRODUCT){
-            /*List<Object> catList = dbHelper.getCategoriesForProduct();
-            CatListItem category = null;
-            List<Object> subCatList = null;
-            for(Object ob: catList){
-                category = (CatListItem)ob;
-                subCatList = dbHelper.getCatSubCategories(category.getId());
-                category.setItemList(subCatList);
-            }
-            Log.i(TAG,"Size "+catList.size());
-            productFragment.setItemCatList(catList);*/
             trans.replace(R.id.container, productFragment,"productFragment");
             fragmentTag = "productFragment";
         }else{
-            trans.replace(R.id.container, languageFragment,"languageFragment");
-            fragmentTag = "languageFragment";
+           // trans.replace(R.id.container, languageFragment,"languageFragment");
+          //  fragmentTag = "languageFragment";
+            personalInfoFragment.setLanguage(language);
+            trans.replace(R.id.container, personalInfoFragment,"personalInfoFragment");
+            fragmentTag = "personalInfoFragment";
         }
 
         /*
