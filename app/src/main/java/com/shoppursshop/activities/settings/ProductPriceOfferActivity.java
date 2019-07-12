@@ -29,6 +29,7 @@ import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.ProductComboDetails;
 import com.shoppursshop.models.ProductComboOffer;
+import com.shoppursshop.models.ProductDiscountOffer;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
@@ -417,12 +418,23 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
         if (data != null) {
             if (requestCode == 1) {
                 MyProductItem productItem = dbHelper.getProductDetails(data.getIntExtra("prod_id", 0));
-                prodSp = productItem.getProdSp();
-                priceOfferAdapter.setSp(prodSp);
-                priceOfferAdapter.notifyDataSetChanged();
-                edit_product_name.setText(productItem.getProdName());
-                product_id = productItem.getProdId();
-                Log.i(TAG,"prod id "+product_id);
+                List<ProductComboOffer> comboOfferList = dbHelper.getProductPriceOffer(""+productItem.getProdId());
+                List<ProductDiscountOffer> productDiscountOfferList = dbHelper.getProductFreeOffer(""+productItem.getProdId());
+                if(comboOfferList.size() > 0 || productDiscountOfferList.size() > 0){
+                    if(comboOfferList.size() > 0){
+                        DialogAndToast.showDialog(comboOfferList.get(0).getOfferName()+" is already applied to selected product",this);
+                    }else{
+                        DialogAndToast.showDialog(productDiscountOfferList.get(0).getOfferName()+" is already applied to selected product",this);
+                    }
+                }else{
+                    prodSp = productItem.getProdSp();
+                    priceOfferAdapter.setSp(prodSp);
+                    priceOfferAdapter.notifyDataSetChanged();
+                    edit_product_name.setText(productItem.getProdName());
+                    product_id = productItem.getProdId();
+                    Log.i(TAG,"prod id "+product_id);
+                }
+
             }
         }
     }
@@ -430,12 +442,23 @@ public class ProductPriceOfferActivity extends NetworkBaseActivity implements My
     @Override
     public void onItemClicked(int prodId) {
         MyProductItem productItem = dbHelper.getProductDetails(prodId);
-        prodSp = productItem.getProdSp();
-        priceOfferAdapter.setSp(prodSp);
-        edit_product_name.setText(productItem.getProdName());
-        product_id = productItem.getProdId();
-        priceOfferAdapter.notifyDataSetChanged();
-        Log.i(TAG,"prod id "+product_id);
+        List<ProductComboOffer> comboOfferList = dbHelper.getProductPriceOffer(""+prodId);
+        List<ProductDiscountOffer> productDiscountOfferList = dbHelper.getProductFreeOffer(""+prodId);
+        if(comboOfferList.size() > 0 || productDiscountOfferList.size() > 0){
+            if(comboOfferList.size() > 0){
+                DialogAndToast.showDialog(comboOfferList.get(0).getOfferName()+" is already applied to selected product",this);
+            }else{
+                DialogAndToast.showDialog(productDiscountOfferList.get(0).getOfferName()+" is already applied to selected product",this);
+            }
+        }else{
+            prodSp = productItem.getProdSp();
+            priceOfferAdapter.setSp(prodSp);
+            edit_product_name.setText(productItem.getProdName());
+            product_id = productItem.getProdId();
+            priceOfferAdapter.notifyDataSetChanged();
+            Log.i(TAG,"prod id "+product_id);
+        }
+
     }
 
     public void onDialogPositiveClicked(){
