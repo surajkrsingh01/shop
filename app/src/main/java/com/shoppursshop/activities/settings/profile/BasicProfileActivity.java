@@ -85,6 +85,7 @@ public class BasicProfileActivity extends BaseImageActivity {
         Glide.with(this)
                 .load(sharedPreferences.getString(Constants.PROFILE_PIC,""))
                 .apply(requestOptions)
+                .error(R.drawable.ic_photo_black_192dp)
                 .into(profileImage);
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
