@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -454,4 +455,22 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 10){
+            if(data != null){
+                MyCustomer myCustomer = (MyCustomer) data.getSerializableExtra("myCustomer");
+                if(myCustomer.getIsFav().equals("Y")){
+                    itemListFav.add(myCustomer);
+                    myItemAdapterFav.notifyDataSetChanged();
+                }else{
+                    myCustomer.setIsFav("N");
+                    itemList.add(myCustomer);
+                    myItemAdapterFav.notifyDataSetChanged();
+                }
+            }
+        }
+    }
 }

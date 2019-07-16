@@ -12,10 +12,13 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
+import com.shoppursshop.models.MyCustomer;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
+import com.shoppursshop.utilities.Utility;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,7 +28,7 @@ import java.util.Map;
 public class AddCustomerActivity extends NetworkBaseActivity {
 
     private EditText etName,etMobile,etEmail,etAddress,etPinCode;
-
+    private MyCustomer myCustomer;
     private RelativeLayout rlFooter;
 
     @Override
@@ -61,6 +64,7 @@ public class AddCustomerActivity extends NetworkBaseActivity {
     }
 
     private void registerCustomer(){
+        myCustomer = null;
         String mobile = etMobile.getText().toString();
         String name =   etName.getText().toString();
         String email =   etEmail.getText().toString();
@@ -102,6 +106,23 @@ public class AddCustomerActivity extends NetworkBaseActivity {
         try {
             if (apiName.equals("registerShopCustomer")) {
                 if (response.getBoolean("status")) {
+                    JSONObject jsonObject = response.getJSONObject("result");
+                    myCustomer = new MyCustomer();
+                    myCustomer.setId(jsonObject.getString("id"));
+                    myCustomer.setCode(jsonObject.getString("code"));
+                    myCustomer.setName(jsonObject.getString("name"));
+                    myCustomer.setMobile(jsonObject.getString("mobileNo"));
+                    myCustomer.setEmail(jsonObject.getString("email"));
+                    myCustomer.setAddress(jsonObject.getString("address"));
+                    myCustomer.setState(jsonObject.getString("state"));
+                    myCustomer.setCity(jsonObject.getString("city"));
+                    myCustomer.setImage(jsonObject.getString("photo"));
+                    myCustomer.setIsFav(jsonObject.getString("isFav"));
+                    myCustomer.setRatings((float)jsonObject.getDouble("ratings"));
+                    myCustomer.setStatus(jsonObject.getString("isActive"));
+                    myCustomer.setCustUserCreateStatus(jsonObject.getString("userCreateStatus"));
+                    myCustomer.setLocalImage(R.drawable.author_1);
+                    dbHelper.addCustomerInfo(myCustomer, Utility.getTimeStamp(),Utility.getTimeStamp());
                     showMyDialog(response.getString("message"));
                 }else{
                     if(response.getInt("result") == 1){
@@ -125,6 +146,12 @@ public class AddCustomerActivity extends NetworkBaseActivity {
         etEmail.setText("");
         etAddress.setText("");
         etPinCode.setText("");
+        if(myCustomer != null){
+           Intent intent = new Intent();
+           intent.putExtra("myCustomer",myCustomer);
+           setResult(-1,intent);
+           finish();
+        }
     }
 
 }
