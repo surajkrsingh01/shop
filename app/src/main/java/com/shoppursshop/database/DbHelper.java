@@ -863,8 +863,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public ArrayList<Object> getCategoriesForActivity(int limit,int offset){
         SQLiteDatabase db = this.getReadableDatabase();
-        final String query="select * from "+CAT_TABLE+" LIMIT ? OFFSET ?";
-        Cursor res =  db.rawQuery(query, new String[]{String.valueOf(limit),String.valueOf(offset)});
+        final String query="select * from "+CAT_TABLE;
+        //Cursor res =  db.rawQuery(query, new String[]{String.valueOf(limit),String.valueOf(offset)});
+        Cursor res =  db.rawQuery(query, null);
         // res.moveToFirst();
         ArrayList<Object> itemList=new ArrayList<>();
         Category item = null;

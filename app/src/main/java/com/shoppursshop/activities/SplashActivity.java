@@ -43,6 +43,8 @@ public class SplashActivity extends NetworkBaseActivity {
 
         // sharedPreferences=getSharedPreferences(Constants.MYPREFERENCEKEY,MODE_PRIVATE);
 
+     //   startActivityForResult(new Intent(SplashActivity.this, DeliveryAddressActivity.class), 101);
+
         if (Utility.checkLocationPermission(this)) {
             init();
             //test();

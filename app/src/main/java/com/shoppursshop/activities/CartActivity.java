@@ -1,10 +1,12 @@
 package com.shoppursshop.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -82,8 +85,13 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     private RelativeLayout rlOfferDesc;
     private Button btnStoreOffers;
     private int position;
-
+    private float viewScrolled = 0;
     private FloatingActionButton fabScan;
+    private String address;
+    private String country;
+    private String state;
+    private String city;
+    private String zip;
 
     private BottomSearchFragment bottomSearchFragment;
 
@@ -257,11 +265,23 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             tv_self_status.setVisibility(View.GONE);
         }
 
+        findViewById(R.id.rb_home_delivery).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(rb_home_delivery.isChecked() == true){
+                    if(totalPrice > sharedPreferences.getInt(Constants.MIN_DELIVERY_AMOUNT,0)){
+                        startActivityForResult(new Intent(CartActivity.this, DeliveryAddressActivity.class), 101);
+                    }
+                }
+
+            }
+        });
+
         rg_delivery.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                deliveryTypeId = checkedId;
                 if(checkedId == R.id.rb_self_delivery){
-                    deliveryTypeId = checkedId;
                     tv_self_status.setText("Self Delivery");
                     //tv_self_status.setVisibility(View.VISIBLE);
                     tv_address_label.setVisibility(View.GONE);
@@ -270,9 +290,10 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     tvDeliveryCharges.setText("0.00");
                     deliveryDistance = 0;
                     rlDelivery.setVisibility(View.GONE);
+                    setFooterValues();
                 }else{
+                    rlDelivery.setVisibility(View.VISIBLE);
                     if(totalPrice > sharedPreferences.getInt(Constants.MIN_DELIVERY_AMOUNT,0)){
-                        startActivityForResult(new Intent(CartActivity.this, DeliveryAddressActivity.class), 101);
                         tv_self_status.setVisibility(View.GONE);
                     }else{
                         rb_self_delivery.setChecked(true);
@@ -332,17 +353,55 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 startActivityForResult(intent,6);
             }
         });
+
+        final NestedScrollView nsv = findViewById(R.id.nested_scrollview);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            nsv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    if (scrollY > oldScrollY) {
+                        Log.i(TAG, "Scroll UP");
+                        if(fabScan.getVisibility() == View.VISIBLE)
+                        fabScan.setVisibility(View.GONE);
+                    }
+                    if (scrollY < oldScrollY) {
+                        Log.i(TAG, "Scroll DOWN");
+                        if(fabScan.getVisibility() == View.GONE)
+                        fabScan.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }else{
+            nsv.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                @Override
+                public void onScrollChanged() {
+                    if (viewScrolled < nsv.getScrollY()){
+                        viewScrolled = nsv.getScrollY();
+                        Log.d(TAG, "scrolling up");
+                        if(fabScan.getVisibility() == View.VISIBLE)
+                        fabScan.setVisibility(View.GONE);
+
+                    }
+                    if (viewScrolled > nsv.getScrollY()){
+                        viewScrolled = nsv.getScrollY();
+                        Log.d(TAG, "scrolling down");
+                        if(fabScan.getVisibility() == View.GONE)
+                        fabScan.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if(requestCode ==101 && intent!=null){
-            String address = intent.getStringExtra("address");
-            String country = intent.getStringExtra("country");
-            String state = intent.getStringExtra("state");
-            String city = intent.getStringExtra("city");
-            String zip = intent.getStringExtra("zip");
-            deliveryDistance = intent.getFloatExtra("distance",0f);
+            address = intent.getStringExtra("address");
+            country = intent.getStringExtra("country");
+            state = intent.getStringExtra("state");
+            city = intent.getStringExtra("city");
+            zip = intent.getStringExtra("zip");
+            deliveryDistance = (float)intent.getDoubleExtra("distance",0d);
             Log.d("addr ", address +country + state + city +zip+deliveryDistance);
             tv_address_label.setVisibility(View.VISIBLE);
             tv_address.setVisibility(View.VISIBLE);
@@ -538,13 +597,23 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     shopObject.put("shopCode", shopCode);
                     shopObject.put("orderDate", Utility.getTimeStamp());
                     shopObject.put("orderDeliveryNote","Note");
-                    shopObject.put("orderDeliveryMode","Self");
                     shopObject.put("paymentMode",paymentMode);
-                    shopObject.put("deliveryAddress","");
-                    shopObject.put("deliveryCountry","");
-                    shopObject.put("deliveryState","");
-                    shopObject.put("deliveryCity","");
-                    shopObject.put("pinCode","");
+                    if(address == null){
+                        shopObject.put("orderDeliveryMode","Self");
+                        shopObject.put("deliveryAddress","");
+                        shopObject.put("deliveryCountry","");
+                        shopObject.put("deliveryState","");
+                        shopObject.put("deliveryCity","");
+                        shopObject.put("pinCode","");
+                    }else{
+                        shopObject.put("orderDeliveryMode","Home");
+                        shopObject.put("deliveryAddress",address);
+                        shopObject.put("deliveryCountry",country);
+                        shopObject.put("deliveryState",state);
+                        shopObject.put("deliveryCity",city);
+                        shopObject.put("pinCode",zip);
+                    }
+
                     shopObject.put("createdBy",sharedPreferences.getString(Constants.FULL_NAME,""));
                     shopObject.put("updateBy",sharedPreferences.getString(Constants.FULL_NAME,""));
                     if(paymentMode.equals("Cash")){
