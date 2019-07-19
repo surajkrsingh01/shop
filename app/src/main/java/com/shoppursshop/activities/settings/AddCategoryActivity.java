@@ -268,11 +268,13 @@ public class AddCategoryActivity extends NetworkBaseActivity implements MyItemCl
             textViewNoData.setVisibility(View.VISIBLE);
             textViewSelectCatLabel.setVisibility(View.GONE);
             btnSelectAll.setVisibility(View.GONE);
+            relative_footer_action.setVisibility(View.GONE);
         }else{
             recyclerView.setVisibility(View.VISIBLE);
             textViewNoData.setVisibility(View.GONE);
             textViewSelectCatLabel.setVisibility(View.GONE);
             btnSelectAll.setVisibility(View.VISIBLE);
+            relative_footer_action.setVisibility(View.VISIBLE);
         }
     }
 }

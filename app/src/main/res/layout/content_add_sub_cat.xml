@@ -31,6 +31,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/btn_select_all"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:text="@string/select_all"
+        android:layout_below="@+id/text_select_category_label"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_alignParentRight="true"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/small_text_size"
+        android:background="@drawable/accent_color_3_solid_round_backgground"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -43,10 +58,10 @@
 <include layout="@layout/footer_action_layout"/>
 
     <TextView
-        android:textColor="?attr/backgroundColor"
+        android:textColor="?attr/primaryTextColor"
         android:id="@+id/text_no_data"
         android:gravity="center"
-        android:text="All categories are synced"
+        android:text="All sub categories are synced"
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
