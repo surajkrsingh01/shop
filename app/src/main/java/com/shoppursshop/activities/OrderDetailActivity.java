@@ -83,7 +83,6 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         setSupportActionBar(toolbar);
 
         init();
-        initFooter(this,0);
     }
 
     private void init(){
@@ -101,7 +100,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         buttonCancel = findViewById(R.id.btn_cancel);
         buttonOrderDelivered = findViewById(R.id.btn_order_delivered);
         btnViewInvoice = findViewById(R.id.btn_view_invoice);
-        ((GradientDrawable)btnViewInvoice.getBackground()).setColor(colorTheme);
+        btnViewInvoice.setBackgroundColor(colorTheme);
         relativeLayoutDeliveryContainer = findViewById(R.id.relative_delivery_container);
         relativeLayoutPayOptionLayout = findViewById(R.id.relative_pay_layout);
 
@@ -121,7 +120,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         if(orderStatus.equals("Accepted") || orderStatus.equals("Cancelled") || orderStatus.equals("Delivered")){
             buttonAccept.setVisibility(View.GONE);
             buttonCancel.setVisibility(View.GONE);
-            textViewOrderStatus.setVisibility(View.VISIBLE);
+          //  textViewOrderStatus.setVisibility(View.VISIBLE);
             textViewOrderStatus.setText("Order "+orderStatus);
 
             if(orderStatus.equals("Accepted") || orderStatus.equals("Delivered")){
@@ -143,6 +142,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                 buttonOrderDelivered.setVisibility(View.GONE);
                 btnViewInvoice.setVisibility(View.VISIBLE);
             }
+
         }
 
         textViewId.setText("Order No - "+intent.getStringExtra("id"));

@@ -343,7 +343,7 @@
 
     <LinearLayout
         android:id="@+id/linear_footer_action"
-        android:layout_above="@+id/linear_footer"
+        android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -409,8 +409,6 @@
 
         <LinearLayout
             android:weightSum="2"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -421,18 +419,17 @@
                 android:text="Cancel"
                 android:visibility="visible"
                 android:textColor="@color/white"
-                android:background="@drawable/accent_2_solid_round_corner_background"
+                android:background="@color/colorAccent"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btn_accept"
-                android:layout_marginLeft="10dp"
                 android:text="Accept"
                 android:visibility="visible"
                 android:textColor="@color/white"
-                android:background="@drawable/accent_1_solid_round_corner_background"
+                android:background="@color/accent_color_1"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
@@ -442,7 +439,7 @@
                 android:visibility="gone"
                 android:text="Deliver Order"
                 android:textColor="@color/white"
-                android:background="@drawable/accent_1_solid_round_corner_background"
+                android:background="@color/accent_color_1"
                 android:layout_weight="2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
@@ -452,7 +449,7 @@
                 android:visibility="gone"
                 android:text="View Invoice"
                 android:textColor="@color/white"
-                android:background="@drawable/accent_1_solid_round_corner_background"
+                android:background="@color/accent_color_1"
                 android:layout_weight="2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
@@ -505,9 +502,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
-    <include layout="@layout/footer_layout"/>
-
 
 </RelativeLayout>
