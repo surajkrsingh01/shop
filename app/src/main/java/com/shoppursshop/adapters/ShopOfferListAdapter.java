@@ -84,8 +84,9 @@ public class ShopOfferListAdapter extends RecyclerView.Adapter<ShopOfferListAdap
             requestOptions.skipMemoryCache(true);
 
             Glide.with(context)
-                    .load(item.getProductLocalImage())
+                    .load(item.getProductImage())
                     .apply(requestOptions)
+                    .error(R.drawable.ic_photo_black_192dp)
                     .into(myViewHolder.imageView);
         }
     }

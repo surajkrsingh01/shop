@@ -47,6 +47,7 @@ public class BaseActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
     protected int limit = 20,offset = 0;
+    protected int smallLimit = 5,smallOffset = 0;
     protected int visibleItemCount,pastVisibleItems,totalItemCount;
     protected boolean loading=true,isScroll = true;
 

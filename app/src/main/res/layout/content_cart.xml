@@ -73,6 +73,7 @@
         android:layout_height="25dp" />
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_scrollview"
         android:layout_below="@id/text_sub_header"
         android:scrollbars="none"
         android:layout_marginBottom="@dimen/activity_vertical_margin"

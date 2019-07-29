@@ -43,6 +43,8 @@ public class SplashActivity extends NetworkBaseActivity {
 
         // sharedPreferences=getSharedPreferences(Constants.MYPREFERENCEKEY,MODE_PRIVATE);
 
+     //   startActivityForResult(new Intent(SplashActivity.this, DeliveryAddressActivity.class), 101);
+
         if (Utility.checkLocationPermission(this)) {
             init();
             //test();
@@ -53,6 +55,9 @@ public class SplashActivity extends NetworkBaseActivity {
     private void init(){
         String IMEI = sharedPreferences.getString(Constants.IMEI_NO,"");
         Log.i(TAG,"IMEI NO "+IMEI);
+
+        editor.putString(Constants.GOOGLE_MAP_API_KEY,"AIzaSyB-GKvcnqqzEBxT6OvmVPfNs7FBppblo-s");
+        editor.commit();
 
         if (sharedPreferences.getBoolean(Constants.IS_LOGGED_IN, false)) {
             intent = new Intent(SplashActivity.this, MainActivity.class);

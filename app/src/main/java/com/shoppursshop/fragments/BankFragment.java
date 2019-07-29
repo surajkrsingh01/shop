@@ -288,6 +288,7 @@ public class BankFragment extends NetworkBaseFragment {
             if(apiName.equals("updateBankDetails")){
                 if(response.getBoolean("status")){
                     editor.putBoolean(Constants.IS_BANK_DETAIL_ADDED,true);
+                    editor.putString(Constants.SHOP_NAME,editTextShopName.getText().toString());
                     editor.putString(Constants.BANK_NAME,editTextBankName.getText().toString());
                     editor.putString(Constants.ACCOUNT_NO,editTextAccountNo.getText().toString());
                     editor.putString(Constants.BRANCH_ADRESS,editTextBranchAddress.getText().toString());

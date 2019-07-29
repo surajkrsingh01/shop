@@ -1,6 +1,8 @@
 package com.shoppursshop.models;
 
-public class MyCustomer {
+import java.io.Serializable;
+
+public class MyCustomer implements Serializable {
     String id,code,name,email,image,mobile,address,country,state,city,custUserCreateStatus,status;
     private String isFav;
     private float ratings;

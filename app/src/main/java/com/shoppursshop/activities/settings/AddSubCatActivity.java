@@ -1,6 +1,7 @@
 package com.shoppursshop.activities.settings;
 
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -47,9 +48,8 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
     private RelativeLayout relative_footer_action;
     private String catIds;
     private TextView tv_top_parent;
-
-    private boolean isAddingSubCat;
-
+    private Button btnSelectAll;
+    private boolean isSelectingAll = true,isAddingSubCat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +65,9 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
     private void init(){
         relative_footer_action = findViewById(R.id.relative_footer_action);
         textViewNoData = findViewById(R.id.text_no_data);
+        btnSelectAll = findViewById(R.id.btn_select_all);
+        ((GradientDrawable)btnSelectAll.getBackground()).setColor(colorTheme);
+        btnSelectAll.setTextColor(getResources().getColor(R.color.white));
 
         itemList = new ArrayList<>();
         selectedItemList = new ArrayList<>();
@@ -88,7 +91,7 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
         // staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        itemAdapter=new SimpleItemAdapter(this,itemList,"subCatList");
+        itemAdapter=new SimpleItemAdapter(this,itemList,"simpleList");
         itemAdapter.setMyLevelItemClickListener(this);
         recyclerView.setAdapter(itemAdapter);
 
@@ -108,6 +111,32 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
             public void onClick(View v) {
                 startActivity(new Intent(AddSubCatActivity.this, SettingActivity.class));
                 finish();
+            }
+        });
+
+        btnSelectAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MySimpleItem item = null;
+                for(Object ob : itemList){
+                    item = (MySimpleItem) ob;
+                    if(isSelectingAll){
+                        item.setSelected(true);
+                    }else{
+                        item.setSelected(false);
+                    }
+
+                }
+
+                if(isSelectingAll){
+                    btnSelectAll.setText("Unselect All");
+                    isSelectingAll = false;
+                }else{
+                    btnSelectAll.setText("Select All");
+                    isSelectingAll = true;
+                }
+
+                itemAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -344,9 +373,13 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
         if(show){
             recyclerView.setVisibility(View.GONE);
             textViewNoData.setVisibility(View.VISIBLE);
+            btnSelectAll.setVisibility(View.GONE);
+            relative_footer_action.setVisibility(View.GONE);
         }else{
             recyclerView.setVisibility(View.VISIBLE);
             textViewNoData.setVisibility(View.GONE);
+            btnSelectAll.setVisibility(View.VISIBLE);
+            relative_footer_action.setVisibility(View.VISIBLE);
         }
     }
 }

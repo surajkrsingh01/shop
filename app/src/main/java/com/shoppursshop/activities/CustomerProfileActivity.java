@@ -7,6 +7,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -106,7 +110,9 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
         String address = intent.getStringExtra("address");
         String city = intent.getStringExtra("stateCity");
         String mobile = intent.getStringExtra("mobile");
-        String image = intent.getStringExtra("customerImage");
+        final String image = intent.getStringExtra("customerImage");
+
+      //  final String image = "http://www.shoppurs.in/images/shops/SHP4/photo.jpg";
 
         textViewMobile.setText(mobile);
 
@@ -148,6 +154,20 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
                     .load(image)
                     .apply(requestOptions)
                     .into(imageView2);
+
+            imageView2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(CustomerProfileActivity.this, ImageActivity.class);
+                    intent.putExtra("imageUrl",image);
+                    Pair participants = new Pair<>(imageView2, ViewCompat.getTransitionName(imageView2));
+                    ActivityOptionsCompat transitionActivityOptions =
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                    CustomerProfileActivity.this, participants);
+                    ActivityCompat.startActivity(CustomerProfileActivity.this,
+                            intent, transitionActivityOptions.toBundle());
+                }
+            });
 
         }else{
             textViewInitials.setVisibility(View.VISIBLE);

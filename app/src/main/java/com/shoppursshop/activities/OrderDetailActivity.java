@@ -329,25 +329,25 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                         productItem.setProdCode(jsonObject.getString("prodCode"));
                         productItem.setProdBarCode(jsonObject.getString("prodBarCode"));
                         productItem.setProdDesc(jsonObject.getString("prodDesc"));
-                        productItem.setProdReorderLevel(jsonObject.getInt("prodReorderLevel"));
+                      //  productItem.setProdReorderLevel(jsonObject.getInt("prodReorderLevel"));
                         productItem.setProdQoh(jsonObject.getInt("prodQoh"));
                         productItem.setProdHsnCode(jsonObject.getString("prodHsnCode"));
                         productItem.setProdCgst(Float.parseFloat(jsonObject.getString("prodCgst")));
                         productItem.setProdIgst(Float.parseFloat(jsonObject.getString("prodIgst")));
                         productItem.setProdSgst(Float.parseFloat(jsonObject.getString("prodSgst")));
-                        productItem.setProdWarranty(Float.parseFloat(jsonObject.getString("prodWarranty")));
-                        productItem.setProdMfgDate(jsonObject.getString("prodMfgDate"));
-                        productItem.setProdExpiryDate(jsonObject.getString("prodExpiryDate"));
-                        productItem.setProdMfgBy(jsonObject.getString("prodMfgBy"));
+                      //  productItem.setProdWarranty(Float.parseFloat(jsonObject.getString("prodWarranty")));
+                     //   productItem.setProdMfgDate(jsonObject.getString("prodMfgDate"));
+                    //    productItem.setProdExpiryDate(jsonObject.getString("prodExpiryDate"));
+                    //    productItem.setProdMfgBy(jsonObject.getString("prodMfgBy"));
                         productItem.setProdImage1(jsonObject.getString("prodImage1"));
                         productItem.setProdImage2(jsonObject.getString("prodImage2"));
                         productItem.setProdImage3(jsonObject.getString("prodImage3"));
                         productItem.setProdMrp(Float.parseFloat(jsonObject.getString("prodMrp")));
                         productItem.setProdSp(Float.parseFloat(jsonObject.getString("prodSp")));
-                        productItem.setCreatedBy(jsonObject.getString("createdBy"));
+                       /* productItem.setCreatedBy(jsonObject.getString("createdBy"));
                         productItem.setUpdatedBy(jsonObject.getString("updatedBy"));
                         productItem.setCreatedDate(jsonObject.getString("createdDate"));
-                        productItem.setUpdatedDate(jsonObject.getString("updatedDate"));
+                        productItem.setUpdatedDate(jsonObject.getString("updatedDate"));*/
                        // productItem.setStatus(jsonObject.getString("status"));
                         itemList.add(productItem);
                     }

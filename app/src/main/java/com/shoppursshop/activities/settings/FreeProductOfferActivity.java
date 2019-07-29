@@ -28,6 +28,7 @@ import com.shoppursshop.fragments.BottomSearchFragment;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.models.ProductComboOffer;
 import com.shoppursshop.models.ProductDiscountOffer;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
@@ -39,6 +40,7 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FreeProductOfferActivity extends NetworkBaseActivity implements MyItemClickListener {
@@ -338,8 +340,19 @@ public class FreeProductOfferActivity extends NetworkBaseActivity implements MyI
         if (data != null) {
             if (requestCode == 1) {
                 MyProductItem productItem = dbHelper.getProductDetails(data.getIntExtra("prod_id", 0));
-                edit_buying_product.setText(productItem.getProdName());
-                buyingProductId = productItem.getProdId();
+                List<ProductComboOffer> comboOfferList = dbHelper.getProductPriceOffer(""+productItem.getProdId());
+                List<ProductDiscountOffer> productDiscountOfferList = dbHelper.getProductFreeOffer(""+productItem.getProdId());
+                if(comboOfferList.size() > 0 || productDiscountOfferList.size() > 0){
+                    if(comboOfferList.size() > 0){
+                        DialogAndToast.showDialog(comboOfferList.get(0).getOfferName()+" is already applied to selected product",this);
+                    }else{
+                        DialogAndToast.showDialog(productDiscountOfferList.get(0).getOfferName()+" is already applied to selected product",this);
+                    }
+                }else{
+                    edit_buying_product.setText(productItem.getProdName());
+                    buyingProductId = productItem.getProdId();
+                }
+
             } else if (requestCode == 2) {
                 MyProductItem productItem = dbHelper.getProductDetails(data.getIntExtra("prod_id", 0));
                 edit_free_product.setText(productItem.getProdName());
@@ -358,8 +371,19 @@ public class FreeProductOfferActivity extends NetworkBaseActivity implements MyI
     public void onItemClicked(int prodId) {
         MyProductItem item = dbHelper.getProductDetails(prodId);
         if(searchType == 0){
-            buyingProductId = item.getProdId();
-            edit_buying_product.setText(item.getProdName());
+            List<ProductComboOffer> comboOfferList = dbHelper.getProductPriceOffer(""+prodId);
+            List<ProductDiscountOffer> productDiscountOfferList = dbHelper.getProductFreeOffer(""+prodId);
+            if(comboOfferList.size() > 0 || productDiscountOfferList.size() > 0){
+                if(comboOfferList.size() > 0){
+                    DialogAndToast.showDialog(comboOfferList.get(0).getOfferName()+" is already applied to selected product",this);
+                }else{
+                    DialogAndToast.showDialog(productDiscountOfferList.get(0).getOfferName()+" is already applied to selected product",this);
+                }
+            }else{
+                buyingProductId = item.getProdId();
+                edit_buying_product.setText(item.getProdName());
+            }
+
         }else{
             freeProductId = item.getProdId();
             edit_free_product.setText(item.getProdName());
