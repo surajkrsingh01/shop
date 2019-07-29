@@ -48,6 +48,8 @@ public class ScannarActivity extends NetworkBaseActivity {
         flag = intent.getStringExtra("flag");
         type = intent.getStringExtra("type");
 
+        Log.i(TAG,"flag "+flag+" type "+type);
+
         //Initialize barcode scanner view
         barcodeScannerView = findViewById(R.id.zxing_barcode_scanner);
 
@@ -126,7 +128,7 @@ public class ScannarActivity extends NetworkBaseActivity {
                     setResult(-1,intent);
                     finish();
                 }
-            } else if(type.equals("customerInfo")){
+            }else if(type.equals("customerInfo")){
                 checkCustomerInfo(rawValue);
             }else{
                int  id = dbHelper.checkBarCodeExist(rawValue);

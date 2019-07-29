@@ -82,8 +82,8 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.grey900), PorterDuff.Mode.SRC_ATOP);
 
-        itemList = dbHelper.getCustomerList("N");
-        itemListFav = dbHelper.getCustomerList("Y");
+        itemList = dbHelper.getCustomerList("Y");
+        itemListFav = dbHelper.getFavCustomerList("Y");
 
         swipeRefreshLayout=findViewById(R.id.swipe_refresh);
         progressBar=findViewById(R.id.progress_bar);
@@ -459,7 +459,7 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 10){
+        if(requestCode == 3){
             if(data != null){
                 MyCustomer myCustomer = (MyCustomer) data.getSerializableExtra("myCustomer");
                 if(myCustomer.getIsFav().equals("Y")){
@@ -468,7 +468,7 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
                 }else{
                     myCustomer.setIsFav("N");
                     itemList.add(myCustomer);
-                    myItemAdapterFav.notifyDataSetChanged();
+                    myItemAdapter.notifyDataSetChanged();
                 }
             }
         }

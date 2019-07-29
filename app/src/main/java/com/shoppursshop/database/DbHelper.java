@@ -728,7 +728,7 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put(CREATED_AT, createdAt);
         contentValues.put(UPDATED_AT, updatedAt);
         db.insert(CUSTOMER_INFO_TABLE, null, contentValues);
-        Log.i("DbHelper","Row is added");
+        Log.i("DbHelper","Customer Row is added");
         return true;
     }
 
@@ -1840,6 +1840,37 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<Object> getCustomerList(String isFav){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+CUSTOMER_INFO_TABLE+" where "+IS_FAV+" != ?";
+        Cursor res =  db.rawQuery(query, new String[]{isFav});
+        List<Object> myCustomerList = new ArrayList<>();
+        MyCustomer myCustomer = null;
+        if(res.moveToFirst()){
+            do{
+                myCustomer = new MyCustomer();
+                myCustomer.setId(res.getString(res.getColumnIndex(ID)));
+                myCustomer.setCode(res.getString(res.getColumnIndex(CODE)));
+                myCustomer.setName(res.getString(res.getColumnIndex(NAME)));
+                myCustomer.setMobile(res.getString(res.getColumnIndex(MOBILE_NO)));
+                myCustomer.setEmail(res.getString(res.getColumnIndex(EMAIL)));
+                myCustomer.setAddress(res.getString(res.getColumnIndex(ADDRESS)));
+                myCustomer.setCountry(res.getString(res.getColumnIndex(COUNTRY)));
+                myCustomer.setState(res.getString(res.getColumnIndex(STATE)));
+                myCustomer.setCity(res.getString(res.getColumnIndex(CITY)));
+                myCustomer.setImage(res.getString(res.getColumnIndex(PHOTO)));
+                myCustomer.setIsFav(res.getString(res.getColumnIndex(IS_FAV)));
+                myCustomer.setRatings(res.getFloat(res.getColumnIndex(RATINGS)));
+                myCustomer.setStatus(res.getString(res.getColumnIndex(STATUS)));
+                myCustomer.setCustUserCreateStatus(res.getString(res.getColumnIndex(USER_CREATE_STATUS)));
+                myCustomerList.add(myCustomer);
+            }while (res.moveToNext());
+
+        }
+
+        return myCustomerList;
+    }
+
+    public List<Object> getFavCustomerList(String isFav){
         SQLiteDatabase db = this.getReadableDatabase();
         final String query="select * from "+CUSTOMER_INFO_TABLE+" where "+IS_FAV+" = ?";
         Cursor res =  db.rawQuery(query, new String[]{isFav});
