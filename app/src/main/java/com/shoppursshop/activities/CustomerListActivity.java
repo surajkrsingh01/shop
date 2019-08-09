@@ -41,6 +41,7 @@ import com.shoppursshop.models.MyCustomer;
 import com.shoppursshop.models.MyHeader;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
 
 import org.bouncycastle.pqc.math.ntru.util.Util;
@@ -123,7 +124,9 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(false);
-              //  getItemList();
+                if (ConnectionDetector.isNetworkAvailable(CustomerListActivity.this)){
+                    refreshCustomerList();
+                }
             }
         });
 
@@ -191,21 +194,53 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"customerList");
     }
 
-    private void getFavItemList(){
+    private void refreshCustomerList(){
+        JSONArray codeArray = new JSONArray();
+        JSONObject dataObject = null,codeObject = null;
         Map<String,String> params=new HashMap<>();
-        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
-        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
-        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
-        String url=getResources().getString(R.string.url)+Constants.CUSTOMER_LIST;
+        MyCustomer myCustomer = null;
+        for(Object ob : itemList){
+            myCustomer = (MyCustomer)ob;
+            dataObject = new JSONObject();
+            try {
+                dataObject.put("custCode",myCustomer.getCode());
+                codeArray.put(dataObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for(Object ob : itemListFav){
+            myCustomer = (MyCustomer)ob;
+            dataObject = new JSONObject();
+            try {
+                dataObject.put("custCode",myCustomer.getCode());
+                codeArray.put(dataObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        dataObject = new JSONObject();
+        try {
+            dataObject.put("codeArray",codeArray);
+            dataObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+            dataObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+            dataObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String url=getResources().getString(R.string.url)+Constants.REFRESH_CUSTOMER_LIST;
         showProgress(true);
-        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"customerFavList");
+        jsonObjectApiRequest(Request.Method.POST,url,dataObject,"refreshCustomerList");
     }
 
     @Override
     public void onJsonObjectResponse(JSONObject response, String apiName) {
 
         try {
-            if (apiName.equals("customerList")) {
+            if (apiName.equals("customerList") || apiName.equals("refreshCustomerList")) {
                 isCustomerLoaded = true;
                 if (response.getBoolean("status")) {
                     JSONArray dataArray = response.getJSONArray("result");
@@ -225,8 +260,12 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
                         myCustomer.setMobile(jsonObject.getString("mobileNo"));
                         myCustomer.setEmail(jsonObject.getString("email"));
                         myCustomer.setAddress(jsonObject.getString("address"));
+                        myCustomer.setCountry(jsonObject.getString("country"));
+                        myCustomer.setLocality(jsonObject.getString("locality"));
                         myCustomer.setState(jsonObject.getString("state"));
                         myCustomer.setCity(jsonObject.getString("city"));
+                        myCustomer.setLatitude(jsonObject.getString("latitude"));
+                        myCustomer.setLongitude(jsonObject.getString("longitude"));
                         myCustomer.setImage(jsonObject.getString("photo"));
                         myCustomer.setIsFav(jsonObject.getString("isFav"));
                         myCustomer.setRatings((float)jsonObject.getDouble("ratings"));
@@ -258,28 +297,6 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
                         myItemAdapterFav.notifyDataSetChanged();
                     }
                 }
-            }else if (apiName.equals("customerFavList")) {
-                isFavCustomerLoaded = true;
-                if (response.getBoolean("status")) {
-                    JSONArray dataArray = response.getJSONArray("result");
-                    JSONObject jsonObject = null;
-                    int len = dataArray.length();
-                    MyCustomer myCustomer= null;
-                    itemListFav.clear();
-                    //setHeaders();
-                    for (int i = 0; i < len; i++) {
-                        jsonObject = dataArray.getJSONObject(i);
-                        myCustomer = new MyCustomer();
-                        myCustomer.setName(jsonObject.getString("name"));
-                        myCustomer.setMobile(jsonObject.getString("mobileNo"));
-                        myCustomer.setEmail(jsonObject.getString("email"));
-                        myCustomer.setImage(jsonObject.getString("photo"));
-                        myCustomer.setLocalImage(R.drawable.author_1);
-                        itemListFav.add(myCustomer);
-                    }
-                }
-
-                checkLoading();
             }
         }catch (JSONException e) {
             checkLoading();
@@ -294,7 +311,6 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
         }else{
             isFavCustomerLoaded = true;
         }
-       checkLoading();
     }
 
     @Override
@@ -382,19 +398,33 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
     @Override
     public void onItemClicked(int position,int type) {
         MyCustomer customer = null;
-        if(type == 1 || type == 2){
+        if(type == 1 || type == 2 || type == 5){
             customer = (MyCustomer)itemListFav.get(position);
             if(type == 1){
                 makeCall(customer.getMobile());
-            }else{
+            }else if(type == 2){
                 messageCustomer(customer.getMobile());
+            }else{
+                if(customer.getLatitude() == null || customer.getLatitude().equals("0.0")
+                        || customer.getLatitude().equals("")|| customer.getLatitude().equals("null")){
+                    DialogAndToast.showDialog("Location is not available",this);
+                }else{
+                    startCustomerAddressActivity(customer);
+                }
             }
-        }else{
+        }else if(type == 3 || type == 4|| type == 6){
             customer = (MyCustomer)itemList.get(position);
             if(type == 3){
                 makeCall(customer.getMobile());
-            }else{
+            }else if(type == 4){
                 messageCustomer(customer.getMobile());
+            }else{
+                if(customer.getLatitude() == null || customer.getLatitude().equals("0.0")
+                        || customer.getLatitude().equals("")|| customer.getLatitude().equals("null")){
+                    DialogAndToast.showDialog("Location is not available",this);
+                }else{
+                    startCustomerAddressActivity(customer);
+                }
             }
         }
         Log.i(TAG,"Customer clicked "+customer.getName());
@@ -438,6 +468,24 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
         catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void startCustomerAddressActivity(MyCustomer item){
+        Intent intent = new Intent(CustomerListActivity.this,CustomerAddressActivity.class);
+        intent.putExtra("name",item.getName());
+        intent.putExtra("address",item.getAddress());
+        intent.putExtra("mobile",item.getMobile());
+        intent.putExtra("country",item.getCountry());
+        intent.putExtra("stateCity",item.getState()+", "+item.getCity());
+        intent.putExtra("locality",item.getLocality());
+        intent.putExtra("longitude",item.getLongitude());
+        intent.putExtra("latitude",item.getLatitude());
+        intent.putExtra("customerImage",item.getImage());
+        intent.putExtra("isFav",item.getIsFav());
+        intent.putExtra("custCode",item.getCode());
+        intent.putExtra("custId",item.getId());
+        intent.putExtra("ratings",item.getRatings());
+        startActivity(intent);
     }
 
     @Override

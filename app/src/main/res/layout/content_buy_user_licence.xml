@@ -144,7 +144,7 @@
             <ImageView
                 android:layout_alignParentBottom="true"
                 android:id="@+id/iv_rupees"
-                android:src="@drawable/rupee"
+                app:srcCompat="@drawable/rupee"
                 android:tint="?attr/primaryTextColor"
                 android:layout_width="16dp"
                 android:layout_height="16dp" />

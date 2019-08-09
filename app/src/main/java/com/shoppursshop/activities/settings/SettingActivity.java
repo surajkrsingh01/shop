@@ -134,6 +134,7 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
             dbHelper.deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
             dbHelper.deleteTable(DbHelper.PROD_FREE_OFFER_TABLE);
             dbHelper.deleteTable(DbHelper.COUPON_TABLE);
+            dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
             Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);

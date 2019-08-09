@@ -31,18 +31,23 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activities.ImageActivity"
-            android:label="Image"
+            android:name=".activities.CustomerAddressActivity"
+            android:label="@string/title_activity_customer_address"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
         <activity
+            android:name=".activities.ImageActivity"
+            android:label="Image"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
             android:name=".activities.payment.ccavenue.activities.CCAvenueWebViewActivity"
             android:label="@string/title_activity_CCAvenueWebViewActivity"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.ApplyOffersActivity"
             android:label="@string/title_activity_apply_offers"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.CouponOffersActivity"
             android:label="@string/title_activity_coupon_offers"

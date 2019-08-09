@@ -251,51 +251,27 @@ public class ApplyOffersActivity extends BaseActivity implements MyItemTypeClick
             }
 
         }else if(type == 2){
-            if(item.getIsBarCodeAvailable().equals("Y")){
-                if(item.getQty() == item.getBarcodeList().size()){
-                    DialogAndToast.showDialog("There are no more stocks",this);
-                }else{
-                    int qty = item.getQty() + 1;
-                    if(qty == 1){
-                        counter++;
-                        item.setFreeProductPosition(counter);
-                        dbHelper.addProductToCart(item);
-                    }
-                    item.setQty(qty);
-                    Log.i(TAG,"qty "+qty);
-                    float netSellingPrice = getOfferAmount(item,type);
-                    qty = item.getQty();
-                    Log.i(TAG,"netSellingPrice "+netSellingPrice);
-                    float amount = item.getTotalAmount() + netSellingPrice;
-                    Log.i(TAG,"tot amount "+amount);
-                    item.setTotalAmount(amount);
-                    dbHelper.updateCartData(item,qty,amount);
-                    myItemAdapter.notifyItemChanged(position);
-                }
-
+            if((item.getComboProductIds() == null || item.getComboProductIds().equals("null"))
+                    && item.getQty() == item.getProdQoh()){
+                DialogAndToast.showDialog("There are no more stocks",this);
             }else{
-                if((item.getComboProductIds() == null || item.getComboProductIds().equals("null"))
-                        && item.getQty() == item.getProdQoh()){
-                    DialogAndToast.showDialog("There are no more stocks",this);
-                }else{
-                    int qty = item.getQty() + 1;
-                    item.setQty(qty);
-                    if(qty == 1){
-                        counter++;
-                        item.setFreeProductPosition(counter);
-                        dbHelper.addProductToCart(item);
-                    }
-                    float netSellingPrice = getOfferAmount(item,type);
-                    Log.i(TAG,"netSellingPrice "+netSellingPrice);
-                    float amount = item.getTotalAmount() + netSellingPrice;
-                    Log.i(TAG,"tot amount "+amount);
-                    item.setTotalAmount(amount);
-                    qty = item.getQty();
-                    Log.i(TAG,"qty "+qty);
-
-                    dbHelper.updateCartData(item,qty,amount);
-                    myItemAdapter.notifyItemChanged(position);
+                int qty = item.getQty() + 1;
+                item.setQty(qty);
+                if(qty == 1){
+                    counter++;
+                    item.setFreeProductPosition(counter);
+                    dbHelper.addProductToCart(item);
                 }
+                float netSellingPrice = getOfferAmount(item,type);
+                Log.i(TAG,"netSellingPrice "+netSellingPrice);
+                float amount = item.getTotalAmount() + netSellingPrice;
+                Log.i(TAG,"tot amount "+amount);
+                item.setTotalAmount(amount);
+                qty = item.getQty();
+                Log.i(TAG,"qty "+qty);
+
+                dbHelper.updateCartData(item,qty,amount);
+                myItemAdapter.notifyItemChanged(position);
             }
         }
     }

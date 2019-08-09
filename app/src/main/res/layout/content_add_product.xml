@@ -71,7 +71,7 @@
 
                     <ImageView
                         android:id="@+id/image_default_1"
-                        android:src="@drawable/ic_photo_camera_black_24dp"
+                        card_view:srcCompat="@drawable/ic_photo_camera_black_24dp"
                         android:tint="@color/secondary_text_color"
                         android:layout_centerInParent="true"
                         android:scaleType="centerCrop"
@@ -97,7 +97,7 @@
 
                     <ImageView
                         android:id="@+id/image_default_2"
-                        android:src="@drawable/ic_photo_camera_black_24dp"
+                        card_view:srcCompat="@drawable/ic_photo_camera_black_24dp"
                         android:tint="@color/secondary_text_color"
                         android:layout_centerInParent="true"
                         android:scaleType="centerCrop"
@@ -123,7 +123,7 @@
 
                 <ImageView
                     android:id="@+id/image_default_3"
-                    android:src="@drawable/ic_photo_camera_black_24dp"
+                    card_view:srcCompat="@drawable/ic_photo_camera_black_24dp"
                     android:tint="@color/secondary_text_color"
                     android:layout_centerInParent="true"
                     android:scaleType="centerCrop"
@@ -166,7 +166,7 @@
                     android:layout_height="20dp"
                     android:layout_alignParentRight="true"
                     android:padding="2dp"
-                    android:src="@drawable/ic_arrow_drop_down_black_24dp"
+                    card_view:srcCompat="@drawable/ic_arrow_drop_down_black_24dp"
                     android:tint="?attr/primaryTextColor" />
 
             </RelativeLayout>
@@ -195,7 +195,7 @@
                     android:layout_height="20dp"
                     android:layout_alignParentRight="true"
                     android:padding="2dp"
-                    android:src="@drawable/ic_arrow_drop_down_black_24dp"
+                    card_view:srcCompat="@drawable/ic_arrow_drop_down_black_24dp"
                     android:tint="?attr/primaryTextColor" />
 
             </RelativeLayout>

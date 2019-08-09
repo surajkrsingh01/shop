@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/backgroundColor"
     android:layout_alignParentBottom="true"
     android:elevation="8dp"
@@ -19,7 +20,7 @@
             android:layout_height="20dp"
             android:layout_margin="16dp"
             android:tint="?attr/primaryTextColor"
-            android:src="@drawable/ic_close_black_24dp" />
+            app:srcCompat="@drawable/ic_close_black_24dp" />
 
         <TextView
             android:id="@+id/text_header"

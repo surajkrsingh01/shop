@@ -36,7 +36,7 @@
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:tint="?attr/primaryTextColor"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_favorite_border_black_24dp"
+                    app:srcCompat="@drawable/ic_favorite_border_black_24dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -170,7 +170,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_toLeftOf="@+id/text_total_sale"
                         android:id="@+id/iv_rupees_total_sale"
-                        android:src="@drawable/rupee"
+                        app:srcCompat="@drawable/rupee"
                         android:tint="?attr/primaryTextColor"
                         android:layout_width="16dp"
                         android:layout_height="16dp" />
@@ -238,7 +238,7 @@
                     <ImageView
                         android:layout_toRightOf="@+id/text_start_rating"
                         android:layout_marginLeft="5dp"
-                        android:src="@drawable/ic_star_black_24dp"
+                        app:srcCompat="@drawable/ic_star_black_24dp"
                         android:layout_centerVertical="true"
                         android:tint="@color/white"
                         android:layout_width="10dp"

@@ -26,7 +26,7 @@
             <ImageView
                 android:id="@+id/image_view"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_camera_black_24dp"
+                card_view:srcCompat="@drawable/ic_camera_black_24dp"
                 android:tint="@color/accent_color_2"
                 android:layout_width="@dimen/camera_scan_size"
                 android:layout_height="@dimen/camera_scan_size" />

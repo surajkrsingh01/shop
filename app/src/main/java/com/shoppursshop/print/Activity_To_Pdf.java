@@ -1,10 +1,11 @@
 package com.shoppursshop.print;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Environment;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
@@ -25,7 +26,7 @@ import java.net.MalformedURLException;
 public class Activity_To_Pdf {
    static File pdfFile;
 
-    public static Bitmap takeScreenshot(Activity activity) { //this is ok with cut windos actionbar , spacing on all sided
+    public static Bitmap takeScreenshot(AppCompatActivity activity) { //this is ok with cut windos actionbar , spacing on all sided
         View view = activity.getWindow().getDecorView();     // Log.d("Activity 1",""+activity.getWindow().getDecorView());
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();

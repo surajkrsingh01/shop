@@ -20,7 +20,7 @@
 
         <ImageView
             android:id="@+id/image_logo"
-            android:src="@drawable/logo"
+            app:srcCompat="@drawable/logo"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_centerHorizontal="true"
             android:layout_width="@dimen/login_logo_size"
@@ -166,7 +166,7 @@
 
             <ImageView
                 android:id="@+id/image_facebook"
-                android:src="@drawable/facebook"
+                app:srcCompat="@drawable/facebook"
                 android:padding="@dimen/social_button_padding"
                 android:tint="@color/accent_color_1"
                 android:background="@drawable/orange_stroke_circle_background"
@@ -175,7 +175,7 @@
 
             <ImageView
                 android:id="@+id/image_twitter"
-                android:src="@drawable/twitter"
+                app:srcCompat="@drawable/twitter"
                 android:padding="@dimen/twitter_social_button_padding"
                 android:tint="@color/accent_color_1"
                 android:layout_marginLeft="@dimen/social_button_margin"
@@ -185,7 +185,7 @@
 
             <ImageView
                 android:id="@+id/image_google"
-                android:src="@drawable/googleplus"
+                app:srcCompat="@drawable/googleplus"
                 android:tint="@color/accent_color_1"
                 android:padding="@dimen/social_button_padding"
                 android:layout_marginLeft="@dimen/social_button_margin"
