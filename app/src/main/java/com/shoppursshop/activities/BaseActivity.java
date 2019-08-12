@@ -51,6 +51,8 @@ public class BaseActivity extends AppCompatActivity {
     protected int visibleItemCount,pastVisibleItems,totalItemCount;
     protected boolean loading=true,isScroll = true;
 
+    protected String token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +62,7 @@ public class BaseActivity extends AppCompatActivity {
         editor=sharedPreferences.edit();
         isDarkTheme = sharedPreferences.getBoolean(Constants.IS_DARK_THEME,false);
         colorTheme = sharedPreferences.getInt(Constants.COLOR_THEME,getResources().getColor(R.color.red_500));
-
+        token = sharedPreferences.getString(Constants.TOKEN,"");
         if(isDarkTheme){
             setTheme(R.style.Dark);
         }else{

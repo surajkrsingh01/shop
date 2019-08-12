@@ -17,6 +17,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.shoppursshop.R;
 import com.shoppursshop.utilities.AppController;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.JsonArrayRequest;
 import com.shoppursshop.utilities.JsonArrayRequestV2;
 
@@ -188,6 +189,8 @@ public class NetworkBaseFragment extends BaseFragment {
     }
 
     public void onServerErrorResponse(VolleyError error, String apiName) {
+
+        DialogAndToast.showDialog("There is some problem occurred. Please try gain later.",getActivity());
 
     }
 

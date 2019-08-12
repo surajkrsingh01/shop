@@ -492,10 +492,10 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         }
 
 
-        tvItemTotal.setText(Utility.numberFormat(dbHelper.getTotalMrpPriceCart()));
         totalTax = dbHelper.getTotalTaxesart();
+        tvItemTotal.setText(Utility.numberFormat(dbHelper.getTotalMrpPriceCart() - totalTax));
         tvTotalTaxes.setText(Utility.numberFormat(totalTax));
-        totalPrice = dbHelper.getTotalPriceCart() + totalTax;
+        totalPrice = dbHelper.getTotalPriceCart();
         totDiscount = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
         float dis = 0f;
         if(offerPer > 0f){

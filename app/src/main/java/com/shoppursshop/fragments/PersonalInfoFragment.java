@@ -380,7 +380,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
                country = data.getStringExtra("country");
                state = data.getStringExtra("state");
                city = data.getStringExtra("city");
-               pincode = data.getStringExtra("address");
+               pincode = data.getStringExtra("pin");
                latitude = data.getDoubleExtra("latitude",0d);
                longitude = data.getDoubleExtra("longitude",0d);
                editAddress.setText(address);
