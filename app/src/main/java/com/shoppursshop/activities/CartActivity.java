@@ -493,9 +493,9 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
 
         totalTax = dbHelper.getTotalTaxesart();
-        tvItemTotal.setText(Utility.numberFormat(dbHelper.getTotalMrpPriceCart() - totalTax));
         tvTotalTaxes.setText(Utility.numberFormat(totalTax));
         totalPrice = dbHelper.getTotalPriceCart();
+        tvItemTotal.setText(Utility.numberFormat(totalPrice - totalTax));
         totDiscount = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
         float dis = 0f;
         if(offerPer > 0f){
