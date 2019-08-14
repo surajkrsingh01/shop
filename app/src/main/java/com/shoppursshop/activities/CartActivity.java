@@ -492,10 +492,10 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         }
 
 
-        tvItemTotal.setText(Utility.numberFormat(dbHelper.getTotalMrpPriceCart()));
         totalTax = dbHelper.getTotalTaxesart();
         tvTotalTaxes.setText(Utility.numberFormat(totalTax));
-        totalPrice = dbHelper.getTotalPriceCart() + totalTax;
+        totalPrice = dbHelper.getTotalPriceCart();
+        tvItemTotal.setText(Utility.numberFormat(totalPrice - totalTax));
         totDiscount = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
         float dis = 0f;
         if(offerPer > 0f){
@@ -837,47 +837,24 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 myItemAdapter.notifyItemChanged(position);
             }
         }else if(type == 2){
-            if(item.getIsBarCodeAvailable().equals("Y")){
-                if(item.getQty() == item.getBarcodeList().size()){
-                    DialogAndToast.showDialog("There are no more stocks",this);
-                }else{
-                    int qty = item.getQty() + 1;
-                    item.setQty(qty);
-                    Log.i(TAG,"qty "+qty);
-                    float netSellingPrice = getOfferAmount(item,type);
-                    qty = item.getQty();
-                    Log.i(TAG,"netSellingPrice "+netSellingPrice);
-                    float amount = item.getTotalAmount() + netSellingPrice;
-                    Log.i(TAG,"tot amount "+amount);
-                    item.setTotalAmount(amount);
-                    dbHelper.updateCartData(item,qty,amount);
-                    if(itemList.size() == 1){
-                        relativeLayoutCartFooter.setVisibility(View.VISIBLE);
-                    }
-                    setFooterValues();
-                    myItemAdapter.notifyItemChanged(position);
-                }
-
+            if(item.getQty() == item.getProdQoh()){
+                DialogAndToast.showDialog("There are no more stocks",this);
             }else{
-                if(item.getQty() == item.getProdQoh()){
-                    DialogAndToast.showDialog("There are no more stocks",this);
-                }else{
-                    int qty = item.getQty() + 1;
-                    item.setQty(qty);
-                    float netSellingPrice = getOfferAmount(item,type);
-                    Log.i(TAG,"netSellingPrice "+netSellingPrice);
-                    float amount = item.getTotalAmount() + netSellingPrice;
-                    Log.i(TAG,"tot amount "+amount);
-                    item.setTotalAmount(amount);
-                    qty = item.getQty();
-                    Log.i(TAG,"qty "+qty);
-                    dbHelper.updateCartData(item,qty,amount);
-                    if(itemList.size() == 1){
-                        relativeLayoutCartFooter.setVisibility(View.VISIBLE);
-                    }
-                    setFooterValues();
-                    myItemAdapter.notifyItemChanged(position);
+                int qty = item.getQty() + 1;
+                item.setQty(qty);
+                float netSellingPrice = getOfferAmount(item,type);
+                Log.i(TAG,"netSellingPrice "+netSellingPrice);
+                float amount = item.getTotalAmount() + netSellingPrice;
+                Log.i(TAG,"tot amount "+amount);
+                item.setTotalAmount(amount);
+                qty = item.getQty();
+                Log.i(TAG,"qty "+qty);
+                dbHelper.updateCartData(item,qty,amount);
+                if(itemList.size() == 1){
+                    relativeLayoutCartFooter.setVisibility(View.VISIBLE);
                 }
+                setFooterValues();
+                myItemAdapter.notifyItemChanged(position);
             }
 
         }else if(type == 3){

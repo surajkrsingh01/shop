@@ -117,7 +117,11 @@ public class AddCustomerActivity extends NetworkBaseActivity {
                     myCustomer.setState(jsonObject.getString("state"));
                     myCustomer.setCity(jsonObject.getString("city"));
                     myCustomer.setImage(jsonObject.getString("photo"));
-                    myCustomer.setIsFav(jsonObject.getString("isFav"));
+                    if(jsonObject.getString("isFav").equals("null")){
+                        myCustomer.setIsFav("N");
+                    }else{
+                        myCustomer.setIsFav(jsonObject.getString("isFav"));
+                    }
                     myCustomer.setRatings((float)jsonObject.getDouble("ratings"));
                     myCustomer.setStatus(jsonObject.getString("isActive"));
                     myCustomer.setCustUserCreateStatus(jsonObject.getString("userCreateStatus"));

@@ -155,7 +155,7 @@
                         <ImageView
                             android:id="@+id/image_1"
                             android:background="@drawable/accent_color_4_circle_background"
-                            android:src="@drawable/ic_check_black_24dp"
+                            app:srcCompat="@drawable/ic_check_black_24dp"
                             android:padding="6dp"
                             android:tint="@color/white"
                             android:layout_width="30dp"
@@ -179,7 +179,7 @@
                         <ImageView
                             android:id="@+id/image_2"
                             android:background="@drawable/light_grey_solid_circle"
-                            android:src="@drawable/ic_check_black_24dp"
+                            app:srcCompat="@drawable/ic_check_black_24dp"
                             android:padding="6dp"
                             android:layout_centerHorizontal="true"
                             android:tint="@color/white"
@@ -204,7 +204,7 @@
                         <ImageView
                             android:id="@+id/image_3"
                             android:background="@drawable/light_grey_solid_circle"
-                            android:src="@drawable/ic_check_black_24dp"
+                            app:srcCompat="@drawable/ic_check_black_24dp"
                             android:padding="6dp"
                             android:layout_centerHorizontal="true"
                             android:tint="@color/white"
@@ -228,7 +228,7 @@
                         <ImageView
                             android:id="@+id/image_4"
                             android:background="@drawable/light_grey_solid_circle"
-                            android:src="@drawable/ic_check_black_24dp"
+                            app:srcCompat="@drawable/ic_check_black_24dp"
                             android:padding="6dp"
                             android:layout_alignParentRight="true"
                             android:tint="@color/white"

@@ -114,6 +114,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String EMAIL= "email";
     public static final String ADDRESS= "address";
     public static final String COUNTRY= "country";
+    public static final String LOCALITY= "locality";
     public static final String STATE= "state";
     public static final String CITY= "city";
     public static final String PHOTO= "photo";
@@ -140,7 +141,7 @@ public class DbHelper extends SQLiteOpenHelper {
             " "+UPDATED_AT+" TEXT)";
 
     public static final String CREATE_SUB_CAT_TABLE = "create table "+SUB_CAT_TABLE +
-            "("+ID+" TEXT NOT NULL, " +
+            "("+ID+" TEXT  NOT NULL, " +
             " "+CAT_ID+" TEXT NOT NULL, " +
             " "+NAME+" TEXT NOT NULL, " +
             " "+IMAGE+" TEXT, " +
@@ -323,8 +324,11 @@ public class DbHelper extends SQLiteOpenHelper {
             " "+EMAIL+" TEXT, " +
             " "+ADDRESS+" TEXT, " +
             " "+COUNTRY+" TEXT, " +
+            " "+LOCALITY+" TEXT, " +
             " "+STATE+" TEXT, " +
             " "+CITY+" TEXT, " +
+            " "+LATITUDE+" TEXT, " +
+            " "+LONGITUDE+" TEXT, " +
             " "+PHOTO+" TEXT, " +
             " "+IS_FAV+" TEXT, " +
             " "+RATINGS+" TEXT, " +
@@ -337,7 +341,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME, null, 26);
+        super(context, DATABASE_NAME, null, 27);
         this.context=context;
     }
 
@@ -363,29 +367,8 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        db.execSQL("DROP TABLE IF EXISTS "+PROD_FREE_OFFER_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+PROD_PRICE_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+PROD_PRICE_DETAIL_TABLE);
         db.execSQL("DROP TABLE IF EXISTS "+CUSTOMER_INFO_TABLE);
-        db.execSQL(CREATE_PROD_FREE_OFFER_TABLE);
-        db.execSQL(CREATE_PROD_PRICE_TABLE);
-        db.execSQL(CREATE_PROD_PRICE_DETAIL_TABLE);
         db.execSQL(CREATE_CUSTOMER_INFO_TABLE);
-
-        db.execSQL("DROP TABLE IF EXISTS "+PROD_COMBO_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+PROD_COMBO_DETAIL_TABLE);
-        db.execSQL(CREATE_PROD_COMBO_TABLE);
-        db.execSQL(CREATE_PROD_COMBO_DETAIL_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+CART_TABLE);
-        db.execSQL(CREATE_CART_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+COUPON_TABLE);
-        db.execSQL(CREATE_COUPON_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_UNIT_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_SIZE_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_COLOR_TABLE);
-        db.execSQL(CREATE_PRODUCT_UNIT_TABLE);
-        db.execSQL(CREATE_PRODUCT_SIZE_TABLE);
-        db.execSQL(CREATE_PRODUCT_COLOR_TABLE);
 
     }
 
@@ -721,6 +704,9 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put(COUNTRY, item.getCountry());
         contentValues.put(STATE, item.getState());
         contentValues.put(CITY, item.getCity());
+        contentValues.put(LOCALITY, item.getLocality());
+        contentValues.put(LATITUDE, item.getLatitude());
+        contentValues.put(LONGITUDE, item.getLongitude());
         contentValues.put(IS_FAV, item.getIsFav());
         contentValues.put(RATINGS, item.getRatings());
         contentValues.put(USER_CREATE_STATUS, item.getCustUserCreateStatus());
@@ -728,7 +714,7 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put(CREATED_AT, createdAt);
         contentValues.put(UPDATED_AT, updatedAt);
         db.insert(CUSTOMER_INFO_TABLE, null, contentValues);
-        Log.i("DbHelper","Row is added");
+        Log.i("DbHelper","Customer Row is added");
         return true;
     }
 
@@ -1841,6 +1827,40 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public List<Object> getCustomerList(String isFav){
         SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+CUSTOMER_INFO_TABLE+" where "+IS_FAV+" != ?";
+        Cursor res =  db.rawQuery(query, new String[]{isFav});
+        List<Object> myCustomerList = new ArrayList<>();
+        MyCustomer myCustomer = null;
+        if(res.moveToFirst()){
+            do{
+                myCustomer = new MyCustomer();
+                myCustomer.setId(res.getString(res.getColumnIndex(ID)));
+                myCustomer.setCode(res.getString(res.getColumnIndex(CODE)));
+                myCustomer.setName(res.getString(res.getColumnIndex(NAME)));
+                myCustomer.setMobile(res.getString(res.getColumnIndex(MOBILE_NO)));
+                myCustomer.setEmail(res.getString(res.getColumnIndex(EMAIL)));
+                myCustomer.setAddress(res.getString(res.getColumnIndex(ADDRESS)));
+                myCustomer.setCountry(res.getString(res.getColumnIndex(COUNTRY)));
+                myCustomer.setState(res.getString(res.getColumnIndex(STATE)));
+                myCustomer.setCity(res.getString(res.getColumnIndex(CITY)));
+                myCustomer.setLocality(res.getString(res.getColumnIndex(LOCALITY)));
+                myCustomer.setLatitude(res.getString(res.getColumnIndex(LATITUDE)));
+                myCustomer.setLongitude(res.getString(res.getColumnIndex(LONGITUDE)));
+                myCustomer.setImage(res.getString(res.getColumnIndex(PHOTO)));
+                myCustomer.setIsFav(res.getString(res.getColumnIndex(IS_FAV)));
+                myCustomer.setRatings(res.getFloat(res.getColumnIndex(RATINGS)));
+                myCustomer.setStatus(res.getString(res.getColumnIndex(STATUS)));
+                myCustomer.setCustUserCreateStatus(res.getString(res.getColumnIndex(USER_CREATE_STATUS)));
+                myCustomerList.add(myCustomer);
+            }while (res.moveToNext());
+
+        }
+
+        return myCustomerList;
+    }
+
+    public List<Object> getFavCustomerList(String isFav){
+        SQLiteDatabase db = this.getReadableDatabase();
         final String query="select * from "+CUSTOMER_INFO_TABLE+" where "+IS_FAV+" = ?";
         Cursor res =  db.rawQuery(query, new String[]{isFav});
         List<Object> myCustomerList = new ArrayList<>();
@@ -1857,6 +1877,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 myCustomer.setCountry(res.getString(res.getColumnIndex(COUNTRY)));
                 myCustomer.setState(res.getString(res.getColumnIndex(STATE)));
                 myCustomer.setCity(res.getString(res.getColumnIndex(CITY)));
+                myCustomer.setLocality(res.getString(res.getColumnIndex(LOCALITY)));
+                myCustomer.setLatitude(res.getString(res.getColumnIndex(LATITUDE)));
+                myCustomer.setLongitude(res.getString(res.getColumnIndex(LONGITUDE)));
                 myCustomer.setImage(res.getString(res.getColumnIndex(PHOTO)));
                 myCustomer.setIsFav(res.getString(res.getColumnIndex(IS_FAV)));
                 myCustomer.setRatings(res.getFloat(res.getColumnIndex(RATINGS)));

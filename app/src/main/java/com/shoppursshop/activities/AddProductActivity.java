@@ -146,6 +146,10 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
         editTextMfgDate = findViewById(R.id.edit_product_manufacture_date);
         editTextExpiryDate = findViewById(R.id.edit_product_expiry_date);
 
+        editTextCGST.setText("0");
+        editTextSGST.setText("0");
+        editTextIGST.setText("0");
+
         specificationType = UNIT;
         etUnitName = findViewById(R.id.edit_unit_name);
         etUnitValue = findViewById(R.id.edit_unit_value);
@@ -1009,20 +1013,20 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             return;
         }
 
-        if(TextUtils.isEmpty(expiryDate)){
+       /* if(TextUtils.isEmpty(expiryDate)){
             DialogAndToast.showDialog("Please enter product expiry date",this);
             return;
-        }
+        }*/
 
         if(TextUtils.isEmpty(mfgBy)){
             DialogAndToast.showDialog("Please enter product mfg company",this);
             return;
         }
 
-        if(TextUtils.isEmpty(warranty)){
+       /* if(TextUtils.isEmpty(warranty)){
             DialogAndToast.showDialog("Please enter product warranty",this);
             return;
-        }
+        }*/
 
         if(TextUtils.isEmpty(cgst)){
             DialogAndToast.showDialog("Please enter product cgst",this);
@@ -1350,9 +1354,9 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
         editTextExpiryDate.setText("");
         editTextMfgBy.setText("");
         editTextWarranty.setText("");
-        editTextIGST.setText("");
-        editTextSGST.setText("");
-        editTextCGST.setText("");
+        editTextCGST.setText("0");
+        editTextSGST.setText("0");
+        editTextIGST.setText("0");
         imageList.set(0,"no");
         imageList.set(1,"no");
         imageList.set(2,"no");

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_marginTop="@dimen/container_view_vertical_margin"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,7 +26,7 @@
 
             <ImageView
                 android:id="@+id/image_view"
-                android:src="@drawable/thumb_12"
+                app:srcCompat="@drawable/thumb_12"
                 android:scaleType="centerCrop"
                 android:layout_width="@dimen/cart_list_image_width"
                 android:layout_height="@dimen/cart_list_image_height" />
@@ -69,7 +69,7 @@
                     android:layout_marginLeft="0dp"
                     android:layout_alignParentBottom="true"
                     android:id="@+id/iv_rupees"
-                    android:src="@drawable/rupee"
+                    app:srcCompat="@drawable/rupee"
                     android:tint="?attr/secondaryTextColor"
                     android:layout_width="16dp"
                     android:layout_height="16dp" />
@@ -138,7 +138,7 @@
                         android:layout_height="20dp"
                         android:layout_marginRight="5dp"
                         android:padding="2dp"
-                        android:src="@drawable/ic_arrow_drop_down_black_24dp"
+                        app:srcCompat="@drawable/ic_arrow_drop_down_black_24dp"
                         android:tint="?attr/primaryTextColor" />
 
                 </RelativeLayout>
@@ -153,7 +153,7 @@
                     <ImageView
                         android:id="@+id/image_minus"
                         android:background="?attr/solidPrimaryStrokeBorderBackground"
-                        android:src="@drawable/ic_remove_black_24dp"
+                        app:srcCompat="@drawable/ic_remove_black_24dp"
                         android:tint="?attr/primaryTextColor"
                         android:layout_width="@dimen/cart_action_size"
                         android:layout_height="@dimen/cart_action_size" />
@@ -173,7 +173,7 @@
                         android:id="@+id/image_add"
                         android:background="?attr/solidPrimaryStrokeBorderBackground"
                         android:layout_toRightOf="@+id/tv_counter"
-                        android:src="@drawable/ic_add_black_24dp"
+                        app:srcCompat="@drawable/ic_add_black_24dp"
                         android:tint="?attr/primaryTextColor"
                         android:layout_width="@dimen/cart_action_size"
                         android:layout_height="@dimen/cart_action_size" />

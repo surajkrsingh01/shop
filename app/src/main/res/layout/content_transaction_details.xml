@@ -67,7 +67,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:tint="@color/green700"
-                    android:src="@drawable/ic_check_black_24dp"
+                    app:srcCompat="@drawable/ic_check_black_24dp"
                     android:padding="6dp"
                     android:layout_width="48dp"
                     android:layout_height="48dp" />
@@ -79,7 +79,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:tint="@color/red_500"
-                    android:src="@drawable/ic_clear_red_24dp"
+                    app:srcCompat="@drawable/ic_clear_red_24dp"
                     android:padding="6dp"
                     android:layout_width="48dp"
                     android:layout_height="48dp" />

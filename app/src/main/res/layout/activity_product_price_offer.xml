@@ -117,7 +117,7 @@
             android:tint="?attr/primaryTextColor"
             android:id="@+id/image_scan"
             android:visibility="visible"
-            android:src="@drawable/ic_camera_black_24dp"
+            app:srcCompat="@drawable/ic_camera_black_24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

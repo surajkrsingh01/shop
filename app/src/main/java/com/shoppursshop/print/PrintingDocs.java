@@ -1,6 +1,5 @@
 package com.shoppursshop.print;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CancellationSignal;
@@ -11,6 +10,8 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintDocumentInfo;
 import android.print.PrintManager;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.shoppursshop.R;
 
@@ -26,11 +27,11 @@ import java.io.OutputStream;
  * Created by suraj kumar singh on 24-10-2016.
  */
 public class PrintingDocs {
-    static Activity activity;
+    static AppCompatActivity activity;
     static File pdfFile;
 
     // Inisiate Printing Api
-    public static void printDocument(Activity activity, File pdfFile, View view) {
+    public static void printDocument(AppCompatActivity activity, File pdfFile, View view) {
         PrintingDocs.activity=activity;
         PrintingDocs.pdfFile=pdfFile;
 

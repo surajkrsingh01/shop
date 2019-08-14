@@ -170,6 +170,13 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 myItemClickListener.onItemClicked(getAdapterPosition(),4);
                             }
                             Log.i("Adapter","Message Customer"+customer.getName());
+                        }else if(item.getTitle().equals("Location")){
+                            if(customer.getIsFav().equals("Y")){
+                                myItemClickListener.onItemClicked(getAdapterPosition(),5);
+                            }else{
+                                myItemClickListener.onItemClicked(getAdapterPosition(),6);
+                            }
+                            Log.i("Adapter","Location Customer"+customer.getName());
                         }
                         return true;
                     }
@@ -195,7 +202,11 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     intent.putExtra("name",item.getName());
                     intent.putExtra("address",item.getAddress());
                     intent.putExtra("mobile",item.getMobile());
+                    intent.putExtra("country",item.getCountry());
                     intent.putExtra("stateCity",item.getState()+", "+item.getCity());
+                    intent.putExtra("locality",item.getLocality());
+                    intent.putExtra("longitude",item.getLongitude());
+                    intent.putExtra("latitude",item.getLatitude());
                     intent.putExtra("customerImage",item.getImage());
                     intent.putExtra("isFav",item.getIsFav());
                     intent.putExtra("custCode",item.getCode());

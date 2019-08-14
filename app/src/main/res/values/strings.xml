@@ -270,5 +270,6 @@
     <string name="title_activity_coupon_offers">CouponOffersActivity</string>
     <string name="title_activity_apply_offers">ApplyOffersActivity</string>
     <string name="title_activity_CCAvenueWebViewActivity">Transaction</string>
+    <string name="title_activity_customer_address">Customer Address</string>
 
 </resources>

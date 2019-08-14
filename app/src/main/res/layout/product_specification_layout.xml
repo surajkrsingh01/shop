@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:orientation="vertical"
     android:layout_alignParentBottom="true"
@@ -30,7 +30,7 @@
             android:layout_height="20dp"
             android:layout_margin="16dp"
             android:tint="?attr/primaryTextColor"
-            android:src="@drawable/ic_close_black_24dp" />
+            app:srcCompat="@drawable/ic_close_black_24dp" />
 
     </RelativeLayout>
 
@@ -213,7 +213,7 @@
                            android:layout_marginRight="16dp"
                            android:layout_alignParentRight="true"
                            android:padding="2dp"
-                           android:src="@drawable/ic_arrow_drop_down_black_24dp"
+                           app:srcCompat="@drawable/ic_arrow_drop_down_black_24dp"
                            android:tint="?attr/primaryTextColor" />
 
                    </RelativeLayout>

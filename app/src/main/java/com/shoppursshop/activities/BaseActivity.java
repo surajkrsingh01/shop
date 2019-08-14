@@ -47,9 +47,11 @@ public class BaseActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
     protected int limit = 20,offset = 0;
-    protected int smallLimit = 5,smallOffset = 0;
+    protected int smallLimit = 4,smallOffset = 0;
     protected int visibleItemCount,pastVisibleItems,totalItemCount;
     protected boolean loading=true,isScroll = true;
+
+    protected String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,7 @@ public class BaseActivity extends AppCompatActivity {
         editor=sharedPreferences.edit();
         isDarkTheme = sharedPreferences.getBoolean(Constants.IS_DARK_THEME,false);
         colorTheme = sharedPreferences.getInt(Constants.COLOR_THEME,getResources().getColor(R.color.red_500));
-
+        token = sharedPreferences.getString(Constants.TOKEN,"");
         if(isDarkTheme){
             setTheme(R.style.Dark);
         }else{

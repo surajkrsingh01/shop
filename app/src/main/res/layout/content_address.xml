@@ -16,13 +16,13 @@
         android:tint="?attr/primaryTextColor"
         android:layout_alignParentRight="true"
         android:visibility="visible"
-        android:src="@drawable/ic_search_black_24dp"
+        app:srcCompat="@drawable/ic_search_black_24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <LinearLayout
         android:orientation="horizontal"
-        android:id="@+id/relative_top"
+        android:id="@+id/linear_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -54,7 +54,7 @@
     </LinearLayout>
 
     <TextView
-        android:layout_below="@+id/relative_top"
+        android:layout_below="@+id/linear_top"
         android:id="@+id/text_second_label"
         android:text="Store Address"
         android:textColor="?attr/primaryTextColor"

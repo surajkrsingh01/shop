@@ -1,7 +1,6 @@
 package com.shoppursshop.activities.payment.mPos;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +10,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.pnsol.sdk.interfaces.PaymentTransactionConstants;
 import com.pnsol.sdk.payment.PaymentInitialization;
@@ -24,7 +25,7 @@ import com.shoppursshop.R;
  * @Date : Sep 19, 2014
  * @Copyright : (C) Paynear Solutions Pvt. Ltd.
  */
-public class RKIProcessActivity extends Activity implements
+public class RKIProcessActivity extends AppCompatActivity implements
 		PaymentTransactionConstants,  OnClickListener {
 
 	public static final String PN_LOG = RKIProcessActivity.class.getName();

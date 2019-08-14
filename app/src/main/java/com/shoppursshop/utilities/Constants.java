@@ -112,6 +112,7 @@ public class Constants {
     public static String DELETE_PRODUCTS="/api/products/delete";
     public static String MANAGE_ORDERS="/api/order/manageShoppursOrder";
     public static String CUSTOMER_LIST="/api/shop_customer/customers";
+    public static String REFRESH_CUSTOMER_LIST="/api/shop_customer/refresh_customers";
     public static String REVIEW_LIST="/api/product_review/getReview";
     public static String PRODUCT_SALE_DATA="/api/products/product_sale_data";
     public static String PRODUCT_RATINGS_DATA="/api/products/product_ratings";

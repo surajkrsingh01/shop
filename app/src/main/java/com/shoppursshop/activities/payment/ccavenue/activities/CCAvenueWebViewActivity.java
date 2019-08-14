@@ -12,6 +12,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,7 +22,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.BaseActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.TransactionDetailsActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
@@ -311,7 +312,7 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
     }
 
     public void show_alert(String msg) {
-        android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(
+        AlertDialog alertDialog = new AlertDialog.Builder(
                 CCAvenueWebViewActivity.this).create();
 
         alertDialog.setTitle("Error!!!");

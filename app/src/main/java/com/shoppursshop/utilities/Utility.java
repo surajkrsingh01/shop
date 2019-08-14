@@ -2,9 +2,7 @@ package com.shoppursshop.utilities;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
@@ -12,15 +10,12 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
-
-import android.telephony.SmsManager;
 import android.util.Log;
 import android.util.TypedValue;
 
-import com.shoppursshop.activities.ForgotPasswordActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -50,7 +45,7 @@ public class Utility {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                     PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) !=
                     PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                ActivityCompat.requestPermissions((AppCompatActivity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                 Manifest.permission.RECORD_AUDIO},
                         MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
                 return false;
@@ -70,7 +65,7 @@ public class Utility {
         {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                     PackageManager.PERMISSION_GRANTED ) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                ActivityCompat.requestPermissions((AppCompatActivity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
                 return false;
             } else {
@@ -106,7 +101,7 @@ public class Utility {
         {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) !=
                     PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                ActivityCompat.requestPermissions((AppCompatActivity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                 return false;
             } else {
@@ -125,7 +120,7 @@ public class Utility {
         {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) !=
                     PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_PHONE_STATE},
+                ActivityCompat.requestPermissions((AppCompatActivity) context, new String[]{Manifest.permission.READ_PHONE_STATE},
                         MY_PERMISSIONS_REQUEST_PHONE_STATE);
                 return false;
             } else {
@@ -144,7 +139,7 @@ public class Utility {
         {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context,
+                ActivityCompat.requestPermissions((AppCompatActivity) context,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
                 return false;
             } else {
@@ -163,7 +158,7 @@ public class Utility {
         {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) !=
                     PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CALL_PHONE},
+                ActivityCompat.requestPermissions((AppCompatActivity) context, new String[]{Manifest.permission.CALL_PHONE},
                         MY_PERMISSIONS_REQUEST_CALL_PHONE);
                 return false;
             } else {
@@ -182,7 +177,7 @@ public class Utility {
         {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
                     != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context,
+                ActivityCompat.requestPermissions((AppCompatActivity) context,
                         new String[]{Manifest.permission.READ_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_CONTACT);
                 return false;
             } else {
@@ -202,7 +197,7 @@ public class Utility {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) !=
                     PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                     PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA,
+                ActivityCompat.requestPermissions((AppCompatActivity) context, new String[]{Manifest.permission.CAMERA,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
                 return false;
@@ -220,9 +215,9 @@ public class Utility {
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if(currentAPIVersion>= Build.VERSION_CODES.M)
         {
-            if (ContextCompat.checkSelfPermission((Activity)context, Manifest.permission.SEND_SMS) !=
+            if (ContextCompat.checkSelfPermission((AppCompatActivity)context, Manifest.permission.SEND_SMS) !=
                     PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.SEND_SMS},
+                ActivityCompat.requestPermissions((AppCompatActivity) context, new String[]{Manifest.permission.SEND_SMS},
                         MY_PERMISSIONS_REQUEST_SEND_SMS);
                 return false;
             } else {
