@@ -21,6 +21,7 @@ import com.shoppursshop.activities.SplashActivity;
 import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.adapters.ShoppursProductAdapter;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.Constants;
@@ -37,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class AddPaymentDevice extends NetworkBaseActivity {
+public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClickListener {
 
     private MyProductItem myProduct;
     private String dbName, dbUserName, dbPassword, shopCode, subCatId;
@@ -262,6 +263,7 @@ public class AddPaymentDevice extends NetworkBaseActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         // myProductList = dbHelper.getShoppursProducts(subCatId);
         shoppursProductAdapter = new ShoppursProductAdapter(this, myProductList);
+        shoppursProductAdapter.setMyImageClickListener(this);
         shoppursProductAdapter.setColorTheme(colorTheme);
         recyclerView.setAdapter(shoppursProductAdapter);
 
@@ -435,5 +437,11 @@ public class AddPaymentDevice extends NetworkBaseActivity {
     @Override
     public void onDialogPositiveClicked(){
 
+    }
+
+    @Override
+    public void onImageClicked(int position, int type, View view) {
+        MyProductItem item = myProductList.get(position);
+        showImageDialog(item.getProdImage1(),view);
     }
 }

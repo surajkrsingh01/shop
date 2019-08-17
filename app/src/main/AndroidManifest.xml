@@ -30,6 +30,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".morphdialog.DialogActivity"
+            android:theme="@style/AppTheme.NoActionBar.Dialog">
+        </activity>
+
         <activity
             android:name=".activities.CustomerAddressActivity"
             android:label="@string/title_activity_customer_address"

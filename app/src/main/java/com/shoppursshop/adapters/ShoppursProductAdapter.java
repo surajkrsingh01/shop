@@ -19,6 +19,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.ProductDetailActivity;
 import com.shoppursshop.activities.settings.AddPaymentDevice;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
@@ -34,6 +35,13 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
     private List<MyProductItem> myProductsList = new ArrayList<>();
     private Context context;
     private int colorTheme;
+
+    private MyImageClickListener myImageClickListener;
+
+
+    public void setMyImageClickListener(MyImageClickListener myImageClickListener) {
+        this.myImageClickListener = myImageClickListener;
+    }
 
     public ShoppursProductAdapter(Context context, List<MyProductItem> myProducts) {
         super();
@@ -167,6 +175,7 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
             ((GradientDrawable)btn_minus.getBackground()).setColor(colorTheme);
             tv_cartCount = itemView.findViewById(R.id.tv_cartCount);
             rootView.setOnClickListener(this);
+            imageView.setOnClickListener(this);
         }
 
         @Override
@@ -177,6 +186,8 @@ public class ShoppursProductAdapter extends RecyclerView.Adapter<ShoppursProduct
                 intent.putExtra("myProduct",item);
                 intent.putExtra("flag","shoppurs_product");
                 context.startActivity(intent);
+            }else if(v == imageView){
+                myImageClickListener.onImageClicked(getAdapterPosition(),1,imageView);
             }
         }
     }

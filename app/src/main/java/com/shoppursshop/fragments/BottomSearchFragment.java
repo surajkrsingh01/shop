@@ -1,5 +1,6 @@
 package com.shoppursshop.fragments;
 
+import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,17 +30,21 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.ProductDetailActivity;
 import com.shoppursshop.adapters.SearchProductAdapter;
 import com.shoppursshop.adapters.SearchCustomerAdapter;
 import com.shoppursshop.database.DbHelper;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.interfaces.MyListItemClickListener;
 import com.shoppursshop.models.MyCustomer;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.morphdialog.DialogActivity;
 import com.shoppursshop.utilities.AppController;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
@@ -57,7 +63,8 @@ import java.util.Map;
  * Created by suraj kumar singh on 18-04-2019.
  */
 
-public class BottomSearchFragment extends BottomSheetDialogFragment implements MyItemClickListener, MyItemTypeClickListener {
+public class BottomSearchFragment extends BottomSheetDialogFragment implements MyItemClickListener,
+        MyItemTypeClickListener, MyImageClickListener {
     private String TAG = "BottomSearchFragment";
     protected ProgressDialog progressDialog;
     protected SharedPreferences sharedPreferences;
@@ -226,6 +233,7 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
         recyclerView_Search.setLayoutManager(layoutManager);
         recyclerView_Search.setItemAnimator(new DefaultItemAnimator());
         customerAdapter=new SearchCustomerAdapter(getContext(),myCustomerList);
+        customerAdapter.setMyImageClickListener(this);
         customerAdapter.setType(callingActivityName);
         customerAdapter.setMyItemTypeClickListener(this);
         recyclerView_Search.setAdapter(customerAdapter);
@@ -239,6 +247,7 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
         recyclerView_Search.setItemAnimator(new DefaultItemAnimator());
         productAdapter = new SearchProductAdapter(getContext(),myProductList);
         productAdapter.setMyItemClickListener(this);
+        productAdapter.setMyImageClickListener(this);
         productAdapter.setFlag(flag);
         recyclerView_Search.setAdapter(productAdapter);
 
@@ -396,5 +405,49 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
         }
 
     }
+
+    public void showImageDialog(String url,View v){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Intent intent = new Intent(getActivity(), DialogActivity.class);
+            intent.putExtra("image",url);
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), v, getString(R.string.transition_dialog));
+            startActivityForResult(intent, 100, options.toBundle());
+        }else {
+            int view = R.layout.activity_dialog;
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+            alertDialogBuilder
+                    .setView(view)
+                    .setCancelable(true);
+
+            // create alert dialog
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+
+            final ImageView imageView = (ImageView) alertDialog.findViewById(R.id.image);
+
+            Glide.with(getActivity())
+                    .load(url)
+                    .centerCrop()
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .override(Utility.dpToPx(300,getActivity()),Utility.dpToPx(300,getActivity()))
+                    .into(imageView);
+        }
+    }
+
+    @Override
+    public void onImageClicked(int position, int type, View view) {
+        if(callingActivityName.equals("customerList") || callingActivityName.equals("customerInfoActivity")) {
+            MyCustomer customer = myCustomerList.get(position);
+            showImageDialog(customer.getImage(),view);
+        }
+        else if(callingActivityName.equals("productList")) {
+          MyProductItem myProductItem = myProductList.get(position);
+          showImageDialog(myProductItem.getProdImage1(),view);
+        }
+    }
+
 }
 

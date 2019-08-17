@@ -28,6 +28,7 @@ import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.adapters.MyItemAdapter;
 import com.shoppursshop.adapters.OrderAdapter;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.models.OrderItem;
 import com.shoppursshop.utilities.ConnectionDetector;
@@ -43,7 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends NetworkBaseActivity {
+public class MainActivity extends NetworkBaseActivity implements MyImageClickListener {
 
     private RecyclerView recyclerView,recyclerViewPreOrders;
     private OrderAdapter myItemAdapter,preItemAdapter;
@@ -138,6 +139,7 @@ public class MainActivity extends NetworkBaseActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         myItemAdapter=new OrderAdapter(this,itemList,"orderList");
+        myItemAdapter.setMyImageClickListener(this);
         recyclerView.setAdapter(myItemAdapter);
         recyclerView.setNestedScrollingEnabled(false);
 
@@ -147,6 +149,7 @@ public class MainActivity extends NetworkBaseActivity {
         recyclerViewPreOrders.setLayoutManager(preLayoutManager);
         recyclerViewPreOrders.setItemAnimator(new DefaultItemAnimator());
         preItemAdapter=new OrderAdapter(this,preItemList,"orderList");
+        preItemAdapter.setMyImageClickListener(this);
         recyclerViewPreOrders.setAdapter(preItemAdapter);
         recyclerViewPreOrders.setNestedScrollingEnabled(false);
 
@@ -385,6 +388,18 @@ public class MainActivity extends NetworkBaseActivity {
         }else{
             swipeRefreshLayout.setVisibility(View.VISIBLE);
             textViewError.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onImageClicked(int position, int type, View view) {
+        OrderItem orderItem = null;
+        if(type == 1){
+            orderItem = (OrderItem)itemList.get(position);
+            showImageDialog(orderItem.getOrderImage(),view);
+        }else{
+            orderItem = (OrderItem)preItemList.get(position);
+            showImageDialog(orderItem.getOrderImage(),view);
         }
     }
 }

@@ -17,6 +17,7 @@ import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.adapters.OrderAdapter;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.models.OrderItem;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
@@ -31,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyOrdersActivity extends NetworkBaseActivity {
+public class MyOrdersActivity extends NetworkBaseActivity implements MyImageClickListener {
 
     private RecyclerView recyclerView;
     private OrderAdapter myItemAdapter;
@@ -61,6 +62,7 @@ public class MyOrdersActivity extends NetworkBaseActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         myItemAdapter=new OrderAdapter(this,itemList,"orderList");
+        myItemAdapter.setMyImageClickListener(this);
         recyclerView.setAdapter(myItemAdapter);
 
         if (ConnectionDetector.isNetworkAvailable(this)){
@@ -170,4 +172,9 @@ public class MyOrdersActivity extends NetworkBaseActivity {
         }
     }
 
+    @Override
+    public void onImageClicked(int position, int type, View view) {
+        OrderItem orderItem = (OrderItem) itemList.get(position);
+        showImageDialog(orderItem.getOrderImage(),view);
+    }
 }
