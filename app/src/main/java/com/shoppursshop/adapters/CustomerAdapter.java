@@ -29,6 +29,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.AddCustomerActivity;
 import com.shoppursshop.activities.CustomerProfileActivity;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTouchListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
@@ -53,6 +54,11 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private MyItemTouchListener myItemTouchListener;
     private MyItemTypeClickListener myItemClickListener;
+    private MyImageClickListener myImageClickListener;
+
+    public void setMyImageClickListener(MyImageClickListener myImageClickListener) {
+        this.myImageClickListener = myImageClickListener;
+    }
 
     public void setMyItemTouchListener(MyItemTouchListener myItemTouchListener) {
         this.myItemTouchListener = myItemTouchListener;
@@ -133,6 +139,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             imageView=itemView.findViewById(R.id.image_view);
             imageMenu=itemView.findViewById(R.id.image_menu);
             imageMenu.setOnClickListener(this);
+            imageView.setOnClickListener(this);
             rootView.setOnTouchListener(this);
         }
 
@@ -182,6 +189,13 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 });
 
+            }else if(view == imageView){
+                final MyCustomer customer = (MyCustomer)itemList.get(getAdapterPosition());
+                if(customer.getIsFav().equals("Y")){
+                    myImageClickListener.onImageClicked(getAdapterPosition(),7,imageView);
+                }else{
+                    myImageClickListener.onImageClicked(getAdapterPosition(),8,imageView);
+                }
             }
         }
 

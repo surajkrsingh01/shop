@@ -33,6 +33,7 @@ import com.bumptech.glide.request.target.Target;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.OrderDetailActivity;
 import com.shoppursshop.activities.settings.MyOrderDetailsActivity;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemTouchListener;
 import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.models.MyItem;
@@ -54,6 +55,11 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private SharedPreferences sharedPreferences;
 
     private MyItemTouchListener myItemTouchListener;
+    private MyImageClickListener myImageClickListener;
+
+    public void setMyImageClickListener(MyImageClickListener myImageClickListener) {
+        this.myImageClickListener = myImageClickListener;
+    }
 
     public void setMyItemTouchListener(MyItemTouchListener myItemTouchListener) {
         this.myItemTouchListener = myItemTouchListener;
@@ -100,11 +106,20 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             textDeliveryType=itemView.findViewById(R.id.text_delivery_type);
             textViewStatus=itemView.findViewById(R.id.text_status);
             imageView=itemView.findViewById(R.id.image_view);
+            imageView.setOnClickListener(this);
             rootView.setOnTouchListener(this);
         }
 
         @Override
         public void onClick(View view) {
+            if(view == imageView){
+                OrderItem orderItem = (OrderItem) itemList.get(getAdapterPosition());
+                if(Utility.getTimeStamp("yyyy-MM-dd").equals(orderItem.getDateTime().split(" ")[0]))
+                    myImageClickListener.onImageClicked(getAdapterPosition(),1,imageView);
+                else
+                    myImageClickListener.onImageClicked(getAdapterPosition(),2,imageView);
+
+            }
         }
 
         @Override

@@ -1,5 +1,6 @@
 package com.shoppursshop.activities;
 
+import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,6 +19,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.appbar.AppBarLayout;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.payment.mPos.MPayTransactionDetailsActivity;
@@ -33,7 +36,9 @@ import com.shoppursshop.activities.settings.profile.AddressActivity;
 import com.shoppursshop.activities.settings.profile.BasicProfileActivity;
 import com.shoppursshop.activities.settings.profile.DeliveryActivity;
 import com.shoppursshop.database.DbHelper;
+import com.shoppursshop.morphdialog.DialogActivity;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.Utility;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -375,6 +380,37 @@ public class BaseActivity extends AppCompatActivity {
 
         // show it
         alertDialog.show();
+    }
+
+    public void showImageDialog(String url,View v){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Intent intent = new Intent(this, DialogActivity.class);
+            intent.putExtra("image",url);
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, v, getString(R.string.transition_dialog));
+            startActivityForResult(intent, 100, options.toBundle());
+        }else {
+            int view = R.layout.activity_dialog;
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder
+                    .setView(view)
+                    .setCancelable(true);
+
+            // create alert dialog
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+
+            final ImageView imageView = (ImageView) alertDialog.findViewById(R.id.image);
+
+            Glide.with(getApplicationContext())
+                    .load(url)
+                    .centerCrop()
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .override(Utility.dpToPx(300,this),Utility.dpToPx(300,this))
+                    .into(imageView);
+        }
     }
 
     public void onDialogPositiveClicked(){

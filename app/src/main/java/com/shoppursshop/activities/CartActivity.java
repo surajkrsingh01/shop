@@ -35,6 +35,7 @@ import com.shoppursshop.adapters.ProductAdapter;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.fragments.BottomSearchFragment;
 import com.shoppursshop.fragments.OfferDescriptionFragment;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.Barcode;
@@ -53,7 +54,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartActivity extends NetworkBaseActivity implements MyItemTypeClickListener, MyItemClickListener {
+public class CartActivity extends NetworkBaseActivity implements MyItemTypeClickListener, MyItemClickListener, MyImageClickListener {
 
     private RecyclerView recyclerView;
     private CartAdapter myItemAdapter;
@@ -151,6 +152,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         myItemAdapter=new CartAdapter(this,itemList);
+        myItemAdapter.setMyImageClickListener(this);
         myItemAdapter.setDarkTheme(isDarkTheme);
         myItemAdapter.setMyItemTypeClickListener(this);
         recyclerView.setAdapter(myItemAdapter);
@@ -1133,5 +1135,11 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             item.setOfferId(""+productDiscountOfferList.get(0).getId());
             item.setOfferType("free");
         }
+    }
+
+    @Override
+    public void onImageClicked(int position, int type, View view) {
+        MyProductItem item = (MyProductItem)itemList.get(position);
+        showImageDialog(item.getProdImage1(),view);
     }
 }

@@ -158,14 +158,15 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
             imageView2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(CustomerProfileActivity.this, ImageActivity.class);
+                    showImageDialog(image,imageView2);
+                    /*Intent intent=new Intent(CustomerProfileActivity.this, ImageActivity.class);
                     intent.putExtra("imageUrl",image);
                     Pair participants = new Pair<>(imageView2, ViewCompat.getTransitionName(imageView2));
                     ActivityOptionsCompat transitionActivityOptions =
                             ActivityOptionsCompat.makeSceneTransitionAnimation(
                                     CustomerProfileActivity.this, participants);
                     ActivityCompat.startActivity(CustomerProfileActivity.this,
-                            intent, transitionActivityOptions.toBundle());
+                            intent, transitionActivityOptions.toBundle());*/
                 }
             });
 

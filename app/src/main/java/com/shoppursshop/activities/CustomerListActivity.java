@@ -34,6 +34,7 @@ import com.shoppursshop.adapters.CustomerAdapter;
 import com.shoppursshop.adapters.OrderAdapter;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.fragments.BottomSearchFragment;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.HomeListItem;
@@ -54,7 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerListActivity extends NetworkBaseActivity implements MyItemTypeClickListener {
+public class CustomerListActivity extends NetworkBaseActivity implements MyItemTypeClickListener, MyImageClickListener {
 
     private RecyclerView recyclerView,recyclerViewFav;
     private CustomerAdapter myItemAdapter,myItemAdapterFav;
@@ -103,6 +104,7 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
         recyclerView.setLayoutAnimation(animation);*/
         myItemAdapter=new CustomerAdapter(this,itemList,"customerList");
         myItemAdapter.setMyItemClickListener(this);
+        myItemAdapter.setMyImageClickListener(this);
         recyclerView.setAdapter(myItemAdapter);
         recyclerView.setNestedScrollingEnabled(false);
 
@@ -117,6 +119,7 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
         recyclerView.setLayoutAnimation(animation);*/
         myItemAdapterFav=new CustomerAdapter(this,itemListFav,"customerList");
         myItemAdapterFav.setMyItemClickListener(this);
+        myItemAdapterFav.setMyImageClickListener(this);
         recyclerViewFav.setAdapter(myItemAdapterFav);
         recyclerViewFav.setNestedScrollingEnabled(false);
 
@@ -519,6 +522,18 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
                     myItemAdapter.notifyDataSetChanged();
                 }
             }
+        }
+    }
+
+    @Override
+    public void onImageClicked(int position, int type, View view) {
+        MyCustomer customer = null;
+        if(type == 7){
+            customer = (MyCustomer)itemListFav.get(position);
+            showImageDialog(customer.getImage(),view);
+        }else if(type == 8){
+            customer = (MyCustomer)itemList.get(position);
+            showImageDialog(customer.getImage(),view);
         }
     }
 }

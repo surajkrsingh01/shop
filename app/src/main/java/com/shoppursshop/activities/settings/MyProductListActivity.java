@@ -19,6 +19,7 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.adapters.ProductAdapter;
 import com.shoppursshop.adapters.SimpleItemAdapter;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.ConnectionDetector;
@@ -35,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyProductListActivity extends NetworkBaseActivity implements MyItemClickListener {
+public class MyProductListActivity extends NetworkBaseActivity implements MyItemClickListener, MyImageClickListener {
 
     private RecyclerView recyclerView;
     private List<Object> itemList;
@@ -63,6 +64,7 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         itemAdapter=new ProductAdapter(this,itemList,"productList");
+        itemAdapter.setMyImageClickListener(this);
         itemAdapter.setFlag("productList");
         itemAdapter.setSubCatName("");
         itemAdapter.setMyItemClickListener(this);
@@ -244,5 +246,11 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
         tvError.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         tvError.setText(message);
+    }
+
+    @Override
+    public void onImageClicked(int position, int type, View view) {
+        MyProductItem item = (MyProductItem) itemList.get(position);
+        showImageDialog(item.getProdImage1(),view);
     }
 }

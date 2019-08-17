@@ -1,9 +1,11 @@
 package com.shoppursshop.fragments;
 
 
+import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -13,15 +15,20 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.BaseActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
 import com.shoppursshop.activities.settings.profile.BasicProfileActivity;
 import com.shoppursshop.activities.settings.profile.DeliveryActivity;
 import com.shoppursshop.database.DbHelper;
+import com.shoppursshop.morphdialog.DialogActivity;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.Utility;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -102,6 +109,37 @@ public class BaseFragment extends Fragment {
 
     public void onDialogPositiveClicked(){
 
+    }
+
+    public void showImageDialog(String url,View v){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Intent intent = new Intent(getActivity(), DialogActivity.class);
+            intent.putExtra("image",url);
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), v, getString(R.string.transition_dialog));
+            startActivityForResult(intent, 100, options.toBundle());
+        }else {
+            int view = R.layout.activity_dialog;
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+            alertDialogBuilder
+                    .setView(view)
+                    .setCancelable(true);
+
+            // create alert dialog
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+
+            final ImageView imageView = (ImageView) alertDialog.findViewById(R.id.image);
+
+            Glide.with(getActivity())
+                    .load(url)
+                    .centerCrop()
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .override(Utility.dpToPx(300,getActivity()),Utility.dpToPx(300,getActivity()))
+                    .into(imageView);
+        }
     }
 
     void showProgress(boolean show,String message){

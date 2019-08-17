@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.ProductComboOffer;
@@ -42,6 +43,11 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     private MyItemTypeClickListener myItemTypeClickListener;
+    private MyImageClickListener myImageClickListener;
+
+    public void setMyImageClickListener(MyImageClickListener myImageClickListener) {
+        this.myImageClickListener = myImageClickListener;
+    }
 
     public void setMyItemTypeClickListener(MyItemTypeClickListener myItemTypeClickListener) {
         this.myItemTypeClickListener = myItemTypeClickListener;
@@ -83,6 +89,7 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
             imageViewAdd.setOnClickListener(this);
             imageViewMinus.setOnClickListener(this);
+            imageView.setOnClickListener(this);
             rlOffer.setOnClickListener(this);
         }
 
@@ -92,6 +99,8 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 myItemTypeClickListener.onItemClicked(getAdapterPosition(),2);
             }else if(view == rlOffer){
                 myItemTypeClickListener.onItemClicked(getAdapterPosition(),3);
+            }else if(view == imageView){
+                myImageClickListener.onImageClicked(getAdapterPosition(),1,imageView);
             }else{
                 myItemTypeClickListener.onItemClicked(getAdapterPosition(),1);
             }

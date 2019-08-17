@@ -36,6 +36,7 @@ import com.shoppursshop.activities.ProductDetailActivity;
 import com.shoppursshop.activities.ProductListActivity;
 import com.shoppursshop.activities.ScannarActivity;
 import com.shoppursshop.activities.SubCatListActivity;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTouchListener;
 import com.shoppursshop.models.Category;
@@ -64,6 +65,12 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private MyItemTouchListener myItemTouchListener;
 
     private MyItemClickListener myItemClickListener;
+
+    private MyImageClickListener myImageClickListener;
+
+    public void setMyImageClickListener(MyImageClickListener myImageClickListener) {
+        this.myImageClickListener = myImageClickListener;
+    }
 
     public void setColorTheme(int colorTheme){
         this.colorTheme = colorTheme;
@@ -344,6 +351,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             imageView=itemView.findViewById(R.id.image_view);
             imageMenu=itemView.findViewById(R.id.image_menu);
             imageMenu.setOnClickListener(this);
+            imageView.setOnClickListener(this);
 
             if(flag.equals("order")){
                 btnAddToCart.setVisibility(View.VISIBLE);
@@ -379,6 +387,8 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         return false;
                     }
                 });
+            }else if(view == imageView){
+                myImageClickListener.onImageClicked(getAdapterPosition(),1,imageView);
             }
         }
 
@@ -429,11 +439,17 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             textOffPer=itemView.findViewById(R.id.text_off_percentage);
             textQty=itemView.findViewById(R.id.text_qty);
             imageView=itemView.findViewById(R.id.image_view);
+            imageView.setOnClickListener(this);
             rootView.setOnTouchListener(this);
         }
 
         @Override
         public void onClick(View view) {
+
+            if(view == imageView){
+                myImageClickListener.onImageClicked(getAdapterPosition(),1,imageView);
+            }
+
         }
 
         @Override

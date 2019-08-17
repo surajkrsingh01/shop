@@ -698,6 +698,7 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put(ID, item.getId());
         contentValues.put(CODE, item.getCode());
         contentValues.put(NAME, item.getName());
+        contentValues.put(PHOTO, item.getImage());
         contentValues.put(MOBILE_NO, item.getMobile());
         contentValues.put(EMAIL, item.getEmail());
         contentValues.put(ADDRESS, item.getAddress());
