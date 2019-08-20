@@ -181,7 +181,7 @@ public class ApplyOffersActivity extends BaseActivity implements MyItemTypeClick
                 offerName = productComboOffer.getOfferName();
                 float totOfferAmt = 0f;
                 for(ProductComboDetails productComboDetails : productComboOffer.getProductComboOfferDetails()){
-                    totOfferAmt = totOfferAmt + productComboDetails.getPcodPrice();
+                    totOfferAmt =  productComboDetails.getPcodPrice();
                     offerDescList.add("Buy "+productComboDetails.getPcodProdQty()+" at Rs "+
                             Utility.numberFormat(totOfferAmt));
                 }
@@ -282,7 +282,7 @@ public class ApplyOffersActivity extends BaseActivity implements MyItemTypeClick
         int qty = item.getQty();
         if(item.getProductOffer() != null && item.getProductOffer() instanceof ProductComboOffer){
             ProductComboOffer productComboOffer = (ProductComboOffer)item.getProductOffer();
-            if(qty > 1){
+            if(qty >= 1){
                 int maxSize = productComboOffer.getProductComboOfferDetails().size();
                 int mod = qty % maxSize;
                 Log.i(TAG,"mod "+mod);
@@ -381,14 +381,19 @@ public class ApplyOffersActivity extends BaseActivity implements MyItemTypeClick
 
     private float getOfferPrice(int qty,float sp,List<ProductComboDetails> productComboDetailsList){
         float amount = 0f;
+        int i = -1;
         for(ProductComboDetails productComboDetails:productComboDetailsList){
             if(productComboDetails.getPcodProdQty() == qty){
                 amount = productComboDetails.getPcodPrice();
+                if(qty != 1){
+                    amount = amount - productComboDetailsList.get(i).getPcodPrice();
+                }
                 Log.i(TAG,"offer price "+amount);
                 break;
             }else{
                 amount = sp;
             }
+            i++;
         }
         Log.i(TAG,"final selling price "+amount);
         return amount;

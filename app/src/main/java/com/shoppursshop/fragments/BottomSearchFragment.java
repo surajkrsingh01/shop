@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -77,7 +78,7 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
     private SearchProductAdapter productAdapter;
     private List<MyProductItem> myProductList;
     private List<MyCustomer> myCustomerList;
-    private String callingActivityName, flag,mobile;
+    private String callingActivityName, flag,mobile,token;
     private int colorTheme;
     private boolean isDarkTheme;
 
@@ -111,7 +112,7 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
         editor=sharedPreferences.edit();
         colorTheme = sharedPreferences.getInt(Constants.COLOR_THEME,getResources().getColor(R.color.red_500));
         isDarkTheme = sharedPreferences.getBoolean(Constants.IS_DARK_THEME,false);
-
+        token = sharedPreferences.getString(Constants.TOKEN,"");
         dbHelper=new DbHelper(getActivity());
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setCanceledOnTouchOutside(false);
@@ -281,7 +282,16 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
                 showProgress(false);
                 DialogAndToast.showDialog(getResources().getString(R.string.connection_error),getActivity());
             }
-        });
+        }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("Authorization", "Bearer "+token);
+                //params.put("VndUserDetail", appVersion+"#"+deviceName+"#"+osVersionName);
+                return params;
+            }
+        };
 
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
                 30000,
