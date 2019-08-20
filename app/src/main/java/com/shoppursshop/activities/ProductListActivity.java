@@ -27,15 +27,17 @@ import com.shoppursshop.R;
 import com.shoppursshop.adapters.OrderAdapter;
 import com.shoppursshop.adapters.ProductAdapter;
 import com.shoppursshop.fragments.BottomSearchFragment;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.models.MyHeader;
 import com.shoppursshop.models.MyProduct;
+import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.DialogAndToast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductListActivity extends BaseActivity {
+public class ProductListActivity extends BaseActivity implements MyImageClickListener {
 
     private RecyclerView recyclerView;
     private ProductAdapter myItemAdapter;
@@ -92,6 +94,7 @@ public class ProductListActivity extends BaseActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         myItemAdapter=new ProductAdapter(this,itemList,"productList");
+        myItemAdapter.setMyImageClickListener(this);
         myItemAdapter.setFlag(getIntent().getStringExtra("flag"));
         myItemAdapter.setSubCatName(subCatName);
         recyclerView.setAdapter(myItemAdapter);
@@ -261,4 +264,10 @@ public class ProductListActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onImageClicked(int position, int type, View view) {
+        MyProductItem item = (MyProductItem) itemList.get(position);
+
+        showImageDialog(item.getProdImage1(),view);
+    }
 }

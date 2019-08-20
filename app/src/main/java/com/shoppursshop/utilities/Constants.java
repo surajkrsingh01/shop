@@ -76,6 +76,8 @@ public class Constants {
     public static String DEVICE_ID="deviceId";
     public static String NOTIFICATION_COUNTER="notificationCounter";
 
+    public static String ANDROID_DEVICE_TYPE="androidDeviceType";
+
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
     public static final String PACKAGE_NAME =
@@ -90,11 +92,11 @@ public class Constants {
 
 
     //api
-    public static String LOGIN="/api/user/loginRetailer";
+    public static String LOGIN="/useradmin/loginRetailer";
     public static String AUTHENTICATE="/api/user/authenticate_user";
-    public static String GET_PASSWORD="/api/user/getPassword";
+    public static String GET_PASSWORD="/useradmin/getPassword";
     public static String SYNC="/api/syncdata";
-    public static String MANAGE_REGISTRATION="/api/user/manageRegistration";
+    public static String MANAGE_REGISTRATION="/useradmin/manageRegistration";
     public static String GET_COUNTRIES="/api/countries";
     public static String GET_STATES="/api/states?countryId=";
     public static String GET_CITIES="/api/cities?stateId=";

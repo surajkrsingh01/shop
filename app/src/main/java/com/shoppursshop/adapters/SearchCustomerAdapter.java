@@ -20,6 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.CustomerProfileActivity;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyCustomer;
@@ -46,6 +47,11 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
 
     private MyItemTypeClickListener myItemTypeClickListener;
     private MyItemClickListener myItemClickListener;
+    private MyImageClickListener myImageClickListener;
+
+    public void setMyImageClickListener(MyImageClickListener myImageClickListener) {
+        this.myImageClickListener = myImageClickListener;
+    }
 
     public void setType(String type) {
         this.type = type;
@@ -117,15 +123,16 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
 
 
             RequestOptions requestOptions = new RequestOptions();
-            requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+            requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
             requestOptions.dontTransform();
             // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
             // requestOptions.centerCrop();
-            requestOptions.skipMemoryCache(true);
+            requestOptions.skipMemoryCache(false);
 
             Glide.with(context)
-                    .load(item.getLocalImage())
+                    .load(item.getImage())
                     .apply(requestOptions)
+                    .error(R.drawable.ic_photo_black_192dp)
                     .into(myViewHolder.imageView);
         }
     }
@@ -157,6 +164,7 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
             imageView=itemView.findViewById(R.id.image_view);
             imageMenu=itemView.findViewById(R.id.image_menu);
             imageMenu.setOnClickListener(this);
+            imageView.setOnClickListener(this);
             rootView.setOnClickListener(this);
         }
 
@@ -179,6 +187,8 @@ public class SearchCustomerAdapter extends RecyclerView.Adapter<SearchCustomerAd
                     context.startActivity(intent);
                 }
 
+            }else if(v == imageView){
+                myImageClickListener.onImageClicked(getAdapterPosition(),1,imageView);
             }else if(v == imageMenu){
                 //myItemTypeClickListener.onItemClicked(getAdapterPosition(),2);
                 final MyCustomer customer = (MyCustomer)itemList.get(getAdapterPosition());

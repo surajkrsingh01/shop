@@ -1,11 +1,16 @@
 package com.shoppursshop.activities;
 
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -14,10 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Environment;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.itextpdf.text.BaseColor;
@@ -36,6 +43,10 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.itextpdf.text.pdf.draw.VerticalPositionMark;
+import com.pnsol.sdk.interfaces.DeviceType;
+import com.pnsol.sdk.payment.PaymentInitialization;
+import com.pnsol.sdk.vo.response.POSReceipt;
+import com.pnsol.sdk.vo.response.TransactionStatusResponse;
 import com.shoppursshop.R;
 import com.shoppursshop.adapters.InvoiceItemAdapter;
 import com.shoppursshop.models.Coupon;
@@ -63,6 +74,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.pnsol.sdk.interfaces.PaymentTransactionConstants.ERROR_MESSAGE;
+import static com.pnsol.sdk.interfaces.PaymentTransactionConstants.FAIL;
+import static com.pnsol.sdk.interfaces.PaymentTransactionConstants.SUCCESS;
+
 public class InvoiceActivity extends NetworkBaseActivity {
 
     private final int SHARE =1,PRINT =2,DOWNLOAD=3;
@@ -78,6 +93,9 @@ public class InvoiceActivity extends NetworkBaseActivity {
     private RelativeLayout rlCouponLayout;
     private TextView tvCouponOfferName;
     private int actionType;
+
+    private boolean customerCopy;
+    private TransactionStatusResponse txnResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +153,8 @@ public class InvoiceActivity extends NetworkBaseActivity {
         rlCouponLayout = findViewById(R.id.rl_coupon_layout);
         tvCouponOfferName = findViewById(R.id.tv_offer_name);
 
+        txnResponse = (TransactionStatusResponse) getIntent().getSerializableExtra("txnResponse");
+
         ImageView ivClose = findViewById(R.id.image_close);
         ImageView ivShare = findViewById(R.id.image_share);
         ImageView ivPrint = findViewById(R.id.image_print);
@@ -151,8 +171,16 @@ public class InvoiceActivity extends NetworkBaseActivity {
         ivPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionType = PRINT;
-                createPdf();
+                if(txnResponse == null){
+                    actionType = PRINT;
+                    createPdf();
+                }else{
+                    PaymentInitialization initialization=new PaymentInitialization(
+                            InvoiceActivity.this);
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.payswiff);
+                    initialization.initiatePrintReceipt(printHandler, DeviceType.N910,txnResponse.getReferenceNumber(),
+                            null,customerCopy);
+                }
             }
         });
 
@@ -908,6 +936,71 @@ public class InvoiceActivity extends NetworkBaseActivity {
         share.putExtra(Intent.EXTRA_STREAM, uri);
        // share.setPackage("com.whatsapp");
         startActivity(share);
+    }
+
+    @SuppressLint("HandlerLeak")
+    private final Handler printHandler = new Handler() {
+
+        public void handleMessage(android.os.Message msg) {
+            if (msg.what == SUCCESS) {
+                /*POSReceipt posReceipts = (POSReceipt) msg.obj;*/
+                Toast.makeText(InvoiceActivity.this, "Success",
+                        Toast.LENGTH_LONG).show();
+                if(!customerCopy) {
+                    showDialogBox();
+                }
+                else {
+                    return;
+                }
+            }
+            if (msg.what == FAIL) {
+                Toast.makeText(InvoiceActivity.this, (String) msg.obj,
+                        Toast.LENGTH_LONG).show();
+                //finish();
+            } else if (msg.what == ERROR_MESSAGE) {
+                Toast.makeText(InvoiceActivity.this, (String) msg.obj,
+                        Toast.LENGTH_LONG).show();
+            }
+        };
+
+    };
+
+    private void showDialogBox() {
+
+        final POSReceipt vo = (POSReceipt) getIntent()
+                .getSerializableExtra("vo");
+        final PaymentInitialization initialization = new PaymentInitialization(
+                InvoiceActivity.this);
+        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.payswiff);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(InvoiceActivity.this);
+        // dialog.setCancelable(false);
+        dialog.setTitle("Print Customer Copy");
+        dialog.setMessage("Do you want to Print Customer Copy?");
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                HashMap<String, String> meMap=new HashMap<String, String>();
+                meMap.put("Color1","Red");
+                meMap.put("Color2","Blue");
+                meMap.put("Color3","Green");
+                meMap.put("Color4","White");
+                customerCopy=true;
+                initialization.initiatePrintReceipt(printHandler, DeviceType.N910,txnResponse.getReferenceNumber(),bitmap,customerCopy);
+
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Action for "Cancel".
+                return;
+            }
+        });
+
+        final AlertDialog alert = dialog.create();
+        alert.show();
+
+
     }
 
     private void print(String path){

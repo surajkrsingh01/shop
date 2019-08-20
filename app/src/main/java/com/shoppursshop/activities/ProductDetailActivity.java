@@ -552,9 +552,15 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                 }
             }else if (apiName.equals("productRatingsData")) {
                 if (response.getBoolean("status")) {
-                    JSONObject jsonObject = response.getJSONObject("result");
-                    tvStarRatings.setText(String.format("%.01f",(float)jsonObject.getDouble("ratings")));
-                    tvNumRatings.setText(jsonObject.getInt("ratingHits")+" Ratings");
+                    if(response.getString("result") == null || response.getString("result").equals("null")){
+                        tvStarRatings.setText("0.0");
+                        tvNumRatings.setText("0 Ratings");
+                    }else{
+                        JSONObject jsonObject = response.getJSONObject("result");
+                        tvStarRatings.setText(String.format("%.01f",(float)jsonObject.getDouble("ratings")));
+                        tvNumRatings.setText(jsonObject.getInt("ratingHits")+" Ratings");
+                    }
+
                 }
             }
         }catch (JSONException e) {

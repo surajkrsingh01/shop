@@ -17,6 +17,7 @@ import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.adapters.OrderAdapter;
 import com.shoppursshop.adapters.ShopOfferListAdapter;
 import com.shoppursshop.database.DbHelper;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.Coupon;
 import com.shoppursshop.models.MyProduct;
@@ -40,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeClickListener {
+public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeClickListener, MyImageClickListener {
 
     private RecyclerView recyclerView;
     private ShopOfferListAdapter myItemAdapter;
@@ -84,6 +85,7 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         myItemAdapter=new ShopOfferListAdapter(this,itemList);
         myItemAdapter.setMyItemTypeClickListener(this);
+        myItemAdapter.setMyImageClickListener(this);
         recyclerView.setAdapter(myItemAdapter);
 
         tv_top_parent = findViewById(R.id.text_left_label);
@@ -386,5 +388,11 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
         }else{
 
         }
+    }
+
+    @Override
+    public void onImageClicked(int position, int type, View view) {
+        ShopOfferItem item = (ShopOfferItem) itemList.get(position);
+        showImageDialog(item.getProductImage(),view);
     }
 }

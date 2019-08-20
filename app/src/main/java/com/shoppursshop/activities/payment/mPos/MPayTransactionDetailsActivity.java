@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
+
 import com.android.volley.Request;
 import com.google.gson.Gson;
 import com.pnsol.sdk.interfaces.PaymentTransactionConstants;
@@ -21,6 +22,8 @@ import com.pnsol.sdk.miura.emv.tlv.ISOUtil;
 import com.pnsol.sdk.payment.PaymentInitialization;
 import com.pnsol.sdk.vo.HostResponse;
 import com.pnsol.sdk.vo.TransactionVO;
+import com.pnsol.sdk.vo.response.ICCTransactionResponse;
+import com.pnsol.sdk.vo.response.TransactionStatusResponse;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.CustomerInfoActivity;
 import com.shoppursshop.activities.InvoiceActivity;
@@ -55,7 +58,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
     EditText void_ref_no;
     private Button send, voidBt, saleCompletion;
     private TextView transactionresponse;
-    String data,ptype,cardLevel,merchantRefNo,transId,invNo,invoiceJson;
+    String data,ptype,cardLevel,merchantRefNo,transId,invoiceJson;
     boolean approved;
     private RelativeLayout rlFooter;
     private TextView tvFooter;
@@ -67,11 +70,13 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
     private JSONObject dataObject;
     private JSONArray shopArray;
 
+    private TransactionStatusResponse txnResponse;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mpay_transaction_details);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -80,20 +85,21 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
         text = (TextView) findViewById(R.id.text);
         void_ref_no=(EditText)findViewById(R.id.void_ref_no);
         transactionresponse= (TextView) findViewById(R.id.transactionresponse);
-        rlFooter = findViewById(R.id.relative_footer_action);
-        tvFooter = findViewById(R.id.text_action);
+        rlFooter = (RelativeLayout) findViewById(R.id.relative_footer_action);
+        tvFooter = (TextView) findViewById(R.id.text_action);
         initFooterAction(this);
 
         transactionresponse.setText(data);
         Log.i(TAG,"Response "+data);
+        txnResponse = (TransactionStatusResponse) getIntent().getSerializableExtra("txnResponse");
         try {
             data = getIntent().getStringExtra("paymentResponseObject");
             dataObject = new JSONObject(data);
             approved = dataObject.getBoolean("approved");
-            cardLevel = dataObject.getString("cardLevel");
+            //cardLevel = dataObject.getString("cardLevel");
             merchantRefNo = dataObject.getString("merchantRefInvoiceNo");
             transId = dataObject.getString("transactionId");
-            invNo = dataObject.getString("invoiceNo");
+          //  invNo = dataObject.getString("invoiceNo");
 
             if(approved){
                 updatePaymentStatus(dataObject,"Done");
@@ -105,70 +111,19 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //transactionresponse.setText("TRANSACTION APPROVED"+vo.getHostResponse().getTdrPercentage()+vo.getHostResponse().getIncentiveAmount());
-
-        send = (Button) findViewById(R.id.send);
-        voidBt = (Button) findViewById(R.id.void_bt);
-        saleCompletion = (Button) findViewById(R.id.sale_completion);
-
-        send.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-               /* Intent i = new Intent(MPayTransactionDetailsActivity.this, SendSMSEmail.class);
-                i.putExtra("response", response);
-                startActivity(i);*/
-            }
-        });
-        voidBt.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                try {
-                    PaymentInitialization initialization = new PaymentInitialization(
-                            MPayTransactionDetailsActivity.this);
-                    //initialization.initiateVoidTransaction(voidHandler, response.getRRN());
-
-                    initialization.initiateVoidTransaction(voidHandler, response.getRRN(),void_ref_no.getText().toString());
-                } catch (RuntimeException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        saleCompletion.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                try {
-                    PaymentInitialization initialization = new PaymentInitialization(
-                            MPayTransactionDetailsActivity.this);
-                    initialization.initiateSaleCompletionTransaction(saleCmpltnHandler, ""+response.getAmount(), response.getRRN());
-                } catch (RuntimeException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        details.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                getTransDetails();
-            }
-        });
 
         init();
     }
 
     private void init(){
-        textViewStatusHeader = findViewById(R.id.tv_status_header);
-        tvStatus = findViewById(R.id.text_status_message);
-        tvPaymentMethod = findViewById(R.id.tv_payment_method);
-        tvTransactionId = findViewById(R.id.transaction_id);
-        tvRrn = findViewById(R.id.tv_rrn);
-        tvAmount = findViewById(R.id.tv_amount);
-        imageStatusSuccess = findViewById(R.id.image_status_success);
-        imageViewStatusFailure = findViewById(R.id.image_status_failure);
+        textViewStatusHeader = (TextView) findViewById(R.id.tv_status_header);
+        tvStatus = (TextView) findViewById(R.id.text_status_message);
+        tvPaymentMethod = (TextView) findViewById(R.id.tv_payment_method);
+        tvTransactionId = (TextView) findViewById(R.id.transaction_id);
+        tvRrn = (TextView) findViewById(R.id.tv_rrn);
+        tvAmount = (TextView) findViewById(R.id.tv_amount);
+        imageStatusSuccess = (ImageView) findViewById(R.id.image_status_success);
+        imageViewStatusFailure = (ImageView) findViewById(R.id.image_status_failure);
 
 
 
@@ -210,6 +165,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
                 if(isDelivered){
                     Intent intent = new Intent(MPayTransactionDetailsActivity.this,InvoiceActivity.class);
                     intent.putExtra("orderNumber",getIntent().getStringExtra("orderNumber"));
+                    intent.putExtra("txnResponse", txnResponse);
                     startActivity(intent);
                     finish();
                 }else{
@@ -240,83 +196,6 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"orderDelivered");
     }
 
-    private void addInvoiceData(JSONObject jsonObject){
-        String url=getResources().getString(R.string.url)+Constants.ADD_INVOICE_DATA;
-        showProgress(true);
-        jsonObjectApiRequest(Request.Method.POST,url,jsonObject,"addInvoice");
-    }
-
-    private void generateInvoiceJson(){
-        try {
-            List<MyProductItem> cartItemList = dbHelper.getCartProducts();
-            Invoice invoice = new Invoice();
-            invoice.setInvId(0);
-            invoice.setInvNo(invNo);
-            invoice.setInvTransId(transId);
-            invoice.setInvDate(Utility.getTimeStamp());
-            invoice.setInvShopId(sharedPreferences.getInt(Constants.USER_ID,0));
-            invoice.setInvShopCode(sharedPreferences.getString(Constants.SHOP_CODE,""));
-            invoice.setInvShopName(sharedPreferences.getString(Constants.SHOP_NAME,""));
-            invoice.setInvShopAddress(sharedPreferences.getString(Constants.ADDRESS,""));
-            invoice.setInvShopEmail(sharedPreferences.getString(Constants.EMAIL,""));
-            invoice.setInvShopMobile(sharedPreferences.getString(Constants.MOBILE_NO,""));
-            invoice.setInvShopGSTIn(sharedPreferences.getString(Constants.GST_NO,""));
-            invoice.setInvCustId(getIntent().getIntExtra("custId",0));
-            invoice.setCustCode(getIntent().getStringExtra("custCode"));
-            invoice.setInvCustName(getIntent().getStringExtra("custName"));
-            invoice.setInvCustMobile(getIntent().getStringExtra("custMobile"));
-            invoice.setInvTotCGST(dbHelper.getTotalTaxValue(DbHelper.PROD_CGST));
-            invoice.setInvTotSGST(dbHelper.getTotalTaxValue(DbHelper.PROD_SGST));
-            invoice.setInvTotIGST(dbHelper.getTotalTaxValue(DbHelper.PROD_IGST));
-            invoice.setInvTotDisAmount(dbHelper.getTotalDisValue());
-            invoice.setInvTotTaxAmount(invoice.getInvTotCGST()+invoice.getInvTotSGST()+invoice.getInvTotIGST());
-            invoice.setInvTotAmount(dbHelper.getTotalPriceCart() + invoice.getInvTotTaxAmount());
-            invoice.setInvTotNetPayable(invoice.getInvTotAmount() - invoice.getInvTotDisAmount());
-            invoice.setInvStatus("active");
-            invoice.setInvCoupenId("");
-            invoice.setInvPaymentMode("Credit/Debit Card");
-            invoice.setUserName(sharedPreferences.getString(Constants.FULL_NAME,""));
-            invoice.setDbName(sharedPreferences.getString(Constants.DB_NAME,""));
-            invoice.setDbUserName(sharedPreferences.getString(Constants.DB_USER_NAME,""));
-            invoice.setDbPassword(sharedPreferences.getString(Constants.DB_PASSWORD,""));
-            InvoiceDetail invoiceDetail = null;
-            List<InvoiceDetail> invoiceDetailList = new ArrayList<>();
-            for (MyProductItem cartItem : cartItemList) {
-                invoiceDetail = new InvoiceDetail();
-                invoiceDetail.setInvDId(0);
-                invoiceDetail.setInvDProdId(cartItem.getProdId());
-                invoiceDetail.setInvDProdCode(cartItem.getProdCode());
-                invoiceDetail.setInvDQty(cartItem.getQty());
-                invoiceDetail.setInvDHsnCode(cartItem.getProdHsnCode());
-                invoiceDetail.setInvDSp(cartItem.getProdSp());
-                invoiceDetail.setInvDMrp(cartItem.getProdMrp());
-                invoiceDetail.setInvDDisAmount(invoiceDetail.getInvDMrp() - invoiceDetail.getInvDSp());
-                if(invoiceDetail.getInvDDisAmount() > 0){
-                    invoiceDetail.setInvDDisPercentage(invoiceDetail.getInvDDisAmount() * 100 /invoiceDetail.getInvDMrp());
-                }else{
-                    invoiceDetail.setInvDDisPercentage(0f);
-                }
-                invoiceDetail.setInvDSGST(cartItem.getProdSgst());
-                invoiceDetail.setInvDCGST(cartItem.getProdCgst());
-                invoiceDetail.setInvDIGST(cartItem.getProdIgst());
-                invoiceDetail.setInvDTotAmount(cartItem.getTotalAmount());
-                invoiceDetail.setInvdOfferId("");
-                invoiceDetailList.add(invoiceDetail);
-            }
-            invoice.setInvoiceDetailList(invoiceDetailList);
-
-            Gson gson = new Gson();
-            invoiceJson = gson.toJson(invoice);
-            JSONObject jsonObject = new JSONObject(invoiceJson);
-
-            Log.i(TAG,"Data "+invoiceJson);
-
-            addInvoiceData(jsonObject);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void generateJson(String paymentMode){
         try {
@@ -466,159 +345,6 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
         }
     }
 
-    private void getTransDetails(){
-        try {
-            TransactionVO vo = (TransactionVO) getIntent()
-                    .getSerializableExtra("vo");
-
-            PaymentInitialization initialization = new PaymentInitialization(
-                    MPayTransactionDetailsActivity.this);
-            if(vo.getHostRequest().isPinVerifiedFlag()){
-                //Signature not required
-                initialization.initiateTransactionDetails(handler, vo,
-                        null);
-                //Toast.makeText(getApplicationContext(), "No sign", Toast.LENGTH_LONG).show();
-            } else {
-                //Signature required
-                initialization.initiateTransactionDetails(handler, vo,
-                        ISOUtil.hex2byte(sign));
-                //Toast.makeText(getApplicationContext(), "sign", Toast.LENGTH_LONG).show();
-            }
-
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // The Handler that gets information back from the PaymentProcessThread
-    @SuppressLint("HandlerLeak")
-    private final Handler handler = new Handler() {
-
-        public void handleMessage(android.os.Message msg) {
-            if (msg.what == SUCCESS) {
-                response = (HostResponse) msg.obj;
-                text.setText("Card Hodler Name : "
-                        + response.getCardHolderName() + "\n" + "Amount : "
-                        + response.getAmount() + "\n" + "RRN : "
-                        + response.getRRN() + "\n" + "Transaction Id : "
-                        + response.getTransactionId());
-
-                Log.i(TAG,"Card Hodler Name : "
-                        + response.getCardHolderName() + "\n" + "Amount : "
-                        + response.getAmount() + "\n" + "RRN : "
-                        + response.getRRN() + "\n" + "Transaction Id : "
-                        + response.getTransactionId());
-
-				/*Toast.makeText(TransactionDetails.this, "success",
-						Toast.LENGTH_LONG).show();*/
-
-				/*if(ptype.equalsIgnoreCase(PRE_AUTH))
-				{
-
-					saleCompletion.setVisibility(View.VISIBLE);
-				}
-				else
-				{*/
-                send.setVisibility(View.VISIBLE);
-                voidBt.setVisibility(View.VISIBLE);
-                void_ref_no.setVisibility(View.VISIBLE);
-                saleCompletion.setVisibility(View.GONE);
-                //}
-
-                //TransactionVO vo = (TransactionVO) msg.obj;
-
-                String data = null;
-                try {
-                    data = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(response);
-                    dataObject = new JSONObject(data);
-                    invNo = dataObject.getString("invoiceNo");
-                    generateJson("Credit/Debit Card");
-                } catch (JsonGenerationException e1) {
-                    e1.printStackTrace();
-                } catch (JsonMappingException e1) {
-                    e1.printStackTrace();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                transactionresponse.setText(data);
-
-                Log.i(TAG,"Details "+data);
-
-				/*transactionresponse.setText("Card Hodler Name : "
-						+ response.getCardHolderName() + "\n" + "Amount : "
-						+ response.getAmount() + "\n" + "RRN : "
-						+ response.getRRN() + "\n" + "Transaction Id : "
-						+ response.getTransactionId());*/
-                //			saleCompletion.setVisibility(View.VISIBLE);
-            }
-            if (msg.what == FAIL) {
-                Toast.makeText(MPayTransactionDetailsActivity.this, (String) msg.obj,
-                        Toast.LENGTH_LONG).show();
-//				finish();
-            }
-            else if(msg.what == TRANSACTION_PENDING)
-            {
-                Toast.makeText(MPayTransactionDetailsActivity.this, (String) msg.obj+"pending details",
-                        Toast.LENGTH_LONG).show();
-            }
-        };
-    };
-
-
-    @SuppressLint("HandlerLeak")
-    private final Handler voidHandler = new Handler() {
-
-        public void handleMessage(android.os.Message msg) {
-            if (msg.what == SUCCESS) {
-				/*Toast.makeText(TransactionDetails.this, (String) msg.obj,
-						Toast.LENGTH_LONG).show();
-				*/
-                String data = null;
-                try {
-                    HostResponse hs=(HostResponse)msg.obj;
-                    data = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(hs);
-                } catch (JsonGenerationException e1) {
-                    e1.printStackTrace();
-                } catch (JsonMappingException e1) {
-                    e1.printStackTrace();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                transactionresponse.setText("Void Data"+"\n"+data);
-
-            }
-            if (msg.what == FAIL) {
-                Toast.makeText(MPayTransactionDetailsActivity.this, (String) msg.obj,
-                        Toast.LENGTH_LONG).show();
-                finish();
-            }
-            else if(msg.what == TRANSACTION_PENDING)
-            {
-                Toast.makeText(MPayTransactionDetailsActivity.this, (String) msg.obj+"pending void",
-                        Toast.LENGTH_LONG).show();
-            }
-        };
-    };
-
-
-    @SuppressLint("HandlerLeak")
-    private final Handler saleCmpltnHandler = new Handler() {
-
-        public void handleMessage(android.os.Message msg) {
-            if (msg.what == SUCCESS) {
-                Toast.makeText(MPayTransactionDetailsActivity.this, "Success",
-                        Toast.LENGTH_LONG).show();
-            }
-            if (msg.what == FAIL) {
-                Toast.makeText(MPayTransactionDetailsActivity.this, (String) msg.obj,
-                        Toast.LENGTH_LONG).show();
-                finish();
-            }
-        };
-    };
-
 
     @Override
     public void onJsonObjectResponse(JSONObject response, String apiName) {
@@ -638,7 +364,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
                         }
                     }
                     dbHelper.deleteTable(DbHelper.CART_TABLE);
-                   // getTransDetails();
+                    // getTransDetails();
                     Log.d(TAG, "Order Placed" );
                 }else {
                     DialogAndToast.showToast(response.getString("message"),MPayTransactionDetailsActivity.this);
@@ -683,12 +409,12 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
                 dataObject.put("status_message", "FAILED");
             }
             dataObject.put("paymentMode", "DevicePay");
-          //  dataObject.put("approved", approved);
-          //  dataObject.put("cardLevel", cardLevel);
-         //   dataObject.put("merchantRefInvoiceNo", merchantRefNo);
-            JSONArray jsonArray = dataObject.getJSONArray("merchantNameAndAddress");
-            dataObject.put("merchantName",jsonArray.getString(0));
-            dataObject.put("merchantAddress", jsonArray.getString(1));
+            //  dataObject.put("approved", approved);
+            //  dataObject.put("cardLevel", cardLevel);
+            //   dataObject.put("merchantRefInvoiceNo", merchantRefNo);
+           // JSONArray jsonArray = dataObject.getJSONArray("merchantNameAndAddress");
+            dataObject.put("merchantName",sharedPreferences.getString(Constants.SHOP_NAME,""));
+            dataObject.put("merchantAddress", sharedPreferences.getString(Constants.ADDRESS,""));
             dataObject.put("custCode",getIntent().getStringExtra("custCode"));
             dataObject.put("paymentMethod",dataObject.getString("cardType"));
             dataObject.put("paymentBrand",dataObject.getString("cardBrand"));

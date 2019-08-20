@@ -217,6 +217,8 @@
     <string name="no_address_found">No locationAddress is found</string>
     <string name="no_location_data_provided">No data is provided</string>
 
+    <string name="transition_dialog">transition_dialog</string>
+
     <!-- titles. -->
     <string name="title_activity_register">Register</string>
     <string name="title_activity_login">Login</string>
@@ -271,5 +273,6 @@
     <string name="title_activity_apply_offers">ApplyOffersActivity</string>
     <string name="title_activity_CCAvenueWebViewActivity">Transaction</string>
     <string name="title_activity_customer_address">Customer Address</string>
+    <string name="title_activity_choose_device">ChooseDeviceActivity</string>
 
 </resources>

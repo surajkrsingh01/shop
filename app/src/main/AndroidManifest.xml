@@ -29,12 +29,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup,android:icon,android:theme">
+        <activity
+            android:name=".activities.ChooseDeviceActivity"
+            android:label="@string/title_activity_choose_device"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+        <activity
+            android:name=".morphdialog.DialogActivity"
+            android:theme="@style/AppTheme.NoActionBar.Dialog"></activity>
         <activity
             android:name=".activities.CustomerAddressActivity"
             android:label="@string/title_activity_customer_address"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.ImageActivity"
             android:label="Image"
@@ -133,11 +141,6 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.payment.mPos.RKIProcessActivity"
-            android:label="@string/title_activity_rkip_process"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-        <activity
             android:name=".activities.payment.mPos.MPayTransactionDetailsActivity"
             android:label="@string/title_activity_mpay_activation"
             android:launchMode="singleTask"
@@ -178,11 +181,6 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".activities.payment.gPay.PaymentActivity"
-            android:label="@string/title_activity_payment"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"

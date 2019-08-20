@@ -23,15 +23,33 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--dontwarn com.newland.**
--dontwarn org.apache.**
--dontwarn javax.**
--dontwarn org.apache.**
--adaptresourcefilenames **/*.properties,**/*.gif,**/*.dtd
--adaptresourcefilecontents
--keep class android.newland.** {*;}
--keep class com.a.a.** {*;}
--keep class com.newland.** {*;}
+-keepclasscom.pnsol.sdk.newland.listener.**{*;}
+-keepclasscom.pnsol.sdk.auth.**{*;}
+-keepclasscom.pnsol.sdk.payment.PaymentInitialization{*;}
+-keepclasscom.pnsol.sdk.payment.PaymentProcessThread{*;}
+-keepclasscom.pnsol.sdk.payment.PaymentModeThread{*;}
+-keepclasscom.pnsol.sdk.payment.**{*;}
+-keepclasscom.pnsol.sdk.qpos.listener.QPOSListener{*;}
+-keepclasscom.pnsol.sdk.payment.MiuraUpdates{*;}
+-keepclasscom.pnsol.sdk.interfaces.**{*;}
+-keepclasscom.pnsol.sdk.enums.**{*;}
+-keepclasscom.pnsol.sdk.miura.emv.tlv.ISOUtil{*;}
+-keepclasscom.pnsol.sdk.miura.response.ResponseManager{*;}
+-keepclasscom.pnsol.sdk.miura.messages.Message{*;}
+-keepclasscom.pnsol.sdk.usb.USBClass{*;}
+-keepclasscom.dspread.xpos.BLE.**{*;}
+-keepclasscom.pnsol.sdk.util.**{*;}
+-keepclasscom.newland.mpos.payswiff.**{*;}
+-keepclassorg.codehaus.jackson.**{*;}
+-keepclasscom.pnsol.sdk.n910.**{*;}
+-keepclasscom.pnsol.sdk.n3.**{*;}
+-keepclassandroid.a.a.**{*;}
+-keepclassandroid.misc.**{*;}
+-keepclassandroid.newland.**{*;}
+-keepclassandroid.psam.**{*;}
+-keepclasscom.a.a.**{*;}
+-keepclasscom.newland.**{*;}
+-keepclasscom.nlscan.android.scan.**{*;}
 
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.module.AppGlideModule

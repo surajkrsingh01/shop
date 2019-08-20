@@ -91,7 +91,7 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
         // staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        itemAdapter=new SimpleItemAdapter(this,itemList,"simpleList");
+        itemAdapter=new SimpleItemAdapter(this,itemList,"subCatList");
         itemAdapter.setMyLevelItemClickListener(this);
         recyclerView.setAdapter(itemAdapter);
 

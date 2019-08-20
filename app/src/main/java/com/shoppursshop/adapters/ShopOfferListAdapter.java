@@ -28,6 +28,7 @@ import com.shoppursshop.activities.settings.ComboProductOfferActivity;
 import com.shoppursshop.activities.settings.CreateCouponOfferActivity;
 import com.shoppursshop.activities.settings.FreeProductOfferActivity;
 import com.shoppursshop.activities.settings.ProductPriceOfferActivity;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.ShopOfferItem;
@@ -48,7 +49,11 @@ public class ShopOfferListAdapter extends RecyclerView.Adapter<ShopOfferListAdap
     private int colorTheme;
 
     private MyItemTypeClickListener myItemTypeClickListener;
+    private MyImageClickListener myImageClickListener;
 
+    public void setMyImageClickListener(MyImageClickListener myImageClickListener) {
+        this.myImageClickListener = myImageClickListener;
+    }
 
     public void setMyItemTypeClickListener(MyItemTypeClickListener myItemTypeClickListener) {
         this.myItemTypeClickListener = myItemTypeClickListener;
@@ -111,7 +116,7 @@ public class ShopOfferListAdapter extends RecyclerView.Adapter<ShopOfferListAdap
             text_offerName=itemView.findViewById(R.id.text_offerName);
             imageView=itemView.findViewById(R.id.image_view);
             iv_three_dot = itemView.findViewById(R.id.image_menu);
-
+            imageView.setOnClickListener(this);
             rootView.setOnClickListener(this);
             iv_three_dot.setOnClickListener(this);
         }
@@ -139,6 +144,8 @@ public class ShopOfferListAdapter extends RecyclerView.Adapter<ShopOfferListAdap
                     intent.putExtra("data",(Serializable) item.getProductObject());
                 }
                 context.startActivity(intent);
+            }else if(view == imageView){
+                myImageClickListener.onImageClicked(getAdapterPosition(),1,imageView);
             }else if(view == iv_three_dot){
                 final ShopOfferItem shopOfferItem = (ShopOfferItem) myItemList.get(getAdapterPosition());
 

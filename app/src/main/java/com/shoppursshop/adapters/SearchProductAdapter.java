@@ -21,6 +21,7 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.AddProductActivity;
 import com.shoppursshop.activities.ProductDetailActivity;
 import com.shoppursshop.database.DbHelper;
+import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.Utility;
@@ -39,6 +40,11 @@ public class SearchProductAdapter extends RecyclerView.Adapter<SearchProductAdap
     private String flag;
 
     private MyItemClickListener myItemClickListener;
+    private MyImageClickListener myImageClickListener;
+
+    public void setMyImageClickListener(MyImageClickListener myImageClickListener) {
+        this.myImageClickListener = myImageClickListener;
+    }
 
     public void setMyItemClickListener(MyItemClickListener myItemClickListener) {
         this.myItemClickListener = myItemClickListener;
@@ -144,6 +150,7 @@ public class SearchProductAdapter extends RecyclerView.Adapter<SearchProductAdap
             imageView=itemView.findViewById(R.id.image_view);
             imageMenu=itemView.findViewById(R.id.image_menu);
             imageMenu.setOnClickListener(this);
+            imageView.setOnClickListener(this);
 
             if(flag.equals("order")){
                 btnAddToCart.setVisibility(View.VISIBLE);
@@ -162,6 +169,8 @@ public class SearchProductAdapter extends RecyclerView.Adapter<SearchProductAdap
                     myItemClickListener.onItemClicked(getAdapterPosition());
                 }
 
+            }else if(v == imageView){
+                myImageClickListener.onImageClicked(getAdapterPosition(),1,imageView);
             }else if(v == imageMenu){
                 final MyProductItem myProductItem = (MyProductItem) myProductsList.get(getAdapterPosition());
 

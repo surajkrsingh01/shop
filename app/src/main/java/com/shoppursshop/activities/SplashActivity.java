@@ -30,8 +30,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.dspread.xnpos.EmvAppTag.status;
-
 public class SplashActivity extends NetworkBaseActivity {
 
     // private SharedPreferences sharedPreferences;
@@ -65,21 +63,30 @@ public class SplashActivity extends NetworkBaseActivity {
             intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",51.00f));
             //  intent.putExtra(AvenuesParams.ORDER_ID, orderID);
             intent.putExtra(AvenuesParams.CURRENCY, "INR");
-          //  startActivityForResult(intent,1);
+            //  startActivityForResult(intent,1);
             if(ConnectionDetector.isNetworkAvailable(this)){
                 authenticateUser();
             }else{
                 showMyDialog(getResources().getString(R.string.no_internet));
             }
         } else {
-            intent = new Intent(SplashActivity.this, LoginActivity.class);
-            if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
-                getMacID();
-            } else {
-                moveToNextActivity();
-            }
-        }
 
+            String deviceType = sharedPreferences.getString(Constants.ANDROID_DEVICE_TYPE,"");
+
+            if(TextUtils.isEmpty(deviceType)){
+                intent = new Intent(SplashActivity.this, ChooseDeviceActivity.class);
+                intent.putExtra("flag", "splash");
+                moveToNextActivity();
+            }else{
+                intent = new Intent(SplashActivity.this, LoginActivity.class);
+                if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
+                    getMacID();
+                } else {
+                    moveToNextActivity();
+                }
+            }
+
+        }
 
     }
 

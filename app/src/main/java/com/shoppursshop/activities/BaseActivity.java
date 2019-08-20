@@ -1,5 +1,6 @@
 package com.shoppursshop.activities;
 
+import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +20,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.appbar.AppBarLayout;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.payment.mPos.MPayTransactionDetailsActivity;
@@ -33,7 +37,9 @@ import com.shoppursshop.activities.settings.profile.AddressActivity;
 import com.shoppursshop.activities.settings.profile.BasicProfileActivity;
 import com.shoppursshop.activities.settings.profile.DeliveryActivity;
 import com.shoppursshop.database.DbHelper;
+import com.shoppursshop.morphdialog.DialogActivity;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.Utility;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -51,7 +57,7 @@ public class BaseActivity extends AppCompatActivity {
     protected int visibleItemCount,pastVisibleItems,totalItemCount;
     protected boolean loading=true,isScroll = true;
 
-    protected String token;
+    protected String appName,appVersion,token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +69,9 @@ public class BaseActivity extends AppCompatActivity {
         isDarkTheme = sharedPreferences.getBoolean(Constants.IS_DARK_THEME,false);
         colorTheme = sharedPreferences.getInt(Constants.COLOR_THEME,getResources().getColor(R.color.red_500));
         token = sharedPreferences.getString(Constants.TOKEN,"");
+        Log.i(TAG,"token "+token);
+        appName = "Shoppurs";
+        appVersion = "1.0.4";
         if(isDarkTheme){
             setTheme(R.style.Dark);
         }else{
@@ -180,6 +189,8 @@ public class BaseActivity extends AppCompatActivity {
             tv.setText("Save");
         }else if(context instanceof CreateCouponOfferActivity){
             tv.setText("Save");
+        }else if(context instanceof ChooseDeviceActivity){
+            tv.setText("Continue");
         }
     }
 
@@ -325,7 +336,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    public void showMyDialog(String msg) {
+    public void showMyDialog(final String msg) {
         //  errorNoInternet.setText("Oops... No internet");
         //  errorNoInternet.setVisibility(View.VISIBLE);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -337,7 +348,12 @@ public class BaseActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        onDialogPositiveClicked();
+                        if(msg.equals("You are not authorized to perform this action.")){
+                            logout();
+                        }else{
+                            onDialogPositiveClicked();
+                        }
+
                     }
                 });
 
@@ -375,6 +391,62 @@ public class BaseActivity extends AppCompatActivity {
 
         // show it
         alertDialog.show();
+    }
+
+    public void showImageDialog(String url,View v){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Intent intent = new Intent(this, DialogActivity.class);
+            intent.putExtra("image",url);
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, v, getString(R.string.transition_dialog));
+            startActivityForResult(intent, 100, options.toBundle());
+        }else {
+            int view = R.layout.activity_dialog;
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder
+                    .setView(view)
+                    .setCancelable(true);
+
+            // create alert dialog
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+
+            final ImageView imageView = (ImageView) alertDialog.findViewById(R.id.image);
+
+            Glide.with(getApplicationContext())
+                    .load(url)
+                    .centerCrop()
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .override(Utility.dpToPx(300,this),Utility.dpToPx(300,this))
+                    .into(imageView);
+        }
+    }
+
+    public void logout(){
+        String IMEI_NO = sharedPreferences.getString(Constants.IMEI_NO,"");
+        editor.clear();
+        editor.putString(Constants.IMEI_NO,IMEI_NO);
+        editor.commit();
+        dbHelper.deleteTable(DbHelper.CAT_TABLE);
+        dbHelper.deleteTable(DbHelper.SUB_CAT_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_BARCODE_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_UNIT_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_SIZE_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_COLOR_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_COMBO_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_COMBO_DETAIL_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_PRICE_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_FREE_OFFER_TABLE);
+        dbHelper.deleteTable(DbHelper.COUPON_TABLE);
+        dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
+        Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     public void onDialogPositiveClicked(){
