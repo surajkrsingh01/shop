@@ -132,11 +132,7 @@
             android:label="@string/title_activity_mpayment_transaction"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-        <activity
-            android:name=".activities.payment.mPos.RKIProcessActivity"
-            android:label="@string/title_activity_rkip_process"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+
         <activity
             android:name=".activities.payment.mPos.MPayTransactionDetailsActivity"
             android:label="@string/title_activity_mpay_activation"
@@ -178,11 +174,6 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".activities.payment.gPay.PaymentActivity"
-            android:label="@string/title_activity_payment"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
