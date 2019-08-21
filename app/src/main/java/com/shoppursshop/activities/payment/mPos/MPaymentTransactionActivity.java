@@ -5,6 +5,9 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,8 +18,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.pnsol.sdk.interfaces.DeviceCommunicationMode;
 import com.pnsol.sdk.interfaces.DeviceType;
 import com.pnsol.sdk.interfaces.PaymentTransactionConstants;
@@ -29,7 +43,12 @@ import com.pnsol.sdk.vo.response.ICCTransactionResponse;
 import com.pnsol.sdk.vo.response.TransactionStatusResponse;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.BaseActivity;
+import com.shoppursshop.activities.settings.profile.AddressActivity;
+import com.shoppursshop.interfaces.OnLocationReceivedListener;
+import com.shoppursshop.location.GpsLocationProvider;
+import com.shoppursshop.location.NetworkSensor;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.Utility;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -62,8 +81,9 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
     private AcquirerEmiDetailsVO emivo;
 
     private JSONObject dataObject;
-    String data,ptype,cardLevel,transId,invNo,invoiceJson;
+    private String deviceType,custMobile,custName,address;
     boolean approved;
+    private double latitude,longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +94,14 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        latitude = Double.parseDouble(sharedPreferences.getString(Constants.USER_LAT,"0.0"));
+        longitude = Double.parseDouble(sharedPreferences.getString(Constants.USER_LONG,"0.0"));
+
+        address = sharedPreferences.getString(Constants.ADDRESS,"");
        // deviceCommMode = getIntent().getIntExtra(DEVICE_COMMUNICATION_MODE, 0);
-       // devicename = getIntent().getIntExtra(DEVICE_TYPE, 0);
-       // deviceMACAddress = getIntent().getStringExtra(MAC_ADDRESS);
+        custMobile = getIntent().getStringExtra("custMobile");
+        custName = getIntent().getStringExtra("custName");
+        deviceType  = getIntent().getStringExtra("devicetype");
         paymentType = getIntent().getStringExtra(PAYMENT_TYPE);
         amount = getIntent().getStringExtra("amount");
         merchantRefNo = getIntent().getStringExtra("referanceno");
@@ -99,7 +124,7 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
        // amount = "2100.00";
 
         Log.i(TAG,"initiating transaction... paymentType "+paymentType+" merchantRefNo "+merchantRefNo+" deviceType "
-        +DeviceType.N910+" amount "+amount+" merchantRefNo "+merchantRefNo+" mobile 9000000000");
+        +deviceType+" amount "+amount+" merchantRefNo "+merchantRefNo+" mobile 9000000000");
 
 
 
@@ -118,9 +143,9 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
                     null, null, 71.000001, 17.000001,
                     merchantRefNo, "", "");*/
 
-            initialization.initiateTransaction(handler, DeviceType.N910, "Delhi", amount, paymentType,
-                    PaymentTransactionConstants.SALE,"9718181697", "Vipin Dhama",
-                    28.5661277, 77.198226, merchantRefNo, null,
+            initialization.initiateTransaction(handler, deviceType, address, amount, paymentType,
+                    PaymentTransactionConstants.SALE,custMobile, custName,
+                    latitude, longitude, merchantRefNo, null,
                     DeviceCommunicationMode.USBCOMMUNICATION
                     , merchantRefNo, appName,appVersion);
 
@@ -141,15 +166,6 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
         }
     }
 
-    private void voidTransaction(String rrn) {
-        try {
-            PaymentInitialization initialization = new PaymentInitialization(getApplicationContext());
-            initialization.initiateVoidTransaction(handler, rrn,appName,appVersion);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void getTransDetails(ICCTransactionResponse iccTransactionResponse){
         Log.i(TAG,"Getting details..");
         try {
@@ -162,6 +178,8 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
             e.printStackTrace();
         }
     }
+
+
 
     // The Handler that gets information back from the PaymentProcessThread
     @SuppressLint("HandlerLeak")
