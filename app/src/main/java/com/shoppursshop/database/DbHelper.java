@@ -1576,6 +1576,21 @@ public class DbHelper extends SQLiteOpenHelper {
         return qty;
     }
 
+    public int getTotalQuantityCart(int prodId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select "+TOTAL_QTY+" as totalQty from "+CART_TABLE+" where "+ID+" = ? and "+PROD_SP+" != ?";
+        Cursor res =  db.rawQuery(query, new String[]{String.valueOf(prodId),String.valueOf(0)});
+        int qty = 0;
+        if(res.moveToFirst()){
+            do{
+                qty = qty + res.getInt(res.getColumnIndex("totalQty"));
+            }while (res.moveToNext());
+
+        }
+
+        return qty;
+    }
+
     public float getTotalTaxValue(String columnName){
         SQLiteDatabase db = this.getReadableDatabase();
         final String query="select sum("+columnName+" * "+PROD_MRP+"/100) as totalTax from "+CART_TABLE;

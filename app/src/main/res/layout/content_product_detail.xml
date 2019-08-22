@@ -323,6 +323,7 @@
             </RelativeLayout>
 
             <View
+                android:id="@+id/view_rl"
                 android:layout_marginTop="@dimen/view_vertical_margin"
                 android:background="?attr/separatorColor"
                 android:layout_width="match_parent"
@@ -624,6 +625,14 @@
                 </androidx.recyclerview.widget.RecyclerView>
 
             </RelativeLayout>
+
+            <View
+                android:id="@+id/view_review"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/view_vertical_margin"
+                android:background="?attr/separatorColor"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
 
             <TextView
                 android:id="@+id/text_reviews_Label"

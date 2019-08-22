@@ -6,10 +6,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
+import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -20,6 +25,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.ParcelFileDescriptor;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -43,6 +51,14 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.itextpdf.text.pdf.draw.VerticalPositionMark;
+import com.newland.mtype.module.common.printer.FontSettingScope;
+import com.newland.mtype.module.common.printer.FontType;
+import com.newland.mtype.module.common.printer.LiteralType;
+import com.newland.mtype.module.common.printer.PrintContext;
+import com.newland.mtype.module.common.printer.Printer;
+import com.newland.mtype.module.common.printer.PrinterResult;
+import com.newland.mtype.module.common.printer.PrinterStatus;
+import com.newland.mtype.module.common.printer.WordStockType;
 import com.pnsol.sdk.interfaces.DeviceType;
 import com.pnsol.sdk.payment.PaymentInitialization;
 import com.pnsol.sdk.vo.response.POSReceipt;
@@ -57,27 +73,36 @@ import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.EnglishNumberToWords;
+import com.shoppursshop.utilities.N910Util;
 import com.shoppursshop.utilities.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static com.pnsol.sdk.interfaces.PaymentTransactionConstants.ERROR_MESSAGE;
 import static com.pnsol.sdk.interfaces.PaymentTransactionConstants.FAIL;
 import static com.pnsol.sdk.interfaces.PaymentTransactionConstants.SUCCESS;
 
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class InvoiceActivity extends NetworkBaseActivity {
 
     private final int SHARE =1,PRINT =2,DOWNLOAD=3;
@@ -96,6 +121,12 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
     private boolean customerCopy;
     private TransactionStatusResponse txnResponse;
+
+    private Printer printer;
+    private N910Util n910Util;
+    private File pdfFile;
+    private List<Bitmap> bitmaps;
+    private String transId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +205,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 if(txnResponse == null){
                     actionType = PRINT;
                     createPdf();
+                    //paySwiffPrint();
                 }else{
                     PaymentInitialization initialization=new PaymentInitialization(
                             InvoiceActivity.this);
@@ -1004,11 +1036,229 @@ public class InvoiceActivity extends NetworkBaseActivity {
     }
 
     private void print(String path){
-        DialogAndToast.showToast("Printing functionality is not working.",this);
+        if(Utility.checkStorageOnlyPermissions(this)){
+            pdfFile = new File(path);
+            if(pdfFile.exists()){
+                Log.i(TAG,"pdf file is exist. "+pdfFile.getAbsolutePath());
+                paySwiffPrint();
+            }else{
+                Log.i(TAG,"pdf file is nt exist.");
+            }
+        }
+
+       // DialogAndToast.showToast("Printing functionality is not working.",this);
+
     }
 
     private void download(String path){
         DialogAndToast.showToast("Pdf downloaded successfully. The location is "+path,this);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void paySwiffPrint(){
+        n910Util = N910Util.getInstance(InvoiceActivity.this);
+        n910Util.connectDevice();
+        printer=n910Util.getPrinter();
+
+        initPrint();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void initPrint() {
+        if (printer.getStatus() != PrinterStatus.NORMAL) {
+            Toast.makeText(this, printer.getStatus().toString(), Toast.LENGTH_LONG).show();
+            //handler.sendMessage(Message.obtain(handler, ERROR_MESSAGE,printer.getStatus().toString()));
+        }else{
+            try {
+                printer.setWordStock(WordStockType.PIX_16);
+                printer.setFontType(LiteralType.WESTERN, FontSettingScope.WIDTH, FontType.NORMAL);
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test);
+                /**Print Logo*/
+              /*  if (bitmap != null)
+                    printer.print(0, bitmap, 30, TimeUnit.SECONDS);
+
+                String PrintData="  Welcome to Payswiff \n";
+                PrintData+="  Hello Print \n";
+                PrintData+="  Thankyou  \n\n";
+
+                //for different font size
+                setFontSize(20);
+                PrinterResult printerResult =printer.print(PrintData, 30, TimeUnit.SECONDS);
+                setFontSize(12);
+                PrinterResult printerResult1 =printer.print(PrintData, 30, TimeUnit.SECONDS);
+                setFontSize(8);
+                PrinterResult printerResult2 =printer.print(PrintData, 30, TimeUnit.SECONDS);
+                setFontSize(4);
+                PrinterResult printerResult3 =printer.print(PrintData, 30, TimeUnit.SECONDS);
+                //File file = new File("");
+                //printer.printByScript(this,file.get)
+
+                printData("Payswiff");
+                printData("RAM");*/
+
+
+                byte[] pdfByteArray = getByteArray(pdfFile);
+              /*  Log.i(TAG,"len "+pdfByteArray.length);
+                Bitmap bitmapPdf = BitmapFactory.decodeByteArray(pdfByteArray, 0, pdfByteArray.length);
+
+                if(bitmapPdf != null){
+                    printer.print(0, bitmapPdf, 30, TimeUnit.SECONDS);
+                }else{
+                    Log.i(TAG,"bitmap is null");
+                }
+
+               bitmapPdf = Bitmap.createBitmap(300, 400, Bitmap.Config.ARGB_8888);
+               // ByteBuffer buffer = ByteBuffer.wrap(pdfByteArray);
+                ByteBuffer buffer = ByteBuffer.allocate(1200000);
+                Log.i(TAG,"buffer size "+buffer.capacity());
+                buffer.rewind();
+                bitmapPdf.copyPixelsFromBuffer(buffer);
+
+                if(bitmapPdf != null){
+                    printer.print(0, bitmapPdf, 30, TimeUnit.SECONDS);
+                }else{
+                    Log.i(TAG,"bitmap is null");
+                }*/
+
+             //   bitmaps = getBitmaps(pdfFile);
+             //   for(Bitmap bitmap1 : bitmaps){
+                   // printer.print(0, bitmap1, 30, TimeUnit.SECONDS);
+            //    }
+
+                Toast.makeText(this, "SUCCESS", Toast.LENGTH_LONG).show();
+                n910Util.disconnect();
+
+            }catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        }
+    }
+
+    private void printData(String data) {
+        String temp="";
+        String temp1="";
+
+        for(int i=0;i<48-data.length();i++) {
+            temp+=" ";
+        }
+        temp1=temp+""+data;
+        printer.setWordStock(WordStockType.PIX_16);// font system
+        printer.setFontType(LiteralType.WESTERN, FontSettingScope.HEIGHT, FontType.DOUBLE);
+        printer.setFontType(LiteralType.WESTERN, FontSettingScope.WIDTH, FontType.DOUBLE);
+
+        PrinterResult printerResult1 =printer.print(temp1, 30, TimeUnit.SECONDS);
+
+
+
+    }
+    private void setFontSize(int fontSize) {
+
+        if (fontSize <= 5) {
+            printer.setWordStock(WordStockType.PIX_16);// font system
+            printer.setFontType(LiteralType.WESTERN, FontSettingScope.HEIGHT, FontType.NORMAL);
+            printer.setFontType(LiteralType.WESTERN, FontSettingScope.WIDTH, FontType.NORMAL);
+            //mainActivity.showMessage("PIX_16 CHINESE NORMAL",MessageTag.NORMAL);
+        } else if (fontSize > 5 && fontSize <= 10) {
+            printer.setWordStock(WordStockType.PIX_24);// font system
+            printer.setFontType(LiteralType.WESTERN, FontSettingScope.HEIGHT, FontType.NORMAL);
+            printer.setFontType(LiteralType.WESTERN, FontSettingScope.WIDTH, FontType.NORMAL);
+            //mainActivity.showMessage("PIX_24 CHINESE NORMAL",MessageTag.NORMAL);
+        } else if (fontSize > 10 && fontSize <= 15) {
+            printer.setWordStock(WordStockType.PIX_16);// font system
+            printer.setFontType(LiteralType.WESTERN, FontSettingScope.HEIGHT, FontType.DOUBLE);
+            printer.setFontType(LiteralType.WESTERN, FontSettingScope.WIDTH, FontType.DOUBLE);
+            //mainActivity.showMessage("PIX_16 CHINESE DOUBLE",MessageTag.NORMAL);
+        } else if (fontSize > 15) {
+            printer.setWordStock(WordStockType.PIX_24);// font system
+            printer.setFontType(LiteralType.WESTERN, FontSettingScope.HEIGHT, FontType.DOUBLE);
+            printer.setFontType(LiteralType.WESTERN, FontSettingScope.WIDTH, FontType.DOUBLE);
+            //mainActivity.showMessage("PIX_24 CHINESE DOUBLE",MessageTag.NORMAL);
+        }
+    }
+
+    private byte[] getByteArray(File file){
+        FileInputStream fis = null;
+        byte[] bytes = null;
+        try {
+            fis = new FileInputStream(file);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            try {
+                for (int readNum; (readNum = fis.read(buf)) != -1;) {
+                    bos.write(buf, 0, readNum); //no doubt here is 0
+                    //Writes len bytes from the specified byte array starting at offset off to this byte array output stream.
+                    System.out.println("read " + readNum + " bytes,");
+                }
+            } catch (IOException ex) {
+                // Logger.getLogger(genJpeg.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            bytes = bos.toByteArray();
+            Log.i(TAG,"byte array is created");
+            Log.i(TAG,"len "+bytes.length);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return bytes;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private List<Bitmap> getBitmaps(File file){
+        List<Bitmap> bitmaps = new ArrayList<>();
+        try {
+            PdfRenderer renderer = new PdfRenderer(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY));
+            Bitmap bitmap;
+            final int pageCount = renderer.getPageCount();
+            for (int i = 0; i < pageCount; i++) {
+                PdfRenderer.Page page = renderer.openPage(i);
+
+                int width = getResources().getDisplayMetrics().densityDpi / 72 * page.getWidth();
+                int height = getResources().getDisplayMetrics().densityDpi / 72 * page.getHeight();
+                width = 600;
+                height = 1100;
+                bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+                bitmap =  compressImage(bitmap);
+                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+                bitmaps.add(bitmap);
+                printer.print(0, bitmap, 30, TimeUnit.SECONDS);
+                // close the page
+                page.close();
+
+            }
+            // close the renderer
+            renderer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bitmaps;
+    }
+
+    private Bitmap compressImage(Bitmap bitmap){
+        int origWidth = bitmap.getWidth();
+        int origHeight = bitmap.getHeight();
+        Log.i(TAG,"width "+origWidth);
+        Bitmap returnBitmap = null;
+        int DEST_WIDTH = 300;
+        if(origWidth > DEST_WIDTH){
+            // picture is wider than we want it, we calculate its target height
+            int destHeight = origHeight/( origWidth / DEST_WIDTH ) ;
+            // we create an scaled bitmap so it reduces the image, not just trim it
+            returnBitmap = Bitmap.createScaledBitmap(bitmap, DEST_WIDTH, destHeight, false);
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            // compress to the format you want, JPEG, PNG...
+            // 70 is the 0-100 quality percentage
+            returnBitmap.compress(Bitmap.CompressFormat.JPEG,40 , outStream);
+            Log.i(TAG,"image compressed");
+
+        }else{
+            returnBitmap = bitmap;
+        }
+        return returnBitmap;
     }
 
 }

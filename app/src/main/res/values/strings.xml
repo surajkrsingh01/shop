@@ -219,6 +219,27 @@
 
     <string name="transition_dialog">transition_dialog</string>
 
+    <string name="html" translatable="false">
+        <![CDATA[
+        <html>
+            <head>
+                <style type="text/css">
+                    body {
+                        font-size: %4$fpx;
+                        color: #%2$s;
+                        margin: %5$fpx %5$fpx %5$fpx %5$fpx;
+                    }
+                    a {color: #%3$s;}
+                    img {display: inline; height: auto; max-width: 100%%;}
+                    pre {white-space: pre-wrap;}
+                    iframe {width: 90vw; height: 50.625vw;} /* 16:9 */
+                </style>
+            </head>
+            <body>%1$s</body>
+            </html>"
+        ]]>
+    </string>
+
     <!-- titles. -->
     <string name="title_activity_register">Register</string>
     <string name="title_activity_login">Login</string>
@@ -274,5 +295,7 @@
     <string name="title_activity_CCAvenueWebViewActivity">Transaction</string>
     <string name="title_activity_customer_address">Customer Address</string>
     <string name="title_activity_choose_device">ChooseDeviceActivity</string>
+    <string name="title_activity_update_stock">UpdateStockActivity</string>
+    <string name="title_activity_banner_details">BannerDetailsActivity</string>
 
 </resources>

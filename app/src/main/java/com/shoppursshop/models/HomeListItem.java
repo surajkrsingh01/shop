@@ -1,9 +1,21 @@
 package com.shoppursshop.models;
 
+import java.util.List;
+
 public class HomeListItem {
     private String id,title,desc,icon,name,category,image;
     private int localIcon,localImage,messages,type;
     private float width,height;
+
+    private List<Object> itemList;
+
+    public List<Object> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(List<Object> itemList) {
+        this.itemList = itemList;
+    }
 
     public String getId() {
         return id;

@@ -55,7 +55,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
     private TextView textViewPreOrderLabel;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
 
-    private Button btnNewOrder,btnLoadMore;
+    private Button btnUpdateStock,btnLoadMore;
     private FloatingActionButton fabNewOrder;
 
     private CoordinatorLayout coordinatorLayout;
@@ -162,11 +162,11 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
             }
         });
 
-        btnNewOrder = findViewById(R.id.btn_new_order);
-        btnNewOrder.setOnClickListener(new View.OnClickListener() {
+        btnUpdateStock = findViewById(R.id.btn_update_stock);
+        btnUpdateStock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,CustomerInfoActivity.class);
+                Intent intent = new Intent(MainActivity.this,UpdateStockActivity.class);
                 startActivity(intent);
             }
         });

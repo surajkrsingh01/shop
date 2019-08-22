@@ -168,4 +168,9 @@ public class Constants {
     public static String CHANGE_PRODUCT_PRICE_OFFER="/api/offers/status_product_price_offer";
     public static String CHANGE_COUPON_OFFER="/api/offers/status_coupon_offer";
 
+    public static String GET_BANNER_OFFERS="/api/offers/get_banner_offers";
+    public static String GET_CATEGORY_OFFERS="/api/offers/get_active_offer_categories_shop";
+    public static String GET_PRODUCT_OFFERS="/api/customers/products/ret_productslist_with_offers";
+    public static String GET_PRODUCT_OFFERS_BY_CAT="/api/customers/products/ret_productslist_with_offers_by_cat";
+
 }
