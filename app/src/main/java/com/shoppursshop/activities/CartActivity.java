@@ -528,24 +528,16 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         tvTotalTaxes.setText(Utility.numberFormat(totalTax));
         totalPrice = dbHelper.getTotalPriceCart();
         tvItemTotal.setText(Utility.numberFormat(totalPrice - totalTax));
-        totDiscount = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
+      //  totDiscount = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
         float dis = 0f;
         if(offerPer > 0f){
             dis = totalPrice * offerPer / 100;
-            totDiscount = totDiscount + dis ;
+        //    totDiscount = totDiscount + dis ;
         }
 
         Log.i(TAG," Taxes "+dbHelper.getTotalTaxesart());
         Log.i(TAG," MRP "+dbHelper.getTotalMrpPriceCart()
                 +" Price "+dbHelper.getTotalPriceCart());
-        Log.i(TAG," diff "+totDiscount+" offerPer "+offerPer+" totalPrice "+totalPrice);
-
-        if(totDiscount == 0f){
-            rlDiscount.setVisibility(View.GONE);
-        }else{
-            rlDiscount.setVisibility(View.VISIBLE);
-            tvTotalDiscount.setText(Utility.numberFormat(totDiscount));
-        }
 
         totalPrice = totalPrice - dis;
         if(deliveryTypeId == R.id.rb_self_delivery){
@@ -566,6 +558,16 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             }else{
                 tvDeliveryCharges.setText("0.00");
             }
+        }
+
+        totDiscount = dbHelper.getTotalMrpPriceCart() - totalPrice;
+        Log.i(TAG," diff "+totDiscount+" offerPer "+offerPer+" totalPrice "+totalPrice);
+
+        if(totDiscount == 0f){
+            rlDiscount.setVisibility(View.GONE);
+        }else{
+            rlDiscount.setVisibility(View.VISIBLE);
+            tvTotalDiscount.setText(Utility.numberFormat(totDiscount));
         }
 
         totalPrice = totalPrice + deliveryCharges;
@@ -668,7 +670,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     shopObject.put("totIgst",String.valueOf(dbHelper.getTaxesCart("igst")));
                     shopObject.put("totTax",String.valueOf(totalTax));
                     shopObject.put("deliveryCharges",String.valueOf(deliveryCharges));
-                    shopObject.put("totDiscount",String.valueOf(totDiscount));
+                    shopObject.put("totDiscount",String.valueOf(dbHelper.getTotalMrpPriceCart() - totalPrice));
                     shopObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
                     shopObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
                     shopObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));

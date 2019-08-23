@@ -15,9 +15,17 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:icon,android:theme">
         <activity
+            android:name=".activities.ShopCartActivity"
+            android:label="@string/title_activity_shop_cart"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+        <activity
+            android:name=".activities.ShoppursProductListActivity"
+            android:label="@string/title_activity_shoppurs_product_list"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
             android:name=".activities.BannerDetailsActivity"
             android:label="@string/title_activity_banner_details"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.UpdateStockActivity"
             android:label="@string/title_activity_update_stock"
@@ -122,13 +130,11 @@
             android:label="@string/title_activity_cart"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-
         <activity
             android:name=".activities.payment.mPos.MPaymentTransactionActivity"
             android:label="@string/title_activity_mpayment_transaction"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-
         <activity
             android:name=".activities.payment.mPos.MPayTransactionDetailsActivity"
             android:label="@string/title_activity_mpay_activation"
@@ -175,14 +181,12 @@
             android:label="@string/title_activity_bank_details"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-
         <activity
             android:name=".activities.settings.profile.DeliveryActivity"
             android:label="@string/title_activity_delivery"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
         <activity
             android:name=".activities.settings.profile.AddressActivity"
             android:label="@string/title_activity_address"
@@ -195,13 +199,11 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
         <activity
             android:name=".activities.settings.ProfileActivity"
             android:label="@string/title_activity_profile"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-
         <activity
             android:name=".activities.settings.DisplaySettingsActivity"
             android:label="@string/title_activity_display_settings"
@@ -227,13 +229,11 @@
             android:label="@string/title_activity_order_detail"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-
         <activity
             android:name=".activities.CustomerInfoActivity"
             android:label="@string/title_activity_customer_info"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -243,14 +243,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.RegisterActivity"
             android:label="@string/title_activity_register"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
@@ -326,12 +324,14 @@
             android:label="@string/title_activity_scannar"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB-GKvcnqqzEBxT6OvmVPfNs7FBppblo-s" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.shoppursshop.provider"
@@ -341,11 +341,13 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
+
         <service android:name=".services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />

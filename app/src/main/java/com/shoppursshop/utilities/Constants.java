@@ -173,4 +173,6 @@ public class Constants {
     public static String GET_PRODUCT_OFFERS="/api/customers/products/ret_productslist_with_offers";
     public static String GET_PRODUCT_OFFERS_BY_CAT="/api/customers/products/ret_productslist_with_offers_by_cat";
 
+    public static String UPDATE_STOCK="/api/products/update_stock";
+
 }

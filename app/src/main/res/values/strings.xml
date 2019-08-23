@@ -297,5 +297,7 @@
     <string name="title_activity_choose_device">ChooseDeviceActivity</string>
     <string name="title_activity_update_stock">UpdateStockActivity</string>
     <string name="title_activity_banner_details">BannerDetailsActivity</string>
+    <string name="title_activity_shoppurs_product_list">ShoppursProductListActivity</string>
+    <string name="title_activity_shop_cart">ShopCartActivity</string>
 
 </resources>

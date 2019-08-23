@@ -3,6 +3,7 @@ package com.shoppursshop.activities;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.android.volley.Request;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -25,9 +26,15 @@ import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.utilities.Constants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UpdateStockActivity extends NetworkBaseActivity implements MyItemClickListener, MyItemTypeClickListener, MyImageClickListener {
 
@@ -38,6 +45,7 @@ public class UpdateStockActivity extends NetworkBaseActivity implements MyItemCl
     private ImageView imageViewSearch;
     private LinearLayout linearLayoutScanCenter;
     private BottomSearchFragment bottomSearchFragment;
+    private int type = 0, position = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +109,38 @@ public class UpdateStockActivity extends NetworkBaseActivity implements MyItemCl
         startActivityForResult(intent,10);
     }
 
+    private void updateStock(int quantity,int prodId){
+        Map<String,String> params=new HashMap<>();
+        params.put("quantity",""+quantity);
+        params.put("prodId",""+prodId);
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.UPDATE_STOCK;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"updateStock");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject response, String apiName) {
+
+        try {
+            if (apiName.equals("updateStock")) {
+                if (response.getBoolean("status")) {
+                    MyProductItem item = (MyProductItem) itemList.get(position);
+                  if(type == 1){
+                      dbHelper.setQoh(item.getProdId(),item.getQty());
+                  }else{
+                      dbHelper.setQoh(item.getProdId(),-item.getQty());
+                  }
+                    myItemAdapter.notifyItemChanged(position);
+                }
+            }
+        }catch (JSONException error){
+            error.printStackTrace();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if(requestCode == 10) {
@@ -138,7 +178,22 @@ public class UpdateStockActivity extends NetworkBaseActivity implements MyItemCl
 
     @Override
     public void onItemClicked(int position, int type) {
-
+        MyProductItem item = (MyProductItem) itemList.get(position);
+        this.type = type;
+        this.position = position;
+        if(type == 1){
+            // add to stock
+            item.setQty(item.getQty() + 1);
+            item.setProdQoh(item.getProdQoh() + 1);
+            updateStock(item.getProdQoh(),item.getProdId());
+        }else if(type == 2){
+            // minus to stock
+            if(item.getProdQoh() > 0){
+                item.setQty(item.getQty() - 1);
+                item.setProdQoh(item.getProdQoh() - 1);
+                updateStock(item.getProdQoh(),item.getProdId());
+            }
+        }
     }
 
     @Override

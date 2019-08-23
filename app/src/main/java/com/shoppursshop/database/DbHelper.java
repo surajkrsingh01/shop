@@ -45,6 +45,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String PRODUCT_SIZE_TABLE = "PRODUCT_SIZE_TABLE";
     public static final String PRODUCT_COLOR_TABLE = "PRODUCT_COLOR_TABLE";
     public static final String CART_TABLE = "CART_TABLE";
+    public static final String SHOP_CART_TABLE = "SHOP_CART_TABLE";
     public static final String PROD_FREE_OFFER_TABLE = "PROD_FREE_OFFER_TABLE";
     public static final String PROD_PRICE_TABLE = "PROD_PRICE_TABLE";
     public static final String PROD_PRICE_DETAIL_TABLE = "PROD_PRICE_DETAIL_TABLE";
@@ -242,6 +243,47 @@ public class DbHelper extends SQLiteOpenHelper {
             " "+PROD_IMAGE_2+" TEXT, " +
             " "+PROD_IMAGE_3+" TEXT)";
 
+    public static final String CREATE_SHOP_CART_TABLE = "create table "+SHOP_CART_TABLE +
+            "("+ID+" TEXT, " +
+            " "+COUPON_ID+" TEXT, " +
+            " "+COUPON_NAME+" TEXT, " +
+            " "+COUPON_PER+" TEXT, " +
+            " "+COUPON_MAX_AMOUNT+" TEXT , " +
+            " "+OFFER_ID+" TEXT , " +
+            " "+OFFER_TYPE+" TEXT , " +
+            " "+DELIVERY_ADDRESS+" TEXT , " +
+            " "+DELIVERY_PIN+" TEXT , " +
+            " "+DELIVERY_COUNTRY+" TEXT , " +
+            " "+DELIVERY_STATE+" TEXT , " +
+            " "+DELIVERY_CITY+" TEXT, " +
+            " "+DELIVERY_CHARGES+" TEXT, " +
+            " "+LONGITUDE+" TEXT, " +
+            " "+LATITUDE+" TEXT , " +
+            " "+OFFER_ITEM_COUNTER+" TEXT, " +
+            " "+FREE_PRODUCT_POSITION+" INTEGER, " +
+            " "+COMBO_PRODUCT_IDS+" TEXT, " +
+            " "+PROD_SUB_CAT_ID+" TEXT, " +
+            " "+PROD_CAT_ID+" TEXT, " +
+            " "+PROD_NAME+" TEXT NOT NULL, " +
+            " "+PROD_CODE+" TEXT, " +
+            " "+PROD_BARCODE+" TEXT, " +
+            " "+PROD_DESC+" TEXT, " +
+            " "+PROD_MRP+" TEXT, " +
+            " "+PROD_SP+" TEXT, " +
+            " "+PROD_HSN_CODE+" TEXT, " +
+            " "+PROD_CGST+" TEXT, " +
+            " "+PROD_IGST+" TEXT, " +
+            " "+PROD_SGST+" TEXT, " +
+            " "+TOTAL_QTY+" TEXT, " +
+            " "+TOTAL_AMOUNT+" TEXT, " +
+            " "+UNIT+" TEXT, " +
+            " "+COLOR+" TEXT, " +
+            " "+SIZE+" TEXT, " +
+            " "+IS_BARCODE_AVAILABLE+" TEXT, " +
+            " "+PROD_IMAGE_1+" TEXT, " +
+            " "+PROD_IMAGE_2+" TEXT, " +
+            " "+PROD_IMAGE_3+" TEXT)";
+
     public static final String CREATE_PROD_FREE_OFFER_TABLE = "create table "+PROD_FREE_OFFER_TABLE +
             "("+ID+" TEXT NOT NULL, " +
             " "+NAME+" TEXT NOT NULL, " +
@@ -341,7 +383,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME, null, 27);
+        super(context, DATABASE_NAME, null, 28);
         this.context=context;
     }
 
@@ -355,6 +397,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_PRODUCT_SIZE_TABLE);
         db.execSQL(CREATE_PRODUCT_COLOR_TABLE);
         db.execSQL(CREATE_CART_TABLE);
+        db.execSQL(CREATE_SHOP_CART_TABLE);
         db.execSQL(CREATE_PROD_FREE_OFFER_TABLE);
         db.execSQL(CREATE_PROD_PRICE_TABLE);
         db.execSQL(CREATE_PROD_PRICE_DETAIL_TABLE);
@@ -367,8 +410,8 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        db.execSQL("DROP TABLE IF EXISTS "+CUSTOMER_INFO_TABLE);
-        db.execSQL(CREATE_CUSTOMER_INFO_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+SHOP_CART_TABLE);
+        db.execSQL(CREATE_SHOP_CART_TABLE);
 
     }
 
@@ -539,6 +582,85 @@ public class DbHelper extends SQLiteOpenHelper {
        // contentValues.put(UNIT, item.getUnit());
         db.insert(CART_TABLE, null, contentValues);
         Log.i("DbHelper","Product added in cart"+item.getProdName());
+        return true;
+    }
+
+    public boolean addProductToShopCart(MyProductItem item){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID, item.getProdId());
+        contentValues.put(OFFER_ID, item.getOfferId());
+        contentValues.put(OFFER_TYPE, item.getOfferType());
+        contentValues.put(PROD_SUB_CAT_ID, item.getProdSubCatId());
+        contentValues.put(PROD_CAT_ID, item.getProdCatId());
+        contentValues.put(PROD_CODE, item.getProdCode());
+        contentValues.put(PROD_BARCODE, item.getProdBarCode());
+        contentValues.put(PROD_NAME, item.getProdName());
+        contentValues.put(PROD_DESC, item.getProdDesc());
+        contentValues.put(PROD_MRP, item.getProdMrp());
+        contentValues.put(PROD_SP, item.getProdSp());
+        contentValues.put(PROD_HSN_CODE, item.getProdHsnCode());
+        if(item.getComboProductIds() != null){
+            contentValues.put(PROD_CGST, item.getProdCgst());
+            contentValues.put(PROD_IGST, item.getProdIgst());
+            contentValues.put(PROD_SGST, item.getProdSgst());
+            Log.i("dbhelper","cgst "+item.getProdCgst());
+            Log.i("dbhelper","sgst "+item.getProdSgst());
+        }else{
+            contentValues.put(PROD_CGST, (item.getProdCgst() * item.getProdSp() * item.getQty()) /100);
+            contentValues.put(PROD_IGST, (item.getProdIgst() * item.getProdSp() * item.getQty()) /100);
+            contentValues.put(PROD_SGST, (item.getProdSgst() * item.getProdSp() * item.getQty()) /100);
+            Log.i("dbhelper","cgst "+item.getProdCgst()+" "+(item.getProdCgst() * item.getProdSp() * item.getQty()) /100);
+            Log.i("dbhelper","sgst "+item.getProdSgst()+" "+(item.getProdSgst() * item.getProdSp() * item.getQty()) /100);
+        }
+        contentValues.put(PROD_IMAGE_1, item.getProdImage1());
+        contentValues.put(PROD_IMAGE_2, item.getProdImage2());
+        contentValues.put(PROD_IMAGE_3, item.getProdImage3());
+        contentValues.put(IS_BARCODE_AVAILABLE, item.getIsBarCodeAvailable());
+        contentValues.put(TOTAL_AMOUNT, item.getTotalAmount());
+        contentValues.put(TOTAL_QTY, item.getQty());
+        contentValues.put(OFFER_ITEM_COUNTER, item.getOfferCounter());
+        contentValues.put(FREE_PRODUCT_POSITION, item.getFreeProductPosition());
+        contentValues.put(COMBO_PRODUCT_IDS, item.getComboProductIds());
+
+        if(TextUtils.isEmpty(item.getUnit())){
+            if(item.getProductUnitList()!=null && item.getProductUnitList().size() > 0){
+                ProductUnit unit = item.getProductUnitList().get(0);
+                contentValues.put(UNIT, unit.getUnitValue()+" "+unit.getUnitName());
+            }else{
+                contentValues.put(UNIT, item.getUnit());
+            }
+
+        }else{
+            contentValues.put(UNIT, item.getUnit());
+        }
+
+        if(TextUtils.isEmpty(item.getSize())){
+            if(item.getProductSizeList()!=null && item.getProductSizeList().size() > 0){
+                ProductSize size = item.getProductSizeList().get(0);
+                contentValues.put(SIZE, size.getSize());
+                if(TextUtils.isEmpty(item.getColor())){
+                    if(size.getProductColorList()!=null && size.getProductColorList().size() > 0){
+                        ProductColor color = size.getProductColorList().get(0);
+                        contentValues.put(COLOR, color.getColorName());
+                    }else{
+                        contentValues.put(COLOR, item.getColor());
+                    }
+                }else{
+                    contentValues.put(COLOR, item.getColor());
+                }
+            }else{
+                contentValues.put(SIZE, item.getSize());
+                contentValues.put(COLOR, item.getColor());
+            }
+
+        }else{
+            contentValues.put(SIZE, item.getSize());
+            contentValues.put(COLOR, item.getColor());
+        }
+        // contentValues.put(UNIT, item.getUnit());
+        db.insert(SHOP_CART_TABLE, null, contentValues);
+        Log.i("DbHelper","Product added in shop cart"+item.getProdName());
         return true;
     }
 

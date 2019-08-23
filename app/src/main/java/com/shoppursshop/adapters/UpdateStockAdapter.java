@@ -90,11 +90,11 @@ public class UpdateStockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @Override
         public void onClick(View view) {
             if(view == imageViewAdd){
-                myItemTypeClickListener.onItemClicked(getAdapterPosition(),2);
+                myItemTypeClickListener.onItemClicked(getAdapterPosition(),1);
             }else if(view == imageView){
                 myImageClickListener.onImageClicked(getAdapterPosition(),1,imageView);
             }else{
-                myItemTypeClickListener.onItemClicked(getAdapterPosition(),1);
+                myItemTypeClickListener.onItemClicked(getAdapterPosition(),2);
             }
         }
     }
@@ -141,7 +141,7 @@ public class UpdateStockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
             myViewHolder.textSp.setText(Utility.numberFormat(item.getProdSp()));
             myViewHolder.textMrp.setText(Utility.numberFormat(item.getProdMrp()));
-            myViewHolder.textCounter.setText(""+item.getQty());
+            myViewHolder.textCounter.setText(""+item.getProdQoh());
 
             float diff = item.getProdMrp() - item.getProdSp();
             if(diff > 0f){

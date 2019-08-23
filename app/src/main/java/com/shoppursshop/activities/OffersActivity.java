@@ -544,6 +544,9 @@ public class OffersActivity extends NetworkBaseActivity implements MyItemTypeCli
         if(type == 1){
 
         }else if(type == 2){
+          //btn click add to cart
+
+
 
         }else if(type == 3){
 
