@@ -9,6 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.shoppursshop.R;
 import com.shoppursshop.utilities.AppController;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
@@ -226,8 +227,17 @@ public class NetworkBaseActivity extends BaseActivity {
     }
 
     public void onServerErrorResponse(VolleyError error, String apiName) {
-
-        DialogAndToast.showDialog("There is some problem occurred. Please try gain later.",this);
+        showProgress(false);
+        if(error.networkResponse != null){
+            if(error.networkResponse.statusCode == 500 || error.networkResponse.statusCode == 503){
+                DialogAndToast.showDialog("There is some problem occurred. Please try gain later.",NetworkBaseActivity.this);
+            }else if(error.networkResponse.statusCode == 400 ||
+                    error.networkResponse.statusCode == 401 || error.networkResponse.statusCode == 403){
+                showMyDialog("You are not authorized to perform this action.");
+            }else{
+                DialogAndToast.showDialog(getResources().getString(R.string.connection_error),NetworkBaseActivity.this);
+            }
+        }
 
     }
 

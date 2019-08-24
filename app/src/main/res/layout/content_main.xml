@@ -10,11 +10,10 @@
     tools:showIn="@layout/activity_main">
 
     <Button
-        android:id="@+id/btn_new_order"
-        android:text="New Order"
-        android:visibility="gone"
+        android:id="@+id/btn_update_stock"
+        android:text="Update Stock"
+        android:visibility="visible"
         android:layout_alignParentRight="true"
-        android:layout_above="@+id/linear_footer"
         android:layout_margin="16dp"
         android:textColor="@color/white"
         android:background="@drawable/accent_2_solid_round_corner_background"

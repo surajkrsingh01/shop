@@ -84,7 +84,7 @@ public class ScannarActivity extends NetworkBaseActivity {
 
     private void processResult(String rawValue){
         try {
-            if(type.equals("addProduct") || type.equals("addProductBarcode")){
+            if(type.equals("addProduct") || type.equals("addProductBarcode") || type.equals("updateStock")){
                 Intent intent = new Intent();
                 intent.putExtra("barCode",rawValue);
                 setResult(-1,intent);
@@ -101,19 +101,10 @@ public class ScannarActivity extends NetworkBaseActivity {
                       //  DialogAndToast.showToast("Product is already added in cart.",this);
                      //   finish();
                     }else{
-                        MyProductItem myProductItem = dbHelper.getProductDetailsByBarCode(rawValue);
-                        if(myProductItem.getIsBarCodeAvailable().equals("Y")){
-                            myProductItem.setBarcodeList(dbHelper.getBarCodesForCart(myProductItem.getProdId()));
-                        }
-                        if(myProductItem.getBarcodeList().size() > 0){
-                            myProductItem.setQty(1);
-                            myProductItem.setTotalAmount(myProductItem.getProdSp());
-                            dbHelper.addProductToCart(myProductItem);
-                            showMyBothDialog("Product is added in cart.","Checkout","Scan More");
-                        }else{
-                            showMyDialog("Product is out of stock.");
-                        }
-
+                        Intent intent = new Intent();
+                        intent.putExtra("barCode",rawValue);
+                        setResult(-1,intent);
+                        finish();
                     }
                 }
             }else if(type.equals("offers")){

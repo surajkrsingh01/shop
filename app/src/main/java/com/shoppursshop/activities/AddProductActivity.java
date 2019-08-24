@@ -784,25 +784,25 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             return;
         }
 
-        if(TextUtils.isEmpty(mfgDate)){
+       if(TextUtils.isEmpty(mfgDate)){
             DialogAndToast.showDialog("Please enter product mfg date",this);
             return;
         }
 
-        if(TextUtils.isEmpty(expiryDate)){
+       /*  if(TextUtils.isEmpty(expiryDate)){
             DialogAndToast.showDialog("Please enter product expiry date",this);
             return;
-        }
+        }*/
 
         if(TextUtils.isEmpty(mfgBy)){
             DialogAndToast.showDialog("Please enter product mfg company",this);
             return;
         }
 
-        if(TextUtils.isEmpty(warranty)){
+       /*   if(TextUtils.isEmpty(warranty)){
             DialogAndToast.showDialog("Please enter product warranty",this);
             return;
-        }
+        }*/
 
         if(TextUtils.isEmpty(cgst)){
             DialogAndToast.showDialog("Please enter product cgst",this);

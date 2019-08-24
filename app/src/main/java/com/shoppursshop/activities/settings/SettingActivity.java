@@ -116,28 +116,7 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
             Intent intent = new Intent(this, DisplaySettingsActivity.class);
             startActivity(intent);
         }else if(name.equals("Logout")){
-            String IMEI_NO = sharedPreferences.getString(Constants.IMEI_NO,"");
-            editor.clear();
-            editor.putString(Constants.IMEI_NO,IMEI_NO);
-            editor.commit();
-            dbHelper.deleteTable(DbHelper.CAT_TABLE);
-            dbHelper.deleteTable(DbHelper.SUB_CAT_TABLE);
-            dbHelper.deleteTable(DbHelper.PRODUCT_TABLE);
-            dbHelper.deleteTable(DbHelper.PRODUCT_BARCODE_TABLE);
-            dbHelper.deleteTable(DbHelper.PRODUCT_UNIT_TABLE);
-            dbHelper.deleteTable(DbHelper.PRODUCT_SIZE_TABLE);
-            dbHelper.deleteTable(DbHelper.PRODUCT_COLOR_TABLE);
-            dbHelper.deleteTable(DbHelper.CART_TABLE);
-            dbHelper.deleteTable(DbHelper.PROD_COMBO_TABLE);
-            dbHelper.deleteTable(DbHelper.PROD_COMBO_DETAIL_TABLE);
-            dbHelper.deleteTable(DbHelper.PROD_PRICE_TABLE);
-            dbHelper.deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
-            dbHelper.deleteTable(DbHelper.PROD_FREE_OFFER_TABLE);
-            dbHelper.deleteTable(DbHelper.COUPON_TABLE);
-            dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
-            Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            logout();
         }
     }
 

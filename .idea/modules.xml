@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ShoppursShopMPos.iml" filepath="$PROJECT_DIR$/ShoppursShopMPos.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mpaysdk_sandbox_v.1.0.36/mpaysdk_sandbox_v.1.0.36.iml" filepath="$PROJECT_DIR$/mpaysdk_sandbox_v.1.0.36/mpaysdk_sandbox_v.1.0.36.iml" />
     </modules>
   </component>
 </project>

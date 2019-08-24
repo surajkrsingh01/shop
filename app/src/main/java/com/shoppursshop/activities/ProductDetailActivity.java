@@ -160,10 +160,14 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                 relative_reorder.setVisibility(View.GONE);
                 linear_amount_division.setVisibility(View.GONE);
                 text_sale_trend_Label.setVisibility(View.GONE);
-                text_reviews_Label.setVisibility(View.GONE);
-                viewAddBarcodeSeparator.setVisibility(View.GONE);
+                text_reviews_Label.setVisibility(View.VISIBLE);
+                viewAddBarcodeSeparator.setVisibility(View.VISIBLE);
+                findViewById(R.id.view_rl).setVisibility(View.GONE);
+                findViewById(R.id.view_review).setVisibility(View.VISIBLE);
                 //myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
                 myProductItem = (MyProductItem) getIntent().getSerializableExtra("myProduct");
+            }else if(flag.equals("buyProduct")){
+                myProductItem = (MyProductItem) getIntent().getSerializableExtra("MyProduct");
             } else{
                 myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
             }

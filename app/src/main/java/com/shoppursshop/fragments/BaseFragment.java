@@ -42,6 +42,7 @@ public class BaseFragment extends Fragment {
     protected DbHelper dbHelper;
     protected boolean isDarkTheme;
     protected int colorTheme;
+    protected String token;
 
     public BaseFragment() {
         // Required empty public constructor
@@ -55,7 +56,7 @@ public class BaseFragment extends Fragment {
         editor=sharedPreferences.edit();
 
         colorTheme = sharedPreferences.getInt(Constants.COLOR_THEME,getActivity().getResources().getColor(R.color.red_500));
-
+        token = sharedPreferences.getString(Constants.TOKEN,"");
         dbHelper=new DbHelper(getActivity());
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setCanceledOnTouchOutside(false);

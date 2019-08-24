@@ -204,7 +204,7 @@ public class FreeProductOfferActivity extends NetworkBaseActivity implements MyI
         BottomSearchFragment bottomSearchFragment = new BottomSearchFragment();
         bottomSearchFragment.setCallingActivityName("productList");
         Bundle bundle = new Bundle();
-        bundle.putString("flag","searchCartProduct");
+        bundle.putString("flag","searchOfferProduct");
         bottomSearchFragment.setArguments(bundle);
         bottomSearchFragment.setMyItemClickListener(this);
         bottomSearchFragment.show(getSupportFragmentManager(), "Search Product Bottom Sheet");

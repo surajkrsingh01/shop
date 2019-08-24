@@ -4,6 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_marginTop="@dimen/container_view_vertical_margin"
+    android:layout_marginRight="16dp"
     card_view:cardElevation="5dp"
     android:background="@color/white"
     android:layout_width="match_parent"
@@ -48,6 +49,7 @@
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/image_icon"
                     android:src="@drawable/icon_1"
+                    android:visibility="gone"
                     android:layout_centerVertical="true"
                     android:layout_width="@dimen/home_list_icon_size"
                     android:layout_height="@dimen/home_list_icon_size" />

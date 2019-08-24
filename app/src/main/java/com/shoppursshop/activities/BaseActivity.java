@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,7 +58,7 @@ public class BaseActivity extends AppCompatActivity {
     protected int visibleItemCount,pastVisibleItems,totalItemCount;
     protected boolean loading=true,isScroll = true;
 
-    protected String token;
+    protected String token,appName,appVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,13 @@ public class BaseActivity extends AppCompatActivity {
         isDarkTheme = sharedPreferences.getBoolean(Constants.IS_DARK_THEME,false);
         colorTheme = sharedPreferences.getInt(Constants.COLOR_THEME,getResources().getColor(R.color.red_500));
         token = sharedPreferences.getString(Constants.TOKEN,"");
+        appName = "Shoppurs";
+        try {
+            appVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            Log.i("About","Version "+appVersion);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         if(isDarkTheme){
             setTheme(R.style.Dark);
         }else{
@@ -185,6 +194,8 @@ public class BaseActivity extends AppCompatActivity {
             tv.setText("Save");
         }else if(context instanceof CreateCouponOfferActivity){
             tv.setText("Save");
+        }else if(context instanceof ChooseDeviceActivity){
+            tv.setText("Continue");
         }
     }
 
@@ -330,7 +341,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    public void showMyDialog(String msg) {
+    public void showMyDialog(final String msg) {
         //  errorNoInternet.setText("Oops... No internet");
         //  errorNoInternet.setVisibility(View.VISIBLE);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -342,7 +353,12 @@ public class BaseActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        onDialogPositiveClicked();
+                        if(msg.equals("You are not authorized to perform this action.")){
+                          logout();
+                        }else{
+                            onDialogPositiveClicked();
+                        }
+
                     }
                 });
 
@@ -419,6 +435,30 @@ public class BaseActivity extends AppCompatActivity {
 
     public void onDialogNegativeClicked(){
 
+    }
+
+    public void logout(){
+        String IMEI_NO = sharedPreferences.getString(Constants.IMEI_NO,"");
+        editor.clear();
+        editor.putString(Constants.IMEI_NO,IMEI_NO);
+        editor.commit();
+        dbHelper.deleteTable(DbHelper.CAT_TABLE);
+        dbHelper.deleteTable(DbHelper.SUB_CAT_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_BARCODE_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_UNIT_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_SIZE_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_COLOR_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_COMBO_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_COMBO_DETAIL_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_PRICE_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_FREE_OFFER_TABLE);
+        dbHelper.deleteTable(DbHelper.COUPON_TABLE);
+        Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     void showProgress(boolean show,String message){

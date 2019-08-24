@@ -165,6 +165,18 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             @Override
             public void onClick(View view) {
                 relativeLayoutPayOptionLayout.setVisibility(View.VISIBLE);
+
+                String deviceType = sharedPreferences.getString(Constants.ANDROID_DEVICE_TYPE,"");
+                Log.i(TAG,"device type "+deviceType);
+                if(deviceType.equals("N910")){
+                    tvMPos.setVisibility(View.GONE);
+                    tvCard.setVisibility(View.GONE);
+                    tvAndroidPos.setVisibility(View.VISIBLE);
+                }else if(deviceType.equals("Android")){
+                    tvAndroidPos.setVisibility(View.GONE);
+                    tvCard.setVisibility(View.GONE);
+                    tvMPos.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -421,6 +433,24 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 tvApplyCoupon.setVisibility(View.GONE);
                 setFooterValues();
             }
+        }else if(requestCode == 10){
+            if(intent != null){
+                String rawValue = intent.getStringExtra("barCode");
+                MyProductItem myProductItem = dbHelper.getProductDetailsByBarCode(rawValue);
+                if(myProductItem.getIsBarCodeAvailable().equals("Y")){
+                    myProductItem.setBarcodeList(dbHelper.getBarCodesForCart(myProductItem.getProdId()));
+                }
+                if(myProductItem.getBarcodeList().size() > 0){
+                    myProductItem.setQty(1);
+                    float netSellingPrice = getOfferAmount(myProductItem,2);
+                    myProductItem.setTotalAmount(netSellingPrice);
+                    dbHelper.addProductToCart(myProductItem);
+                    showMyBothDialog("Product is added in cart.","Checkout","Scan More");
+                }else{
+                    showMyDialog("Product is out of stock.");
+                }
+            }
+
         }
     }
 
@@ -428,7 +458,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         Intent intent = new Intent(this,ScannarActivity.class);
         intent.putExtra("flag","scan");
         intent.putExtra("type","addToCart");
-        startActivity(intent);
+        startActivityForResult(intent,10);
 
       /* dbHelper.deleteTable(DbHelper.CART_TABLE);
 
@@ -498,24 +528,16 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         tvTotalTaxes.setText(Utility.numberFormat(totalTax));
         totalPrice = dbHelper.getTotalPriceCart();
         tvItemTotal.setText(Utility.numberFormat(totalPrice - totalTax));
-        totDiscount = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
+      //  totDiscount = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
         float dis = 0f;
         if(offerPer > 0f){
             dis = totalPrice * offerPer / 100;
-            totDiscount = totDiscount + dis ;
+        //    totDiscount = totDiscount + dis ;
         }
 
         Log.i(TAG," Taxes "+dbHelper.getTotalTaxesart());
         Log.i(TAG," MRP "+dbHelper.getTotalMrpPriceCart()
                 +" Price "+dbHelper.getTotalPriceCart());
-        Log.i(TAG," diff "+totDiscount+" offerPer "+offerPer+" totalPrice "+totalPrice);
-
-        if(totDiscount == 0f){
-            rlDiscount.setVisibility(View.GONE);
-        }else{
-            rlDiscount.setVisibility(View.VISIBLE);
-            tvTotalDiscount.setText(Utility.numberFormat(totDiscount));
-        }
 
         totalPrice = totalPrice - dis;
         if(deliveryTypeId == R.id.rb_self_delivery){
@@ -536,6 +558,16 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             }else{
                 tvDeliveryCharges.setText("0.00");
             }
+        }
+
+        totDiscount = dbHelper.getTotalMrpPriceCart() - totalPrice;
+        Log.i(TAG," diff "+totDiscount+" offerPer "+offerPer+" totalPrice "+totalPrice);
+
+        if(totDiscount == 0f){
+            rlDiscount.setVisibility(View.GONE);
+        }else{
+            rlDiscount.setVisibility(View.VISIBLE);
+            tvTotalDiscount.setText(Utility.numberFormat(totDiscount));
         }
 
         totalPrice = totalPrice + deliveryCharges;
@@ -638,7 +670,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     shopObject.put("totIgst",String.valueOf(dbHelper.getTaxesCart("igst")));
                     shopObject.put("totTax",String.valueOf(totalTax));
                     shopObject.put("deliveryCharges",String.valueOf(deliveryCharges));
-                    shopObject.put("totDiscount",String.valueOf(totDiscount));
+                    shopObject.put("totDiscount",String.valueOf(dbHelper.getTotalMrpPriceCart() - totalPrice));
                     shopObject.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
                     shopObject.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
                     shopObject.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
@@ -887,7 +919,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                 offerName = productComboOffer.getOfferName();
                 float totOfferAmt = 0f;
                 for(ProductComboDetails productComboDetails : productComboOffer.getProductComboOfferDetails()){
-                    totOfferAmt = totOfferAmt + productComboDetails.getPcodPrice();
+                    totOfferAmt = productComboDetails.getPcodPrice();
                     offerDescList.add("Buy "+productComboDetails.getPcodProdQty()+" at Rs "+
                             Utility.numberFormat(totOfferAmt));
                 }
@@ -925,6 +957,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     mod = maxSize;
                 }
                 amount = getOfferPrice(mod,item.getProdSp(),productComboOffer.getProductComboOfferDetails());
+
             }else{
                 amount = item.getProdSp();
             }
@@ -1027,14 +1060,21 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
     private float getOfferPrice(int qty,float sp,List<ProductComboDetails> productComboDetailsList){
         float amount = 0f;
+        int i = -1;
+        Log.i(TAG,"mod "+qty);
         for(ProductComboDetails productComboDetails:productComboDetailsList){
+            Log.i(TAG,"qty "+productComboDetails.getPcodProdQty());
             if(productComboDetails.getPcodProdQty() == qty){
                 amount = productComboDetails.getPcodPrice();
+                if(qty != 1){
+                    amount = amount - productComboDetailsList.get(i).getPcodPrice();
+                }
                 Log.i(TAG,"offer price "+amount);
                 break;
             }else{
                 amount = sp;
             }
+            i++;
         }
         Log.i(TAG,"final selling price "+amount);
         return amount;
@@ -1082,39 +1122,20 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
         MyProductItem item = dbHelper.getProductDetails(prodId);
         setOffer(item);
-       // item.setProductPriceOfferList(dbHelper.getProductPriceOffer(""+item.getProdId()));
-
-        if(item.getIsBarCodeAvailable().equals("Y")){
-            item.setBarcodeList(dbHelper.getBarCodesForCart(prodId));
-            if(item.getBarcodeList() != null && item.getBarcodeList().size() > 0){
-                item.setQty(1);
-                item.setTotalAmount(item.getProdSp());
-                dbHelper.addProductToCart(item);
-                itemList.add(item);
-                myItemAdapter.notifyDataSetChanged();
-                if(itemList.size() > 0){
-                    setFooterValues();
-                    relativeLayoutCartFooter.setVisibility(View.VISIBLE);
-                }
-            }else{
-                DialogAndToast.showDialog("Product is out of stock.",this);
+        if(item.getProdQoh() > 0){
+            item.setQty(1);
+            float netSellingPrice = getOfferAmount(item,2);
+            item.setTotalAmount(netSellingPrice);
+            dbHelper.addProductToCart(item);
+            itemList.add(item);
+            //myItemAdapter.notifyItemChanged(itemList.size() -1 );
+            myItemAdapter.notifyDataSetChanged();
+            if(itemList.size() > 0){
+                setFooterValues();
+                relativeLayoutCartFooter.setVisibility(View.VISIBLE);
             }
-
         }else{
-            if(item.getProdQoh() > 0){
-                item.setQty(1);
-                item.setTotalAmount(item.getProdSp());
-                dbHelper.addProductToCart(item);
-                itemList.add(item);
-                //myItemAdapter.notifyItemChanged(itemList.size() -1 );
-                myItemAdapter.notifyDataSetChanged();
-                if(itemList.size() > 0){
-                    setFooterValues();
-                    relativeLayoutCartFooter.setVisibility(View.VISIBLE);
-                }
-            }else{
-                DialogAndToast.showDialog("Product is out of stock.",this);
-            }
+            DialogAndToast.showDialog("Product is out of stock.",this);
         }
 
 
