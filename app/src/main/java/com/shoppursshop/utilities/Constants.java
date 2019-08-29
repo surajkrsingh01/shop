@@ -70,6 +70,7 @@ public class Constants {
     public static String IS_SUB_CAT_ADDED="isSubCatAdded";
     public static String IS_PRODUCT_ADDED="isProductAdded";
     public static String MERCHANT_REF_NO="merchantRefNo";
+    public static String SYNCED_DATE="syncedDate";
 
     public static String FCM_TOKEN="fcmToken";
     public static String IS_TOKEN_SAVED="isTokenSaved";
@@ -96,6 +97,7 @@ public class Constants {
     public static String AUTHENTICATE="/api/user/authenticate_user";
     public static String GET_PASSWORD="/useradmin/getPassword";
     public static String SYNC="/api/syncdata";
+    public static String SYNC_SHOP_DATA="/api/sync_shop_data";
     public static String MANAGE_REGISTRATION="/useradmin/manageRegistration";
     public static String GET_COUNTRIES="/api/countries";
     public static String GET_STATES="/api/states?countryId=";
@@ -121,6 +123,8 @@ public class Constants {
     public static String SHOP_SALE_DATE="/api/user/shop_sale_data";
     public static String IS_CUSTOMER_REGISTERED="/api/shop_customer/is_registered";
     public static String REGISTER_CUSTOMER="/api/shop_customer/register_shop_customer";
+    public static String REGISTER_USER="/api/user/add_user";
+    public static String GET_USER="/api/user/get_users";
     public static String ORDER_PRODUCTS="/api/shop/order/productslist";
     public static String GET_SHOP_ORDERS="/api/shop/order/get_shop_order";
     public static String GET_CUSTOMER_ORDERS="/api/shop/order/get_shop_cust_order";
@@ -162,6 +166,7 @@ public class Constants {
     public static String CREATE_COUPON_OFFER="/api/offers/create_coupon_offer";
     public static String UPDATE_COUPON_OFFER="/api/offers/update_coupon_offer";
     public static String GET_COUPON_OFFER="/api/offers/get_coupon_offer";
+    public static String VALIDATE_COUPON_OFFER="/api/offers/validate_coupon_offer";
 
     public static String CHANGE_FREE_PRODUCT_OFFER="/api/offers/status_product_discount_offer";
     public static String CHANGE_COMBO_PRODUCT_OFFER="/api/offers/status_product_combo_offer";

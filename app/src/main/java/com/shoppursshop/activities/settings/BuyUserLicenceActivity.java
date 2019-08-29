@@ -108,6 +108,17 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
         recyclerView.setAdapter(paymentSchemeAdapter);
 
         userLicenseList = new ArrayList<>();
+       /* UserLicense userLicense = new UserLicense();
+        userLicense.setLicenseType("Standard");
+        userLicense.setPurchaseDate("2019-08-26 11:36:30");
+        userLicense.setRenewdDate("2019-09-26 11:36:30");
+        userLicense.setExpiryDate("2019-09-26 11:36:30");
+        userLicense.setNumOfUsers(2);
+        userLicense.setAmount(500);
+        userLicense.setScheme("Monthly");
+        userLicense.setStatus("Active");
+        userLicense.setPaymentStatus("Paid");
+        userLicenseList.add(userLicense);*/
         recyclerViewUserLicense = findViewById(R.id.recycler_mysubscription);
         recyclerViewUserLicense.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager1=new LinearLayoutManager(this);

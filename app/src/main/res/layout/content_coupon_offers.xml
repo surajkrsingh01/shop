@@ -71,6 +71,7 @@
             android:id="@+id/btn_apply"
             android:text="Apply"
             android:textSize="@dimen/large_text_size"
+            android:clickable="true"
             android:layout_centerVertical="true"
             android:textColor="@color/orange600"
             android:layout_alignParentRight="true"

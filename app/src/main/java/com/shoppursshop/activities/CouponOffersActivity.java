@@ -9,7 +9,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -19,6 +23,7 @@ import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.Coupon;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
 
 import org.json.JSONArray;
@@ -37,6 +42,7 @@ public class CouponOffersActivity extends NetworkBaseActivity implements MyItemC
     private CouponOfferAdapter myItemAdapter;
     private TextView textApply,textViewError;
 
+    private EditText editTextCoupon;
     private String flag;
 
     @Override
@@ -55,6 +61,7 @@ public class CouponOffersActivity extends NetworkBaseActivity implements MyItemC
         itemList = new ArrayList<>();
         textViewError = findViewById(R.id.text_error);
         textApply = findViewById(R.id.btn_apply);
+        editTextCoupon = findViewById(R.id.edit_coupon_code);
         recyclerView=findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
@@ -67,20 +74,55 @@ public class CouponOffersActivity extends NetworkBaseActivity implements MyItemC
 
         textApply.setTextColor(colorTheme);
 
+        textApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ConnectionDetector.isNetworkAvailable(CouponOffersActivity.this)){
+                    applyCoupon();
+                }else{
+                    DialogAndToast.showDialog(getResources().getString(R.string.no_internet),CouponOffersActivity.this);
+                }
+            }
+        });
+
         if(ConnectionDetector.isNetworkAvailable(this)){
             getCouponOffers();
         }
     }
 
-
     private void getCouponOffers(){
         Map<String,String> params=new HashMap<>();
-        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        if(flag.equals("shoppursCoupons")){
+            params.put("dbName","SHP1");
+        }else{
+            params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        }
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
         String url=getResources().getString(R.string.url)+Constants.GET_COUPON_OFFER;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"offerList");
+    }
+
+    private void applyCoupon(){
+        String couponCode = editTextCoupon.getText().toString();
+        if(TextUtils.isEmpty(couponCode)){
+            DialogAndToast.showDialog("Please enter coupon code",this);
+            return;
+        }
+        Map<String,String> params=new HashMap<>();
+        params.put("couponCode",couponCode);
+        params.put("shopCode","SHP1");
+        if(flag.equals("shoppursCoupons")){
+            params.put("dbName","SHP1");
+        }else{
+            params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        }
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.VALIDATE_COUPON_OFFER;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"applyCoupon");
     }
 
     @Override
@@ -99,6 +141,7 @@ public class CouponOffersActivity extends NetworkBaseActivity implements MyItemC
                         dataObject = couponArray.getJSONObject(i);
                         coupon = new Coupon();
                         coupon.setId(dataObject.getInt("id"));
+                        coupon.setShopCode(sharedPreferences.getString(Constants.SHOP_CODE,""));
                         coupon.setPercentage(dataObject.getInt("percentage"));
                         coupon.setAmount((float)dataObject.getDouble("amount"));
                         coupon.setName(dataObject.getString("name"));
@@ -116,6 +159,42 @@ public class CouponOffersActivity extends NetworkBaseActivity implements MyItemC
                         myItemAdapter.notifyDataSetChanged();
                     }
 
+                }
+            }else if(apiName.equals("applyCoupon")){
+                Log.d("response ", response.toString());
+                if (response.getBoolean("status")) {
+                    JSONObject dataObject = response.getJSONObject("result");
+                    Coupon coupon = new Coupon();
+                    coupon.setId(dataObject.getInt("id"));
+                    coupon.setShopCode(dataObject.getString("shopCode"));
+                    coupon.setPercentage(dataObject.getInt("percentage"));
+                    coupon.setAmount((float)dataObject.getDouble("amount"));
+                    coupon.setName(dataObject.getString("name"));
+                    coupon.setStatus(dataObject.getString("status"));
+                    coupon.setStartDate(dataObject.getString("startDate"));
+                    coupon.setEndDate(dataObject.getString("endDate"));
+
+                    if(coupon.getPercentage()==0){
+                        showMyDialog("Coupon is not Valid");
+                        return;
+                    }else {
+                        if(coupon.getPercentage()>0) {
+                            Intent intent  = new Intent();
+                            intent.putExtra("name",coupon.getName());
+                            intent.putExtra("id",coupon.getId());
+                            intent.putExtra("shopCode",coupon.getShopCode());
+                            intent.putExtra("per",coupon.getPercentage());
+                            intent.putExtra("amount",coupon.getAmount());
+                            setResult(-1,intent);
+                            finish();
+                        }
+                    }
+                }else {
+                    int result = response.getInt("result");
+                    if(result==0){
+                        showMyDialog("Coupon is not Valid");
+                    }else if(result==1)
+                        showMyDialog("Something went wrong, please try letter");
                 }
             }
         }catch (JSONException e) {
@@ -139,6 +218,7 @@ public class CouponOffersActivity extends NetworkBaseActivity implements MyItemC
         Intent intent  = new Intent();
         intent.putExtra("name",coupon.getName());
         intent.putExtra("id",coupon.getId());
+        intent.putExtra("shopCode",coupon.getShopCode());
         intent.putExtra("per",coupon.getPercentage());
         intent.putExtra("amount",coupon.getAmount());
         setResult(-1,intent);

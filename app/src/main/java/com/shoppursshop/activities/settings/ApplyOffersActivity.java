@@ -97,10 +97,14 @@ public class ApplyOffersActivity extends BaseActivity implements MyItemTypeClick
                 comboProductItem = dbHelper.getProductDetails(productComboDetails.getPcodProdId());
                 totAmt = totAmt + (productComboDetails.getPcodPrice() * productComboDetails.getPcodProdQty());
                 totMrp = totMrp + (comboProductItem.getProdMrp() * productComboDetails.getPcodProdQty());
-                totCgst = totCgst + (productComboDetails.getPcodPrice() *
-                        comboProductItem.getProdCgst() * productComboDetails.getPcodProdQty()/100);
-                totSgst = totSgst + (productComboDetails.getPcodPrice() *
-                        comboProductItem.getProdSgst() * productComboDetails.getPcodProdQty()/100);
+
+                float rate = ((productComboDetails.getPcodPrice() * (comboProductItem.getProdCgst()+comboProductItem.getProdSgst()))/(100 +
+                        (comboProductItem.getProdCgst()+comboProductItem.getProdSgst())));
+
+                totCgst = totCgst + ((rate/2) * productComboDetails.getPcodProdQty());
+
+                totSgst = totSgst + ((rate/2) * productComboDetails.getPcodProdQty());
+
                 if(TextUtils.isEmpty(comboName)){
                     comboName = comboProductItem.getProdName();
                     comboIds = ""+comboProductItem.getProdId();

@@ -1,22 +1,24 @@
-package com.shoppursshop.activities;
+package com.shoppursshop.activities.settings;
 
-import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.android.volley.Request;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
+import android.view.View;
 
 import com.shoppursshop.R;
+import com.shoppursshop.activities.LoginActivity;
+import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.adapters.SimpleItemAdapter;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.models.Coupon;
 import com.shoppursshop.models.MyCustomer;
@@ -42,145 +44,65 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LoginActivity extends NetworkBaseActivity{
+public class SyncDataActivity extends NetworkBaseActivity {
 
-    private EditText editTextMobile,editTextPassword;
-    private TextView textForgotPassword;
-    private Button btnLogin,btnSignUp;
-    private String mobile,password;
-    private Typeface iconFont;
+    private RecyclerView recyclerView;
+    private List<Object> itemList;
+    private SimpleItemAdapter itemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_sync_data);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        dbHelper.deleteAllTable();
-
-        iconFont = Utility.getSimpleLineIconsFont(this);
-
-        RelativeLayout relativeForgotPassword=findViewById(R.id.relative_forgot_password);
-        RelativeLayout relativeRegister=findViewById(R.id.relative_sign_up);
-        editTextMobile=(EditText)findViewById(R.id.edit_mobile);
-        editTextPassword=(EditText)findViewById(R.id.edit_password);
-        textForgotPassword=(TextView)findViewById(R.id.text_forgot_password);
-        TextView textMobile=(TextView)findViewById(R.id.text_mobile_icon);
-        TextView textPassword=(TextView)findViewById(R.id.text_password_icon);
-        TextView textSignUp=(TextView)findViewById(R.id.text_sign_up_icon);
-        TextView textForgotPassword=(TextView)findViewById(R.id.text_forgot_password_icon);
-        textMobile.setTypeface(iconFont);
-        textPassword.setTypeface(iconFont);
-        textSignUp.setTypeface(iconFont);
-        textForgotPassword.setTypeface(iconFont);
-
-        progressDialog.setMessage(getResources().getString(R.string.logging_user));
-
-        relativeForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(LoginActivity.this,ForgotPasswordActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        relativeRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(LoginActivity.this,RegisterActivity.class);
-                intent.putExtra("type",0);
-                startActivity(intent);
-            }
-        });
-
-        btnLogin=(Button)findViewById(R.id.btn_login);
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-
-       /* btnSignUp=(Button)findViewById(R.id.btn_register);
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(LoginActivity.this,RegisterActivity.class);
-                startActivity(intent);
-            }
-        });*/
-
-        for(Drawable drawable : editTextMobile.getCompoundDrawables()){
-            if(drawable != null){
-                drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.accent_color_1), PorterDuff.Mode.SRC_IN));
-            }
-        }
-
-        for(Drawable drawable : editTextPassword.getCompoundDrawables()){
-            if(drawable != null){
-                drawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.accent_color_1), PorterDuff.Mode.SRC_IN));
-            }
-        }
+        init();
+        initFooterAction(this);
 
     }
 
-    public void attemptLogin(){
-        mobile=editTextMobile.getText().toString();
-        password=editTextPassword.getText().toString();
-        View focus=null;
-        boolean cancel=false;
+    private void init(){
+        itemList = new ArrayList<>();
+        MySimpleItem item=new MySimpleItem();
+        item.setName("Categories");
+        itemList.add(item);
+        item=new MySimpleItem();
+        item.setName("Sub Categories");
+        itemList.add(item);
+        item=new MySimpleItem();
+        item.setName("Products");
+        itemList.add(item);
+        item=new MySimpleItem();
+        item.setName("Customers");
+        itemList.add(item);
+        item=new MySimpleItem();
+        item.setName("Offers");
+        itemList.add(item);
 
-        //mobile = "9718181697";
-        //password = "12345";
+        recyclerView= findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        itemAdapter=new SimpleItemAdapter(this,itemList,"simpleSyncList");
+        recyclerView.setAdapter(itemAdapter);
 
-        if(TextUtils.isEmpty(password)){
-            editTextPassword.setError(getResources().getString(R.string.password_required));
-            focus=editTextPassword;
-            cancel=true;
-        }
 
-        if(TextUtils.isEmpty(mobile)){
-            editTextMobile.setError(getResources().getString(R.string.mobile_required));
-            focus=editTextMobile;
-            cancel=true;
-        }else if(mobile.length() != 10){
-            editTextMobile.setError(getResources().getString(R.string.mobile_valid));
-            focus=editTextMobile;
-            cancel=true;
-        }
-
-        if(cancel){
-            focus.requestFocus();
-            return;
-        }else {
-            if(ConnectionDetector.isNetworkAvailable(this)) {
-                progressDialog.setMessage(getResources().getString(R.string.logging_user));
-                volleyRequest();
-               /* editor.putString(Constants.MOBILE_NO,mobile);
-                editor.putBoolean(Constants.IS_LOGGED_IN,true);
-                editor.commit();
-                //DialogAndToast.showToast("Account created",LoginActivity.this);
-                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-                startActivity(intent);
-                finish();*/
-
-            }else {
-                DialogAndToast.showDialog(getResources().getString(R.string.no_internet),this);
+        findViewById(R.id.relative_footer_action).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ConnectionDetector.isNetworkAvailable(SyncDataActivity.this)){
+                    syncSata();
+                }else{
+                    DialogAndToast.showDialog(getResources().getString(R.string.no_internet),SyncDataActivity.this);
+                }
             }
+        });
 
-        }
     }
 
-    public void volleyRequest(){
-        Map<String,String> params=new HashMap<>();
-        params.put("mobile",mobile);
-        params.put("password",password);
-        params.put("imeiNo",sharedPreferences.getString(Constants.IMEI_NO,""));
-        String url=getResources().getString(R.string.url)+Constants.LOGIN;
-        showProgress(true);
-        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"login");
-    }
-
-    private void syncData(){
+    private void syncSata(){
         Map<String,String> params=new HashMap<>();
         params.put("id",sharedPreferences.getString(Constants.USER_ID,""));
         params.put("syncedDate",sharedPreferences.getString(Constants.SYNCED_DATE,"1900-01-01 00:00:00"));
@@ -197,65 +119,7 @@ public class LoginActivity extends NetworkBaseActivity{
         showProgress(false);
         try {
             // JSONObject jsonObject=response.getJSONObject("response");
-            if(apiName.equals("login")){
-                if(response.getBoolean("status")){
-                    JSONObject dataObject=response.getJSONObject("result");
-                    editor.putString(Constants.USER_ID,dataObject.getString("id"));
-                    editor.putString(Constants.FULL_NAME,dataObject.getString("username"));
-                    editor.putString(Constants.EMAIL,dataObject.getString("userEmail"));
-                    editor.putString(Constants.MOBILE_NO,dataObject.getString("mobile"));
-                    editor.putString(Constants.SHOP_NAME,dataObject.getString("shopName"));
-                    editor.putString(Constants.SHOP_CODE,dataObject.getString("shopCode"));
-                    editor.putString(Constants.LANGUAGE,dataObject.getString("language"));
-                    //myUser.setMpassword(dataObject.getString("RET_CODE"));
-                    editor.putString(Constants.CITY,dataObject.getString("city"));
-                    editor.putString(Constants.STATE,dataObject.getString("province"));
-                    editor.putString(Constants.COUNTRY,dataObject.getString("country"));
-                    editor.putString(Constants.ZIP,dataObject.getString("zip"));
-                    editor.putString(Constants.ADDRESS,dataObject.getString("address"));
-                    editor.putString(Constants.PHOTO,dataObject.getString("photo"));
-                    editor.putString(Constants.PROFILE_PIC,dataObject.getString("photo"));
-                    //myUser.setIdProof(dataObject.getString("RET_CODE"));
-                    editor.putString(Constants.BANK_NAME,dataObject.getString("bankName"));
-                    editor.putString(Constants.ACCOUNT_NO,dataObject.getString("accountNo"));
-                    editor.putString(Constants.BRANCH_ADRESS,dataObject.getString("branchAddress"));
-                    editor.putString(Constants.IFSC_CODE,dataObject.getString("ifscCode"));
-                    editor.putString(Constants.CHEQUE_IMAGE,dataObject.getString("chequeImage"));
-
-                    editor.putString(Constants.PAN_NO,dataObject.getString("panNo"));
-                   // editor.putString(Constants.KYC_DOC_IMAGE,dataObject.getString("panNo"));
-                    editor.putString(Constants.AADHAR_NO,dataObject.getString("aadharNo"));
-                    editor.putString(Constants.GST_NO,dataObject.getString("gstNo"));
-                    editor.putString(Constants.USER_LAT,dataObject.getString("userLat"));
-                    editor.putString(Constants.USER_LONG,dataObject.getString("userLong"));
-                    editor.putString(Constants.DB_NAME,dataObject.getString("dbName"));
-                    editor.putString(Constants.DB_USER_NAME,dataObject.getString("dbUserName"));
-                    editor.putString(Constants.DB_PASSWORD,dataObject.getString("dbPassword"));
-                    editor.putString(Constants.USER_TYPE,"Seller");
-                    editor.putString(Constants.TOKEN,dataObject.getString("token"));
-                    token = dataObject.getString("token");
-                    editor.putString(Constants.GOOGLE_MAP_API_KEY,dataObject.getString("googleMapApiKey"));
-                    if(dataObject.getString("isDeliveryAvailable").equals("Y")){
-                        editor.putBoolean(Constants.IS_DELIVERY_AVAILABLE,true);
-                    }else{
-                        editor.putBoolean(Constants.IS_DELIVERY_AVAILABLE,false);
-                    }
-                    editor.putInt(Constants.MIN_DELIVERY_AMOUNT,dataObject.getInt("minDeliveryAmount"));
-                    editor.putInt(Constants.DELIVERY_EST_TIME,dataObject.getInt("minDeliverytime"));
-                    editor.putInt(Constants.MIN_DELIVERY_DISTANCE,dataObject.getInt("minDeliverydistance"));
-                    editor.putInt(Constants.CHARGE_AFTER_MIN_DISTANCE,dataObject.getInt("chargesAfterMinDistance"));
-                   // editor.putBoolean(Constants.IS_LOGGED_IN,true);
-                    editor.commit();
-                    syncData();
-                    //editor.putBoolean(Constants.IS_LOGGED_IN,true);
-                   // editor.commit();
-                   // moveToActivities();
-                    //moveToActivities();
-                }else {
-                    DialogAndToast.showDialog(response.getString("message"),LoginActivity.this);
-                }
-            }else if(apiName.equals("syncdata")){
-
+            if(apiName.equals("syncdata")){
                 if(response.getBoolean("status")){
                     JSONObject dataObject = response.getJSONObject("result");
                     JSONArray catArray = dataObject.getJSONArray("categories");
@@ -280,6 +144,20 @@ public class LoginActivity extends NetworkBaseActivity{
                     ProductSize productSize = null;
                     ProductColor productColor = null;
                     int len = catArray.length();
+                    dbHelper.deleteTable(DbHelper.CAT_TABLE);
+                    dbHelper.deleteTable(DbHelper.SUB_CAT_TABLE);
+                    dbHelper.deleteTable(DbHelper.PRODUCT_TABLE);
+                    dbHelper.deleteTable(DbHelper.PRODUCT_BARCODE_TABLE);
+                    dbHelper.deleteTable(DbHelper.PRODUCT_UNIT_TABLE);
+                    dbHelper.deleteTable(DbHelper.PRODUCT_SIZE_TABLE);
+                    dbHelper.deleteTable(DbHelper.PRODUCT_COLOR_TABLE);
+                    dbHelper.deleteTable(DbHelper.PROD_COMBO_TABLE);
+                    dbHelper.deleteTable(DbHelper.PROD_COMBO_DETAIL_TABLE);
+                    dbHelper.deleteTable(DbHelper.PROD_PRICE_TABLE);
+                    dbHelper.deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
+                    dbHelper.deleteTable(DbHelper.PROD_FREE_OFFER_TABLE);
+                    dbHelper.deleteTable(DbHelper.COUPON_TABLE);
+                    dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
                     for(int i=0; i<len; i++){
                         jsonObject = catArray.getJSONObject(i);
                         item = new MySimpleItem();
@@ -288,6 +166,8 @@ public class LoginActivity extends NetworkBaseActivity{
                         item.setImage(jsonObject.getString("imageUrl"));
                         dbHelper.addCategory(item, Utility.getTimeStamp(),Utility.getTimeStamp());
                     }
+
+                    ((MySimpleItem)itemList.get(0)).setSelected(true);
 
                     len = subCatArray.length();
                     for(int i=0; i<len; i++){
@@ -299,6 +179,8 @@ public class LoginActivity extends NetworkBaseActivity{
                         dbHelper.addSubCategory(item,""+jsonObject.getInt("catId"),Utility.getTimeStamp(),Utility.getTimeStamp());
                     }
 
+                    ((MySimpleItem)itemList.get(1)).setSelected(true);
+
                     len = productArray.length();
                     for(int i=0; i<len; i++){
                         jsonObject = productArray.getJSONObject(i);
@@ -308,7 +190,7 @@ public class LoginActivity extends NetworkBaseActivity{
                         productItem.setProdSubCatId(jsonObject.getInt("prodSubCatId"));
                         productItem.setProdName(jsonObject.getString("prodName"));
                         productItem.setProdCode(jsonObject.getString("prodCode"));
-                       // productItem.setProdBarCode(jsonObject.getString("prodBarCode"));
+                        // productItem.setProdBarCode(jsonObject.getString("prodBarCode"));
                         productItem.setProdDesc(jsonObject.getString("prodDesc"));
                         productItem.setProdReorderLevel(jsonObject.getInt("prodReorderLevel"));
                         productItem.setProdQoh(jsonObject.getInt("prodQoh"));
@@ -383,6 +265,8 @@ public class LoginActivity extends NetworkBaseActivity{
                         jsonObject = productBarCodeArray.getJSONObject(i);
                         dbHelper.addProductBarcode(jsonObject.getInt("prodId"),jsonObject.getString("prodBarCode"));
                     }
+
+                    ((MySimpleItem)itemList.get(2)).setSelected(true);
 
                     len = freeArray.length();
                     for (int i = 0; i < len; i++) {
@@ -481,6 +365,8 @@ public class LoginActivity extends NetworkBaseActivity{
                         dbHelper.addCouponOffer(coupon, Utility.getTimeStamp(),Utility.getTimeStamp());
                     }
 
+                    ((MySimpleItem)itemList.get(4)).setSelected(true);
+
                     len = customerArray.length();
                     dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
                     for (int i = 0; i < len; i++) {
@@ -511,12 +397,13 @@ public class LoginActivity extends NetworkBaseActivity{
                         dbHelper.addCustomerInfo(myCustomer,Utility.getTimeStamp(),Utility.getTimeStamp());
                     }
 
-                    editor.putBoolean(Constants.IS_LOGGED_IN,true);
-                    editor.commit();
+                    ((MySimpleItem)itemList.get(3)).setSelected(true);
+
+                    recyclerView.setVisibility(View.VISIBLE);
+                    itemAdapter.notifyDataSetChanged();
+
                     editor.putString(Constants.SYNCED_DATE,Utility.getTimeStamp("yyyy-MM-dd HH:mm:ss"));
                     editor.commit();
-                    moveToActivities();
-
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }
@@ -524,24 +411,8 @@ public class LoginActivity extends NetworkBaseActivity{
 
         } catch (JSONException e) {
             e.printStackTrace();
-            DialogAndToast.showToast(getResources().getString(R.string.json_parser_error)+e.toString(),LoginActivity.this);
+            DialogAndToast.showToast(getResources().getString(R.string.json_parser_error)+e.toString(),SyncDataActivity.this);
         }
-    }
-
-
-    private void moveToActivities(){
-        Intent intent=null;
-       /* if(!sharedPreferences.getBoolean(Constants.IS_SUB_CAT_ADDED,false)){
-            intent=new Intent(LoginActivity.this,RegisterActivity.class);
-            intent.putExtra("type",RegisterActivity.SUB_CATEGORY);
-        }else{
-            intent=new Intent(LoginActivity.this,MainActivity.class);
-        }*/
-
-        intent=new Intent(LoginActivity.this,MainActivity.class);
-
-        startActivity(intent);
-        finish();
     }
 
 }

@@ -215,6 +215,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             }
         });
 
+        tvAndroidPos.setText("Credit Card/Debit Card");
+
         tvAndroidPos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -608,8 +610,9 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             JSONObject tempbarcodeObject = null;
 
             String shopCode = sharedPreferences.getString(Constants.SHOP_CODE,"");
-
+            MyProductItem cartProductItem = null;
             for (MyProductItem cartItem : cartItemList) {
+                cartProductItem = dbHelper.getProductDetails(cartItem.getProdId());
                 Log.d(TAG, cartItem.getProdBarCode()+"");
                 if (!tempShopList.contains(shopCode)) {
                     //Log.d("PRD list "+tempShopList.toString(), cartItem.getShopCode());
@@ -695,9 +698,9 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     productObject.put("prodDesc",cartItem.getProdDesc());
                     productObject.put("prodMrp",cartItem.getProdMrp());
                     productObject.put("prodSp", cartItem.getProdSp());
-                    productObject.put("prodCgst", cartItem.getProdCgst());
-                    productObject.put("prodSgst", cartItem.getProdSgst());
-                    productObject.put("prodIgst", cartItem.getProdIgst());
+                    productObject.put("prodCgst", cartProductItem.getProdCgst());
+                    productObject.put("prodSgst", cartProductItem.getProdSgst());
+                    productObject.put("prodIgst", cartProductItem.getProdIgst());
                     productObject.put("prodImage1",cartItem.getProdImage1());
                     productObject.put("prodImage2",cartItem.getProdImage2());
                     productObject.put("prodImage3",cartItem.getProdImage3());

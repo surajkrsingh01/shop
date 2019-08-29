@@ -67,6 +67,28 @@
         <TextView
             android:id="@+id/text_amount"
             android:text="Amt"
+            android:layout_toLeftOf="@+id/text_sgst_rate"
+            android:layout_marginRight="10dp"
+            android:textSize="@dimen/invoice_sub_header_text_size"
+            android:gravity="right"
+            android:textColor="@color/primary_text_color"
+            android:layout_width="@dimen/invoice_right_view_width"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/text_sgst_rate"
+            android:text="SGST"
+            android:layout_toLeftOf="@+id/text_cgst_rate"
+            android:layout_marginRight="10dp"
+            android:textSize="@dimen/invoice_sub_header_text_size"
+            android:gravity="right"
+            android:textColor="@color/primary_text_color"
+            android:layout_width="@dimen/invoice_right_view_width"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/text_cgst_rate"
+            android:text="CGST"
             android:layout_alignParentRight="true"
             android:textSize="@dimen/invoice_sub_header_text_size"
             android:gravity="right"

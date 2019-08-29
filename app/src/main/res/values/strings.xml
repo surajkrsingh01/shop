@@ -299,5 +299,8 @@
     <string name="title_activity_banner_details">BannerDetailsActivity</string>
     <string name="title_activity_shoppurs_product_list">ShoppursProductListActivity</string>
     <string name="title_activity_shop_cart">ShopCartActivity</string>
+    <string name="title_activity_add_user">AddUserActivity</string>
+    <string name="title_activity_user_list">UserListActivity</string>
+    <string name="title_activity_sync_data">SyncDataActivity</string>
 
 </resources>

@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ShoppursProductListActivity">
+    tools:context=".activities.settings.AddUserActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:id="@+id/app_bar"
         android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
@@ -22,6 +21,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_shoppurs_product_list" />
+
+    <include layout="@layout/content_add_user" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

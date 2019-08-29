@@ -31,6 +31,7 @@ import com.shoppursshop.activities.payment.ccavenue.utility.RSAUtility;
 import com.shoppursshop.activities.payment.ccavenue.utility.ServiceUtility;
 import com.shoppursshop.utilities.DialogAndToast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -365,16 +366,23 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
                          finish();
                          CCAvenueWebViewActivity.this.finish();
                      }else{
-                         Intent intent = new Intent(CCAvenueWebViewActivity.this, TransactionDetailsActivity.class);
-                         intent.putExtra("responseData",dataObject.toString());
-                         intent.putExtra("shopArray",getIntent().getStringExtra("shopArray"));
-                         intent.putExtra("response", dataObject.toString());
-                         startActivity(intent);
-                         CCAvenueWebViewActivity.this.finish();
+                         placeOrder();
                      }
 
                  }else{
                      DialogAndToast.showDialog(response.getString("message"),this);
+                 }
+             }else if (apiName.equals("place_order")) {
+                 if (response.getBoolean("status")) {
+                     Intent intent = new Intent(CCAvenueWebViewActivity.this, TransactionDetailsActivity.class);
+                     intent.putExtra("responseData",dataObject.toString());
+                     intent.putExtra("shopArray",getIntent().getStringExtra("shopArray"));
+                     intent.putExtra("response", dataObject.toString());
+                     intent.putExtra("flag", getIntent().getStringExtra("flag"));
+                     startActivity(intent);
+                     CCAvenueWebViewActivity.this.finish();
+                 }else{
+                     showMyDialog(response.getString("message"));
                  }
              }
 
@@ -425,7 +433,7 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
                 dataObject.put("currencyCode", dataObject.getString("currency"));
                 dataObject.put("date", dataObject.getString("trans_date"));
                 //dataObject.put("status", dataObject.getString("order_status"));
-                dataObject.put("custCode",getIntent().getStringExtra("custCode"));
+                dataObject.put("custCode",sharedPreferences.getString(com.shoppursshop.utilities.Constants.SHOP_CODE,""));
                 //dataObject.put("cardHolderName",dataObject.getString("Card Hodler Name"));
                 dataObject.put("userName",sharedPreferences.getString(com.shoppursshop.utilities.Constants.FULL_NAME,""));
                 dataObject.put("dbName",sharedPreferences.getString(com.shoppursshop.utilities.Constants.DB_NAME,""));
@@ -443,4 +451,23 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
         }
     }
 
+    private void placeOrder(){
+        JSONArray shopArray = null;
+        try {
+            shopArray = new JSONArray(getIntent().getStringExtra("shopArray"));
+            shopArray.getJSONObject(0).put("orderNumber", dataObject.getString("orderNumber"));
+            shopArray.getJSONObject(0).put("transactionId", dataObject.getString("transactionId") );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, shopArray.toString());
+        String url=getResources().getString(R.string.url)+ com.shoppursshop.utilities.Constants.PLACE_ORDER;
+        showProgress(true);
+        jsonArrayV2ApiRequest(Request.Method.POST,url, shopArray,"place_order");
+    }
+
+    @Override
+    public void onDialogPositiveClicked(){
+        CCAvenueWebViewActivity.this.finish();
+    }
 }

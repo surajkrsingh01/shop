@@ -152,7 +152,7 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                     shopObject.put("updateBy",sharedPreferences.getString(Constants.FULL_NAME,""));
                     shopObject.put("orderStatus","pending");
                     shopObject.put("orderPaymentStatus", "pending");
-                    shopObject.put("custName", sharedPreferences.getString(Constants.FULL_NAME,""));
+                    shopObject.put("custName", sharedPreferences.getString(Constants.SHOP_NAME,""));
                     shopObject.put("custCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
                     shopObject.put("mobileNo",sharedPreferences.getString(Constants.MOBILE_NO,""));
                     shopObject.put("orderImage",sharedPreferences.getString(Constants.PHOTO,""));
@@ -175,10 +175,6 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                     productObject.put("prodCode", cartItem.getProdCode());
                     productObject.put("prodHsnCode", cartItem.getProdHsnCode());
                     productObject.put("prodId", cartItem.getProdId());
-                    if(cartItem.getIsBarCodeAvailable().equals("Y")){
-                        productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
-                        productObject.put("barcodeList",  tempbarcodeArray);
-                    }
                     productObject.put("qty", cartItem.getQty());
                     productObject.put("prodName",cartItem.getProdName());
                     productObject.put("prodUnit",cartItem.getUnit());
@@ -204,10 +200,6 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                     productObject.put("prodCode", cartItem.getProdCode());
                     productObject.put("prodHsnCode", cartItem.getProdHsnCode());
                     productObject.put("prodId", cartItem.getProdId());
-                    if(cartItem.getIsBarCodeAvailable().equals("Y")){
-                        productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
-                        productObject.put("barcodeList",  tempbarcodeArray);
-                    }
                     productObject.put("qty", cartItem.getQty());
                     productObject.put("prodName",cartItem.getProdName());
                     productObject.put("prodUnit",cartItem.getUnit());
@@ -390,9 +382,11 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
         for (MyProductItem myProductItem : myProductList) {
             total_amount = total_amount + myProductItem.getTotalAmount();
             total_quantity = total_quantity + myProductItem.getQty();
-            totCGST = totCGST + (myProductItem.getProdCgst() * myProductItem.getProdSp() * myProductItem.getQty()) /100;
-            totSGST = totSGST + (myProductItem.getProdSgst() * myProductItem.getProdSp() * myProductItem.getQty()) /100;
-            totIGST = totIGST + (myProductItem.getProdIgst() * myProductItem.getProdSp() * myProductItem.getQty()) /100;
+            float rate = ((myProductItem.getProdSp() * (myProductItem.getProdCgst()+myProductItem.getProdSgst()))/(100 +
+                    (myProductItem.getProdCgst()+myProductItem.getProdSgst())));
+            totCGST = totCGST + rate/2;
+            totSGST = totSGST + rate/2;
+            totIGST = totIGST + rate;
             if(myProductItem.getTotalAmount()>0) {
                 viewCart.setVisibility(View.VISIBLE);
                 cartSize = cartSize + 1;
@@ -400,8 +394,6 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
         }
 
         totalTax = totCGST + totSGST;
-
-        total_amount = total_amount + totalTax;
         //totDiscount = dbHelper.getTotalMrpPriceCart() - dbHelper.getTotalPriceCart();
 
         tv_total.setText("Amount " + String.valueOf(Utility.numberFormat(total_amount)));

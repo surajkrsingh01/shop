@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ShoppursProductListActivity">
+    tools:context=".activities.settings.SyncDataActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -22,6 +22,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_shoppurs_product_list" />
+    <include layout="@layout/content_sync_data" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

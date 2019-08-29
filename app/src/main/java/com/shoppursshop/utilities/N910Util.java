@@ -112,4 +112,8 @@ public class N910Util {
 		}).start();
 	}
 
+	public void printReceipt(){
+
+	}
+
 }

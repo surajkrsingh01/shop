@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.BaseActivity;
 import com.shoppursshop.activities.LoginActivity;
+import com.shoppursshop.activities.ShoppursProductListActivity;
 import com.shoppursshop.adapters.SettingsAdapter;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.interfaces.MyItemClickListener;
@@ -45,12 +46,14 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
         itemList.add("Store Categories");
         itemList.add("Store Sub Category");
         itemList.add("Add Products to Store");
+        itemList.add("Shoppurs Products");
         itemList.add("Orders to Shoppurs");
         itemList.add("Customer Orders");
         itemList.add("Store Sales");
         itemList.add("Store Offers");
         itemList.add("Payment Device");
         itemList.add("User License");
+        //itemList.add("Sync Data");
         itemList.add("Display");
         itemList.add("Logout");
         recyclerView = findViewById(R.id.recycler_view);
@@ -87,6 +90,10 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
         }else if(name.equals("Add Products to Store")){
             Intent intent = new Intent(this, MyProductListActivity.class);
             startActivity(intent);
+        }else if(name.equals("Shoppurs Products")){
+            Intent intent = new Intent(this, ShoppursProductListActivity.class);
+            intent.putExtra("flag","shoppursProducts");
+            startActivity(intent);
         }else if(name.equals("Orders to Shoppurs")){
             Intent intent = new Intent(this, MyOrdersActivity.class);
             intent.putExtra("flag","storeOrders");
@@ -111,6 +118,9 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
             startActivity(intent);
         }else if(name.equals("User License")){
             Intent intent = new Intent(this, BuyUserLicenceActivity.class);
+            startActivity(intent);
+        }else if(name.equals("Sync Data")){
+            Intent intent = new Intent(this, SyncDataActivity.class);
             startActivity(intent);
         }else if(name.equals("Display")){
             Intent intent = new Intent(this, DisplaySettingsActivity.class);
