@@ -20,56 +20,13 @@
 
         <TextView
             android:maxLines="1"
-            android:text="Orders"
+            android:text="Back"
             android:id="@+id/text_order_label"
             android:textColor="?attr/secondaryTextColor"
             android:paddingLeft="@dimen/view_horizontal_margin"
             android:paddingRight="@dimen/view_horizontal_margin"
             android:textSize="@dimen/home_list_header_text_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <View
-            android:id="@+id/view_seperator_1"
-            android:layout_width="2dp"
-            android:layout_height="20dp"
-            android:background="?attr/separatorColor"/>
-        <TextView
-            android:paddingLeft="@dimen/view_horizontal_margin"
-            android:paddingRight="@dimen/view_horizontal_margin"
-            android:id="@+id/text_products_label"
-            android:text="Products"
-            android:textColor="?attr/secondaryTextColor"
-            android:textSize="@dimen/small_text_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <View
-            android:id="@+id/view_seperator_2"
-            android:layout_width="2dp"
-            android:layout_height="20dp"
-            android:background="?attr/separatorColor"/>
-        <TextView
-            android:paddingLeft="@dimen/view_horizontal_margin"
-            android:paddingRight="@dimen/view_horizontal_margin"
-            android:id="@+id/text_right_label"
-            android:text="Customers"
-            android:textColor="?attr/secondaryTextColor"
-            android:textSize="@dimen/small_text_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <View
-            android:id="@+id/view_seperator_3"
-            android:layout_width="2dp"
-            android:layout_height="20dp"
-            android:background="?attr/separatorColor"/>
-        <TextView
-            android:paddingLeft="@dimen/view_horizontal_margin"
-            android:paddingRight="@dimen/view_horizontal_margin"
-            android:id="@+id/text_profile_label"
-            android:text="Profile"
-            android:textColor="?attr/secondaryTextColor"
-            android:textSize="@dimen/small_text_size"
+            android:clickable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -91,7 +48,7 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_below="@+id/text_desc"
-        android:layout_above="@+id/rlfooterviewcart"
+        android:layout_above="@+id/ll_container_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -106,7 +63,19 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/footer_viewcart_layout"/>
+    <LinearLayout
+        android:id="@+id/ll_container_footer"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/footer_viewcart_layout"/>
+
+        <include layout="@layout/footer_layout"/>
+
+    </LinearLayout>
+
+
 
     <ProgressBar
         android:id="@+id/progress_bar"

@@ -53,7 +53,7 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
         itemList.add("Store Offers");
         itemList.add("Payment Device");
         itemList.add("User License");
-        //itemList.add("Sync Data");
+        itemList.add("Sync Data");
         itemList.add("Display");
         itemList.add("Logout");
         recyclerView = findViewById(R.id.recycler_view);

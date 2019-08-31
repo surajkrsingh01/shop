@@ -73,114 +73,9 @@ public class OffersActivity extends NetworkBaseActivity implements MyItemTypeCli
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        initFooter(this,3);
+
         itemList = new ArrayList<>();
-        /*HomeListItem myItem = new HomeListItem();
-        myItem.setTitle("Offers");
-        myItem.setDesc("Store Offers");
-        myItem.setType(0);
-        itemList.add(myItem);*/
-
-       /* myItem = new HomeListItem();
-        myItem.setName("Samsung Stores");
-        myItem.setLocalIcon(R.drawable.icon_1);
-        myItem.setLocalImage(R.drawable.thumb_1);
-        myItem.setType(1);
-        itemList.add(myItem);
-
-        myItem = new HomeListItem();
-        myItem.setTitle("The Fashion Trends");
-        myItem.setDesc("Handmade in Italy, Now in India");
-        myItem.setCategory("Fashion");
-        myItem.setLocalImage(R.drawable.thumb_2);
-        myItem.setType(2);
-        itemList.add(myItem);
-
-        myItem = new HomeListItem();
-        myItem.setName("Grocery");
-        myItem.setTitle("Big Grocery Sale !!");
-        myItem.setLocalIcon(R.drawable.icon_1);
-        myItem.setLocalImage(R.drawable.thumb_3);
-        myItem.setType(1);
-        itemList.add(myItem);
-
-        myItem = new HomeListItem();
-        myItem.setTitle("15 December - 16 December");
-        myItem.setDesc("Festive Sales");
-        myItem.setType(0);
-        itemList.add(myItem);
-
-        myItem = new HomeListItem();
-        myItem.setTitle("Sports Store");
-        myItem.setLocalImage(R.drawable.thumb_4);
-        myItem.setType(3);
-        myItem.setWidth(MIN_WIDTH);
-        myItem.setHeight(MIN_HEIGHT);
-        itemList.add(myItem);
-
-        myItem = new HomeListItem();
-        myItem.setTitle("Books and Toys");
-        myItem.setLocalImage(R.drawable.thumb_5);
-        myItem.setType(3);
-        myItem.setWidth(MAX_WIDTH);
-        myItem.setHeight(MAX_HEIGHT);
-        itemList.add(myItem);
-
-        myItem = new HomeListItem();
-        myItem.setTitle("Top Sunglasses");
-        myItem.setLocalImage(R.drawable.thumb_6);
-        myItem.setType(3);
-        myItem.setWidth(MAX_WIDTH);
-        myItem.setHeight(MAX_HEIGHT);
-        itemList.add(myItem);
-
-        myItem = new HomeListItem();
-        myItem.setTitle("Fashion Makeups");
-        myItem.setLocalImage(R.drawable.thumb_7);
-        myItem.setType(3);
-        myItem.setWidth(MAX_WIDTH);
-        myItem.setHeight(MAX_HEIGHT);
-        itemList.add(myItem);
-
-        myItem = new HomeListItem();
-        myItem.setTitle("MotoBikes");
-        myItem.setLocalImage(R.drawable.thumb_8);
-        myItem.setType(3);
-        myItem.setWidth(MAX_WIDTH);
-        myItem.setHeight(MAX_HEIGHT);
-        itemList.add(myItem);
-
-        myItem = new HomeListItem();
-        myItem.setTitle("Swimwear and Lingerie");
-        myItem.setLocalImage(R.drawable.thumb_9);
-        myItem.setType(3);
-        myItem.setWidth(MIN_WIDTH);
-        myItem.setHeight(MIN_HEIGHT);
-        itemList.add(myItem);
-
-        myItem = new HomeListItem();
-        myItem.setTitle("Big Discount in Titan Watches");
-        myItem.setDesc("Titan Stores");
-        myItem.setCategory("Watches");
-        myItem.setLocalImage(R.drawable.thumb_11);
-        myItem.setType(4);
-        itemList.add(myItem);
-
-        myItem = new HomeListItem();
-        myItem.setTitle("10% Discount on Camera And HandyCams");
-        myItem.setDesc("Sony Stores");
-        myItem.setCategory("Camera And HandyCams");
-        myItem.setLocalImage(R.drawable.thumb_12);
-        myItem.setType(4);
-        itemList.add(myItem);
-
-        myItem = new HomeListItem();
-        myItem.setTitle("Upto 30% discount in furnitures and other products");
-        myItem.setDesc("Home Town Stores");
-        myItem.setCategory("Home Furnishing");
-        myItem.setLocalImage(R.drawable.thumb_13);
-        myItem.setType(4);
-        itemList.add(myItem);*/
-
         shopCode = "SHP1";
         rlOfferDesc = findViewById(R.id.rl_offer_desc);
         rlfooterviewcart = findViewById(R.id.rlfooterviewcart);
@@ -206,11 +101,23 @@ public class OffersActivity extends NetworkBaseActivity implements MyItemTypeCli
         myItemAdapter.setDarkTheme(isDarkTheme);
         recyclerView.setAdapter(myItemAdapter);
 
+        if(sharedPreferences.getString(Constants.SHOP_CODE,"") == "SHP1"){
+            TextView text_desc = findViewById(R.id.text_desc);
+            text_desc.setText("Shoppurs offers");
+        }
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
                 getItemList();
+            }
+        });
+
+        findViewById(R.id.text_order_label).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
 
@@ -227,8 +134,36 @@ public class OffersActivity extends NetworkBaseActivity implements MyItemTypeCli
     public void onResume() {
         super.onResume();
         if(myItemAdapter!=null) {
-            myItemAdapter.notifyDataSetChanged();
             counter = dbHelper.getCartCount();
+            if(counter > 0){
+                List<MyProductItem> cartList =  dbHelper.getShopCartProducts();
+                MyProductItem myProductItem = null;
+                for(MyProductItem item : cartList){
+                    for(Object ob : itemList){
+                        if(ob instanceof MyProductItem){
+                            if(item.getProdId() == myProductItem.getProdId()){
+                                myProductItem = (MyProductItem)ob;
+                                Log.i(TAG,"Qty Before"+myProductItem.getQty());
+                                myProductItem.setQty(item.getQty());
+                                Log.i(TAG,"Qty After"+myProductItem.getQty());
+                                break;
+                            }
+
+                        }
+                    }
+                }
+            }else{
+                MyProductItem myProductItem = null;
+                for(Object ob : itemList){
+                    if(ob instanceof MyProductItem){
+                        myProductItem = (MyProductItem)ob;
+                        Log.i(TAG,"Qty Before"+myProductItem.getQty());
+                        myProductItem.setQty(0);
+                        Log.i(TAG,"Qty After"+myProductItem.getQty());
+                    }
+                }
+            }
+            myItemAdapter.notifyDataSetChanged();
         }
         updateCartCount();
     }
@@ -372,6 +307,7 @@ public class OffersActivity extends NetworkBaseActivity implements MyItemTypeCli
                         jsonObject = dataArray.getJSONObject(i);
                         productItem = new MyProductItem();
                         productItem.setProdId(jsonObject.getInt("prodId"));
+                        productItem.setId(jsonObject.getInt("prodId"));
                         productItem.setProdCatId(jsonObject.getInt("prodCatId"));
                         productItem.setProdSubCatId(jsonObject.getInt("prodSubCatId"));
                         productItem.setProdName(jsonObject.getString("prodName"));
@@ -679,8 +615,8 @@ public class OffersActivity extends NetworkBaseActivity implements MyItemTypeCli
                 if(myProduct.getQty() == 1){
                     counter--;
                     //dbHelper.removeProductFromCart(myProduct.getProdBarCode());
-                    dbHelper.removeProductFromShopCart(myProduct.getId());
-                    dbHelper.removePriceProductFromCart(""+myProduct.getId());
+                    dbHelper.removeProductFromShopCart(myProduct.getProdId());
+                    dbHelper.removePriceProductFromCart(""+myProduct.getProdId());
                     Object ob = myProduct.getProductOffer();
                     if(ob instanceof ProductDiscountOffer){
                         ProductDiscountOffer productDiscountOffer = (ProductDiscountOffer)ob;
@@ -770,6 +706,7 @@ public class OffersActivity extends NetworkBaseActivity implements MyItemTypeCli
     public void updateCartCount(){
         totalPrice = 0;
         if(dbHelper.getCartCount()>0){
+            findViewById(R.id.linear_footer).setVisibility(View.GONE);
             rlfooterviewcart.setVisibility(View.VISIBLE);
             viewCart.setVisibility(View.VISIBLE);
             viewCart.setOnClickListener(new View.OnClickListener() {
@@ -798,7 +735,10 @@ public class OffersActivity extends NetworkBaseActivity implements MyItemTypeCli
 
             cartItemPrice.setText("Amount "+ Utility.numberFormat(totalPrice));
             cartItemCount.setText("Item "+String.valueOf(dbHelper.getCartCount()));
-        }else rlfooterviewcart.setVisibility(View.GONE);
+        }else{
+            findViewById(R.id.linear_footer).setVisibility(View.VISIBLE);
+            rlfooterviewcart.setVisibility(View.GONE);
+        }
 
     }
 
