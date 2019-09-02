@@ -302,5 +302,6 @@
     <string name="title_activity_add_user">AddUserActivity</string>
     <string name="title_activity_user_list">UserListActivity</string>
     <string name="title_activity_sync_data">SyncDataActivity</string>
+    <string name="title_activity_reset_password">ResetPasswordActivity</string>
 
 </resources>

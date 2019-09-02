@@ -96,6 +96,9 @@ public class Constants {
     public static String LOGIN="/useradmin/loginRetailer";
     public static String AUTHENTICATE="/api/user/authenticate_user";
     public static String GET_PASSWORD="/useradmin/getPassword";
+    public static String VALIDATE_OTP="/useradmin/validate_otp";
+    public static String SAVE_OTP="/useradmin/save_otp";
+    public static String RESET_PASSWORD="/useradmin/shop/reset_password";
     public static String SYNC="/api/syncdata";
     public static String SYNC_SHOP_DATA="/api/sync_shop_data";
     public static String MANAGE_REGISTRATION="/useradmin/manageRegistration";

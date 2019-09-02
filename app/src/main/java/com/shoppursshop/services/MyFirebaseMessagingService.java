@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -20,6 +21,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.MainActivity;
+import com.shoppursshop.utilities.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,7 +99,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
-       // sendRegistrationToServer(token);
+        sendRegistrationToServer(token);
     }
 
 
@@ -195,6 +197,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void sendRegistrationToServer(String token){
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.MYPREFERENCEKEY,MODE_PRIVATE);
+        if(sharedPreferences.getBoolean(Constants.IS_LOGGED_IN,false)){
+
         }
     }
 
