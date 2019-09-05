@@ -77,7 +77,8 @@ public class TransactionDetailsActivity extends NetworkBaseActivity {
             orderNumber = dataObject.getString("orderNumber");
 
             if(custCode == sharedPreferences.getString(Constants.SHOP_CODE,"")){
-                tvFooter.setText("Home");
+                tvFooter.setText("Invoice");
+                isDelivered = true;
                // rlFooter.setVisibility(View.GONE);
             }
 

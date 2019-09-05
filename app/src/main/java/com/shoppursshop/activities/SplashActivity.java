@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
+import com.shoppursshop.activities.payment.PaymentActivity;
 import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.activities.payment.mPos.MPayActivity;
@@ -60,7 +61,7 @@ public class SplashActivity extends NetworkBaseActivity {
         if (sharedPreferences.getBoolean(Constants.IS_LOGGED_IN, false)) {
             intent = new Intent(SplashActivity.this, MainActivity.class);
             intent.putExtra("flag", "wallet");
-            intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",51.00f));
+            intent.putExtra("amount", 500);
             //  intent.putExtra(AvenuesParams.ORDER_ID, orderID);
             intent.putExtra(AvenuesParams.CURRENCY, "INR");
             //  startActivityForResult(intent,1);

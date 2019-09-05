@@ -95,6 +95,7 @@ public class MyItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             super(itemView);
             textHeader=itemView.findViewById(R.id.text_date_range);
             textDesc=itemView.findViewById(R.id.text_desc);
+
         }
 
         @Override
@@ -212,6 +213,7 @@ public class MyItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         @Override
         public void onClick(View view) {
+            myItemTypeClickListener.onItemClicked(getAdapterPosition(),4);
         }
 
         @Override
@@ -227,6 +229,7 @@ public class MyItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 case MotionEvent.ACTION_UP:
                     // Log.i("Adapter","onPressUp");
                     zoomAnimation(false,rootView);
+                    myItemTypeClickListener.onItemClicked(getAdapterPosition(),4);
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     Log.i("Adapter","onPressCancel");
@@ -296,13 +299,13 @@ public class MyItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             if(view == imageView){
                 myImageClickListener.onImageClicked(getAdapterPosition(),0,imageView);
             }else if(view==text_offer){
-                myItemTypeClickListener.onItemClicked(getAdapterPosition(),1);
+                myItemTypeClickListener.onItemClicked(getAdapterPosition(),3);
             }else if(view == btnAddCart){
                 myItemTypeClickListener.onItemClicked(getAdapterPosition(),2);
             }else if(view == image_plus){
-                myItemTypeClickListener.onItemClicked(getAdapterPosition(),3);
+                myItemTypeClickListener.onItemClicked(getAdapterPosition(),2);
             }else if(view == image_minus){
-                myItemTypeClickListener.onItemClicked(getAdapterPosition(),4);
+                myItemTypeClickListener.onItemClicked(getAdapterPosition(),1);
             }else if(view == rootView){
                 MyProductItem item = (MyProductItem) itemList.get(getAdapterPosition());
                 Intent intent = new Intent(context, ProductDetailActivity.class);
@@ -418,6 +421,16 @@ public class MyItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
               MyHomeHeaderViewHolder myViewHolder = (MyHomeHeaderViewHolder)holder;
               myViewHolder.textHeader.setText(item.getTitle());
               myViewHolder.textDesc.setText(item.getDesc());
+
+              if(position == 0){
+                  myViewHolder.textHeader.setVisibility(View.GONE);
+                  myViewHolder.textDesc.setVisibility(View.GONE);
+                  myViewHolder.itemView.setVisibility(View.GONE);
+              }else{
+                  myViewHolder.textHeader.setVisibility(View.VISIBLE);
+                  myViewHolder.textDesc.setVisibility(View.VISIBLE);
+                  myViewHolder.itemView.setVisibility(View.VISIBLE);
+              }
 
               StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams)myViewHolder.itemView.getLayoutParams();
               layoutParams.setFullSpan(true);

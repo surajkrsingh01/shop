@@ -1,9 +1,26 @@
 package com.shoppursshop.models;
 
 public class SubCategory {
-    private String id,name,image;
+    private String id,catId,name,image;
     private int localImage;
     private float width,height;
+    private boolean isSelected;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public String getCatId() {
+        return catId;
+    }
+
+    public void setCatId(String catId) {
+        this.catId = catId;
+    }
 
     public String getId() {
         return id;

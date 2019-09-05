@@ -58,6 +58,7 @@ import com.newland.mtype.module.common.printer.PrintContext;
 import com.newland.mtype.module.common.printer.Printer;
 import com.newland.mtype.module.common.printer.PrinterResult;
 import com.newland.mtype.module.common.printer.PrinterStatus;
+import com.newland.mtype.module.common.printer.ThrowType;
 import com.newland.mtype.module.common.printer.WordStockType;
 import com.pnsol.sdk.interfaces.DeviceType;
 import com.pnsol.sdk.payment.PaymentInitialization;
@@ -119,14 +120,16 @@ public class InvoiceActivity extends NetworkBaseActivity {
     private TextView tvCouponOfferName;
     private int actionType;
 
-    private boolean customerCopy;
+    private boolean customerCopy = true;
     private TransactionStatusResponse txnResponse;
 
     private Printer printer;
     private N910Util n910Util;
     private File pdfFile;
     private List<Bitmap> bitmaps;
-    private String transId;
+    private String transId,invoiceNo;
+
+    private float totalAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,15 +206,16 @@ public class InvoiceActivity extends NetworkBaseActivity {
             @Override
             public void onClick(View v) {
                 if(txnResponse == null){
-                    actionType = PRINT;
-                    createPdf();
-                    //paySwiffPrint();
+                   // actionType = PRINT;
+                    //createPdf();
+                    paySwiffPrint();
                 }else{
-                    PaymentInitialization initialization=new PaymentInitialization(
+                    paySwiffPrint();
+                   /* PaymentInitialization initialization=new PaymentInitialization(
                             InvoiceActivity.this);
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.payswiff);
                     initialization.initiatePrintReceipt(printHandler, DeviceType.N910,txnResponse.getReferenceNumber(),
-                            null,customerCopy);
+                            null,customerCopy);*/
                 }
             }
         });
@@ -260,6 +264,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     tvDate.setText(jsonObject.getString("invDate"));
                     tvCustomerName.setText(jsonObject.getString("invCustName"));
                     tvInvoiceNo.setText("Invoice No: "+jsonObject.getString("invNo"));
+                    invoiceNo = jsonObject.getString("invNo");
                     float subTotal = Float.parseFloat(""+(jsonObject.getDouble("invTotAmount") - jsonObject.getDouble("invTotTaxAmount")));
                     tvSubTotAmt.setText(Utility.numberFormat(subTotal));
                     tvGrossTotAmt.setText(Utility.numberFormat(subTotal));
@@ -275,10 +280,13 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     tvPaymentMethod.setText(jsonObject.getString("paymentMethod"));
                     tvPaymentBrand.setText(jsonObject.getString("paymentBrand"));
                     tvTransId.setText(jsonObject.getString("invTransId"));
+                    transId = jsonObject.getString("invTransId");
                     tvPaymentAmount.setText(Utility.numberFormat(netPayable));
                     tvTotSavings.setText("Total Savings(Rupees) "+Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
-                    tvDiscount.setText(Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
+                    tvDiscount.setText("-"+Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
 
+                   // totDiscount = (float) jsonObject.getDouble("invTotDisAmount");
+                   // tvDiscount.setText("-"+Utility.numberFormat(totDiscount));
                     int couponId = jsonObject.getInt("invCoupenId");
                     if(couponId == 0){
                         rlCouponLayout.setVisibility(View.GONE);
@@ -299,9 +307,17 @@ public class InvoiceActivity extends NetworkBaseActivity {
                         item.setItemName(jsonObject.getString("invDProdName"));
                         item.setHsn(jsonObject.getString("invDHsnCode"));
                         item.setQty(jsonObject.getInt("invDQty"));
-                        item.setGst(jsonObject.getInt("invDIGST"));
+                        item.setCgst(Float.parseFloat(jsonObject.getString("invDCGST")));
+                        item.setSgst(Float.parseFloat(jsonObject.getString("invDSGST")));
+                        item.setIgst(Float.parseFloat(jsonObject.getString("invDIGST")));
                         item.setMrp((float) jsonObject.getDouble("invDMrp"));
-                        item.setRate(Float.parseFloat(jsonObject.getString("invDSp")));
+
+                        float rate = Float.parseFloat(jsonObject.getString("invDSp"));
+                        float cgst = Float.parseFloat(jsonObject.getString("invDCGST"));
+                        float sgst = Float.parseFloat(jsonObject.getString("invDSGST"));
+                        rate = rate - ((rate * (cgst+sgst))/(100 + (cgst+sgst)));
+                        item.setRate(rate);
+                        totalAmount = totalAmount + (rate * item.getQty());
                         item.setFreeItems(jsonObject.getInt("invDFreeItems"));
                         item.setOfferId(jsonObject.getString("invdOfferId"));
                         item.setOfferType(jsonObject.getString("invdOfferType"));
@@ -312,6 +328,8 @@ public class InvoiceActivity extends NetworkBaseActivity {
                         totQty = totQty + item.getQty();
                     }
 
+                    tvSubTotAmt.setText(Utility.numberFormat(totalAmount));
+                    tvGrossTotAmt.setText(Utility.numberFormat(totalAmount));
                     tvTotQty.setText(""+totQty);
                     itemAdapter.notifyDataSetChanged();
 
@@ -343,8 +361,8 @@ public class InvoiceActivity extends NetworkBaseActivity {
     }
 
     public String getFile() {
-        String date=new SimpleDateFormat("yyyy_MM_dd").format(new Date());
-        String time=new SimpleDateFormat("HH:mm:ss").format(new Date());
+       // String date=new SimpleDateFormat("yyyy_MM_dd").format(new Date());
+       // String time=new SimpleDateFormat("HH:mm:ss").format(new Date());
 
         String root="";
         if(BaseImageActivity.isExternalStorageAvailable()){
@@ -352,8 +370,8 @@ public class InvoiceActivity extends NetworkBaseActivity {
         }
         File myDir = new File(root+"/Shoppurs/Shoppurs documents");
         myDir.mkdirs();
-        String fname="";
-        fname = date+time+".pdf";
+        String fname="Invoice"+invoiceNo+".pdf";
+       // fname = date+time+".pdf";
 
         String imagePath=root+"/Shoppurs/Shoppurs documents/"+fname;
        // File file = new File (myDir, fname);
@@ -366,6 +384,20 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
         if(Utility.verifyStorageOnlyPermissions(this)){
             String fileName = getFile();
+
+            File file = new File(fileName);
+            if(file.exists()){
+                Log.i(TAG,"pdf file is already exist.");
+                if(actionType == SHARE){
+                    share(fileName);
+                }else if(actionType == PRINT){
+                    print(fileName);
+                }if(actionType == DOWNLOAD){
+                    download(fileName);
+                }
+                //DialogAndToast.showToast("Pdf downloaded successfully. The location is "+fileName,this);
+                return;
+            }
 
             /***
              * Variables for further use....
@@ -476,7 +508,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
                 document.add(new Chunk(lineSeparator));
 
-                PdfPTable pdfPTable = new PdfPTable(6);
+                PdfPTable pdfPTable = new PdfPTable(8);
                 pdfPTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 pdfPTable.setWidthPercentage(100);
 
@@ -546,12 +578,33 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 amtLabelCell.addElement(amtLabelParagraph);
                 pdfPTable.addCell(amtLabelCell);
 
+                Chunk sgstRateLabelChunk = new Chunk("SGST", descFont);
+                PdfPCell sgstRateLabelCell = new PdfPCell();
+                Paragraph sgstRateLabelParagraph = new Paragraph(sgstRateLabelChunk);
+                sgstRateLabelParagraph.setAlignment(Element.ALIGN_RIGHT);
+                sgstRateLabelCell.setBorder(Rectangle.NO_BORDER);
+                sgstRateLabelCell.setUseAscender(true);
+                sgstRateLabelCell.setVerticalAlignment(Element.ALIGN_TOP);
+                sgstRateLabelCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                sgstRateLabelCell.addElement(sgstRateLabelParagraph);
+                pdfPTable.addCell(sgstRateLabelCell);
+
+                Chunk cgstRateLabelChunk = new Chunk("CGST", descFont);
+                PdfPCell cgstRateLabelCell = new PdfPCell();
+                Paragraph cgstRateLabelParagraph = new Paragraph(cgstRateLabelChunk);
+                sgstRateLabelParagraph.setAlignment(Element.ALIGN_RIGHT);
+                cgstRateLabelCell.setBorder(Rectangle.NO_BORDER);
+                cgstRateLabelCell.setUseAscender(true);
+                cgstRateLabelCell.setVerticalAlignment(Element.ALIGN_TOP);
+                cgstRateLabelCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                cgstRateLabelCell.addElement(cgstRateLabelParagraph);
+                pdfPTable.addCell(cgstRateLabelCell);
 
                 document.add(pdfPTable);
 
                 document.add(new Chunk(lineSeparator));
 
-                PdfPTable itemPdfPTable = new PdfPTable(6);
+                PdfPTable itemPdfPTable = new PdfPTable(8);
                 itemPdfPTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 itemPdfPTable.setWidthPercentage(100);
 
@@ -573,7 +626,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     itemNameCell.setVerticalAlignment(Element.ALIGN_TOP);
                     itemNameCell.setBorder(Rectangle.NO_BORDER);
                     itemNameCell.addElement(itemNameChunk);
-                    itemNameCell.setColspan(6);
+                    itemNameCell.setColspan(8);
                     itemPdfPTable.addCell(itemNameCell);
 
                     PdfPCell blankCell = new PdfPCell();
@@ -647,6 +700,28 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     amtCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                     amtCell.addElement(amtParagraph);
                     itemPdfPTable.addCell(amtCell);
+
+                    Chunk sgstRateChunk = new Chunk(String.format("%.02f",item.getSgst())+"%", descFont);
+                    PdfPCell sgstRateCell = new PdfPCell();
+                    Paragraph sgstRateParagraph = new Paragraph(sgstRateChunk);
+                    sgstRateParagraph.setAlignment(Element.ALIGN_RIGHT);
+                    sgstRateCell.setBorder(Rectangle.NO_BORDER);
+                    sgstRateCell.setUseAscender(true);
+                    sgstRateCell.setVerticalAlignment(Element.ALIGN_TOP);
+                    sgstRateCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                    sgstRateCell.addElement(sgstRateParagraph);
+                    itemPdfPTable.addCell(sgstRateCell);
+
+                    Chunk cgstRateChunk = new Chunk(String.format("%.02f",item.getCgst())+"%", descFont);
+                    PdfPCell cgstRateCell = new PdfPCell();
+                    Paragraph cgstRateParagraph = new Paragraph(cgstRateChunk);
+                    cgstRateParagraph.setAlignment(Element.ALIGN_RIGHT);
+                    cgstRateCell.setBorder(Rectangle.NO_BORDER);
+                    cgstRateCell.setUseAscender(true);
+                    cgstRateCell.setVerticalAlignment(Element.ALIGN_TOP);
+                    cgstRateCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                    cgstRateCell.addElement(cgstRateParagraph);
+                    itemPdfPTable.addCell(cgstRateCell);
                 }
 
                 document.add(itemPdfPTable);
@@ -819,6 +894,53 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
                 document.add(new Chunk(lineSeparator));
 
+
+
+               /* Chunk glueDis = new Chunk(new VerticalPositionMark());
+                Chunk totDisLabelChunk = new Chunk("Total Discount", descFont);
+                Chunk totDisChunk = new Chunk(tvDiscount.getText().toString(), descFont);
+                Paragraph totDisParagraph = new Paragraph(totDisLabelChunk);
+                totDisParagraph.add(new Chunk(glueDis));
+                totDisParagraph.add(totDisChunk);
+                document.add(totDisParagraph);*/
+
+                PdfPTable totDiscountPdfPTable = new PdfPTable(3);
+                totDiscountPdfPTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                totDiscountPdfPTable.setWidthPercentage(100);
+
+                PdfPCell totDiscountBlankCell = new PdfPCell();
+                totDiscountBlankCell.setBorder(Rectangle.NO_BORDER);
+                totDiscountBlankCell.setVerticalAlignment(Element.ALIGN_TOP);
+                totDiscountBlankCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                totDiscountBlankCell.addElement(new Chunk());
+                totDiscountPdfPTable.addCell(totDiscountBlankCell);
+
+                Chunk totDiscountLabelChunk = new Chunk("Total Discount", descFont);
+                PdfPCell totDiscountLabelCell = new PdfPCell();
+                Paragraph totDiscountLabelParagraph = new Paragraph(totDiscountLabelChunk);
+                totDiscountLabelParagraph.setAlignment(Element.ALIGN_RIGHT);
+                totDiscountLabelCell.setBorder(Rectangle.NO_BORDER);
+                totDiscountLabelCell.setUseAscender(true);
+                totDiscountLabelCell.setVerticalAlignment(Element.ALIGN_TOP);
+                totDiscountLabelCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                totDiscountLabelCell.addElement(totDiscountLabelParagraph);
+                totDiscountPdfPTable.addCell(totDiscountLabelCell);
+
+                Chunk totDiscountChunk = new Chunk(tvDiscount.getText().toString(), descFont);
+                PdfPCell totDiscountCell = new PdfPCell();
+                Paragraph totDiscountParagraph = new Paragraph(totDiscountChunk);
+                totDiscountParagraph.setAlignment(Element.ALIGN_RIGHT);
+                totDiscountCell.setBorder(Rectangle.NO_BORDER);
+                totDiscountCell.setUseAscender(true);
+                totDiscountCell.setVerticalAlignment(Element.ALIGN_TOP);
+                totDiscountCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                totDiscountCell.addElement(totDiscountParagraph);
+                totDiscountPdfPTable.addCell(totDiscountCell);
+
+                document.add(totDiscountPdfPTable);
+
+                document.add(new Chunk(lineSeparator));
+
                 PdfPTable netPayablePdfPTable = new PdfPTable(3);
                 netPayablePdfPTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 netPayablePdfPTable.setWidthPercentage(100);
@@ -853,16 +975,6 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 netPayablePdfPTable.addCell(netPayableCell);
 
                 document.add(netPayablePdfPTable);
-
-                document.add(new Chunk(lineSeparator));
-
-                Chunk glueDis = new Chunk(new VerticalPositionMark());
-                Chunk totDisLabelChunk = new Chunk("Total Discount", descFont);
-                Chunk totDisChunk = new Chunk(tvDiscount.getText().toString(), descFont);
-                Paragraph totDisParagraph = new Paragraph(totDisLabelChunk);
-                totDisParagraph.add(new Chunk(glueDis));
-                totDisParagraph.add(totDisChunk);
-                document.add(totDisParagraph);
 
                 document.add(new Chunk(lineSeparator));
 
@@ -978,7 +1090,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 /*POSReceipt posReceipts = (POSReceipt) msg.obj;*/
                 Toast.makeText(InvoiceActivity.this, "Success",
                         Toast.LENGTH_LONG).show();
-                if(!customerCopy) {
+                if(customerCopy) {
                     showDialogBox();
                 }
                 else {
@@ -1001,13 +1113,10 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
         final POSReceipt vo = (POSReceipt) getIntent()
                 .getSerializableExtra("vo");
-        final PaymentInitialization initialization = new PaymentInitialization(
-                InvoiceActivity.this);
-        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.payswiff);
         AlertDialog.Builder dialog = new AlertDialog.Builder(InvoiceActivity.this);
         // dialog.setCancelable(false);
-        dialog.setTitle("Print Customer Copy");
-        dialog.setMessage("Do you want to Print Customer Copy?");
+        dialog.setTitle("Print Merchant Copy");
+        dialog.setMessage("Do you want to Print Merchant Copy?");
         dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
@@ -1017,8 +1126,8 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 meMap.put("Color2","Blue");
                 meMap.put("Color3","Green");
                 meMap.put("Color4","White");
-                customerCopy=true;
-                initialization.initiatePrintReceipt(printHandler, DeviceType.N910,txnResponse.getReferenceNumber(),bitmap,customerCopy);
+                customerCopy=false;
+                paySwiffPrint();
 
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -1070,9 +1179,13 @@ public class InvoiceActivity extends NetworkBaseActivity {
             //handler.sendMessage(Message.obtain(handler, ERROR_MESSAGE,printer.getStatus().toString()));
         }else{
             try {
-                printer.setWordStock(WordStockType.PIX_16);
+                //printer.setWordStock(WordStockType.PIX_16);
+                //printer.setFontType(LiteralType.WESTERN, FontSettingScope.WIDTH, FontType.NORMAL);
+                printer.setWordStock(WordStockType.PIX_16);// font system
+                printer.setFontType(LiteralType.WESTERN, FontSettingScope.HEIGHT, FontType.NORMAL);
                 printer.setFontType(LiteralType.WESTERN, FontSettingScope.WIDTH, FontType.NORMAL);
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test);
+
+                //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test);
                 /**Print Logo*/
               /*  if (bitmap != null)
                     printer.print(0, bitmap, 30, TimeUnit.SECONDS);
@@ -1097,7 +1210,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 printData("RAM");*/
 
 
-                byte[] pdfByteArray = getByteArray(pdfFile);
+                //byte[] pdfByteArray = getByteArray(pdfFile);
               /*  Log.i(TAG,"len "+pdfByteArray.length);
                 Bitmap bitmapPdf = BitmapFactory.decodeByteArray(pdfByteArray, 0, pdfByteArray.length);
 
@@ -1125,6 +1238,132 @@ public class InvoiceActivity extends NetworkBaseActivity {
                    // printer.print(0, bitmap1, 30, TimeUnit.SECONDS);
             //    }
 
+                //setFontSize(12);
+                StringBuffer scriptBuffer = new StringBuffer();
+                String shopName = sharedPreferences.getString(Constants.SHOP_NAME,"");
+                shopName = shopName.toUpperCase();
+                scriptBuffer.append("*text c " + shopName + "\n");
+                scriptBuffer.append("*text c " + sharedPreferences.getString(Constants.ADDRESS,"") + "\n");
+                printer.printByScript(PrintContext.defaultContext(), scriptBuffer.toString().getBytes("GBK"), 60L, TimeUnit.SECONDS);
+                scriptBuffer = new StringBuffer();
+                scriptBuffer.append("!hz l\n !asc l\n");
+                scriptBuffer.append("!yspace 6\n");
+                scriptBuffer.append("!hz n\n !asc n\n");
+                scriptBuffer.append("!yspace 1\n");
+                scriptBuffer.append("*text c Ph: " + sharedPreferences.getString(Constants.MOBILE_NO,"") + "\n");
+                scriptBuffer.append("*text c Email: " + sharedPreferences.getString(Constants.EMAIL,"") + "\n");
+                scriptBuffer.append("*text c GSTIN" + sharedPreferences.getString(Constants.GST_NO,"") + "\n");
+                scriptBuffer.append("*text c Tax Invoice" + "\n");
+                printer.printByScript(PrintContext.defaultContext(), scriptBuffer.toString().getBytes("GBK"), 60L, TimeUnit.SECONDS);
+                scriptBuffer = new StringBuffer();
+                scriptBuffer.append("*line\n");
+                scriptBuffer.append("*text c " + tvInvoiceNo.getText().toString() + "\n");
+                scriptBuffer.append("*text l " + this.getfinalString(tvDate.getText().toString(),
+                        tvCustomerName.getText().toString(), 32) + "\n");
+                scriptBuffer.append("*line\n");
+                printer.printByScript(PrintContext.defaultContext(), scriptBuffer.toString().getBytes("GBK"), 60L, TimeUnit.SECONDS);
+                scriptBuffer = new StringBuffer();
+
+               // setFontSize(4);
+                scriptBuffer.append("*text l " + this.getfinalString("Item Name",
+                        "   HSN   Qty   Mrp   Rate   Amt   SGST   CGST", 32) + "\n");
+
+                scriptBuffer.append("*line\n");
+
+                for(InvoiceItem item : itemList){
+                    String name = item.getItemName();
+                    if(item.getFreeItems() > 0){
+                        if(item.getOfferType().equals("free")){
+                            if(item.getFreeItems() == 1){
+                                name = item.getItemName()+" ("+item.getFreeItems()+" free item)";
+                            }else{
+                                name = item.getItemName()+" ("+item.getFreeItems()+" free items)";
+                            }
+
+                        }
+                    }
+
+                    scriptBuffer.append("*text l " + this.getfinalString(name,
+                            "", 32) + "\n");
+
+                    String qty = "";
+                    if(item.getUnit() == null || item.getUnit().toLowerCase().equals("null") || item.getUnit().equals("")){
+                        qty = ""+item.getQty();
+                    }else{
+                        String[] unitArray = item.getUnit().split(" ");
+                        float totalUnit = Float.parseFloat(unitArray[0]) * item.getQty();
+                        qty = String.format("%.00f",totalUnit)+" "+unitArray[1];
+                    }
+
+                    float amt = item.getQty() * item.getRate();
+
+                    scriptBuffer.append("*text l " + this.getfinalString("         ",
+                            "   "+item.getHsn()+"   "+qty+"   "+Utility.numberFormat(item.getMrp())+"   "+
+                                    Utility.numberFormat(item.getRate())+"   "
+                            +Utility.numberFormat(amt)+"   "+String.format("%.02f",item.getSgst())+"%"+"   "+
+                                    String.format("%.02f",item.getCgst())+"%", 32) + "\n");
+                }
+                //setFontSize(12);
+                scriptBuffer.append("*line\n");
+                scriptBuffer.append("*text l " + this.getfinalString("Total Qty "+tvTotQty.getText().toString(),
+                        "Total Amount "+tvSubTotAmt.getText().toString(), 32) + "\n");
+                scriptBuffer.append("*line\n");
+                scriptBuffer.append("*text l " + this.getfinalString("Gross Total",
+                        tvGrossTotAmt.getText().toString(), 32) + "\n");
+                scriptBuffer.append("*text l " + this.getfinalString("+SGST",
+                        tvTotSgst.getText().toString(), 32) + "\n");
+                scriptBuffer.append("*text l " + this.getfinalString("+CGST",
+                        tvTotCgst.getText().toString(), 32) + "\n");
+                scriptBuffer.append("*text l " + this.getfinalString("Short/Excess(+/-)",
+                        tvShortExcess.getText().toString(), 32) + "\n");
+                scriptBuffer.append("*line\n");
+                scriptBuffer.append("*text l " + this.getfinalString("Total Discount",
+                        tvDiscount.getText().toString(), 32) + "\n");
+                scriptBuffer.append("*line\n");
+                scriptBuffer.append("*text l " + this.getfinalString("Net Payable(Rupees)",
+                        tvNetPayableAmt.getText().toString(), 32) + "\n");
+                scriptBuffer.append("*line\n");
+                scriptBuffer.append("*text l " + this.getfinalString(tvNetPayableWords.getText().toString(),
+                        "", 32) + "\n");
+                scriptBuffer.append("*line\n");
+                scriptBuffer.append("*text l " + this.getfinalString("Payment Method",
+                        tvPaymentMethod.getText().toString(), 32) + "\n");
+                scriptBuffer.append("*text l " + this.getfinalString("Brand",
+                        tvPaymentBrand.getText().toString(), 32) + "\n");
+                scriptBuffer.append("*text l " + this.getfinalString("Transaction id",
+                        tvTransId.getText().toString(), 32) + "\n");
+                scriptBuffer.append("*text l " + this.getfinalString("Amount",
+                        tvNetPayableAmt.getText().toString(), 32) + "\n");
+
+                scriptBuffer.append("*text c " + "Total Savings(Rupees) "+tvDiscount.getText().toString() + "\n");
+                scriptBuffer.append("*text c HAVE A NICE DAY " + "\n");
+                scriptBuffer.append("*text c Please take care of your belongings." + "\n");
+                scriptBuffer.append("!hz l\n !asc l\n");
+                scriptBuffer.append("!yspace 6\n");
+                scriptBuffer.append("!hz n\n !asc n\n");
+                scriptBuffer.append("!yspace 1\n");
+                scriptBuffer.append("*text c Powered by Shoppurs\n");
+                scriptBuffer.append("*text l                       \n");
+                scriptBuffer.append("*text l                       \n");
+                printer.printByScript(PrintContext.defaultContext(), scriptBuffer.toString().getBytes("GBK"), 60L, TimeUnit.SECONDS);
+                this.printer.paperThrow(ThrowType.BY_LINE, 1);
+
+                if(customerCopy){
+                    if(!transId.contains("trans")){
+                        defaultPayswiffPrint();
+                    }else{
+                        showDialogBox();
+                    }
+                }else{
+                    if(!transId.contains("trans")){
+                        final PaymentInitialization initialization = new PaymentInitialization(
+                                InvoiceActivity.this);
+                        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+                        initialization.initiatePrintReceipt(printHandler, DeviceType.N910,txnResponse.getReferenceNumber(),bitmap,customerCopy);
+                    }
+
+                }
+
                 Toast.makeText(this, "SUCCESS", Toast.LENGTH_LONG).show();
                 n910Util.disconnect();
 
@@ -1134,6 +1373,14 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
             }
         }
+    }
+
+    private void defaultPayswiffPrint(){
+        PaymentInitialization initialization=new PaymentInitialization(
+                InvoiceActivity.this);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+        initialization.initiatePrintReceipt(printHandler, DeviceType.N910,txnResponse.getReferenceNumber(),
+                null,customerCopy);
     }
 
     private void printData(String data) {
@@ -1178,7 +1425,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
         }
     }
 
-    private byte[] getByteArray(File file){
+    private byte[] getFileByteArray(File file){
         FileInputStream fis = null;
         byte[] bytes = null;
         try {
@@ -1205,6 +1452,26 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
 
         return bytes;
+    }
+
+    private String getfinalString(String string, String string2, int strlength) {
+        int len1 = string.length();
+        int len2 = string2.length();
+        StringBuffer sb = new StringBuffer();
+        sb.append(string);
+        if (len1 + len2 < strlength) {
+            int space = strlength - (len1 + len2);
+
+            for(int i = 0; i < space; ++i) {
+                sb.append(" ");
+            }
+
+            sb.append(string2);
+        } else {
+            sb.append(string2);
+        }
+
+        return sb.toString();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

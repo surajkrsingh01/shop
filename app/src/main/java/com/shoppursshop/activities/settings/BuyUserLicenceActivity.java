@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.payment.PaymentActivity;
 import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.adapters.MySubscriptionAdapter;
@@ -108,6 +109,17 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
         recyclerView.setAdapter(paymentSchemeAdapter);
 
         userLicenseList = new ArrayList<>();
+       /* UserLicense userLicense = new UserLicense();
+        userLicense.setLicenseType("Standard");
+        userLicense.setPurchaseDate("2019-08-26 11:36:30");
+        userLicense.setRenewdDate("2019-09-26 11:36:30");
+        userLicense.setExpiryDate("2019-09-26 11:36:30");
+        userLicense.setNumOfUsers(2);
+        userLicense.setAmount(500);
+        userLicense.setScheme("Monthly");
+        userLicense.setStatus("Active");
+        userLicense.setPaymentStatus("Paid");
+        userLicenseList.add(userLicense);*/
         recyclerViewUserLicense = findViewById(R.id.recycler_mysubscription);
         recyclerViewUserLicense.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager1=new LinearLayoutManager(this);
@@ -218,7 +230,7 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
     }
 
     private void buyUserLicense(){
-        Intent intent = new Intent(BuyUserLicenceActivity.this, CCAvenueWebViewActivity.class);
+        Intent intent = new Intent(BuyUserLicenceActivity.this, PaymentActivity.class);
         intent.putExtra("flag", "wallet");
         intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",totalAmount));
         intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);

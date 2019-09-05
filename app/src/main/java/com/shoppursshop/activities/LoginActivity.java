@@ -19,6 +19,7 @@ import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.models.Coupon;
+import com.shoppursshop.models.MyCustomer;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MySimpleItem;
 import com.shoppursshop.models.ProductColor;
@@ -182,6 +183,7 @@ public class LoginActivity extends NetworkBaseActivity{
     private void syncData(){
         Map<String,String> params=new HashMap<>();
         params.put("id",sharedPreferences.getString(Constants.USER_ID,""));
+        params.put("syncedDate",sharedPreferences.getString(Constants.SYNCED_DATE,"1900-01-01 00:00:00"));
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
@@ -238,7 +240,6 @@ public class LoginActivity extends NetworkBaseActivity{
                     }else{
                         editor.putBoolean(Constants.IS_DELIVERY_AVAILABLE,false);
                     }
-
                     editor.putInt(Constants.MIN_DELIVERY_AMOUNT,dataObject.getInt("minDeliveryAmount"));
                     editor.putInt(Constants.DELIVERY_EST_TIME,dataObject.getInt("minDeliverytime"));
                     editor.putInt(Constants.MIN_DELIVERY_DISTANCE,dataObject.getInt("minDeliverydistance"));
@@ -265,10 +266,12 @@ public class LoginActivity extends NetworkBaseActivity{
                     JSONArray comboArray = dataObject.getJSONArray("comboOfferList");
                     JSONArray priceArray = dataObject.getJSONArray("priceOfferList");
                     JSONArray couponArray = dataObject.getJSONArray("couponOfferList");
+                    JSONArray customerArray = dataObject.getJSONArray("customerList");
                     JSONArray tempArray = null;
                     JSONObject jsonObject =null,tempObject = null;
                     MySimpleItem item = null;
                     MyProductItem productItem = null;
+                    MyCustomer myCustomer = null;
                     ProductComboOffer productComboOffer = null;
                     ProductComboDetails productComboDetails = null;
                     ProductDiscountOffer productDiscountOffer = null;
@@ -478,7 +481,39 @@ public class LoginActivity extends NetworkBaseActivity{
                         dbHelper.addCouponOffer(coupon, Utility.getTimeStamp(),Utility.getTimeStamp());
                     }
 
+                    len = customerArray.length();
+                    dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
+                    for (int i = 0; i < len; i++) {
+                        dataObject = customerArray.getJSONObject(i);
+                        myCustomer = new MyCustomer();
+                        myCustomer.setId(dataObject.getString("id"));
+                        myCustomer.setCode(dataObject.getString("code"));
+                        myCustomer.setName(dataObject.getString("name"));
+                        myCustomer.setMobile(dataObject.getString("mobileNo"));
+                        myCustomer.setEmail(dataObject.getString("email"));
+                        myCustomer.setAddress(dataObject.getString("address"));
+                        myCustomer.setCountry(dataObject.getString("country"));
+                        myCustomer.setLocality(dataObject.getString("locality"));
+                        myCustomer.setState(dataObject.getString("state"));
+                        myCustomer.setCity(dataObject.getString("city"));
+                        myCustomer.setLatitude(dataObject.getString("latitude"));
+                        myCustomer.setLongitude(dataObject.getString("longitude"));
+                        myCustomer.setImage(dataObject.getString("photo"));
+                        myCustomer.setIsFav(dataObject.getString("isFav"));
+                        myCustomer.setRatings((float)dataObject.getDouble("ratings"));
+                        myCustomer.setStatus(dataObject.getString("isActive"));
+                        myCustomer.setCustUserCreateStatus(dataObject.getString("userCreateStatus"));
+                        myCustomer.setLocalImage(R.drawable.author_1);
+                        if(myCustomer.getIsFav().equals("Y")){
+                        }else{
+                            myCustomer.setIsFav("N");
+                        }
+                        dbHelper.addCustomerInfo(myCustomer,Utility.getTimeStamp(),Utility.getTimeStamp());
+                    }
+
                     editor.putBoolean(Constants.IS_LOGGED_IN,true);
+                    editor.commit();
+                    editor.putString(Constants.SYNCED_DATE,Utility.getTimeStamp("yyyy-MM-dd HH:mm:ss"));
                     editor.commit();
                     moveToActivities();
 

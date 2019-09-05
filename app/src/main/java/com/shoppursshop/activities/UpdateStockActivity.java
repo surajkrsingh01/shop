@@ -128,11 +128,7 @@ public class UpdateStockActivity extends NetworkBaseActivity implements MyItemCl
             if (apiName.equals("updateStock")) {
                 if (response.getBoolean("status")) {
                     MyProductItem item = (MyProductItem) itemList.get(position);
-                  if(type == 1){
-                      dbHelper.setQoh(item.getProdId(),item.getQty());
-                  }else{
-                      dbHelper.setQoh(item.getProdId(),-item.getQty());
-                  }
+                    dbHelper.updateQoh(item.getProdId(),item.getProdQoh());
                     myItemAdapter.notifyItemChanged(position);
                 }
             }
@@ -188,7 +184,7 @@ public class UpdateStockActivity extends NetworkBaseActivity implements MyItemCl
             updateStock(item.getProdQoh(),item.getProdId());
         }else if(type == 2){
             // minus to stock
-            if(item.getProdQoh() > 0){
+            if(item.getQty() > 0){
                 item.setQty(item.getQty() - 1);
                 item.setProdQoh(item.getProdQoh() - 1);
                 updateStock(item.getProdQoh(),item.getProdId());

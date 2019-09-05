@@ -59,7 +59,7 @@ public class UpdateStockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView textName,textMrp,textSp,textOffPer,textCounter;
+        private TextView textName,textMrp,textSp,textOffPer,textCounter,textStock;
         private ImageView imageView,imageViewMinus,imageViewAdd;
         private RelativeLayout relativeLayoutUnit;
         private Spinner spinnerUnit;
@@ -73,6 +73,7 @@ public class UpdateStockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             textSp=itemView.findViewById(R.id.text_sp);
             textOffPer=itemView.findViewById(R.id.text_off_percentage);
             textCounter=itemView.findViewById(R.id.tv_counter);
+            textStock=itemView.findViewById(R.id.text_stock);
             imageViewMinus=itemView.findViewById(R.id.image_minus);
             imageViewAdd=itemView.findViewById(R.id.image_add);
             imageView=itemView.findViewById(R.id.image_view);
@@ -141,7 +142,14 @@ public class UpdateStockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
             myViewHolder.textSp.setText(Utility.numberFormat(item.getProdSp()));
             myViewHolder.textMrp.setText(Utility.numberFormat(item.getProdMrp()));
-            myViewHolder.textCounter.setText(""+item.getProdQoh());
+            myViewHolder.textCounter.setText(""+item.getQty());
+
+            if(item.getQty() > 0){
+                myViewHolder.textStock.setText((item.getProdQoh() - item.getQty())+" +  "+
+                        item.getQty()+" = "+item.getProdQoh());
+            }else{
+                myViewHolder.textStock.setText("Stock: "+item.getProdQoh());
+            }
 
             float diff = item.getProdMrp() - item.getProdSp();
             if(diff > 0f){

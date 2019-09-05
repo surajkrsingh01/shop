@@ -3,12 +3,16 @@ package com.shoppursshop.adapters;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
+import com.shoppursshop.activities.settings.AddUserActivity;
+import com.shoppursshop.activities.settings.UserListActivity;
 import com.shoppursshop.models.UserLicense;
 import com.shoppursshop.utilities.Utility;
 
@@ -35,11 +39,16 @@ public class MySubscriptionAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             textAmount = itemView.findViewById(R.id.text_amount);
             textNumOfUsers = itemView.findViewById(R.id.tv_no_users);
             textExpiryDate = itemView.findViewById(R.id.tv_license_expiry_date);
+
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-
+            Intent intent = new Intent(context, UserListActivity.class);
+            intent.putExtra("number",itemList.get(getAdapterPosition()).getNumOfUsers());
+            intent.putExtra("id",itemList.get(getAdapterPosition()).getId());
+            context.startActivity(intent);
         }
     }
 

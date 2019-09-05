@@ -28,7 +28,7 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class MyHomeHeaderViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvName,tvQty,tvHsn,tvMrp,tvRate,tvAmt;
+        private TextView tvName,tvQty,tvHsn,tvMrp,tvRate,tvAmt,tvSgst,tvCgst;
 
         public MyHomeHeaderViewHolder(View itemView) {
             super(itemView);
@@ -37,7 +37,8 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             tvMrp=itemView.findViewById(R.id.text_mrp);
             tvRate=itemView.findViewById(R.id.text_rate);
             tvAmt=itemView.findViewById(R.id.text_amount);
-            //tvGst=itemView.findViewById(R.id.text_gst);
+            tvSgst=itemView.findViewById(R.id.text_sgst_rate);
+            tvCgst=itemView.findViewById(R.id.text_cgst_rate);
             tvHsn=itemView.findViewById(R.id.text_hsn);
         }
     }
@@ -84,7 +85,8 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
             myViewHolder.tvMrp.setText(Utility.numberFormat(item.getMrp()));
             myViewHolder.tvRate.setText(Utility.numberFormat(item.getRate()));
-          //  myViewHolder.tvGst.setText(Utility.numberFormat(item.getGst())+"%");
+            myViewHolder.tvSgst.setText(String.format("%.02f",item.getSgst())+"%");
+            myViewHolder.tvCgst.setText(String.format("%.02f",item.getCgst())+"%");
             float amt = item.getQty() * item.getRate();
             myViewHolder.tvAmt.setText(Utility.numberFormat(amt));
 

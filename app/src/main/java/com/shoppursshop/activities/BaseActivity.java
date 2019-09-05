@@ -28,11 +28,13 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.payment.mPos.MPayTransactionDetailsActivity;
 import com.shoppursshop.activities.settings.AddCategoryActivity;
 import com.shoppursshop.activities.settings.AddSubCatActivity;
+import com.shoppursshop.activities.settings.AddUserActivity;
 import com.shoppursshop.activities.settings.ComboProductOfferActivity;
 import com.shoppursshop.activities.settings.CreateCouponOfferActivity;
 import com.shoppursshop.activities.settings.FreeProductOfferActivity;
 import com.shoppursshop.activities.settings.ProductPriceOfferActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
+import com.shoppursshop.activities.settings.SyncDataActivity;
 import com.shoppursshop.activities.settings.SyncProductActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
 import com.shoppursshop.activities.settings.profile.BasicProfileActivity;
@@ -196,6 +198,10 @@ public class BaseActivity extends AppCompatActivity {
             tv.setText("Save");
         }else if(context instanceof ChooseDeviceActivity){
             tv.setText("Continue");
+        }else if(context instanceof AddUserActivity){
+            tv.setText("Add User");
+        }else if(context instanceof SyncDataActivity){
+            tv.setText("Sync Data");
         }
     }
 
@@ -456,6 +462,17 @@ public class BaseActivity extends AppCompatActivity {
         dbHelper.deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
         dbHelper.deleteTable(DbHelper.PROD_FREE_OFFER_TABLE);
         dbHelper.deleteTable(DbHelper.COUPON_TABLE);
+        dbHelper.deleteTable(DbHelper.SHOP_CART_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PROD_PRICE_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PROD_PRICE_DETAIL_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PROD_COMBO_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PROD_COMBO_DETAIL_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PROD_FREE_OFFER_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_COUPON_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PRODUCT_UNIT_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PRODUCT_SIZE_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PRODUCT_COLOR_TABLE);
+
         Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

@@ -69,6 +69,8 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             textHeader=itemView.findViewById(R.id.text_name);
             imageViewSelected=itemView.findViewById(R.id.image_selected);
             relativeLayoutContainer = (RelativeLayout)itemView;
+
+            if(!type.equals("simpleSyncList"))
             itemView.setOnClickListener(this);
         }
 
@@ -150,7 +152,8 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if(type.equals("simpleList") || type.equals("levelSimpleList") || type.equals("levelProductList")){
+        if(type.equals("simpleList") || type.equals("levelSimpleList")
+                || type.equals("levelProductList") || type.equals("simpleSyncList")){
             return 0;
         }else{
             return 1;
@@ -176,7 +179,13 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                    // myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.grey200));
                   //  myViewHolder.textHeader.setTextColor(context.getResources().getColor(R.color.black));
                 }else{
-                    myViewHolder.imageViewSelected.setVisibility(View.GONE);
+                    if(type.equals("simpleSyncList")){
+                        myViewHolder.imageViewSelected.setBackgroundResource(R.drawable.ic_clear_red_24dp);
+                    }else{
+                        myViewHolder.imageViewSelected.setVisibility(View.GONE);
+                    }
+
+
                     /*if(isDarkTheme) {
                         myViewHolder.relativeLayoutContainer.setBackgroundColor(context.getResources().getColor(R.color.dark_color));
                         myViewHolder.textHeader.setTextColor(context.getResources().getColor(R.color.white));

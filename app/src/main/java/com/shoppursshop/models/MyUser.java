@@ -1,6 +1,8 @@
 package com.shoppursshop.models;
 
-public class MyUser {
+import java.io.Serializable;
+
+public class MyUser implements Serializable {
 
     private String id,shopCode,username,shopName,userEmail,mobile,language,mpassword,city,province,country,
             zip,address,imeiNo,photo,idProof,ip,dbName,

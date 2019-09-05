@@ -83,51 +83,6 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         myItem.setType(0);
         itemList.add(myItem);
 
-      /*  OrderItem orderItem = new OrderItem();
-        orderItem.setType(1);
-        orderItem.setCustomerName("Sonam Kapoor");
-        orderItem.setMobile("9718181697");
-        orderItem.setAmount(2000);
-        orderItem.setDeliveryType("Cash On Delivery");
-        orderItem.setLocalImage(R.drawable.thumb_11);
-        itemList.add(orderItem);
-
-        orderItem = new OrderItem();
-        orderItem.setType(1);
-        orderItem.setCustomerName("Katie Perry");
-        orderItem.setMobile("9718181698");
-        orderItem.setAmount(24000);
-        orderItem.setDeliveryType("Pick Up");
-        orderItem.setLocalImage(R.drawable.thumb_12);
-        itemList.add(orderItem);
-
-        orderItem = new OrderItem();
-        orderItem.setType(1);
-        orderItem.setCustomerName("Mohit Kumar");
-        orderItem.setMobile("9718181699");
-        orderItem.setAmount(34000);
-        orderItem.setDeliveryType("In Store");
-        orderItem.setLocalImage(R.drawable.thumb_13);
-        itemList.add(orderItem);
-
-        orderItem = new OrderItem();
-        orderItem.setType(1);
-        orderItem.setCustomerName("Sachin Kumar");
-        orderItem.setMobile("9718181610");
-        orderItem.setAmount(4000);
-        orderItem.setDeliveryType("In Store");
-        orderItem.setLocalImage(R.drawable.thumb_11);
-        itemList.add(orderItem);
-
-        orderItem = new OrderItem();
-        orderItem.setType(1);
-        orderItem.setCustomerName("Amit Kumar");
-        orderItem.setMobile("9718181611");
-        orderItem.setAmount(10000);
-        orderItem.setDeliveryType("Cash On Delivery");
-        orderItem.setLocalImage(R.drawable.thumb_12);
-        itemList.add(orderItem);*/
-
         swipeRefreshLayout=findViewById(R.id.swipe_refresh);
         progressBar=findViewById(R.id.progress_bar);
         textViewError = findViewById(R.id.text_error);
