@@ -122,7 +122,7 @@ public class AddUserActivity extends NetworkBaseActivity {
                     JSONObject jsonObject = response.getJSONObject("result");
                     myUser = new MyUser();
                     myUser.setId(jsonObject.getString("id"));
-                    myUser.setUsername(jsonObject.getString("name"));
+                    myUser.setUsername(jsonObject.getString("username"));
                     myUser.setMobile(jsonObject.getString("mobileNo"));
                     myUser.setIsActive(jsonObject.getString("isActive"));
                    // myUser.setImeiNo(jsonObject.getString("isActive"));
