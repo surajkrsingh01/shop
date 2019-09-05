@@ -170,13 +170,27 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemTypeC
 
      if(type == 1){
          //remove
-         changeStatus("0");
+         showMyBothDialog("Are you sure want to delete selected user?","NO","YES");
      }else if(type == 2){
          //disable
-         changeStatus("2");
+         showMyBothDialog("Are you sure want to disable selected user?","NO","YES");
      }else if(type == 3){
          //enable
-         changeStatus("1");
+         showMyBothDialog("Are you sure want to enable selected user?","NO","YES");
      }
+    }
+
+    @Override
+    public void onDialogPositiveClicked(){
+        if(type == 1){
+            //remove
+            changeStatus("0");
+        }else if(type == 2){
+            //disable
+            changeStatus("2");
+        }else if(type == 3){
+            //enable
+            changeStatus("1");
+        }
     }
 }
