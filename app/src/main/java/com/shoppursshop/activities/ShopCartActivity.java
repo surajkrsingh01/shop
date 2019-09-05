@@ -30,6 +30,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
+import com.shoppursshop.activities.payment.PaymentActivity;
 import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.activities.payment.mPos.MPayActivity;
@@ -767,7 +768,7 @@ public class ShopCartActivity extends NetworkBaseActivity implements MyItemTypeC
                 if(response.getString("status").equals("true")||response.getString("status").equals(true)){
                     Log.d(TAG, "Ordeer Generated" );
                     orderNumber = response.getJSONObject("result").getString("orderNumber");
-                    Intent intent = new Intent(ShopCartActivity.this, CCAvenueWebViewActivity.class);
+                    Intent intent = new Intent(ShopCartActivity.this, PaymentActivity.class);
                     intent.putExtra("flag", "wallet");
                     intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",totalPrice));
                     intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);

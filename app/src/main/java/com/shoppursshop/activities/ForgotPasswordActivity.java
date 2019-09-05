@@ -50,7 +50,6 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
 
     private EditText editMobile;
     private Button btnSubmit,btnCancel;
-    private boolean isSubmitEnable;
     private String message;
 
     //These are the objects needed
@@ -60,6 +59,7 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
     //The edittext to input the code
     private EditText editTextCode;
     private String OTP ="";
+    private boolean generateOTP;
 
     //firebase auth object
     private FirebaseAuth mAuth;
@@ -77,50 +77,13 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
         editMobile=(EditText)findViewById(R.id.edit_mobile);
         editTextCode=(EditText)findViewById(R.id.edit_otp);
 
-        editMobile.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String userInput=editable.toString();
-                if(userInput.length() == 10){
-                    btnSubmit.setBackgroundResource(R.drawable.submit);
-                    isSubmitEnable=true;
-                }else {
-                    btnSubmit.setBackgroundResource(R.drawable.cancel);
-                    isSubmitEnable=false;
-                }
-            }
-        });
-
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isSubmitEnable){
-                    if(ConnectionDetector.isNetworkAvailable(ForgotPasswordActivity.this)) {
-                        String enteredOtp = editTextCode.getText().toString();
-                        if(TextUtils.isEmpty(enteredOtp)){
-                            enteredOtp = "-1";
-                        }
-                        Map<String,String> params=new HashMap<>();
-                        params.put("mobile",editMobile.getText().toString());
-                        params.put("otp",enteredOtp);
-                        String url=getResources().getString(R.string.url)+ Constants.VALIDATE_OTP;
-                        showProgress(true);
-                        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"validateOTP");
-                    }else {
-                        DialogAndToast.showDialog(getResources().getString(R.string.no_internet),ForgotPasswordActivity.this);
-                    }
+                if(ConnectionDetector.isNetworkAvailable(ForgotPasswordActivity.this)) {
+                    validateOTP();
                 }else {
-                    // DialogAndToast.showToast("Disable",ForgotPasswordActivity.this);
+                    DialogAndToast.showDialog(getResources().getString(R.string.no_internet),ForgotPasswordActivity.this);
                 }
             }
         });
@@ -141,6 +104,19 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
         String url=getResources().getString(R.string.url)+ Constants.SAVE_OTP;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"saveOTP");
+    }
+
+    private void validateOTP(){
+        String enteredOtp = editTextCode.getText().toString();
+        if(TextUtils.isEmpty(enteredOtp)){
+            enteredOtp = "-1";
+        }
+        Map<String,String> params=new HashMap<>();
+        params.put("mobile",editMobile.getText().toString());
+        params.put("otp",enteredOtp);
+        String url=getResources().getString(R.string.url)+ Constants.VALIDATE_OTP;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"validateOTP");
     }
 
     @Override
@@ -164,12 +140,25 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
                 }
             }else if(apiName.equals("validateOTP")){
                 if(response.getBoolean("status")){
-                    Intent intent = new Intent(ForgotPasswordActivity.this,ResetPasswordActivity.class);
-                    intent.putExtra("mobile",editMobile.getText().toString());
-                    startActivity(intent);
+                    if(response.getInt("result") == 1){
+                        Intent intent = new Intent(ForgotPasswordActivity.this,ResetPasswordActivity.class);
+                        intent.putExtra("mobile",editMobile.getText().toString());
+                        startActivity(intent);
+                    }else{
+                        editTextCode.setVisibility(View.VISIBLE);
+                        generateOTP = false;
+                        btnSubmit.setText("Submit");
+                        DialogAndToast.showDialog("OTP has been sent to your mobile number. Please check your notification.",this);
+                        NotificationService.displayNotification(this,response.getInt("result")+" is your verification code");
+                    }
+
                 }else{
                     if(response.getInt("result") == 0){
-                        showMyDialog(response.getString("message"));
+                      //  showMyDialog(response.getString("message"));
+                        editTextCode.setVisibility(View.VISIBLE);
+                        generateOTP = false;
+                        btnSubmit.setText("Submit");
+                        initFirebaseOtp(editMobile.getText().toString());
                     }else{
                         DialogAndToast.showDialog(response.getString("message"),ForgotPasswordActivity.this);
                     }
@@ -223,6 +212,10 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
                 editTextCode.setText(OTP);
                 //verifying the code
                 verifyVerificationCode(OTP);
+            }else{
+                Intent intent = new Intent(ForgotPasswordActivity.this,ResetPasswordActivity.class);
+                intent.putExtra("mobile",editMobile.getText().toString());
+                startActivity(intent);
             }
         }
 

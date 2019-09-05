@@ -33,6 +33,7 @@ public class AddUserActivity extends NetworkBaseActivity {
 
     private EditText editTextName,editTextMobile;
     private MyUser myUser;
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,8 @@ public class AddUserActivity extends NetworkBaseActivity {
     private void init(){
         editTextName = findViewById(R.id.edit_user_name);
         editTextMobile = findViewById(R.id.edit_mobile);
+
+        id = getIntent().getIntExtra("id",0);
 
         findViewById(R.id.relative_footer_action).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +100,7 @@ public class AddUserActivity extends NetworkBaseActivity {
         }
 
         Map<String,String> params=new HashMap<>();
+        params.put("ulId",""+id);
         params.put("mobile",mobile);
         params.put("name",name);
         params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));

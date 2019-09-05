@@ -38,7 +38,7 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemClick
     private List<MyUser> itemList;
     private RecyclerView recyclerView;
     private MyUserAdapter itemAdapter;
-    private int usersAllowed;
+    private int usersAllowed,id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,7 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemClick
 
         itemList = new ArrayList<>();
         usersAllowed = getIntent().getIntExtra("number",0);
+        id = getIntent().getIntExtra("id",0);
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -70,6 +71,7 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemClick
             public void onClick(View view) {
                 if(itemList.size() < usersAllowed){
                     Intent intent = new Intent(UserListActivity.this, AddUserActivity.class);
+                    intent.putExtra("id",""+id);
                     startActivityForResult(intent,10);
                 }else{
                     DialogAndToast.showDialog("Please buy subscription to add new user",UserListActivity.this);
@@ -84,6 +86,7 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemClick
 
     private void getUsers(){
         Map<String,String> params=new HashMap<>();
+        params.put("id",""+id);
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));

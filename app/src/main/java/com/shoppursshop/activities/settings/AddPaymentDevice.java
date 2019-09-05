@@ -18,6 +18,7 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.MainActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.SplashActivity;
+import com.shoppursshop.activities.payment.PaymentActivity;
 import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.adapters.ShoppursProductAdapter;
@@ -337,7 +338,7 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                     String orderNumber = response.getJSONObject("result").getString("orderNumber");
                     Log.d(TAG, "orderNumber "+orderNumber );
                     //placeOrder(shopArray, orderId);  // open payment option
-                    Intent intent = new Intent(AddPaymentDevice.this, CCAvenueWebViewActivity.class);
+                    Intent intent = new Intent(AddPaymentDevice.this, PaymentActivity.class);
                     intent.putExtra("flag", "wallet");
                     intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",total_amount));
                     intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);

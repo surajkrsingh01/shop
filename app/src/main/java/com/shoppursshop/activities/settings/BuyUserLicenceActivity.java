@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.payment.PaymentActivity;
 import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.adapters.MySubscriptionAdapter;
@@ -229,7 +230,7 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
     }
 
     private void buyUserLicense(){
-        Intent intent = new Intent(BuyUserLicenceActivity.this, CCAvenueWebViewActivity.class);
+        Intent intent = new Intent(BuyUserLicenceActivity.this, PaymentActivity.class);
         intent.putExtra("flag", "wallet");
         intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",totalAmount));
         intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);

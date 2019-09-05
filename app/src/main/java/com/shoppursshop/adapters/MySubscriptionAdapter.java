@@ -47,6 +47,7 @@ public class MySubscriptionAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public void onClick(View view) {
             Intent intent = new Intent(context, UserListActivity.class);
             intent.putExtra("number",itemList.get(getAdapterPosition()).getNumOfUsers());
+            intent.putExtra("id",itemList.get(getAdapterPosition()).getId());
             context.startActivity(intent);
         }
     }
