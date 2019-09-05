@@ -231,7 +231,7 @@ public class LoginActivity extends NetworkBaseActivity{
                     editor.putString(Constants.DB_NAME,dataObject.getString("dbName"));
                     editor.putString(Constants.DB_USER_NAME,dataObject.getString("dbUserName"));
                     editor.putString(Constants.DB_PASSWORD,dataObject.getString("dbPassword"));
-                    editor.putString(Constants.USER_TYPE,"Seller");
+                    editor.putString(Constants.USER_TYPE,dataObject.getString("userType"));
                     editor.putString(Constants.TOKEN,dataObject.getString("token"));
                     token = dataObject.getString("token");
                     editor.putString(Constants.GOOGLE_MAP_API_KEY,dataObject.getString("googleMapApiKey"));

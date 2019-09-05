@@ -128,6 +128,7 @@ public class Constants {
     public static String REGISTER_CUSTOMER="/api/shop_customer/register_shop_customer";
     public static String REGISTER_USER="/api/user/add_user";
     public static String GET_USER="/api/user/get_users";
+    public static String CHANGE_USER_STATUS="/api/user/update_user_status";
     public static String ORDER_PRODUCTS="/api/shop/order/productslist";
     public static String GET_SHOP_ORDERS="/api/shop/order/get_shop_order";
     public static String GET_CUSTOMER_ORDERS="/api/shop/order/get_shop_cust_order";
