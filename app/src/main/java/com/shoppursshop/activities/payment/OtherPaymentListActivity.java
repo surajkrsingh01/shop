@@ -110,7 +110,7 @@ public class OtherPaymentListActivity extends NetworkBaseActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         itemAdapter=new CardTypeAdapter(this,cardTypeDTOArrayList);
         recyclerView.setAdapter(itemAdapter);
-        //recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setNestedScrollingEnabled(false);
 
         spinnerCardType=findViewById(R.id.spinner_bank);
 
