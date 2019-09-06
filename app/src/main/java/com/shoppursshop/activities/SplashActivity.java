@@ -22,6 +22,7 @@ import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.activities.payment.mPos.MPayActivity;
 import com.shoppursshop.activities.payment.mPos.MPayTransactionDetailsActivity;
 import com.shoppursshop.database.DbHelper;
+import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;

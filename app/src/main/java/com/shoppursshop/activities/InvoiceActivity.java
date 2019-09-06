@@ -35,6 +35,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -51,6 +55,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.itextpdf.text.pdf.draw.VerticalPositionMark;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.newland.mtype.module.common.printer.FontSettingScope;
 import com.newland.mtype.module.common.printer.FontType;
 import com.newland.mtype.module.common.printer.LiteralType;
@@ -116,6 +121,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                       tvSubTotAmt,tvGrossTotAmt,tvTotSgst,tvTotCgst,tvTotIgst,tvShortExcess,tvNetPayableAmt,tvNetPayableWords,
                       tvPaidAmt,tvBalAmt,tvTotQty,tvDiscount,tvPaymentMethod,tvPaymentBrand,tvTransId,tvPaymentAmount,tvTotSavings;
 
+    private ImageView image_barcode;
     private RelativeLayout rlCouponLayout;
     private TextView tvCouponOfferName;
     private int actionType;
@@ -183,6 +189,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
         tvPaymentAmount = findViewById(R.id.text_paid_amount);
         tvTotSavings = findViewById(R.id.text_total_savings);
         tvTotQty = findViewById(R.id.text_total_qty);
+        image_barcode = findViewById(R.id.image_barcode);
 
         rlCouponLayout = findViewById(R.id.rl_coupon_layout);
         tvCouponOfferName = findViewById(R.id.tv_offer_name);
@@ -265,6 +272,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     tvCustomerName.setText(jsonObject.getString("invCustName"));
                     tvInvoiceNo.setText("Invoice No: "+jsonObject.getString("invNo"));
                     invoiceNo = jsonObject.getString("invNo");
+                    generateBarcode(invoiceNo);
                     float subTotal = Float.parseFloat(""+(jsonObject.getDouble("invTotAmount") - jsonObject.getDouble("invTotTaxAmount")));
                     tvSubTotAmt.setText(Utility.numberFormat(subTotal));
                     tvGrossTotAmt.setText(Utility.numberFormat(subTotal));
@@ -1046,6 +1054,10 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
                 document.add(new Chunk(lineSeparator));
 
+
+
+
+
                 document.close();
 
                 if(actionType == SHARE){
@@ -1526,6 +1538,24 @@ public class InvoiceActivity extends NetworkBaseActivity {
             returnBitmap = bitmap;
         }
         return returnBitmap;
+    }
+
+    private void generateBarcode(String text){
+       /* if(text.length() < 12){
+            int len = text.length();
+            for(int i = len; i < 12; i++){
+                text = "0"+text;
+            }
+        }*/
+        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+        try {
+            BitMatrix bitMatrix = multiFormatWriter.encode(text, BarcodeFormat.CODE_128,400,200);
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+            image_barcode.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
     }
 
 }
