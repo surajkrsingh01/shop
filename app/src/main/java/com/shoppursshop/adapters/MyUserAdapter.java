@@ -63,8 +63,10 @@ public class MyUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
               if(itemList.get(getAdapterPosition()).getIsActive().equals("1")){
                   popupMenu.getMenu().getItem(1).setVisible(false);
+                  popupMenu.getMenu().getItem(0).setVisible(true);
               }else{
                   popupMenu.getMenu().getItem(0).setVisible(false);
+                  popupMenu.getMenu().getItem(1).setVisible(true);
               }
 
               popupMenu.show();

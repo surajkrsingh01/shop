@@ -94,6 +94,10 @@
             @drawable/white_stroke_dark_round_background
         </item>
 
+        <item name="borderBackground">
+            @drawable/white_border_background
+        </item>
+
 
     </style>
 
@@ -109,6 +113,10 @@
 
         <item name="solidPrimaryStrokeBorderBackground">
             @drawable/grey_border_small_round_background
+        </item>
+
+        <item name="borderBackground">
+            @drawable/grey_border_background
         </item>
 
     </style>

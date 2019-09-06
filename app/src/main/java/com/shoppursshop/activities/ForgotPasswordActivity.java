@@ -59,7 +59,7 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
     //The edittext to input the code
     private EditText editTextCode;
     private String OTP ="";
-    private boolean generateOTP;
+    private boolean generateOTP,otpAutoDetected;
 
     //firebase auth object
     private FirebaseAuth mAuth;
@@ -81,7 +81,18 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
             @Override
             public void onClick(View view) {
                 if(ConnectionDetector.isNetworkAvailable(ForgotPasswordActivity.this)) {
-                    validateOTP();
+                    if(!otpAutoDetected && btnSubmit.getText().toString().equals("Submit")){
+                        String code = editTextCode.getText().toString();
+                        if(TextUtils.isEmpty(code)){
+                            DialogAndToast.showDialog("Please enter OTP",ForgotPasswordActivity.this);
+                            return;
+                        }
+
+                        verifyVerificationCode(code);
+
+                    }else{
+                        validateOTP();
+                    }
                 }else {
                     DialogAndToast.showDialog(getResources().getString(R.string.no_internet),ForgotPasswordActivity.this);
                 }
@@ -201,7 +212,7 @@ public class ForgotPasswordActivity extends NetworkBaseActivity {
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-
+             otpAutoDetected = true;
             //Getting the code sent by SMS
             OTP = phoneAuthCredential.getSmsCode();
 
