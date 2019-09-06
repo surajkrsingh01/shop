@@ -85,6 +85,8 @@ public class BaseActivity extends AppCompatActivity {
             setTheme(R.style.Light);
         }
 
+       // setTheme(R.style.Dark);
+
         setColorTheme();
 
         dbHelper=new DbHelper(this);

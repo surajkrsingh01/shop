@@ -1,6 +1,7 @@
 package com.shoppursshop.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.shoppursshop.R;
+import com.shoppursshop.activities.payment.CardDetailsActivity;
+import com.shoppursshop.activities.payment.OtherPaymentListActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.CardTypeDTO;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
@@ -84,7 +87,12 @@ public class PaymentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
             PaymentOption paymentOption = itemList.get(getAdapterPosition());
 
             if(paymentOption.getId().equals("OPTCRDC") || paymentOption.getId().equals("OPTDBCRD")){
-                if(preRecyclerView != null){
+
+                Intent intent = new Intent(context, CardDetailsActivity.class);
+                intent.putExtra("flag",paymentOption.getId());
+                context.startActivity(intent);
+
+              /*  if(preRecyclerView != null){
                     preRecyclerView.setVisibility(View.GONE);
                 }
 
@@ -101,10 +109,16 @@ public class PaymentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 llCreditCard.setVisibility(View.VISIBLE);
                 btnPay.setVisibility(View.VISIBLE);
                 preButtonPay = btnPay;
-                preCreditCard = llCreditCard;
+                preCreditCard = llCreditCard;*/
             }else if(paymentOption.getId().equals("OPTNBK") || paymentOption.getId().equals("OPTWLT")
             || paymentOption.getId().equals("OPTUPI")){
-                if(preCreditCard != null)
+
+                Intent intent = new Intent(context, OtherPaymentListActivity.class);
+                intent.putExtra("flag",paymentOption.getId());
+                intent.putExtra("cardList",cardsList.get(paymentOption.getId()));
+                context.startActivity(intent);
+
+               /* if(preCreditCard != null)
                 preCreditCard.setVisibility(View.GONE);
 
                 if(preButtonPay != null)
@@ -122,9 +136,9 @@ public class PaymentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 btnPay.setVisibility(View.VISIBLE);
                 preRecyclerView = recyclerView;
                 preButtonPay = btnPay;
-                preRlNetBanking = rl_net_banking;
+                preRlNetBanking = rl_net_banking;*/
             }else{
-                if(preCreditCard != null)
+               /* if(preCreditCard != null)
                 preCreditCard.setVisibility(View.GONE);
                 if(preButtonPay != null)
                 preButtonPay.setVisibility(View.GONE);
@@ -134,7 +148,7 @@ public class PaymentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if(preRecyclerView != null){
                     preRecyclerView.setVisibility(View.GONE);
                     preButtonPay.setVisibility(View.GONE);
-                }
+                }*/
             }
         }
     }

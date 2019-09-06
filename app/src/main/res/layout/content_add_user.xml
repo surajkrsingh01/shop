@@ -43,24 +43,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <View
-            android:layout_toRightOf="@+id/text_right_label"
-            android:layout_marginLeft="16dp"
-            android:id="@+id/view_seperator_2"
-            android:layout_width="2dp"
-            android:layout_height="20dp"
-            android:background="?attr/separatorColor"/>
-
-        <TextView
-            android:id="@+id/text_right_2_label"
-            android:layout_toRightOf="@+id/view_seperator_2"
-            android:text="Add User"
-            android:textColor="?attr/secondaryTextColor"
-            android:layout_marginLeft="16dp"
-            android:textSize="@dimen/small_text_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
     </RelativeLayout>
 
 
