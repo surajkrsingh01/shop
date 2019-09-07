@@ -115,8 +115,6 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_personal_info, container, false);
         IMEI = sharedPreferences.getString(Constants.IMEI_NO,"");
-        editor.putString(Constants.GOOGLE_MAP_API_KEY,"AIzaSyB-GKvcnqqzEBxT6OvmVPfNs7FBppblo-s");
-        editor.commit();
         init();
         return rootView;
     }

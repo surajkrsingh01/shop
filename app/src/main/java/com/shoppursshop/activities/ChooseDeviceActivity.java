@@ -92,13 +92,10 @@ public class ChooseDeviceActivity extends NetworkBaseActivity implements MyItemC
                 }
                 editor.commit();
 
-                if(flag.equals("splash")){
-                    intent = new Intent(ChooseDeviceActivity.this, LoginActivity.class);
-                    if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
-                        getMacID();
-                    } else {
-                        moveToNextActivity();
-                    }
+                if(flag.equals("register")){
+                    Intent intent = new Intent(ChooseDeviceActivity.this,MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }else{
                      ChooseDeviceActivity.this.finish();
                 }
@@ -106,52 +103,6 @@ public class ChooseDeviceActivity extends NetworkBaseActivity implements MyItemC
             }
         });
 
-    }
-
-    private void moveToNextActivity() {
-        startActivity(intent);
-        finish();
-    }
-
-    /**
-     * Get MAC ID from real device
-     */
-    private void getMacID() {
-        // gets the current TelephonyManager
-        TelephonyManager teleManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-
-        if (Utility.verifyReadPhoneStatePermissions(this)) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            String IMEI = teleManager.getDeviceId();
-            editor.putString(Constants.IMEI_NO,IMEI);
-            editor.commit();
-            Log.i(TAG,"Mac id "+IMEI);
-            moveToNextActivity();
-        }
-        //      mMacId = "866700048591240";
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case Utility.MY_PERMISSIONS_REQUEST_PHONE_STATE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getMacID();
-                }else{
-                    finish();
-                }
-                break;
-            case Utility.MY_PERMISSIONS_REQUEST_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    init();
-                }else{
-                    finish();
-                }
-                break;
-        }
     }
 
     @Override

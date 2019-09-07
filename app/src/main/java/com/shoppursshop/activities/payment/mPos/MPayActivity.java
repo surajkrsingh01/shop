@@ -28,12 +28,12 @@ public class MPayActivity extends NetworkBaseActivity {
     //Testing
     //private String PARTNER_API_KEY = "2C869B63DD4E";
     //private String MERCHANT_API_KEY = "2C869B63DD4E";
-    private String PARTNER_API_KEY = "763432092B47";
-    private String MERCHANT_API_KEY = "763432092B47";
+   // private String PARTNER_API_KEY = "763432092B47";
+   // private String MERCHANT_API_KEY = "763432092B47";
 
     //Production
-  //  private String PARTNER_API_KEY = "E5004EA8E077";
- //   private String MERCHANT_API_KEY = "DE4B7AF220C7";
+    private String PARTNER_API_KEY = "E5004EA8E077";
+    private String MERCHANT_API_KEY = "DE4B7AF220C7";
 
     private int devicePosition;
     private List<String> list;

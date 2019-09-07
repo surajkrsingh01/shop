@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -158,6 +160,10 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
         if (ConnectionDetector.isNetworkAvailable(this)){
             getItemList();
+            if(!sharedPreferences.getBoolean(Constants.IS_TOKEN_SAVED,false) &&
+            !TextUtils.isEmpty(sharedPreferences.getString(Constants.TOKEN,""))){
+                saveFcmToken();
+            }
         }else{
             showNoNetwork(true);
         }
@@ -176,6 +182,18 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         String url=getResources().getString(R.string.url)+Constants.GET_PENDING_ORDERS;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"orders");
+    }
+
+    private void saveFcmToken(){
+        Map<String,String> params=new HashMap<>();
+        params.put("token",sharedPreferences.getString(Constants.TOKEN,""));
+        params.put("userType",sharedPreferences.getString(Constants.USER_TYPE,""));
+        params.put("mobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+"/api/user/save_fcm_token";
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"saveFcmToken");
     }
 
     @Override
@@ -280,6 +298,12 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                     }
 
                     Log.i(TAG,"itemList "+itemList.size()+" pre item list "+preItemList.size());
+                }
+
+            }else if (apiName.equals("saveFcmToken")) {
+                if (response.getBoolean("status")) {
+                    editor.putBoolean(Constants.IS_TOKEN_SAVED,true);
+                    editor.commit();
                 }
             }
         }catch (JSONException e) {
