@@ -33,10 +33,11 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_below="@+id/text_second_label"
+        android:scrollbars="none"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:orientation="vertical"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
@@ -101,6 +102,7 @@
             <TextView
                 android:id="@+id/text_info_4"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_below="@+id/rl_net_banking"
                 android:text="(Note: We will redirect you to the bank you have chosen above. Once the bank verifies your net banking credentials, we will proceed with your payment)"
                 android:textColor="?attr/primaryTextColor"
                 android:textSize="@dimen/very_small_text_size"
@@ -110,7 +112,7 @@
             <RelativeLayout
                 android:background="?attr/borderBackground"
                 android:id="@+id/rl_save_layout"
-                android:layout_below="@+id/rl_net_banking"
+                android:layout_below="@+id/text_info_4"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:paddingRight="16dp"
                 android:paddingBottom="16dp"
@@ -206,7 +208,7 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </androidx.core.widget.NestedScrollView>
 
