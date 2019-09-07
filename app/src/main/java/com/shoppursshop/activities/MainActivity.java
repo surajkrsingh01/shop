@@ -186,7 +186,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
     private void saveFcmToken(){
         Map<String,String> params=new HashMap<>();
-        params.put("token",sharedPreferences.getString(Constants.TOKEN,""));
+        params.put("token",sharedPreferences.getString(Constants.FCM_TOKEN,""));
         params.put("userType",sharedPreferences.getString(Constants.USER_TYPE,""));
         params.put("mobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));

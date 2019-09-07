@@ -75,7 +75,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             message = remoteMessage.getData().toString();
-            sendNotification();
+            try {
+                if(message.contains("=")){
+                    JSONObject jsonObject = new JSONObject(message.split("=")[1]);
+                    NotificationService.displayNotification(this,jsonObject.getString("message"));
+                }else{
+                    NotificationService.displayNotification(this,message);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //sendNotification();
 
         }
 
@@ -86,7 +96,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             message = remoteMessage.getNotification().getBody();
             Log.d(TAG, "Notification data payload: " + message);
-            sendNotification();
+            Log.d(TAG, "Notification data data: " + remoteMessage.getData().toString());
+            //sendNotification();
 
         }
 

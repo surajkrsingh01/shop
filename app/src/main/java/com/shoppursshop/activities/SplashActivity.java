@@ -47,6 +47,8 @@ public class SplashActivity extends NetworkBaseActivity {
 
      //   startActivityForResult(new Intent(SplashActivity.this, DeliveryAddressActivity.class), 101);
 
+        Log.i(TAG,"fcm token "+sharedPreferences.getString(Constants.FCM_TOKEN,""));
+
         if (Utility.checkLocationPermission(this)) {
             if(!sharedPreferences.getBoolean(Constants.INIT_DATA_LOADED,false)){
                 if(ConnectionDetector.isNetworkAvailable(this)){
