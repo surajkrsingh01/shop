@@ -76,6 +76,7 @@ public class Constants {
     public static String IS_TOKEN_SAVED="isTokenSaved";
     public static String DEVICE_ID="deviceId";
     public static String NOTIFICATION_COUNTER="notificationCounter";
+    public static String INIT_DATA_LOADED="initDataLoaded";
 
     public static String ANDROID_DEVICE_TYPE="androidDeviceType";
 
@@ -93,6 +94,7 @@ public class Constants {
 
 
     //api
+    public static String GET_INIT_DATA="/useradmin/init_data";
     public static String LOGIN="/useradmin/loginRetailer";
     public static String AUTHENTICATE="/api/user/authenticate_user";
     public static String GET_PASSWORD="/useradmin/getPassword";

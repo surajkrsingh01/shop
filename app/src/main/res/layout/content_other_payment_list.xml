@@ -55,6 +55,7 @@
                 android:layout_below="@+id/recycler_view"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:id="@+id/rl_net_banking"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -117,6 +118,7 @@
                 android:paddingRight="16dp"
                 android:paddingBottom="16dp"
                 android:paddingTop="10dp"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -41,6 +42,12 @@ public class OtherPaymentListActivity extends NetworkBaseActivity {
         setContentView(R.layout.activity_other_payment_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Button btnPay = findViewById(R.id.btn_pay);
+        Button btnCencel = findViewById(R.id.btn_cancel);
+
+        btnPay.setBackgroundColor(colorTheme);
+        btnCencel.setBackgroundColor(colorTheme);
 
         flag = getIntent().getStringExtra("flag");
         TextView textLabel = findViewById(R.id.text_second_label);
@@ -108,7 +115,7 @@ public class OtherPaymentListActivity extends NetworkBaseActivity {
         // staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        itemAdapter=new CardTypeAdapter(this,cardTypeDTOArrayList);
+        itemAdapter=new CardTypeAdapter(this,cardTypeDTOAllOthersArrayList);
         recyclerView.setAdapter(itemAdapter);
         recyclerView.setNestedScrollingEnabled(false);
 
@@ -165,7 +172,7 @@ public class OtherPaymentListActivity extends NetworkBaseActivity {
             }
         };
 
-        spinnerCardType.setAdapter(cardAdapter);
+       // spinnerCardType.setAdapter(cardAdapter);
 
     }
 

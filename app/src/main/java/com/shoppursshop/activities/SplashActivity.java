@@ -47,9 +47,19 @@ public class SplashActivity extends NetworkBaseActivity {
 
      //   startActivityForResult(new Intent(SplashActivity.this, DeliveryAddressActivity.class), 101);
 
+        Log.i(TAG,"fcm token "+sharedPreferences.getString(Constants.FCM_TOKEN,""));
+
         if (Utility.checkLocationPermission(this)) {
-            init();
-            //test();
+            if(!sharedPreferences.getBoolean(Constants.INIT_DATA_LOADED,false)){
+                if(ConnectionDetector.isNetworkAvailable(this)){
+                    getInitData();
+                }else{
+                    DialogAndToast.showDialog(getResources().getString(R.string.no_internet),this);
+                }
+            }else{
+                init();
+                //test();
+            }
         }
 
     }
@@ -58,36 +68,33 @@ public class SplashActivity extends NetworkBaseActivity {
         String IMEI = sharedPreferences.getString(Constants.IMEI_NO,"");
         Log.i(TAG,"IMEI NO "+IMEI);
 
-        editor.putString(Constants.GOOGLE_MAP_API_KEY,"AIzaSyB-GKvcnqqzEBxT6OvmVPfNs7FBppblo-s");
-        editor.commit();
-
         if (sharedPreferences.getBoolean(Constants.IS_LOGGED_IN, false)) {
-            intent = new Intent(SplashActivity.this, MainActivity.class);
-            intent.putExtra("flag", "wallet");
-            intent.putExtra("amount", 500);
-            //  intent.putExtra(AvenuesParams.ORDER_ID, orderID);
-            intent.putExtra(AvenuesParams.CURRENCY, "INR");
-            //  startActivityForResult(intent,1);
-            if(ConnectionDetector.isNetworkAvailable(this)){
-                authenticateUser();
-            }else{
-                showMyDialog(getResources().getString(R.string.no_internet));
-            }
-        } else {
 
             String deviceType = sharedPreferences.getString(Constants.ANDROID_DEVICE_TYPE,"");
-
             if(TextUtils.isEmpty(deviceType)){
                 intent = new Intent(SplashActivity.this, ChooseDeviceActivity.class);
                 intent.putExtra("flag", "splash");
                 moveToNextActivity();
             }else{
-                intent = new Intent(SplashActivity.this, LoginActivity.class);
-                if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
-                    getMacID();
-                } else {
-                    moveToNextActivity();
+                intent = new Intent(SplashActivity.this, MainActivity.class);
+                intent.putExtra("flag", "wallet");
+                intent.putExtra("amount", 500);
+                //  intent.putExtra(AvenuesParams.ORDER_ID, orderID);
+                intent.putExtra(AvenuesParams.CURRENCY, "INR");
+                //  startActivityForResult(intent,1);
+                if(ConnectionDetector.isNetworkAvailable(this)){
+                    authenticateUser();
+                }else{
+                    showMyDialog(getResources().getString(R.string.no_internet));
                 }
+            }
+        } else {
+
+            intent = new Intent(SplashActivity.this, LoginActivity.class);
+            if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
+                getMacID();
+            } else {
+                moveToNextActivity();
             }
 
         }
@@ -139,12 +146,27 @@ public class SplashActivity extends NetworkBaseActivity {
                 break;
             case Utility.MY_PERMISSIONS_REQUEST_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    init();
+                    if(sharedPreferences.getBoolean(Constants.INIT_DATA_LOADED,false)){
+                        if(ConnectionDetector.isNetworkAvailable(this)){
+                            getInitData();
+                        }else{
+                            DialogAndToast.showDialog(getResources().getString(R.string.no_internet),this);
+                        }
+                    }else{
+                        init();
+                        //test();
+                    }
                 }else{
                     finish();
                 }
                 break;
         }
+    }
+
+    private void getInitData(){
+        String url=getResources().getString(R.string.url)+Constants.GET_INIT_DATA;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(),"initData");
     }
 
 
@@ -185,6 +207,13 @@ public class SplashActivity extends NetworkBaseActivity {
                         DialogAndToast.showDialog(response.getString("message"),this);
                     }
 
+                }
+            }if (apiName.equals("initData")) {
+                if (response.getBoolean("status")) {
+                    editor.putString(Constants.GOOGLE_MAP_API_KEY,response.getJSONObject("result").getString("googleApiKey"));
+                    editor.putBoolean(Constants.INIT_DATA_LOADED,true);
+                    editor.commit();
+                    init();
                 }
             }
         }catch (JSONException error){

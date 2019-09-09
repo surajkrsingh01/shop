@@ -45,6 +45,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Rectangle;
@@ -92,6 +93,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -133,6 +135,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
     private N910Util n910Util;
     private File pdfFile;
     private List<Bitmap> bitmaps;
+    private Bitmap barcodeImage;
     private String transId,invoiceNo;
 
     private float totalAmount;
@@ -1052,11 +1055,16 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 //  belongingsParagraph.setSpacingBefore(20);
                 document.add(belongingsParagraph);
 
+
+                if(barcodeImage != null){
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    barcodeImage.compress(Bitmap.CompressFormat.JPEG, 100 , stream);
+                    Image myImg = Image.getInstance(stream.toByteArray());
+                    myImg.setAlignment(Image.MIDDLE);
+                    document.add(myImg);
+                }
+
                 document.add(new Chunk(lineSeparator));
-
-
-
-
 
                 document.close();
 
@@ -1074,6 +1082,10 @@ public class InvoiceActivity extends NetworkBaseActivity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 DialogAndToast.showToast("Error in creating pdf.",this);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         }
@@ -1358,6 +1370,15 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 scriptBuffer.append("*text l                       \n");
                 scriptBuffer.append("*text l                       \n");
                 printer.printByScript(PrintContext.defaultContext(), scriptBuffer.toString().getBytes("GBK"), 60L, TimeUnit.SECONDS);
+
+                if (barcodeImage != null)
+                    printer.print(0, barcodeImage, 30, TimeUnit.SECONDS);
+
+                scriptBuffer = new StringBuffer();
+                scriptBuffer.append("*text l                       \n");
+                scriptBuffer.append("*text l                       \n");
+                printer.printByScript(PrintContext.defaultContext(), scriptBuffer.toString().getBytes("GBK"), 60L, TimeUnit.SECONDS);
+
                 this.printer.paperThrow(ThrowType.BY_LINE, 1);
 
                 if(customerCopy){
@@ -1549,10 +1570,10 @@ public class InvoiceActivity extends NetworkBaseActivity {
         }*/
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
-            BitMatrix bitMatrix = multiFormatWriter.encode(text, BarcodeFormat.CODE_128,400,200);
+            BitMatrix bitMatrix = multiFormatWriter.encode(text, BarcodeFormat.CODE_128,200,100);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
-            image_barcode.setImageBitmap(bitmap);
+            barcodeImage = barcodeEncoder.createBitmap(bitMatrix);
+            image_barcode.setImageBitmap(barcodeImage);
         } catch (WriterException e) {
             e.printStackTrace();
         }
