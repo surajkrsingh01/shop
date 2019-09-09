@@ -44,7 +44,8 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:text="Card type"
+            android:id="@+id/tv_card_type_label"
+            android:text="Select Bank"
             android:textColor="?attr/primaryTextColor"
             android:textSize="@dimen/very_small_text_size"
             android:layout_width="match_parent"
@@ -209,6 +210,7 @@
             android:paddingRight="16dp"
             android:paddingBottom="16dp"
             android:paddingTop="10dp"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

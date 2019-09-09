@@ -293,7 +293,7 @@ public class OffersActivity extends NetworkBaseActivity implements MyItemTypeCli
                     myItem.setDesc("Store Products");
                     myItem.setType(0);
                     itemList.add(myItem);
-                    JSONArray dataArray = response.getJSONArray("result");
+                    JSONArray dataArray = response.getJSONObject("result").getJSONArray("productList");
                     JSONArray tempArray = null;
                     JSONObject tempObject = null;
                     JSONObject jsonObject = null;
