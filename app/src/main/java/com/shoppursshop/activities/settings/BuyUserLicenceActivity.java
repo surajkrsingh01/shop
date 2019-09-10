@@ -230,7 +230,7 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
     }
 
     private void buyUserLicense(){
-        Intent intent = new Intent(BuyUserLicenceActivity.this, PaymentActivity.class);
+        Intent intent = new Intent(BuyUserLicenceActivity.this, CCAvenueWebViewActivity.class);
         intent.putExtra("flag", "wallet");
         intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",totalAmount));
         intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);

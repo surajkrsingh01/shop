@@ -165,18 +165,9 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             @Override
             public void onClick(View view) {
                 relativeLayoutPayOptionLayout.setVisibility(View.VISIBLE);
-
-                String deviceType = sharedPreferences.getString(Constants.ANDROID_DEVICE_TYPE,"");
-                Log.i(TAG,"device type "+deviceType);
-                if(deviceType.equals("N910")){
-                    tvMPos.setVisibility(View.GONE);
-                    tvCard.setVisibility(View.GONE);
-                    tvAndroidPos.setVisibility(View.VISIBLE);
-                }else if(deviceType.equals("Android")){
-                    tvAndroidPos.setVisibility(View.GONE);
-                    tvCard.setVisibility(View.GONE);
-                    tvMPos.setVisibility(View.VISIBLE);
-                }
+                tvMPos.setVisibility(View.VISIBLE);
+                tvCard.setVisibility(View.GONE);
+                tvAndroidPos.setVisibility(View.GONE);
             }
         });
 
