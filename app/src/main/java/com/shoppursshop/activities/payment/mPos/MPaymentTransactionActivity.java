@@ -81,9 +81,13 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
     private AcquirerEmiDetailsVO emivo;
 
     private JSONObject dataObject;
-    private String deviceType,custMobile,custName,address;
+    private String deviceType,custMobile,custName,address,deviceName,deviceMACAddress;
+    private int deviceCommMode;
     boolean approved;
     private double latitude,longitude;
+
+    private BluetoothAdapter mBtAdapter;
+    private boolean bluetoothOnFlag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +108,9 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
         deviceType  = getIntent().getStringExtra("devicetype");
         paymentType = getIntent().getStringExtra(PAYMENT_TYPE);
         amount = getIntent().getStringExtra("amount");
+        deviceCommMode = getIntent().getIntExtra("deviceCommMode",0);
+        deviceName = getIntent().getStringExtra("deviceName");
+        deviceMACAddress = getIntent().getStringExtra("deviceMACAddress");
         merchantRefNo = getIntent().getStringExtra("referanceno");
         if (merchantRefNo == null || merchantRefNo.equalsIgnoreCase("null") ||
                 merchantRefNo.equalsIgnoreCase(""))
@@ -113,7 +120,9 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
             editor.commit();
         }
 
-        initiateTransaction();
+        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+
+       // initiateTransaction();
 
 
     }
@@ -143,11 +152,20 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
                     null, null, 71.000001, 17.000001,
                     merchantRefNo, "", "");*/
 
-            initialization.initiateTransaction(handler, deviceType, address, amount, paymentType,
+            /*initialization.initiateTransaction(handler, deviceType, address, amount, paymentType,
                     PaymentTransactionConstants.SALE,custMobile, custName,
                     latitude, longitude, merchantRefNo, null,
-                    DeviceCommunicationMode.USBCOMMUNICATION
-                    , merchantRefNo, appName,appVersion);
+                    deviceCommMode
+                    , merchantRefNo, appName,appVersion);*/
+
+            try {
+
+                initialization.initiateTransaction(handler, deviceName, deviceMACAddress, amount, paymentType,
+                        PaymentTransactionConstants.SALE, custMobile, custName, latitude, longitude, merchantRefNo,
+                        null, deviceCommMode, merchantRefNo, appName, appVersion);
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
 
 
 
@@ -295,7 +313,7 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
                         .show();
                 // finish();
             } else if (msg.what == DISPLAY_STATUS) {
-                Toast.makeText(MPaymentTransactionActivity.this, "Display status", Toast.LENGTH_LONG).show();
+               // Toast.makeText(MPaymentTransactionActivity.this, "Display status", Toast.LENGTH_LONG).show();
             } else if (msg.what == PIN_ENTERED) {
                 Toast.makeText(MPaymentTransactionActivity.this, "Pin entered", Toast.LENGTH_LONG).show();
             }
@@ -319,6 +337,66 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
                     }
                 }).show();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Bluetooth is enabled or not if not then asks for enable
+        if (!checkFlag) {
+            if (mBtAdapter != null) {
+                mBtAdapter.cancelDiscovery();
+                if (!mBtAdapter.isEnabled()) {
+                    bluetoothOnFlag = false;
+                    Intent enableIntent = new Intent(
+                            BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+                } else {
+                    bluetoothOnFlag = true;
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!checkFlag) {
+            if (bluetoothOnFlag) {
+                initiateConnection();
+            }
+        }
+    }
+
+    private void initiateConnection() {
+
+        isDeviceON(getString(R.string.pls_chk_cardreader_availble));
+    }
+
+    public void isDeviceON(String message) {
+
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+
+        }
+        builder.setTitle("Alert").setMessage(message)
+                .setCancelable(false)
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+                        finish();
+                    }
+                })
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        initiateTransaction();
+                    }
+                }).show();
     }
 
 }

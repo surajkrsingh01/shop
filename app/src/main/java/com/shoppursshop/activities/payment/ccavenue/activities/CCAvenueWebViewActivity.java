@@ -415,7 +415,8 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
             Log.i(TAG,"Save Response "+dataObject.toString());
             try{
                 dataObject.put("orderNumber",orderId);
-                if(dataObject.getString("response_code").equals("0")){
+                if(dataObject.getString("response_code").equals("0") ||
+                        dataObject.getString("status_message").toUpperCase().equals("SUCCESS")){
                     dataObject.put("status", "Done");
                     dataObject.put("approved", true);
                 }else{

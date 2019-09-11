@@ -4,12 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/backgroundColor"
     android:layout_alignParentBottom="true"
-    android:elevation="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <RelativeLayout
+        android:elevation="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

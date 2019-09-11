@@ -132,6 +132,8 @@
     <string name="enable_dark_mode">Enable Dark Mode</string>
     <string name="color_theme">Color Themes</string>
 
+    <string name="pls_chk_cardreader_availble">Please check whether card reader available and its ON?</string>
+
 
     <!-- Dialogs. -->
     <string name="logging_user">Logging User</string>

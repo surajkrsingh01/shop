@@ -61,7 +61,7 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView textBarCode,textName,textMrp,textSp,textOffPer,textCounter,textOffer;
+        private TextView textBarCode,textName,textMrp,textSp,textOffPer,textCounter,textOffer,textAdditionDiscount;
         private ImageView imageView,imageViewMinus,imageViewAdd;
         private RelativeLayout rlOffer;
         private RelativeLayout relativeLayoutUnit;
@@ -81,6 +81,7 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             imageView=itemView.findViewById(R.id.image_view);
             viewSeparator=itemView.findViewById(R.id.view_separator);
             textOffer=itemView.findViewById(R.id.text_offer);
+            textAdditionDiscount=itemView.findViewById(R.id.text_additional_discount);
             rlOffer=itemView.findViewById(R.id.relative_offer);
             relativeLayoutUnit=itemView.findViewById(R.id.relative_unit);
             spinnerUnit=itemView.findViewById(R.id.spinner_unit);
@@ -91,6 +92,7 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             imageViewMinus.setOnClickListener(this);
             imageView.setOnClickListener(this);
             rlOffer.setOnClickListener(this);
+            textAdditionDiscount.setOnClickListener(this);
         }
 
         @Override
@@ -101,6 +103,8 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 myItemTypeClickListener.onItemClicked(getAdapterPosition(),3);
             }else if(view == imageView){
                 myImageClickListener.onImageClicked(getAdapterPosition(),1,imageView);
+            }else if(view == textAdditionDiscount){
+                myItemTypeClickListener.onItemClicked(getAdapterPosition(),4);
             }else{
                 myItemTypeClickListener.onItemClicked(getAdapterPosition(),1);
             }

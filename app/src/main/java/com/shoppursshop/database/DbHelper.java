@@ -3008,10 +3008,41 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.i("dbhelper","sgst "+item.getProdSgst());
         contentValues.put(TOTAL_QTY, qty);
         contentValues.put(TOTAL_AMOUNT, totalAmount);
+        contentValues.put(PROD_SP, item.getProdSp());
+
+        float rate = ((item.getProdSp() * (item.getProdCgst()+item.getProdSgst()))/(100 +
+                (item.getProdCgst()+item.getProdSgst())));
+        Log.d("Rate ", ""+rate);
+        contentValues.put(PROD_CGST, rate/2);
+        contentValues.put(PROD_IGST, rate);
+        contentValues.put(PROD_SGST, rate/2);
+
         db.update(CART_TABLE,contentValues,ID+" = ? AND "+PROD_SP+" != ?",
                 new String[]{String.valueOf(item.getProdId()),String.valueOf(0f)});
         db.update(CART_TABLE,contentValues,PROD_BARCODE+" = ? AND "+PROD_SP+" != ?",
                 new String[]{item.getProdBarCode(),String.valueOf(0f)});
+
+    }
+
+    public void updateCartData(MyProductItem item,float totalAmount){
+        SQLiteDatabase db = this.getReadableDatabase();
+        // query="UPDATE "+PRODUCT_TABLE+" SET "+PROD_QOH+" = ? where "+PROD_CODE+" = ?";
+        ContentValues contentValues = new ContentValues();
+        Log.i("dbhelper","cgst "+item.getProdCgst());
+        Log.i("dbhelper","sgst "+item.getProdSgst());
+        Log.i("dbhelper","sp "+item.getProdSp());
+        contentValues.put(PROD_SP, item.getProdSp());
+        contentValues.put(TOTAL_AMOUNT, totalAmount);
+
+        float rate = ((item.getProdSp() * (item.getProdCgst()+item.getProdSgst()))/(100 +
+                (item.getProdCgst()+item.getProdSgst())));
+        Log.d("Rate ", ""+rate);
+        contentValues.put(PROD_CGST, rate/2);
+        contentValues.put(PROD_IGST, rate);
+        contentValues.put(PROD_SGST, rate/2);
+
+        db.update(CART_TABLE,contentValues,ID+" = ? AND "+PROD_SP+" != ?",
+                new String[]{String.valueOf(item.getProdId()),String.valueOf(0f)});
 
     }
 
