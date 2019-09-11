@@ -975,6 +975,10 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             recyclerViewOfferDesc.setAdapter(offerDescAdapter);
             recyclerViewOfferDesc.setNestedScrollingEnabled(false);
         }else if(type == 4){
+              RadioButton rbAmount = findViewById(R.id.rb_amount);
+              rbAmount.setChecked(true);
+              additionalAmountType = R.id.rb_amount;
+              editTextAdditionDisAmt.setText("");
               findViewById(R.id.rl_additional_desc).setVisibility(View.VISIBLE);
               fabScan.setVisibility(View.GONE);
         }
