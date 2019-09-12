@@ -44,7 +44,7 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
 
     public static final String TAG = "CCAvenueWeb";
    // public static final String ACCESS_CODE = "4YRUXLSRO20O8NIH";
-    public String orderId = "0";
+    public String orderNumber;
    /* Test
     public static final String ACCESS_CODE = "AVYS02GA48AW12SYWA";
     public static final String MERCHANT_ID = "191918";
@@ -108,14 +108,17 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
         REDIRECT_URL = getResources().getString(R.string.url)+"/web/payment/paymentResponseHandler";
         CANCEL_URL = getResources().getString(R.string.url)+"/web/payment/paymentResponseHandler";
 
+
+        orderNumber = mainIntent.getStringExtra(AvenuesParams.ORDER_ID);
+
       //  REDIRECT_URL = getResources().getString(R.string.url)+"/api/paymentResponseHandler";
      //   CANCEL_URL = getResources().getString(R.string.url)+"/api/paymentResponseHandler";
 
-        Integer randomNum = ServiceUtility.randInt(0, 9999999);
+       /* Integer randomNum = ServiceUtility.randInt(0, 9999999);
        // orderId = mainIntent.getStringExtra(AvenuesParams.ORDER_ID);
         orderId = randomNum.toString();
         Log.i(TAG,"orderID "+orderId);
-        get_RSA();
+        get_RSA();*/
 
 
         Log.i(TAG,"amount "+mainIntent.getStringExtra(AvenuesParams.AMOUNT));
@@ -226,7 +229,7 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
 
             try {
                 String postData = "";
-                postData = AvenuesParams.ACCESS_CODE + "=" + URLEncoder.encode(ACCESS_CODE, "UTF-8") + "&" + AvenuesParams.MERCHANT_ID + "=" + URLEncoder.encode(MERCHANT_ID, "UTF-8") + "&" + AvenuesParams.ORDER_ID + "=" + URLEncoder.encode(orderId, "UTF-8")
+                postData = AvenuesParams.ACCESS_CODE + "=" + URLEncoder.encode(ACCESS_CODE, "UTF-8") + "&" + AvenuesParams.MERCHANT_ID + "=" + URLEncoder.encode(MERCHANT_ID, "UTF-8") + "&" + AvenuesParams.ORDER_ID + "=" + URLEncoder.encode(orderNumber, "UTF-8")
                         + "&" + AvenuesParams.REDIRECT_URL + "=" + URLEncoder.encode(REDIRECT_URL, "UTF-8")
                         + "&" + AvenuesParams.CANCEL_URL + "=" + URLEncoder.encode(CANCEL_URL, "UTF-8")
                         + "&" + AvenuesParams.ENC_VAL + "=" + URLEncoder.encode(encVal, "UTF-8")
@@ -253,7 +256,7 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
     public void get_RSA() {
 
         Log.i(TAG,"Getting RSA...");
-        String url=getResources().getString(R.string.url)+"/api/getRSAKey?orderId="+orderId+"&accessCode="+ACCESS_CODE;
+        String url=getResources().getString(R.string.url)+"/api/getRSAKey?orderId="+orderNumber+"&accessCode="+ACCESS_CODE;
         progressDialog.setMessage("Loading...");
         showProgress(true);
         // Log.i(TAG,"params "+params.toString());
@@ -414,7 +417,8 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
             dataObject = new JSONObject(responseData);
             Log.i(TAG,"Save Response "+dataObject.toString());
             try{
-                dataObject.put("orderNumber",orderId);
+                dataObject.put("orderNumber",orderNumber);
+                dataObject.put("shopCode",sharedPreferences.getString(com.shoppursshop.utilities.Constants.DB_NAME,""));
                 if(dataObject.getString("response_code").equals("0") ||
                         dataObject.getString("status_message").toUpperCase().equals("SUCCESS")){
                     dataObject.put("status", "Done");
@@ -456,7 +460,7 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
         JSONArray shopArray = null;
         try {
             shopArray = new JSONArray(getIntent().getStringExtra("shopArray"));
-            shopArray.getJSONObject(0).put("orderNumber", dataObject.getString("orderNumber"));
+            shopArray.getJSONObject(0).put("orderNumber", orderNumber);
             shopArray.getJSONObject(0).put("transactionId", dataObject.getString("transactionId") );
         } catch (JSONException e) {
             e.printStackTrace();

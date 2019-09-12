@@ -245,6 +245,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                         orderItem = new OrderItem();
                         orderItem.setType(1);
                         orderItem.setId(jsonObject.getString("orderId"));
+                        orderItem.setOrderNumber(jsonObject.getString("orderNumber"));
                         orderItem.setDateTime(jsonObject.getString("orderDate"));
                         orderItem.setCustomerName(jsonObject.getString("custName"));
                         orderItem.setCustCode(jsonObject.getString("custCode"));

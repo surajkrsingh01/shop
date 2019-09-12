@@ -447,8 +447,10 @@ public class BaseActivity extends AppCompatActivity {
 
     public void logout(){
         String IMEI_NO = sharedPreferences.getString(Constants.IMEI_NO,"");
+        String fcmToken = sharedPreferences.getString(Constants.FCM_TOKEN,"");
         editor.clear();
         editor.putString(Constants.IMEI_NO,IMEI_NO);
+        editor.putString(Constants.FCM_TOKEN,fcmToken);
         editor.commit();
         dbHelper.deleteTable(DbHelper.CAT_TABLE);
         dbHelper.deleteTable(DbHelper.SUB_CAT_TABLE);
