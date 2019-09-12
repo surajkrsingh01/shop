@@ -74,7 +74,7 @@ dependencies {
     implementation group: 'log4j', name: 'log4j', version: '1.2.17'
     implementation group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'
     implementation group: 'org.bouncycastle', name: 'bcprov-ext-jdk15on', version: '1.54'
-    implementation files('libs/mPaysdk_uat_2.0.6_27082019.aar')
+    implementation files('libs/mpaysdk_release_2.0.6_16082019.aar')
     testImplementation 'junit:junit:4.12'
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
 }

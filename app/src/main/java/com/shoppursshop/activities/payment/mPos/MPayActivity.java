@@ -40,12 +40,12 @@ import static com.pnsol.sdk.interfaces.PaymentTransactionConstants.SUCCESS;
 public class MPayActivity extends NetworkBaseActivity implements MyItemClickListener {
 
     //Testing
-    private String PARTNER_API_KEY = "763432092B47";
-    private String MERCHANT_API_KEY = "763432092B47";
+   // private String PARTNER_API_KEY = "763432092B47";
+   // private String MERCHANT_API_KEY = "763432092B47";
 
     //Production
-   // private String PARTNER_API_KEY = "E5004EA8E077";
-  //  private String MERCHANT_API_KEY = "DE4B7AF220C7";
+    private String PARTNER_API_KEY = "E5004EA8E077";
+    private String MERCHANT_API_KEY = "DE4B7AF220C7";
 
     private int devicePosition;
     private List<String> list;
