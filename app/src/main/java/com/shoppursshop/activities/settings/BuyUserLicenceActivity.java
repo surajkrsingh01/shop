@@ -255,6 +255,7 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
                     for(int i=0; i<len; i++){
                         jsonObject = jsonArray.getJSONObject(i);
                         item = new UserLicense();
+                        item.setId(jsonObject.getInt("id"));
                         item.setLicenseType(jsonObject.getString("licenseType"));
                         item.setPurchaseDate(jsonObject.getString("purchaseDate"));
                         item.setRenewdDate(jsonObject.getString("renewdDate"));

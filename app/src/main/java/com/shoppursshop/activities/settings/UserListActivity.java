@@ -79,7 +79,7 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemTypeC
         recyclerView.setAdapter(itemAdapter);
 
         fab = findViewById(R.id.fab);
-        if(flag.equals("userList")){
+        if(!flag.equals("userList")){
             fab.setVisibility(View.GONE);
         }
         fab.setOnClickListener(new View.OnClickListener() {
