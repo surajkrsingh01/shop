@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -39,7 +40,9 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemTypeC
     private List<MyUser> itemList;
     private RecyclerView recyclerView;
     private MyUserAdapter itemAdapter;
-    private int usersAllowed,id,type,position;
+    private int deviceId,usersAllowed,id,type,position;
+    private String flag;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +56,16 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemTypeC
 
     private void init(){
 
+        flag = getIntent().getStringExtra("flag");
         itemList = new ArrayList<>();
-        usersAllowed = getIntent().getIntExtra("number",0);
-        id = getIntent().getIntExtra("id",0);
+
+        if(flag.equals("userList")){
+            usersAllowed = getIntent().getIntExtra("number",0);
+            id = getIntent().getIntExtra("id",0);
+        }else{
+            deviceId = getIntent().getIntExtra("deviceId",0);
+        }
+
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -64,19 +74,29 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemTypeC
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         itemAdapter=new MyUserAdapter(this,itemList);
         itemAdapter.setMyItemClickListener(this);
+        itemAdapter.setFlag(flag);
+        itemAdapter.setColorTheme(colorTheme);
         recyclerView.setAdapter(itemAdapter);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
+        if(flag.equals("userList")){
+            fab.setVisibility(View.GONE);
+        }
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(itemList.size() < usersAllowed){
-                    Intent intent = new Intent(UserListActivity.this, AddUserActivity.class);
-                    intent.putExtra("id",""+id);
-                    startActivityForResult(intent,10);
+                if(flag.equals("userList")){
+                    if(itemList.size() < usersAllowed){
+                        Intent intent = new Intent(UserListActivity.this, AddUserActivity.class);
+                        intent.putExtra("id",id);
+                        startActivityForResult(intent,10);
+                    }else{
+                        DialogAndToast.showDialog("Please buy subscription to add new user",UserListActivity.this);
+                    }
                 }else{
-                    DialogAndToast.showDialog("Please buy subscription to add new user",UserListActivity.this);
+
                 }
+
             }
         });
 
@@ -109,6 +129,19 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemTypeC
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"changeUserStatus");
     }
 
+    private void allocateDevice(){
+        MyUser myUser = itemList.get(position);
+        Map<String,String> params=new HashMap<>();
+        params.put("id",""+myUser.getId());
+        params.put("deviceId",""+deviceId);
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+"/api/device/order/allocate_device";
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"allocateDevice");
+    }
+
     @Override
     public void onJsonObjectResponse(JSONObject response, String apiName) {
 
@@ -133,9 +166,22 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemTypeC
                         itemList.add(myUser);
                     }
 
-                    itemAdapter.notifyDataSetChanged();
+                    if(!flag.equals("userList")){
+
+                        if(itemList.size() > 0){
+                            itemAdapter.notifyDataSetChanged();
+                        }else{
+                            Intent intent = new Intent(UserListActivity.this, AddUserActivity.class);
+                            intent.putExtra("id",id);
+                            startActivityForResult(intent,10);
+                        }
+
+                    }else{
+                        itemAdapter.notifyDataSetChanged();
+                    }
 
                 }else{
+                    fab.setVisibility(View.GONE);
                     DialogAndToast.showDialog(response.getString("message"), this);
                 }
             }else if (apiName.equals("changeUserStatus")) {
@@ -155,9 +201,29 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemTypeC
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }
+            }else if (apiName.equals("allocateDevice")) {
+                if (response.getBoolean("status")) {
+                    type =5;
+                    showMyDialog(response.getString("message"));
+                }else{
+                    DialogAndToast.showDialog(response.getString("message"),this);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 10){
+            if(data != null){
+                MyUser myUser = (MyUser)data.getSerializableExtra("myUser");
+                itemList.add(myUser);
+                itemAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -177,6 +243,9 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemTypeC
      }else if(type == 3){
          //enable
          showMyBothDialog("Are you sure want to enable selected user?","NO","YES");
+     }else if(type == 4){
+         //enable
+         showMyBothDialog("Are you sure want to allocate device to selected user?","NO","YES");
      }
     }
 
@@ -191,6 +260,12 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemTypeC
         }else if(type == 3){
             //enable
             changeStatus("1");
+        }else if(type == 4){
+            //allocate
+          //  changeStatus("1");
+            allocateDevice();
+        }else if(type == 5){
+            finish();
         }
     }
 }

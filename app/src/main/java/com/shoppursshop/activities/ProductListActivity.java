@@ -110,9 +110,9 @@ public class ProductListActivity extends BaseActivity implements MyImageClickLis
                     pastVisibleItems = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
                     Log.i(TAG,"total visible "+(visibleItemCount+pastVisibleItems));
 
-                    if (loading) {
+                    if (!loading) {
                         if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                            loading = false;
+                            loading = true;
                             offset = limit + offset;
                             List<Object> nextItemList = dbHelper.getProducts(subCatID,limit,offset);
                             for(Object ob : nextItemList){
@@ -126,7 +126,7 @@ public class ProductListActivity extends BaseActivity implements MyImageClickLis
                                 recyclerView.post(new Runnable() {
                                     public void run() {
                                         myItemAdapter.notifyItemRangeInserted(offset,limit);
-                                        loading = true;
+                                        loading = false;
                                     }
                                 });
                                 Log.d(TAG, "NEXT ITEMS LOADED");

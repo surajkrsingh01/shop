@@ -9,6 +9,8 @@ public class Constants {
 
     public static String MYPREFERENCEKEY="com."+APP_NAME+".MyPrefs";
     public static String USER_ID="userID";
+    public static String MERCHANT_ID="merchantId";
+    public static String PARTNER_ID="partnerId";
     public static String IMEI_NO="imeiNo";
     public static String USER_TYPE_ID="user_type_id";
     public static String USER_TYPE="user_type";
@@ -71,6 +73,9 @@ public class Constants {
     public static String IS_PRODUCT_ADDED="isProductAdded";
     public static String MERCHANT_REF_NO="merchantRefNo";
     public static String SYNCED_DATE="syncedDate";
+
+    public static String DEVICE_SER_NO="deviceSerNum";
+    public static String DEVICE_MODEL="deviceModel";
 
     public static String FCM_TOKEN="fcmToken";
     public static String IS_TOKEN_SAVED="isTokenSaved";

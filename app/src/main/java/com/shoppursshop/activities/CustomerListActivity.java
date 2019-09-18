@@ -84,8 +84,10 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.grey900), PorterDuff.Mode.SRC_ATOP);
 
-        itemList = dbHelper.getCustomerList("Y");
-        itemListFav = dbHelper.getFavCustomerList("Y");
+        itemList = new ArrayList<>();
+        itemListFav = new ArrayList<>();
+
+        Log.i(TAG,"no fav list "+itemList.size()+" fav size "+itemListFav.size());
 
         swipeRefreshLayout=findViewById(R.id.swipe_refresh);
         progressBar=findViewById(R.id.progress_bar);
@@ -123,12 +125,24 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
         recyclerViewFav.setAdapter(myItemAdapterFav);
         recyclerViewFav.setNestedScrollingEnabled(false);
 
+        /*if(itemList.size() == 0){
+            showNoData(true);
+        }else{
+            showNoData(false);
+        }
+
+        if(itemListFav.size() == 0){
+            showNoFavData(true);
+        }else{
+            showNoFavData(false);
+        }*/
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(false);
                 if (ConnectionDetector.isNetworkAvailable(CustomerListActivity.this)){
-                    refreshCustomerList();
+                    getItemList();
                 }
             }
         });
@@ -171,6 +185,27 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
 
         if(bottomSearchFragment != null){
             bottomSearchFragment.dismiss();
+        }
+
+        List<Object> itemNewList = dbHelper.getCustomerList("N",limit,offset);
+        List<Object> itemNewListFav = dbHelper.getFavCustomerList("Y",limit,offset);
+        itemList.clear();
+        itemListFav.clear();
+        itemList.addAll(itemNewList);
+        itemListFav.addAll(itemNewListFav);
+
+        if(itemList.size() == 0){
+            showNoData(true);
+        }else{
+            showNoData(false);
+            myItemAdapter.notifyDataSetChanged();
+        }
+
+        if(itemListFav.size() == 0){
+            showNoFavData(true);
+        }else{
+            showNoFavData(false);
+            myItemAdapterFav.notifyDataSetChanged();
         }
     }
 
@@ -250,9 +285,9 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
                     JSONObject jsonObject = null;
                     int len = dataArray.length();
                     MyCustomer myCustomer= null;
-                    itemList.clear();
-                    itemListFav.clear();
-                    dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
+                   // itemList.clear();
+                  //  itemListFav.clear();
+                    //dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
                     //setHeaders();
                     for (int i = 0; i < len; i++) {
                         jsonObject = dataArray.getJSONObject(i);
@@ -274,16 +309,18 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
                         myCustomer.setRatings((float)jsonObject.getDouble("ratings"));
                         myCustomer.setStatus(jsonObject.getString("isActive"));
                         myCustomer.setCustUserCreateStatus(jsonObject.getString("userCreateStatus"));
-                        myCustomer.setLocalImage(R.drawable.author_1);
-                        if(myCustomer.getIsFav().equals("Y")){
-                            itemListFav.add(myCustomer);
+
+                        if(!dbHelper.checkCustomerExistInCart(jsonObject.getString("code"))){
+                            if(myCustomer.getIsFav().equals("Y")){
+                                itemListFav.add(myCustomer);
+                            }else{
+                                myCustomer.setIsFav("N");
+                                itemList.add(myCustomer);
+                            }
+                            dbHelper.addCustomerInfo(myCustomer,Utility.getTimeStamp(),Utility.getTimeStamp());
                         }else{
-                            myCustomer.setIsFav("N");
-                            itemList.add(myCustomer);
+                            dbHelper.updatedCustomerInfo(myCustomer,Utility.getTimeStamp());
                         }
-
-                        dbHelper.addCustomerInfo(myCustomer,Utility.getTimeStamp(),Utility.getTimeStamp());
-
                     }
 
                     if(itemList.size() == 0){

@@ -1139,6 +1139,30 @@ public class DbHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updatedCustomerInfo(MyCustomer item,String updatedAt){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NAME, item.getName());
+        contentValues.put(PHOTO, item.getImage());
+        contentValues.put(MOBILE_NO, item.getMobile());
+        contentValues.put(EMAIL, item.getEmail());
+        contentValues.put(ADDRESS, item.getAddress());
+        contentValues.put(COUNTRY, item.getCountry());
+        contentValues.put(STATE, item.getState());
+        contentValues.put(CITY, item.getCity());
+        contentValues.put(LOCALITY, item.getLocality());
+        contentValues.put(LATITUDE, item.getLatitude());
+        contentValues.put(LONGITUDE, item.getLongitude());
+        contentValues.put(IS_FAV, item.getIsFav());
+        contentValues.put(RATINGS, item.getRatings());
+        contentValues.put(USER_CREATE_STATUS, item.getCustUserCreateStatus());
+        contentValues.put(STATUS, item.getStatus());
+        contentValues.put(UPDATED_AT, updatedAt);
+        db.update(CUSTOMER_INFO_TABLE, contentValues,CODE + " = ?",new String[]{item.getCode()});
+        Log.i("DbHelper","Customer Row is updated");
+        return true;
+    }
+
 
     public String getCategoryName(String catId){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -2764,9 +2788,9 @@ public class DbHelper extends SQLiteOpenHelper {
         return itemList;
     }
 
-    public List<Object> getCustomerList(String isFav){
+    public List<Object> getCustomerList(String isFav,int limit,int offset){
         SQLiteDatabase db = this.getReadableDatabase();
-        final String query="select * from "+CUSTOMER_INFO_TABLE+" where "+IS_FAV+" != ?";
+        final String query="select * from "+CUSTOMER_INFO_TABLE+" where "+IS_FAV+" = ?";
         Cursor res =  db.rawQuery(query, new String[]{isFav});
         List<Object> myCustomerList = new ArrayList<>();
         MyCustomer myCustomer = null;
@@ -2798,7 +2822,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return myCustomerList;
     }
 
-    public List<Object> getFavCustomerList(String isFav){
+    public List<Object> getFavCustomerList(String isFav,int limit,int offset){
         SQLiteDatabase db = this.getReadableDatabase();
         final String query="select * from "+CUSTOMER_INFO_TABLE+" where "+IS_FAV+" = ?";
         Cursor res =  db.rawQuery(query, new String[]{isFav});
@@ -2841,6 +2865,17 @@ public class DbHelper extends SQLiteOpenHelper {
         cursor.close();
         // return count
         return count;
+    }
+
+    public boolean checkCustomerExistInCart(String code){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+CUSTOMER_INFO_TABLE+" WHERE "+CODE+" = ?";
+        Cursor res =  db.rawQuery(query, new String[]{code});
+        if(res.getCount() > 0){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 
@@ -3101,6 +3136,18 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put(FREE_PRODUCT_POSITION, position);
         db.update(SHOP_CART_TABLE,contentValues,ID+" = ? AND "+PROD_SP+" != ?",
                 new String[]{String.valueOf(prodId),String.valueOf(0f)});
+
+    }
+
+    public void updateFavStatus(String code,String status){
+        SQLiteDatabase db = this.getReadableDatabase();
+        // query="UPDATE "+PRODUCT_TABLE+" SET "+PROD_QOH+" = ? where "+PROD_CODE+" = ?";
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(IS_FAV, status);
+        db.update(CUSTOMER_INFO_TABLE,contentValues,CODE+" = ?",
+                new String[]{code});
+
+        Log.i("dbhelper","status updated "+status+" code "+code);
 
     }
 

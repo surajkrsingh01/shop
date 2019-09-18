@@ -18,19 +18,46 @@
         android:layout_width="@dimen/customer_list_image_size"
         android:layout_height="@dimen/customer_list_image_size" />
 
-    <ImageView
-        android:id="@+id/image_menu"
-        android:tint="@color/secondary_text_color"
+    <LinearLayout
+        android:id="@+id/ll_action_right"
         android:layout_alignParentRight="true"
         android:layout_marginLeft="12dp"
-        app:srcCompat="@drawable/ic_more_vert_black_24dp"
-        android:padding="8dp"
-        android:layout_width="36dp"
-        android:layout_height="36dp" />
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_allocate"
+            android:layout_below="@+id/tv_serial_number"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/red_solid_round_corner_background"
+            android:textColor="@color/white"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="Allocate"
+            android:visibility="visible"
+            android:layout_alignParentRight="true"
+            android:textSize="@dimen/home_list_header_text_size"
+            android:textAllCaps="true"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp" />
+
+        <ImageView
+            android:id="@+id/image_menu"
+            android:visibility="gone"
+            android:tint="@color/secondary_text_color"
+            app:srcCompat="@drawable/ic_more_vert_black_24dp"
+            android:padding="8dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
+
+    </LinearLayout>
+
+
 
     <RelativeLayout
         android:layout_toRightOf="@+id/tv_initial"
-        android:layout_toLeftOf="@+id/image_menu"
+        android:layout_toLeftOf="@+id/ll_action_right"
         android:layout_marginLeft="12dp"
         android:layout_centerVertical="true"
         android:layout_width="match_parent"
@@ -53,6 +80,5 @@
             android:layout_width="match_parent"/>
 
     </RelativeLayout>
-
 
 </RelativeLayout>

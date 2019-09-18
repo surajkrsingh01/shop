@@ -71,6 +71,10 @@ public class MPayActivity extends NetworkBaseActivity implements MyItemClickList
     }
 
     private void init(){
+
+        PARTNER_API_KEY = sharedPreferences.getString(Constants.PARTNER_ID,"");
+        MERCHANT_API_KEY = sharedPreferences.getString(Constants.MERCHANT_ID,"");
+
         String devType = getIntent().getStringExtra("deviceType");
         deviceType = devType;
         Log.i(TAG,"device type "+devType+" "+deviceType);

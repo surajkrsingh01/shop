@@ -370,10 +370,14 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
             if (apiName.equals("setFavStatus")) {
                 if (response.getBoolean("status")) {
                     if(isFav.equals("Y")){
+                        dbHelper.updateFavStatus(custCode,"N");
+                        Log.i(TAG,"status updated");
                         isFav = "N";
                         imageFav.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                     }else{
+                        dbHelper.updateFavStatus(custCode,"Y");
                         isFav = "Y";
+                        Log.i(TAG,"status updated");
                         imageFav.setImageResource(R.drawable.ic_favorite_black_24dp);
                     }
 

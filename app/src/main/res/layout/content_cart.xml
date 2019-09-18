@@ -544,7 +544,7 @@
             android:text="Choose Payment Option"
             android:textColor="@color/white"
             android:background="@color/colorAccent"
-            android:padding="12dp"
+            android:padding="@dimen/activity_vertical_margin"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -556,7 +556,7 @@
             android:layout_below="@id/tv_pay_option_header"
             android:text="Cash"
             android:textColor="?attr/primaryTextColor"
-            android:padding="12dp"
+            android:padding="@dimen/activity_vertical_margin"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -568,7 +568,7 @@
             android:clickable="true"
             android:visibility="gone"
             android:textColor="?attr/primaryTextColor"
-            android:padding="12dp"
+            android:padding="@dimen/activity_vertical_margin"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -580,7 +580,7 @@
             android:layout_below="@id/tv_pay_cash"
             android:text="ME30S"
             android:textColor="?attr/primaryTextColor"
-            android:padding="12dp"
+            android:padding="@dimen/activity_vertical_margin"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -592,7 +592,7 @@
             android:clickable="true"
             android:visibility="gone"
             android:textColor="?attr/primaryTextColor"
-            android:padding="12dp"
+            android:padding="@dimen/activity_vertical_margin"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

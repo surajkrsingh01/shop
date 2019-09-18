@@ -97,10 +97,11 @@
                 <TextView
                     android:id="@+id/text_my_fav"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:text="Favourite Customers"
-                    android:textColor="?attr/primaryTextColor"
+                    android:text="My Favourite Customers"
+                    android:textColor="?attr/secondaryTextColor"
                     android:textSize="@dimen/home_list_desc_text_size"
-                    android:visibility="gone"
+                    android:visibility="visible"
+                    android:textStyle="bold"
                     android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -117,10 +118,11 @@
                 <TextView
                     android:id="@+id/text_customer_label"
                     android:layout_marginTop="10dp"
-                    android:text="Customer List"
-                    android:visibility="gone"
+                    android:text="My Customers"
+                    android:visibility="visible"
                     android:layout_below="@+id/text_title"
-                    android:textColor="?attr/primaryTextColor"
+                    android:textColor="?attr/secondaryTextColor"
+                    android:textStyle="bold"
                     android:textSize="@dimen/home_list_desc_text_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

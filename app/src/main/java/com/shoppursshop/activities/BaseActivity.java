@@ -58,7 +58,7 @@ public class BaseActivity extends AppCompatActivity {
     protected int limit = 20,offset = 0;
     protected int smallLimit = 4,smallOffset = 0;
     protected int visibleItemCount,pastVisibleItems,totalItemCount;
-    protected boolean loading=true,isScroll = true;
+    protected boolean loading=false,isScroll = true;
 
     protected String token,appName,appVersion;
 
@@ -476,6 +476,7 @@ public class BaseActivity extends AppCompatActivity {
         dbHelper.deleteTable(DbHelper.CART_PRODUCT_UNIT_TABLE);
         dbHelper.deleteTable(DbHelper.CART_PRODUCT_SIZE_TABLE);
         dbHelper.deleteTable(DbHelper.CART_PRODUCT_COLOR_TABLE);
+        dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
 
         Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);

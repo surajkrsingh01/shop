@@ -169,7 +169,12 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             @Override
             public void onClick(View view) {
                 relativeLayoutPayOptionLayout.setVisibility(View.VISIBLE);
-                tvMPos.setVisibility(View.VISIBLE);
+                if(TextUtils.isEmpty(sharedPreferences.getString(Constants.MERCHANT_ID,""))){
+                    tvMPos.setVisibility(View.GONE);
+                }else{
+                    tvMPos.setVisibility(View.VISIBLE);
+                }
+
                 tvCard.setVisibility(View.GONE);
                 tvAndroidPos.setVisibility(View.GONE);
             }

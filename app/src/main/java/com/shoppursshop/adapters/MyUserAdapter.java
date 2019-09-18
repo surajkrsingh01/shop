@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,13 +27,21 @@ public class MyUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private List<MyUser> itemList;
     private Context context;
-    private String type;
-    private int counter;
+    private String type,flag;
+    private int counter,colorTheme;
 
     private MyItemTypeClickListener myItemClickListener;
 
     public void setMyItemClickListener(MyItemTypeClickListener myItemClickListener) {
         this.myItemClickListener = myItemClickListener;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    public void setColorTheme(int colorTheme) {
+        this.colorTheme = colorTheme;
     }
 
     public MyUserAdapter(Context context, List<MyUser> itemList) {
@@ -45,6 +54,7 @@ public class MyUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         private TextView textName,textMobile,textInitials;
         private ImageView imageMenu;
+        private Button btn_allocate;
 
         public MyHomeHeaderViewHolder(View itemView) {
             super(itemView);
@@ -52,7 +62,16 @@ public class MyUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             textMobile=itemView.findViewById(R.id.text_mobile);
             textInitials=itemView.findViewById(R.id.tv_initial);
             imageMenu=itemView.findViewById(R.id.image_menu);
-            imageMenu.setOnClickListener(this);
+            btn_allocate=itemView.findViewById(R.id.btn_allocate);
+            Utility.setColorFilter(btn_allocate.getBackground(),colorTheme);
+            if(!flag.equals("userList")){
+                imageMenu.setVisibility(View.GONE);
+                btn_allocate.setVisibility(View.VISIBLE);
+                btn_allocate.setOnClickListener(this);
+            }else{
+                imageMenu.setOnClickListener(this);
+                btn_allocate.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -83,6 +102,8 @@ public class MyUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                       return false;
                   }
               });
+          }else if(view == btn_allocate){
+              myItemClickListener.onItemClicked(getAdapterPosition(),4);
           }
         }
     }

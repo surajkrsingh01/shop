@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.models.MyUser;
+import com.shoppursshop.services.NotificationService;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
@@ -123,12 +124,14 @@ public class AddUserActivity extends NetworkBaseActivity {
                     myUser = new MyUser();
                     myUser.setId(jsonObject.getString("id"));
                     myUser.setUsername(jsonObject.getString("username"));
-                    myUser.setMobile(jsonObject.getString("mobileNo"));
+                    myUser.setMobile(jsonObject.getString("mobile"));
                     myUser.setIsActive(jsonObject.getString("isActive"));
                    // myUser.setImeiNo(jsonObject.getString("isActive"));
                     myUser.setDbName(jsonObject.getString("dbName"));
                     myUser.setDbUserName(jsonObject.getString("dbUserName"));
                     myUser.setDbPassword(jsonObject.getString("dbPassword"));
+                    NotificationService.displayNotification(this,"Password for "+myUser.getUsername()+
+                            " is "+jsonObject.getString("mpassword"));
                     showMyDialog(response.getString("message"));
                 }else{
                     DialogAndToast.showDialog(response.getString("message"), this);
