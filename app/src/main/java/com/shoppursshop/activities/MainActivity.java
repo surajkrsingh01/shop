@@ -48,13 +48,12 @@ import java.util.Map;
 
 public class MainActivity extends NetworkBaseActivity implements MyImageClickListener {
 
-    private RecyclerView recyclerView,recyclerViewPreOrders;
-    private OrderAdapter myItemAdapter,preItemAdapter;
-    private List<Object> itemList,preItemList;
-    private TextView textViewError,textViewNoTodayOrders;
+    private RecyclerView recyclerView;
+    private OrderAdapter myItemAdapter;
+    private List<Object> itemList;
+    private TextView textViewError;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
-    private TextView textViewPreOrderLabel;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
 
     private Button btnUpdateStock,btnLoadMore;
@@ -77,7 +76,6 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         Log.i(TAG,"available memory "+ activityManager.getMemoryClass());
 
         itemList = new ArrayList<>();
-        preItemList = new ArrayList<>();
         HomeListItem myItem = new HomeListItem();
        // myItem.setTitle("Sunday 16 December, 2018");
         myItem.setTitle(Utility.getTimeStamp("EEE dd MMMM, yyyy"));
@@ -88,27 +86,39 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         swipeRefreshLayout=findViewById(R.id.swipe_refresh);
         progressBar=findViewById(R.id.progress_bar);
         textViewError = findViewById(R.id.text_error);
-        textViewNoTodayOrders = findViewById(R.id.text_no_today_order);
-        textViewPreOrderLabel = findViewById(R.id.text_pre_order_label);
         recyclerView=findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
+        final RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         myItemAdapter=new OrderAdapter(this,itemList,"orderList");
         myItemAdapter.setMyImageClickListener(this);
         recyclerView.setAdapter(myItemAdapter);
-        recyclerView.setNestedScrollingEnabled(false);
 
-        recyclerViewPreOrders=findViewById(R.id.recycler_view_pre_orders);
-        recyclerViewPreOrders.setHasFixedSize(true);
-        RecyclerView.LayoutManager preLayoutManager=new LinearLayoutManager(this);
-        recyclerViewPreOrders.setLayoutManager(preLayoutManager);
-        recyclerViewPreOrders.setItemAnimator(new DefaultItemAnimator());
-        preItemAdapter=new OrderAdapter(this,preItemList,"orderList");
-        preItemAdapter.setMyImageClickListener(this);
-        recyclerViewPreOrders.setAdapter(preItemAdapter);
-        recyclerViewPreOrders.setNestedScrollingEnabled(false);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (isScroll) {
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    Log.i(TAG,"visible "+visibleItemCount+" total "+totalItemCount);
+                    pastVisibleItems = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+                    Log.i(TAG,"past visible "+(pastVisibleItems));
+
+                    if (!loading) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            loading = true;
+                            offset = limit + offset;
+                            getItemList();
+                        }
+                    }
+
+                }
+            }
+        });
+
 
         fabNewOrder = findViewById(R.id.fab_new_order);
         fabNewOrder.setOnClickListener(new View.OnClickListener() {
@@ -125,15 +135,6 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,UpdateStockActivity.class);
                 startActivity(intent);
-            }
-        });
-
-        btnLoadMore = findViewById(R.id.btn_load_more);
-        btnLoadMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                offset = offset + limit;
-                getItemList();
             }
         });
 
@@ -216,9 +217,6 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
             if(type.equals("today")){
                 ((OrderItem)itemList.get(position)).setStatus(status);
                 myItemAdapter.notifyItemChanged(position);
-            }else{
-                ((OrderItem)preItemList.get(position)).setStatus(status);
-                preItemAdapter.notifyItemChanged(position);
             }
 
             editor.putInt("orderPosition",-1);
@@ -263,42 +261,33 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
                         if(Utility.getTimeStamp("yyyy-MM-dd").equals(orderItem.getDateTime().split(" ")[0]))
                         itemList.add(orderItem);
-                        else
-                        preItemList.add(orderItem);
-                    }
-
-                    if(len == 0){
-                        showNoData(false);
-                    }else{
-                        showNoData(false);
-                        myItemAdapter.notifyDataSetChanged();
-                    }
-
-                    if(len == limit){
-                        Log.i(TAG,"Load more is visible");
-                        btnLoadMore.setVisibility(View.VISIBLE);
-                    }else {
-                        btnLoadMore.setVisibility(View.GONE);
+                        //else
+                        //preItemList.add(orderItem);
                     }
 
                     if(itemList.size() == 1){
-                        //recyclerView.setVisibility(View.GONE);
-                        textViewNoTodayOrders.setVisibility(View.VISIBLE);
+                        showNoData(true);
                     }else{
-                       // recyclerView.setVisibility(View.VISIBLE);
-                        textViewNoTodayOrders.setVisibility(View.GONE);
+                        showNoData(false);
+                        if(len < limit){
+                            isScroll = false;
+                        }
+                        if(len > 0){
+                            if(offset == 0){
+                                myItemAdapter.notifyDataSetChanged();
+                            }else{
+                                recyclerView.post(new Runnable() {
+                                    public void run() {
+                                        myItemAdapter.notifyItemRangeInserted(offset,limit);
+                                        loading = false;
+                                    }
+                                });
+                                Log.d(TAG, "NEXT ITEMS LOADED");
+                            }
+                        }else{
+                            Log.d(TAG, "NO ITEMS FOUND");
+                        }
                     }
-
-                    if(preItemList.size() == 0){
-                        textViewPreOrderLabel.setVisibility(View.GONE);
-                        recyclerViewPreOrders.setVisibility(View.GONE);
-                    }else{
-                        textViewPreOrderLabel.setVisibility(View.VISIBLE);
-                        recyclerViewPreOrders.setVisibility(View.VISIBLE);
-                        preItemAdapter.notifyDataSetChanged();
-                    }
-
-                    Log.i(TAG,"itemList "+itemList.size()+" pre item list "+preItemList.size());
                 }
 
             }else if (apiName.equals("saveFcmToken")) {
@@ -314,7 +303,6 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
     private void resetItemList(){
         itemList.clear();
-        preItemList.clear();
         HomeListItem myItem = new HomeListItem();
         // myItem.setTitle("Sunday 16 December, 2018");
         myItem.setTitle(Utility.getTimeStamp("EEEE dd MMMM, yyyy"));
@@ -352,10 +340,10 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
     private void showNoData(boolean show){
         if(show){
-            recyclerView.setVisibility(View.GONE);
+           // recyclerView.setVisibility(View.GONE);
             textViewError.setVisibility(View.VISIBLE);
         }else{
-            recyclerView.setVisibility(View.VISIBLE);
+          //  recyclerView.setVisibility(View.VISIBLE);
             textViewError.setVisibility(View.GONE);
         }
     }
@@ -376,9 +364,6 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         OrderItem orderItem = null;
         if(type == 1){
             orderItem = (OrderItem)itemList.get(position);
-            showImageDialog(orderItem.getOrderImage(),view);
-        }else{
-            orderItem = (OrderItem)preItemList.get(position);
             showImageDialog(orderItem.getOrderImage(),view);
         }
     }
