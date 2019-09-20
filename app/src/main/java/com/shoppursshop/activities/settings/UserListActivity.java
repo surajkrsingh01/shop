@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +20,7 @@ import android.view.View;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.adapters.MyUserAdapter;
+import com.shoppursshop.custom.RecyclerItemTouchHelper;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyUser;
@@ -35,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserListActivity extends NetworkBaseActivity implements MyItemTypeClickListener {
+public class UserListActivity extends NetworkBaseActivity implements MyItemTypeClickListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private List<MyUser> itemList;
     private RecyclerView recyclerView;
@@ -77,6 +79,10 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemTypeC
         itemAdapter.setFlag(flag);
         itemAdapter.setColorTheme(colorTheme);
         recyclerView.setAdapter(itemAdapter);
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
 
         fab = findViewById(R.id.fab);
         if(!flag.equals("userList")){
@@ -199,6 +205,7 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemTypeC
                        }
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }else{
+                    itemAdapter.notifyItemChanged(position);
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }
             }else if (apiName.equals("allocateDevice")) {
@@ -267,5 +274,19 @@ public class UserListActivity extends NetworkBaseActivity implements MyItemTypeC
         }else if(type == 5){
             finish();
         }
+    }
+
+    @Override
+    public void onDialogNegativeClicked(){
+        itemAdapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        type = 1;
+       // MyUser myUser = itemList.get(position);
+        this.position = position;
+        showMyBothDialog("Are you sure want to delete selected user?","NO","YES");
+      //  changeStatus("0");
     }
 }
