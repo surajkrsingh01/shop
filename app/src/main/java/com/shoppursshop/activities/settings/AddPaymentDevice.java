@@ -27,6 +27,7 @@ import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.MyDevice;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
@@ -79,7 +80,6 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
         myProductList = new ArrayList<>();
         init();
         getPaymentDevice();
-        getMyDevice();
     }
 
     private void init(){
@@ -105,7 +105,7 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
         // myProductList = dbHelper.getShoppursProducts(subCatId);
         myDeviceAdapter = new MyDeviceAdapter(this, deviceList);
         myDeviceAdapter.setColorTheme(colorTheme);
-      //  myDeviceAdapter.setMyItemClickListener(this);
+        //  myDeviceAdapter.setMyItemClickListener(this);
         recyclerViewMyDevices.setAdapter(myDeviceAdapter);
         recyclerViewMyDevices.setNestedScrollingEnabled(false);
 
@@ -134,6 +134,14 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        if(ConnectionDetector.isNetworkAvailable(this))
+            getMyDevice();
     }
 
     private JSONArray shopArray;
@@ -184,7 +192,7 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                     shopObject.put("orderImage",sharedPreferences.getString(Constants.PHOTO,""));
                     shopObject.put("totalQuantity",total_quantity);
                     shopObject.put("toalAmount",total_amount);
-                   // shopObject.put("ordCouponId","");
+                    // shopObject.put("ordCouponId","");
                     //shopObject.put("totCgst",String.valueOf(dbHelper.getTaxesCart("cgst")));
                     //shopObject.put("totSgst",String.valueOf(dbHelper.getTaxesCart("sgst")));
                     //shopObject.put("totIgst",String.valueOf(dbHelper.getTaxesCart("igst")));
@@ -366,7 +374,7 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                     if(myProductList.size()>0){
                         shoppursProductAdapter.notifyDataSetChanged();
                     }else {
-                         showNoProduct(true);
+                        showNoProduct(true);
                     }
                 }else{
                     showNoProduct(true);
@@ -411,6 +419,7 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                     MyDevice item = null;
                     JSONObject jsonObject = null;
                     int len = jsonArray.length();
+                    deviceList.clear();
                     for(int i=0; i<len; i++){
                         jsonObject = jsonArray.getJSONObject(i);
                         item = new MyDevice();
@@ -481,7 +490,7 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
             if(data != null){
                 try {
                     JSONObject jsonObject = new JSONObject(data.getStringExtra("response"));
-                   // Log.i(TAG,"Transaction status "+jsonObject.getString("order_status"));
+                    // Log.i(TAG,"Transaction status "+jsonObject.getString("order_status"));
                     String statusCode = jsonObject.getString("response_code");
                     if(statusCode.equals("0")){
                         //showMyDialog(data.getStringExtra("message"));
@@ -513,11 +522,11 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
         if(show){
             tvErrorNoProduct.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
-           // text_add_payment_device_label.setVisibility(View.GONE);
+            // text_add_payment_device_label.setVisibility(View.GONE);
         }else{
             tvErrorNoProduct.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-          //  text_add_payment_device_label.setVisibility(View.VISIBLE);
+            //  text_add_payment_device_label.setVisibility(View.VISIBLE);
         }
     }
 

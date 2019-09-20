@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,11 +54,13 @@ public class MyUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public class MyHomeHeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView textName,textMobile,textInitials;
+        public RelativeLayout viewForeground;
         private ImageView imageMenu;
         private Button btn_allocate;
 
         public MyHomeHeaderViewHolder(View itemView) {
             super(itemView);
+            viewForeground=itemView.findViewById(R.id.rl_foreground);
             textName=itemView.findViewById(R.id.text_name);
             textMobile=itemView.findViewById(R.id.text_mobile);
             textInitials=itemView.findViewById(R.id.tv_initial);
@@ -69,6 +72,7 @@ public class MyUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 btn_allocate.setVisibility(View.VISIBLE);
                 btn_allocate.setOnClickListener(this);
             }else{
+                imageMenu.setVisibility(View.GONE);
                 imageMenu.setOnClickListener(this);
                 btn_allocate.setVisibility(View.GONE);
             }
