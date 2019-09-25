@@ -62,11 +62,11 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
     // TODO: Rename and change types of parameters
     private String language, mParam1;
     private String mParam2;
-    private EditText editFullName, editAddress, editEmail, editMobile, editPassword,
+    private EditText editFullName,edit_shop_name, editAddress, editEmail, editMobile, editPassword,
             editConfPassword, editPanCard, editAadharCard, editGstNo;
     private CheckBox checkBoxTerms;
     private Button btnRegister, btnBack;
-    private String fullName, address,country,state,city, pincode, email, mobile,
+    private String fullName,shopName, address,country,state,city, pincode, email, mobile,
             password, confPassword, panNo, aadharNo, gstNo, idProof, IMEI;
     private double latitude,longitude;
     private MyUser myUser;
@@ -121,6 +121,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
 
     private void init() {
         editFullName = (EditText) rootView.findViewById(R.id.edit_full_name);
+        edit_shop_name = rootView.findViewById(R.id.edit_shop_name);
         editAddress = rootView.findViewById(R.id.edit_address);
         //editPincode = rootView.findViewById(R.id.edit_pincode);
         editEmail = (EditText) rootView.findViewById(R.id.edit_email);
@@ -162,6 +163,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
 
     private void attemptRegister() {
         fullName = editFullName.getText().toString();
+        shopName = edit_shop_name.getText().toString();
         address = editAddress.getText().toString();
         email = editEmail.getText().toString();
         mobile = editMobile.getText().toString();
@@ -214,6 +216,12 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
             editAddress.setError(getResources().getString(R.string.address_required));
         }
 
+        if (TextUtils.isEmpty(shopName)) {
+            focus = edit_shop_name;
+            cancel = true;
+            edit_shop_name.setError(getResources().getString(R.string.shop_name_required));
+        }
+
         if (TextUtils.isEmpty(fullName)) {
             focus = editFullName;
             cancel = true;
@@ -231,7 +239,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
 
                     params.put("shopCode", "shop_" + mobile);
                     params.put("username", fullName);
-                    params.put("shopName", "");
+                    params.put("shopName", shopName);
                     params.put("userEmail", email);
                     params.put("mobile", mobile);
                     params.put("mpassword", password);

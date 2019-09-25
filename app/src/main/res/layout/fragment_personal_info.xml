@@ -40,10 +40,26 @@
             android:layout_height="wrap_content" />
 
         <EditText
+            android:id="@+id/edit_shop_name"
+            android:layout_below="@+id/edit_full_name"
+            android:hint="@string/shop_name"
+            android:inputType="textPersonName"
+            android:imeOptions="actionNext"
+            android:theme="@style/MySelectViewTheme"
+            android:layout_marginTop="@dimen/register_container_margin_top"
+            android:textSize="@dimen/edit_text_small_text_size"
+            android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+            android:paddingTop="@dimen/edit_text_small_vertical_padding"
+            android:paddingLeft="@dimen/edit_text_horizontal_padding"
+            android:paddingRight="@dimen/edit_text_horizontal_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
             android:id="@+id/edit_address"
             android:hint="@string/address"
             android:textSize="@dimen/edit_text_small_text_size"
-            android:layout_below="@+id/edit_full_name"
+            android:layout_below="@+id/edit_shop_name"
             android:gravity="center_vertical"
             android:inputType="none"
             android:focusable="false"
