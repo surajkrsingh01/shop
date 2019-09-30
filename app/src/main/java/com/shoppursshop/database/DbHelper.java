@@ -1723,6 +1723,43 @@ public class DbHelper extends SQLiteOpenHelper {
         return productItem;
     }
 
+    public MyProductItem getProductDetails(String prodCode){
+        Log.i("dbHelper",prodCode);
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+PRODUCT_TABLE+" where "+PROD_CODE+" = ?";
+        Cursor res =  db.rawQuery(query, new String[]{prodCode});
+        MyProductItem productItem = null;
+        if(res.moveToFirst()){
+            productItem=new MyProductItem();
+            productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
+            productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+            productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+            productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
+            productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));
+            productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
+            productItem.setProdReorderLevel(res.getInt(res.getColumnIndex(PROD_REORDER_LEVEL)));
+            productItem.setProdQoh(res.getInt(res.getColumnIndex(PROD_QOH)));
+            productItem.setProdHsnCode(res.getString(res.getColumnIndex(PROD_HSN_CODE)));
+            productItem.setProdCgst(res.getFloat(res.getColumnIndex(PROD_CGST)));
+            productItem.setProdIgst(res.getFloat(res.getColumnIndex(PROD_IGST)));
+            productItem.setProdSgst(res.getFloat(res.getColumnIndex(PROD_SGST)));
+            productItem.setProdWarranty(res.getFloat(res.getColumnIndex(PROD_WARRANTY)));
+            productItem.setProdMfgDate(res.getString(res.getColumnIndex(PROD_MFG_DATE)));
+            productItem.setProdExpiryDate(res.getString(res.getColumnIndex(PROD_EXPIRY_DATE)));
+            productItem.setProdMfgBy(res.getString(res.getColumnIndex(PROD_MFG_BY)));
+            productItem.setProdImage1(res.getString(res.getColumnIndex(PROD_IMAGE_1)));
+            productItem.setProdImage2(res.getString(res.getColumnIndex(PROD_IMAGE_2)));
+            productItem.setProdImage3(res.getString(res.getColumnIndex(PROD_IMAGE_3)));
+            productItem.setIsBarCodeAvailable(res.getString(res.getColumnIndex(IS_BARCODE_AVAILABLE)));
+            productItem.setProdMrp(res.getFloat(res.getColumnIndex(PROD_MRP)));
+            productItem.setProdSp(res.getFloat(res.getColumnIndex(PROD_SP)));
+            productItem.setProductUnitList(getProductUnitList(db,productItem.getProdId()));
+            productItem.setProductSizeList(getProductSizeList(db,productItem.getProdId()));
+        }
+
+        return productItem;
+    }
+
     public MyProductItem getShopCartProductDetails(int prodId){
         SQLiteDatabase db = this.getReadableDatabase();
         final String query="select * from "+SHOP_CART_TABLE+" where "+ID+" = ?";

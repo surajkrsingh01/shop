@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_open_store"
+        android:orderInCategory="100"
+        android:title="Open Store"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_close_store"
+        android:orderInCategory="100"
+        android:visible="false"
+        android:title="Close Store"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_update_stock"
+        android:orderInCategory="100"
+        android:title="Update Stock"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_frequency_order"
+        android:orderInCategory="100"
+        android:title="Frequency Order"
+        android:visible="false"
+        app:showAsAction="always" />
+
+
+</menu>

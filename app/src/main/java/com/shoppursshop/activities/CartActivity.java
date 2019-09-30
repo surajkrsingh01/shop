@@ -1268,4 +1268,10 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         MyProductItem item = (MyProductItem)itemList.get(position);
         showImageDialog(item.getProdImage1(),view);
     }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        dbHelper.deleteTable(DbHelper.CART_TABLE);
+    }
 }

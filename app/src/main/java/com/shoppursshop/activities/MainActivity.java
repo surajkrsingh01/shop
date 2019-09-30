@@ -1,11 +1,13 @@
 package com.shoppursshop.activities;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.appcompat.widget.PopupMenu;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -23,6 +25,7 @@ import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -35,6 +38,7 @@ import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.models.OrderItem;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
 
 import org.json.JSONArray;
@@ -61,6 +65,9 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
     private CoordinatorLayout coordinatorLayout;
     private NestedScrollView nestedScrollView;
+
+    private ImageView ivMenu;
+    private boolean openingStore;
 
     private float MIN_WIDTH = 200,MIN_HEIGHT = 230,MAX_WIDTH = 200,MAX_HEIGHT = 290;
 
@@ -138,6 +145,40 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
             }
         });
 
+        ivMenu = findViewById(R.id.iv_menu);
+        ivMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG,"menu cliecked");
+                PopupMenu popupMenu = new PopupMenu(MainActivity.this, ivMenu);
+                getMenuInflater().inflate(R.menu.home_menu, popupMenu.getMenu());
+                if(sharedPreferences.getBoolean(Constants.STORE_OPEN_STATUS,false)){
+                    popupMenu.getMenu().getItem(0).setVisible(false);
+                    popupMenu.getMenu().getItem(1).setVisible(true);
+                }else{
+                    popupMenu.getMenu().getItem(0).setVisible(true);
+                    popupMenu.getMenu().getItem(1).setVisible(false);
+                }
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if(item.getTitle().equals("Open Store")){
+                            changeStoreStatus("1");
+                        }else if(item.getTitle().equals("Close Store")){
+                            changeStoreStatus("0");
+                        }else if(item.getTitle().equals("Update Stock")){
+                            Intent intent = new Intent(MainActivity.this,UpdateStockActivity.class);
+                            startActivity(intent);
+                        }
+
+                        return true;
+                    }
+                });
+
+                popupMenu.show();
+            }
+        });
+
         initFooter(this,0);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -161,14 +202,9 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
         if (ConnectionDetector.isNetworkAvailable(this)){
             getItemList();
-            if(!sharedPreferences.getBoolean(Constants.IS_TOKEN_SAVED,false) &&
-            !TextUtils.isEmpty(sharedPreferences.getString(Constants.TOKEN,""))){
-                saveFcmToken();
-            }
         }else{
             showNoNetwork(true);
         }
-
 
     }
 
@@ -195,6 +231,17 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
         String url=getResources().getString(R.string.url)+"/api/user/save_fcm_token";
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"saveFcmToken");
+    }
+
+    private void changeStoreStatus(String status){
+        Map<String,String> params=new HashMap<>();
+        params.put("status",status);
+        params.put("mobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+"/api/user/update_store_open_status";
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"changeOpenStatus");
     }
 
     @Override
@@ -232,6 +279,20 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
         try {
             if (apiName.equals("orders")) {
+                if(!sharedPreferences.getBoolean(Constants.IS_TOKEN_SAVED,false) &&
+                        !TextUtils.isEmpty(sharedPreferences.getString(Constants.TOKEN,""))){
+                    saveFcmToken();
+                }else{
+                    if(!sharedPreferences.getBoolean(Constants.STORE_OPEN_STATUS,false)){
+                        if(!sharedPreferences.getString(Constants.STORE_CLOSE_DATE,"").
+                                equals(Utility.getTimeStamp("yyyy-MM-dd"))){
+                            openingStore = true;
+                            showMyBothDialog("Open your store","Cancel","Open");
+                        }
+
+                    }
+                }
+
                 if (response.getBoolean("status")) {
                     JSONArray dataArray = response.getJSONArray("result");
                     JSONObject jsonObject = null;
@@ -291,9 +352,31 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                 }
 
             }else if (apiName.equals("saveFcmToken")) {
+                if(!sharedPreferences.getBoolean(Constants.STORE_OPEN_STATUS,false)){
+                    if(!sharedPreferences.getString(Constants.STORE_CLOSE_DATE,"").
+                            equals(Utility.getTimeStamp("yyyy-MM-dd"))){
+                        openingStore = true;
+                        showMyBothDialog("Open your store","Cancel","Open");
+                    }
+
+                }
                 if (response.getBoolean("status")) {
                     editor.putBoolean(Constants.IS_TOKEN_SAVED,true);
                     editor.commit();
+                }
+            }else if (apiName.equals("changeOpenStatus")) {
+                if (response.getBoolean("status")) {
+                    int status = response.getInt("result");
+                    if(status == 1){
+                        editor.putBoolean(Constants.STORE_OPEN_STATUS,true);
+                    }else{
+                        editor.putBoolean(Constants.STORE_OPEN_STATUS,false);
+                        editor.putString(Constants.STORE_CLOSE_DATE,Utility.getTimeStamp("yyyy-MM-dd"));
+                    }
+                    editor.commit();
+                    DialogAndToast.showDialog(response.getString("message"),this);
+                }else{
+                    DialogAndToast.showDialog(response.getString("message"),this);
                 }
             }
         }catch (JSONException e) {
@@ -366,5 +449,18 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
             orderItem = (OrderItem)itemList.get(position);
             showImageDialog(orderItem.getOrderImage(),view);
         }
+    }
+
+    @Override
+    public void onDialogPositiveClicked(){
+        if(openingStore){
+            openingStore = false;
+            changeStoreStatus("1");
+        }
+    }
+
+    @Override
+    public void onDialogNegativeClicked(){
+       openingStore =false;
     }
 }

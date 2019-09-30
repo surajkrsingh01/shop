@@ -27,6 +27,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.MainActivity;
+import com.shoppursshop.activities.settings.ChatActivity;
 import com.shoppursshop.utilities.AppController;
 import com.shoppursshop.utilities.Constants;
 
@@ -78,7 +79,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             try {
                 if(message.contains("=")){
                     JSONObject jsonObject = new JSONObject(message.split("=")[1]);
-                    NotificationService.displayNotification(this,jsonObject.getString("message"));
+                    if(jsonObject.getString("flag").equals("chat")){
+                        NotificationService.displayChatNotification(this,
+                                jsonObject.getString("message"),jsonObject.getString("from"));
+                        if(ChatActivity.isVisible){
+                            Intent messageReceived=new Intent();
+                            messageReceived.setAction("com.shoppursshop.broadcast.messageReceived");
+                            messageReceived.putExtra("data",jsonObject.toString());
+                            sendBroadcast(messageReceived);
+                            Log.i("MessageService","Message broadcast sent.");
+                        }
+
+                    }else{
+                        NotificationService.displayNotification(this,jsonObject.getString("message"));
+                    }
+
                 }else{
                     NotificationService.displayNotification(this,message);
                 }

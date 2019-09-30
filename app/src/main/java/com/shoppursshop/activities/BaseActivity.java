@@ -21,6 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.android.volley.Request;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.appbar.AppBarLayout;
@@ -43,6 +44,11 @@ import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.morphdialog.DialogActivity;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.Utility;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -446,41 +452,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void logout(){
-        String IMEI_NO = sharedPreferences.getString(Constants.IMEI_NO,"");
-        String fcmToken = sharedPreferences.getString(Constants.FCM_TOKEN,"");
-        editor.clear();
-        editor.putString(Constants.IMEI_NO,IMEI_NO);
-        editor.putString(Constants.FCM_TOKEN,fcmToken);
-        editor.commit();
-        dbHelper.deleteTable(DbHelper.CAT_TABLE);
-        dbHelper.deleteTable(DbHelper.SUB_CAT_TABLE);
-        dbHelper.deleteTable(DbHelper.PRODUCT_TABLE);
-        dbHelper.deleteTable(DbHelper.PRODUCT_BARCODE_TABLE);
-        dbHelper.deleteTable(DbHelper.PRODUCT_UNIT_TABLE);
-        dbHelper.deleteTable(DbHelper.PRODUCT_SIZE_TABLE);
-        dbHelper.deleteTable(DbHelper.PRODUCT_COLOR_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_TABLE);
-        dbHelper.deleteTable(DbHelper.PROD_COMBO_TABLE);
-        dbHelper.deleteTable(DbHelper.PROD_COMBO_DETAIL_TABLE);
-        dbHelper.deleteTable(DbHelper.PROD_PRICE_TABLE);
-        dbHelper.deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
-        dbHelper.deleteTable(DbHelper.PROD_FREE_OFFER_TABLE);
-        dbHelper.deleteTable(DbHelper.COUPON_TABLE);
-        dbHelper.deleteTable(DbHelper.SHOP_CART_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PROD_PRICE_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PROD_PRICE_DETAIL_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PROD_COMBO_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PROD_COMBO_DETAIL_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PROD_FREE_OFFER_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_COUPON_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PRODUCT_UNIT_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PRODUCT_SIZE_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PRODUCT_COLOR_TABLE);
-        dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
-
-        Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        changeStoreStatus();
     }
 
     void showProgress(boolean show,String message){
@@ -514,6 +486,10 @@ public class BaseActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void changeStoreStatus(){
+
     }
 
 }
