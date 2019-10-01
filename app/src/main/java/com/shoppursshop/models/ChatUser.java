@@ -1,6 +1,6 @@
 package com.shoppursshop.models;
 
-public class ChatUser {
+public class ChatUser{
 	
 	private String userCode,userName,userPic,userMobile,lastMessage,lastMessageDate;
 

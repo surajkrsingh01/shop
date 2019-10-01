@@ -28,6 +28,7 @@ import com.shoppursshop.fragments.BottomSearchFragment;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyListItemClickListener;
 import com.shoppursshop.models.ChatUser;
+import com.shoppursshop.models.MyHeader;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
@@ -43,7 +44,7 @@ import java.util.Map;
 
 public class UserListForChatActivity extends NetworkBaseActivity implements MyItemClickListener, MyListItemClickListener {
 
-    private List<ChatUser> itemList;
+    private List<Object> itemList;
     private RecyclerView recyclerView;
     private ChatUserAdapter myItemAdapter;
     private BottomSearchFragment bottomSearchFragment;
@@ -64,6 +65,11 @@ public class UserListForChatActivity extends NetworkBaseActivity implements MyIt
 
         itemList = new ArrayList<>();
         if(!sharedPreferences.getString(Constants.SHOP_CODE,"").equals("SHP1")){
+
+            MyHeader myHeader = new MyHeader();
+            myHeader.setTitle("Shoppurs Support");
+            itemList.add(myHeader);
+
             ChatUser item = new ChatUser();
             item.setUserCode("SHP1");
             item.setLastMessage("");
@@ -91,6 +97,12 @@ public class UserListForChatActivity extends NetworkBaseActivity implements MyIt
             item.setUserPic("");
             itemList.add(item);
         }
+
+        MyHeader myHeader = new MyHeader();
+        myHeader.setTitle("Customer");
+        itemList.add(myHeader);
+
+
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         final RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
@@ -179,7 +191,7 @@ public class UserListForChatActivity extends NetworkBaseActivity implements MyIt
 
                         //myItemAdapter.notifyDataSetChanged();
 
-                        if(itemList.size() > 3){
+                        if(itemList.size() > 5){
                             if(len < limit){
                                 isScroll = false;
                             }

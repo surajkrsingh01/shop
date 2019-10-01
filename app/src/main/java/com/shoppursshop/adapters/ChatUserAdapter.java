@@ -21,20 +21,39 @@ import com.shoppursshop.activities.settings.ChatActivity;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.ChatUser;
+import com.shoppursshop.models.MyHeader;
 import com.shoppursshop.utilities.Utility;
 
 import java.util.List;
 
 public class ChatUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<ChatUser> itemList;
+    private List<Object> itemList;
     private Context context;
     private int counter;
 
-    public ChatUserAdapter(Context context, List<ChatUser> itemList) {
+    public ChatUserAdapter(Context context, List<Object> itemList) {
         this.itemList = itemList;
         this.context=context;
 
+    }
+
+    public class MyHomeHeader1ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        private TextView textHeader;
+        private Button btnAdd;
+
+        public MyHomeHeader1ViewHolder(View itemView) {
+            super(itemView);
+            textHeader=itemView.findViewById(R.id.text_title);
+            btnAdd=itemView.findViewById(R.id.btn_add);
+            btnAdd.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onClick(View view) {
+
+        }
     }
 
     public class MyHomeHeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -53,7 +72,7 @@ public class ChatUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         @Override
         public void onClick(View view) {
-            ChatUser item = itemList.get(getAdapterPosition());
+            ChatUser item = (ChatUser) itemList.get(getAdapterPosition());
             Intent intent = new Intent(context, ChatActivity.class);
             intent.putExtra("messageTo",item.getUserCode());
             intent.putExtra("messageToName",item.getUserName());
@@ -75,6 +94,10 @@ public class ChatUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 View v0 = inflater.inflate(R.layout.chat_user_item_layout, parent, false);
                 viewHolder = new MyHomeHeaderViewHolder(v0);
                 break;
+            case 1:
+                View v1 = inflater.inflate(R.layout.header_item_type_2_layout, parent, false);
+                viewHolder = new MyHomeHeader1ViewHolder(v1);
+                break;
             default:
                 View v = inflater.inflate(R.layout.chat_user_item_layout, parent, false);
                 viewHolder = new MyHomeHeaderViewHolder(v);
@@ -86,14 +109,19 @@ public class ChatUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        return 0;
+        if(itemList.get(position) instanceof MyHeader){
+            return 1;
+        }else{
+            return 0;
+        }
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MyHomeHeaderViewHolder){
             MyHomeHeaderViewHolder myViewHolder = (MyHomeHeaderViewHolder)holder;
-            ChatUser myUser = itemList.get(position);
+            ChatUser myUser = (ChatUser) itemList.get(position);
             myViewHolder.textName.setText(myUser.getUserName());
             myViewHolder.textLastMessage.setText(myUser.getLastMessage());
             String initials = "";
@@ -111,6 +139,12 @@ public class ChatUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if(counter == 12){
                 counter = 0;
             }
+        }else if(holder instanceof MyHomeHeader1ViewHolder){
+
+            MyHeader item = (MyHeader) itemList.get(position);
+            MyHomeHeader1ViewHolder myViewHolder = (MyHomeHeader1ViewHolder)holder;
+            myViewHolder.textHeader.setText(item.getTitle());
+
         }
     }
 
