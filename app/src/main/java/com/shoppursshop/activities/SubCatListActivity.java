@@ -97,9 +97,9 @@ public class SubCatListActivity extends BaseActivity {
                     if(firstVisibleItems != null && firstVisibleItems.length > 0) {
                         pastVisibleItems = firstVisibleItems[0];
                     }
-                    if (loading) {
+                    if (!loading) {
                         if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                            loading = false;
+                            loading = true;
                             offset = limit + offset;
                             List<Object> nextItemList = dbHelper.getCatSubCategoriesForActivity(catID,limit,offset);
                             for(Object ob : nextItemList){
@@ -112,7 +112,7 @@ public class SubCatListActivity extends BaseActivity {
                                 recyclerView.post(new Runnable() {
                                     public void run() {
                                         myItemAdapter.notifyItemRangeInserted(offset,limit);
-                                        loading = true;
+                                        loading = false;
                                     }
                                 });
                                 Log.d(TAG, "NEXT ITEMS LOADED");

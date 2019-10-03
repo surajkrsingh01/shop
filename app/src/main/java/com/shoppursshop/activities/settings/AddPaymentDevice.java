@@ -21,10 +21,13 @@ import com.shoppursshop.activities.SplashActivity;
 import com.shoppursshop.activities.payment.PaymentActivity;
 import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
+import com.shoppursshop.adapters.MyDeviceAdapter;
 import com.shoppursshop.adapters.ShoppursProductAdapter;
 import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.models.Barcode;
+import com.shoppursshop.models.MyDevice;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
@@ -45,8 +48,11 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
     private String dbName, dbUserName, dbPassword, shopCode, subCatId;
     private String TAG = "AddPaymentDevice";
     private List<MyProductItem> myProductList;
-    private RecyclerView recyclerView;
+    private List<MyDevice> deviceList;
+    private TextView text_device_label,text_add_payment_device_label,tvErrorNoProduct,tvnoMyDeviceData;
+    private RecyclerView recyclerView,recyclerViewMyDevices;
     private ShoppursProductAdapter shoppursProductAdapter;
+    private MyDeviceAdapter myDeviceAdapter;
     private RelativeLayout rlfooterviewcart;
     private float total_amount,totCGST,totSGST,totIGST;
     private int total_quantity, cartSize;
@@ -80,11 +86,30 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
         tv_total = findViewById(R.id.itemPrice);
         tv_totalItems = findViewById(R.id.itemCount);
         tv_placeorder = findViewById(R.id.viewCart);
+        tvErrorNoProduct = findViewById(R.id.tvnoProductData);
+        tvnoMyDeviceData = findViewById(R.id.tvnoMyDeviceData);
+        text_add_payment_device_label = findViewById(R.id.text_add_payment_device_label);
+        text_device_label = findViewById(R.id.text_device_label);
         linear_details = findViewById(R.id.linear_details);
         rlfooterviewcart = findViewById(R.id.rlfooterviewcart);
         rlfooterviewcart.setBackgroundColor(colorTheme);
         tvnoData = findViewById(R.id.tvnoData);
         viewCart = findViewById(R.id.viewCart);
+
+        deviceList = new ArrayList<>();
+        recyclerViewMyDevices = findViewById(R.id.recycler_view_my_devices);
+        recyclerViewMyDevices.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerViewMyDevices.setLayoutManager(layoutManager);
+        recyclerViewMyDevices.setItemAnimator(new DefaultItemAnimator());
+        // myProductList = dbHelper.getShoppursProducts(subCatId);
+        myDeviceAdapter = new MyDeviceAdapter(this, deviceList);
+        myDeviceAdapter.setColorTheme(colorTheme);
+        //  myDeviceAdapter.setMyItemClickListener(this);
+        recyclerViewMyDevices.setAdapter(myDeviceAdapter);
+        recyclerViewMyDevices.setNestedScrollingEnabled(false);
+
+
         viewCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +134,14 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        if(ConnectionDetector.isNetworkAvailable(this))
+            getMyDevice();
     }
 
     private JSONArray shopArray;
@@ -159,7 +192,7 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                     shopObject.put("orderImage",sharedPreferences.getString(Constants.PHOTO,""));
                     shopObject.put("totalQuantity",total_quantity);
                     shopObject.put("toalAmount",total_amount);
-                   // shopObject.put("ordCouponId","");
+                    // shopObject.put("ordCouponId","");
                     //shopObject.put("totCgst",String.valueOf(dbHelper.getTaxesCart("cgst")));
                     //shopObject.put("totSgst",String.valueOf(dbHelper.getTaxesCart("sgst")));
                     //shopObject.put("totIgst",String.valueOf(dbHelper.getTaxesCart("igst")));
@@ -259,6 +292,7 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
         shoppursProductAdapter.setMyImageClickListener(this);
         shoppursProductAdapter.setColorTheme(colorTheme);
         recyclerView.setAdapter(shoppursProductAdapter);
+        recyclerView.setNestedScrollingEnabled(false);
 
         Map<String,String> params=new HashMap<>();
         params.put("subCatId", subCatId);
@@ -270,6 +304,16 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
         String url=getResources().getString(R.string.url)+"/api/customers/products/ret_productslist";
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"productfromshop");
+    }
+
+    private void getMyDevice(){
+        Map<String,String> params=new HashMap<>();
+        params.put("dbUserName",dbUserName);
+        params.put("dbPassword",dbPassword);
+        Log.d(TAG, params.toString());
+        String url=getResources().getString(R.string.url)+"/api/device/order/get_my_devices";
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"getMyDevices");
     }
 
 
@@ -325,11 +369,15 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                         }
 
                     }
+
+                    Log.i(TAG,"product list "+myProductList.size());
                     if(myProductList.size()>0){
                         shoppursProductAdapter.notifyDataSetChanged();
                     }else {
-                        // showNoData(true);
+                        showNoProduct(true);
                     }
+                }else{
+                    showNoProduct(true);
                 }
 
             }else if (apiName.equals("generate_order")){
@@ -338,7 +386,7 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                     String orderNumber = response.getJSONObject("result").getString("orderNumber");
                     Log.d(TAG, "orderNumber "+orderNumber );
                     //placeOrder(shopArray, orderId);  // open payment option
-                    Intent intent = new Intent(AddPaymentDevice.this, PaymentActivity.class);
+                    Intent intent = new Intent(AddPaymentDevice.this, CCAvenueWebViewActivity.class);
                     intent.putExtra("flag", "wallet");
                     intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",total_amount));
                     intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);
@@ -365,8 +413,38 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                 }else {
                     DialogAndToast.showToast(response.getString("message"),AddPaymentDevice.this);
                 }
-            } else {
-                DialogAndToast.showDialog(response.getString("message"),AddPaymentDevice.this);
+            } else if(apiName.equals("getMyDevices")){
+                if(response.getBoolean("status")){
+                    JSONArray jsonArray = response.getJSONArray("result");
+                    MyDevice item = null;
+                    JSONObject jsonObject = null;
+                    int len = jsonArray.length();
+                    deviceList.clear();
+                    for(int i=0; i<len; i++){
+                        jsonObject = jsonArray.getJSONObject(i);
+                        item = new MyDevice();
+                        item.setId(jsonObject.getInt("id"));
+                        item.setSerialNumber(jsonObject.getString("serialNumber"));
+                        item.setModel(jsonObject.getString("model"));
+                        item.setAllotment(jsonObject.getString("allotment"));
+                        item.setMerchantId(jsonObject.getString("merchantId"));
+                        item.setMerchantName(jsonObject.getString("merchantName"));
+                        item.setMaker(jsonObject.getString("maker"));
+                        item.setAllottedUserId(jsonObject.getString("allottedUserId"));
+                        item.setAllottedUserName(jsonObject.getString("allottedUserName"));
+                        item.setAllottedUserMobile(jsonObject.getString("allottedUserMobile"));
+                        item.setStatus(jsonObject.getString("status"));
+                        deviceList.add(item);
+                    }
+
+                    if(deviceList.size() == 0){
+                        showNoMyDevice(true);
+                    }else{
+                        myDeviceAdapter.notifyDataSetChanged();
+                    }
+                }else{
+                    DialogAndToast.showToast(response.getString("message"),AddPaymentDevice.this);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -412,7 +490,7 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
             if(data != null){
                 try {
                     JSONObject jsonObject = new JSONObject(data.getStringExtra("response"));
-                   // Log.i(TAG,"Transaction status "+jsonObject.getString("order_status"));
+                    // Log.i(TAG,"Transaction status "+jsonObject.getString("order_status"));
                     String statusCode = jsonObject.getString("response_code");
                     if(statusCode.equals("0")){
                         //showMyDialog(data.getStringExtra("message"));
@@ -438,5 +516,27 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
     public void onImageClicked(int position, int type, View view) {
         MyProductItem item = myProductList.get(position);
         showImageDialog(item.getProdImage1(),view);
+    }
+
+    private void showNoProduct(boolean show){
+        if(show){
+            tvErrorNoProduct.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            // text_add_payment_device_label.setVisibility(View.GONE);
+        }else{
+            tvErrorNoProduct.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            //  text_add_payment_device_label.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showNoMyDevice(boolean show){
+        if(show){
+            tvnoMyDeviceData.setVisibility(View.VISIBLE);
+            recyclerViewMyDevices.setVisibility(View.GONE);
+        }else{
+            tvnoMyDeviceData.setVisibility(View.GONE);
+            recyclerViewMyDevices.setVisibility(View.VISIBLE);
+        }
     }
 }

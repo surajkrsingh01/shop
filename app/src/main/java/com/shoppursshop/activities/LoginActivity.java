@@ -20,6 +20,7 @@ import com.shoppursshop.R;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.models.Coupon;
 import com.shoppursshop.models.MyCustomer;
+import com.shoppursshop.models.MyDevice;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MySimpleItem;
 import com.shoppursshop.models.ProductColor;
@@ -201,6 +202,8 @@ public class LoginActivity extends NetworkBaseActivity{
                 if(response.getBoolean("status")){
                     JSONObject dataObject=response.getJSONObject("result");
                     editor.putString(Constants.USER_ID,dataObject.getString("id"));
+                   // editor.putString(Constants.MERCHANT_ID,dataObject.getString("merchantId"));
+                    editor.putString(Constants.PARTNER_ID,dataObject.getString("partnerId"));
                     editor.putString(Constants.FULL_NAME,dataObject.getString("username"));
                     editor.putString(Constants.EMAIL,dataObject.getString("userEmail"));
                     editor.putString(Constants.MOBILE_NO,dataObject.getString("mobile"));
@@ -267,11 +270,13 @@ public class LoginActivity extends NetworkBaseActivity{
                     JSONArray priceArray = dataObject.getJSONArray("priceOfferList");
                     JSONArray couponArray = dataObject.getJSONArray("couponOfferList");
                     JSONArray customerArray = dataObject.getJSONArray("customerList");
+                    JSONArray deviceArray = dataObject.getJSONArray("deviceList");
                     JSONArray tempArray = null;
                     JSONObject jsonObject =null,tempObject = null;
                     MySimpleItem item = null;
                     MyProductItem productItem = null;
                     MyCustomer myCustomer = null;
+                    MyDevice myDevice = null;
                     ProductComboOffer productComboOffer = null;
                     ProductComboDetails productComboDetails = null;
                     ProductDiscountOffer productDiscountOffer = null;
@@ -509,6 +514,34 @@ public class LoginActivity extends NetworkBaseActivity{
                             myCustomer.setIsFav("N");
                         }
                         dbHelper.addCustomerInfo(myCustomer,Utility.getTimeStamp(),Utility.getTimeStamp());
+                    }
+
+                    len = deviceArray.length();
+                   // dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
+                    for (int i = 0; i < len; i++) {
+                        dataObject = deviceArray.getJSONObject(i);
+                      /*  myDevice = new MyDevice();
+                        myDevice.setId(dataObject.getInt("id"));
+                        myDevice.setSerialNumber(dataObject.getString("serialNumber"));
+                        myDevice.setModel(dataObject.getString("model"));
+                        myDevice.setAllotment(dataObject.getString("allotment"));
+                        myDevice.setMerchantId(dataObject.getString("merchantId"));
+                        myDevice.setMerchantName(dataObject.getString("merchantName"));
+                        myDevice.setMaker(dataObject.getString("maker"));
+                        myDevice.setAllottedUserId(dataObject.getString("allottedUserId"));
+                        myDevice.setAllottedUserName(dataObject.getString("allottedUserName"));
+                        myDevice.setAllottedUserMobile(dataObject.getString("allottedUserMobile"));
+                        myDevice.setStatus(dataObject.getString("status"));*/
+
+                        if(sharedPreferences.getString(Constants.MOBILE_NO,"").
+                                equals(dataObject.getString("allottedUserMobile")) &&
+                                dataObject.getString("model").equals("ME3POS")){
+                            editor.putString(Constants.MERCHANT_ID,dataObject.getString("merchantId"));
+                            editor.putString(Constants.DEVICE_SER_NO,dataObject.getString("serialNumber"));
+                            editor.putString(Constants.DEVICE_MODEL,dataObject.getString("model"));
+                            editor.commit();
+                        }
+
                     }
 
                     editor.putBoolean(Constants.IS_LOGGED_IN,true);

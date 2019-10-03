@@ -9,6 +9,8 @@ public class Constants {
 
     public static String MYPREFERENCEKEY="com."+APP_NAME+".MyPrefs";
     public static String USER_ID="userID";
+    public static String MERCHANT_ID="merchantId";
+    public static String PARTNER_ID="partnerId";
     public static String IMEI_NO="imeiNo";
     public static String USER_TYPE_ID="user_type_id";
     public static String USER_TYPE="user_type";
@@ -72,11 +74,17 @@ public class Constants {
     public static String MERCHANT_REF_NO="merchantRefNo";
     public static String SYNCED_DATE="syncedDate";
 
+    public static String DEVICE_SER_NO="deviceSerNum";
+    public static String DEVICE_MODEL="deviceModel";
+
     public static String FCM_TOKEN="fcmToken";
     public static String IS_TOKEN_SAVED="isTokenSaved";
     public static String DEVICE_ID="deviceId";
     public static String NOTIFICATION_COUNTER="notificationCounter";
     public static String INIT_DATA_LOADED="initDataLoaded";
+
+    public static String STORE_OPEN_STATUS="storeOpenStatus";
+    public static String STORE_CLOSE_DATE="storeCloseDate";
 
     public static String ANDROID_DEVICE_TYPE="androidDeviceType";
 
@@ -185,5 +193,9 @@ public class Constants {
     public static String GET_PRODUCT_OFFERS_BY_CAT="/api/customers/products/ret_productslist_with_offers_by_cat";
 
     public static String UPDATE_STOCK="/api/products/update_stock";
+
+    public static String GET_CHAT_USERS="/api/chat/get_chat_users";
+    public static String SEND_MESSAGE="/api/chat/chat_for_support";
+    public static String GET_MESSAGE="/api/chat/get_chat_for_support";
 
 }

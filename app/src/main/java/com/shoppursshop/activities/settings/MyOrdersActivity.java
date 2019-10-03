@@ -38,7 +38,7 @@ public class MyOrdersActivity extends NetworkBaseActivity implements MyImageClic
     private OrderAdapter myItemAdapter;
     private List<Object> itemList;
     private TextView textViewError,tv_top_parent, text_second_label;
-
+    RecyclerView.LayoutManager layoutManager;
     private String flag;
 
     @Override
@@ -58,12 +58,35 @@ public class MyOrdersActivity extends NetworkBaseActivity implements MyImageClic
         textViewError = findViewById(R.id.text_no_order);
         recyclerView=findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
+        layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         myItemAdapter=new OrderAdapter(this,itemList,"orderList");
         myItemAdapter.setMyImageClickListener(this);
         recyclerView.setAdapter(myItemAdapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (isScroll) {
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    Log.i(TAG,"visible "+visibleItemCount+" total "+totalItemCount);
+                    pastVisibleItems = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+                    Log.i(TAG,"past visible "+(pastVisibleItems));
+
+                    if (!loading) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            loading = true;
+                            offset = limit + offset;
+                            getItemList();
+                        }
+                    }
+
+                }
+            }
+        });
 
         if (ConnectionDetector.isNetworkAvailable(this)){
             getItemList();
@@ -141,7 +164,25 @@ public class MyOrdersActivity extends NetworkBaseActivity implements MyImageClic
                         showNoData(true);
                     }else{
                         showNoData(false);
-                        myItemAdapter.notifyDataSetChanged();
+                        if(len < limit){
+                            isScroll = false;
+                        }
+                        if(len > 0){
+                            if(offset == 0){
+                                myItemAdapter.notifyDataSetChanged();
+                            }else{
+                                recyclerView.post(new Runnable() {
+                                    public void run() {
+                                        myItemAdapter.notifyItemRangeInserted(offset,limit);
+                                        loading = false;
+                                    }
+                                });
+                                Log.d(TAG, "NEXT ITEMS LOADED");
+                            }
+                        }else{
+                            Log.d(TAG, "NO ITEMS FOUND");
+                        }
+                       // myItemAdapter.notifyDataSetChanged();
                     }
 
                 }

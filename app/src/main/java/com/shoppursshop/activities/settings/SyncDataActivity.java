@@ -131,6 +131,7 @@ public class SyncDataActivity extends NetworkBaseActivity {
                     JSONArray priceArray = dataObject.getJSONArray("priceOfferList");
                     JSONArray couponArray = dataObject.getJSONArray("couponOfferList");
                     JSONArray customerArray = dataObject.getJSONArray("customerList");
+                    JSONArray deviceArray = dataObject.getJSONArray("deviceList");
                     JSONArray tempArray = null;
                     JSONObject jsonObject =null,tempObject = null;
                     MySimpleItem item = null;
@@ -398,6 +399,34 @@ public class SyncDataActivity extends NetworkBaseActivity {
                     }
 
                     ((MySimpleItem)itemList.get(3)).setSelected(true);
+
+                    len = deviceArray.length();
+                    // dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
+                    for (int i = 0; i < len; i++) {
+                        dataObject = deviceArray.getJSONObject(i);
+                      /*  myDevice = new MyDevice();
+                        myDevice.setId(dataObject.getInt("id"));
+                        myDevice.setSerialNumber(dataObject.getString("serialNumber"));
+                        myDevice.setModel(dataObject.getString("model"));
+                        myDevice.setAllotment(dataObject.getString("allotment"));
+                        myDevice.setMerchantId(dataObject.getString("merchantId"));
+                        myDevice.setMerchantName(dataObject.getString("merchantName"));
+                        myDevice.setMaker(dataObject.getString("maker"));
+                        myDevice.setAllottedUserId(dataObject.getString("allottedUserId"));
+                        myDevice.setAllottedUserName(dataObject.getString("allottedUserName"));
+                        myDevice.setAllottedUserMobile(dataObject.getString("allottedUserMobile"));
+                        myDevice.setStatus(dataObject.getString("status"));*/
+
+                        if(sharedPreferences.getString(Constants.MOBILE_NO,"").
+                                equals(dataObject.getString("allottedUserMobile")) &&
+                                dataObject.getString("model").equals("ME3POS")){
+                            editor.putString(Constants.MERCHANT_ID,dataObject.getString("merchantId"));
+                            editor.putString(Constants.DEVICE_SER_NO,dataObject.getString("serialNumber"));
+                            editor.putString(Constants.DEVICE_MODEL,dataObject.getString("model"));
+                            editor.commit();
+                        }
+
+                    }
 
                     recyclerView.setVisibility(View.VISIBLE);
                     itemAdapter.notifyDataSetChanged();

@@ -168,6 +168,8 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                 myProductItem = (MyProductItem) getIntent().getSerializableExtra("myProduct");
             }else if(flag.equals("buyProduct")){
                 myProductItem = (MyProductItem) getIntent().getSerializableExtra("MyProduct");
+            }else if(flag.equals("chatProduct")){
+                myProductItem = dbHelper.getProductDetails(intent.getStringExtra("code"));
             } else{
                 myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
             }
@@ -181,7 +183,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
             Log.i(TAG,"unit size null");
         }
 
-
+        textViewSubCatName.setText(dbHelper.getSubCatName(myProductItem.getProdId()));
 
         textViewProductName.setText(myProductItem.getProdName());
         textViewMrp.setText(Utility.numberFormat(myProductItem.getProdSp()));

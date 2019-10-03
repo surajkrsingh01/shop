@@ -145,7 +145,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
 
         }
 
-        textViewId.setText("Order No - "+intent.getStringExtra("id"));
+        textViewId.setText("Order No - "+intent.getStringExtra("orderNumber"));
         textViewCustomerName.setText(intent.getStringExtra("custName"));
         String[] orderDate = Utility.parseDate(intent.getStringExtra("date"),
                 "yyyy-MM-dd HH:mm:ss","HH:mm, MMM dd, yyyy").split(",");
@@ -273,7 +273,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
 
     private void acceptOrder(){
         Map<String,String> params=new HashMap<>();
-        params.put("id", getIntent().getStringExtra("id"));
+        params.put("orderNumber", getIntent().getStringExtra("orderNumber"));
         params.put("deliveryBy","");
         params.put("custCode",getIntent().getStringExtra("custCode"));;
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
@@ -286,7 +286,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
 
     private void cancelOrder(){
         Map<String,String> params=new HashMap<>();
-        params.put("id", getIntent().getStringExtra("id"));
+        params.put("orderNumber", getIntent().getStringExtra("orderNumber"));
         params.put("custCode",getIntent().getStringExtra("custCode"));
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
@@ -298,7 +298,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
 
     private void deliverOrder(){
         Map<String,String> params=new HashMap<>();
-        params.put("id", getIntent().getStringExtra("id"));
+        params.put("orderNumber", getIntent().getStringExtra("orderNumber"));
         params.put("custCode",getIntent().getStringExtra("custCode"));
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));

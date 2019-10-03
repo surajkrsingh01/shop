@@ -1,11 +1,13 @@
 package com.shoppursshop.activities;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.appcompat.widget.PopupMenu;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -23,6 +25,7 @@ import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -35,6 +38,7 @@ import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.models.OrderItem;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
 
 import org.json.JSONArray;
@@ -48,13 +52,12 @@ import java.util.Map;
 
 public class MainActivity extends NetworkBaseActivity implements MyImageClickListener {
 
-    private RecyclerView recyclerView,recyclerViewPreOrders;
-    private OrderAdapter myItemAdapter,preItemAdapter;
-    private List<Object> itemList,preItemList;
-    private TextView textViewError,textViewNoTodayOrders;
+    private RecyclerView recyclerView;
+    private OrderAdapter myItemAdapter;
+    private List<Object> itemList;
+    private TextView textViewError;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
-    private TextView textViewPreOrderLabel;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
 
     private Button btnUpdateStock,btnLoadMore;
@@ -62,6 +65,9 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
     private CoordinatorLayout coordinatorLayout;
     private NestedScrollView nestedScrollView;
+
+    private ImageView ivMenu;
+    private boolean openingStore;
 
     private float MIN_WIDTH = 200,MIN_HEIGHT = 230,MAX_WIDTH = 200,MAX_HEIGHT = 290;
 
@@ -77,7 +83,6 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         Log.i(TAG,"available memory "+ activityManager.getMemoryClass());
 
         itemList = new ArrayList<>();
-        preItemList = new ArrayList<>();
         HomeListItem myItem = new HomeListItem();
        // myItem.setTitle("Sunday 16 December, 2018");
         myItem.setTitle(Utility.getTimeStamp("EEE dd MMMM, yyyy"));
@@ -88,27 +93,39 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         swipeRefreshLayout=findViewById(R.id.swipe_refresh);
         progressBar=findViewById(R.id.progress_bar);
         textViewError = findViewById(R.id.text_error);
-        textViewNoTodayOrders = findViewById(R.id.text_no_today_order);
-        textViewPreOrderLabel = findViewById(R.id.text_pre_order_label);
         recyclerView=findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
+        final RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         myItemAdapter=new OrderAdapter(this,itemList,"orderList");
         myItemAdapter.setMyImageClickListener(this);
         recyclerView.setAdapter(myItemAdapter);
-        recyclerView.setNestedScrollingEnabled(false);
 
-        recyclerViewPreOrders=findViewById(R.id.recycler_view_pre_orders);
-        recyclerViewPreOrders.setHasFixedSize(true);
-        RecyclerView.LayoutManager preLayoutManager=new LinearLayoutManager(this);
-        recyclerViewPreOrders.setLayoutManager(preLayoutManager);
-        recyclerViewPreOrders.setItemAnimator(new DefaultItemAnimator());
-        preItemAdapter=new OrderAdapter(this,preItemList,"orderList");
-        preItemAdapter.setMyImageClickListener(this);
-        recyclerViewPreOrders.setAdapter(preItemAdapter);
-        recyclerViewPreOrders.setNestedScrollingEnabled(false);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (isScroll) {
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    Log.i(TAG,"visible "+visibleItemCount+" total "+totalItemCount);
+                    pastVisibleItems = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+                    Log.i(TAG,"past visible "+(pastVisibleItems));
+
+                    if (!loading) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            loading = true;
+                            offset = limit + offset;
+                            getItemList();
+                        }
+                    }
+
+                }
+            }
+        });
+
 
         fabNewOrder = findViewById(R.id.fab_new_order);
         fabNewOrder.setOnClickListener(new View.OnClickListener() {
@@ -128,12 +145,37 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
             }
         });
 
-        btnLoadMore = findViewById(R.id.btn_load_more);
-        btnLoadMore.setOnClickListener(new View.OnClickListener() {
+        ivMenu = findViewById(R.id.iv_menu);
+        ivMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                offset = offset + limit;
-                getItemList();
+                Log.i(TAG,"menu cliecked");
+                PopupMenu popupMenu = new PopupMenu(MainActivity.this, ivMenu);
+                getMenuInflater().inflate(R.menu.home_menu, popupMenu.getMenu());
+                if(sharedPreferences.getBoolean(Constants.STORE_OPEN_STATUS,false)){
+                    popupMenu.getMenu().getItem(0).setVisible(false);
+                    popupMenu.getMenu().getItem(1).setVisible(true);
+                }else{
+                    popupMenu.getMenu().getItem(0).setVisible(true);
+                    popupMenu.getMenu().getItem(1).setVisible(false);
+                }
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if(item.getTitle().equals("Open Store")){
+                            changeStoreStatus("1");
+                        }else if(item.getTitle().equals("Close Store")){
+                            changeStoreStatus("0");
+                        }else if(item.getTitle().equals("Update Stock")){
+                            Intent intent = new Intent(MainActivity.this,UpdateStockActivity.class);
+                            startActivity(intent);
+                        }
+
+                        return true;
+                    }
+                });
+
+                popupMenu.show();
             }
         });
 
@@ -160,14 +202,9 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
         if (ConnectionDetector.isNetworkAvailable(this)){
             getItemList();
-            if(!sharedPreferences.getBoolean(Constants.IS_TOKEN_SAVED,false) &&
-            !TextUtils.isEmpty(sharedPreferences.getString(Constants.TOKEN,""))){
-                saveFcmToken();
-            }
         }else{
             showNoNetwork(true);
         }
-
 
     }
 
@@ -196,6 +233,17 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"saveFcmToken");
     }
 
+    private void changeStoreStatus(String status){
+        Map<String,String> params=new HashMap<>();
+        params.put("status",status);
+        params.put("mobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+"/api/user/update_store_open_status";
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"changeOpenStatus");
+    }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -216,9 +264,6 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
             if(type.equals("today")){
                 ((OrderItem)itemList.get(position)).setStatus(status);
                 myItemAdapter.notifyItemChanged(position);
-            }else{
-                ((OrderItem)preItemList.get(position)).setStatus(status);
-                preItemAdapter.notifyItemChanged(position);
             }
 
             editor.putInt("orderPosition",-1);
@@ -234,6 +279,20 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
         try {
             if (apiName.equals("orders")) {
+                if(!sharedPreferences.getBoolean(Constants.IS_TOKEN_SAVED,false) &&
+                        !TextUtils.isEmpty(sharedPreferences.getString(Constants.TOKEN,""))){
+                    saveFcmToken();
+                }else{
+                    if(!sharedPreferences.getBoolean(Constants.STORE_OPEN_STATUS,false)){
+                        if(!sharedPreferences.getString(Constants.STORE_CLOSE_DATE,"").
+                                equals(Utility.getTimeStamp("yyyy-MM-dd"))){
+                            openingStore = true;
+                            showMyBothDialog("Open your store","Cancel","Open");
+                        }
+
+                    }
+                }
+
                 if (response.getBoolean("status")) {
                     JSONArray dataArray = response.getJSONArray("result");
                     JSONObject jsonObject = null;
@@ -245,6 +304,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                         orderItem = new OrderItem();
                         orderItem.setType(1);
                         orderItem.setId(jsonObject.getString("orderId"));
+                        orderItem.setOrderNumber(jsonObject.getString("orderNumber"));
                         orderItem.setDateTime(jsonObject.getString("orderDate"));
                         orderItem.setCustomerName(jsonObject.getString("custName"));
                         orderItem.setCustCode(jsonObject.getString("custCode"));
@@ -262,48 +322,61 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
                         if(Utility.getTimeStamp("yyyy-MM-dd").equals(orderItem.getDateTime().split(" ")[0]))
                         itemList.add(orderItem);
-                        else
-                        preItemList.add(orderItem);
-                    }
-
-                    if(len == 0){
-                        showNoData(false);
-                    }else{
-                        showNoData(false);
-                        myItemAdapter.notifyDataSetChanged();
-                    }
-
-                    if(len == limit){
-                        Log.i(TAG,"Load more is visible");
-                        btnLoadMore.setVisibility(View.VISIBLE);
-                    }else {
-                        btnLoadMore.setVisibility(View.GONE);
+                        //else
+                        //preItemList.add(orderItem);
                     }
 
                     if(itemList.size() == 1){
-                        //recyclerView.setVisibility(View.GONE);
-                        textViewNoTodayOrders.setVisibility(View.VISIBLE);
+                        showNoData(true);
                     }else{
-                       // recyclerView.setVisibility(View.VISIBLE);
-                        textViewNoTodayOrders.setVisibility(View.GONE);
+                        showNoData(false);
+                        if(len < limit){
+                            isScroll = false;
+                        }
+                        if(len > 0){
+                            if(offset == 0){
+                                myItemAdapter.notifyDataSetChanged();
+                            }else{
+                                recyclerView.post(new Runnable() {
+                                    public void run() {
+                                        myItemAdapter.notifyItemRangeInserted(offset,limit);
+                                        loading = false;
+                                    }
+                                });
+                                Log.d(TAG, "NEXT ITEMS LOADED");
+                            }
+                        }else{
+                            Log.d(TAG, "NO ITEMS FOUND");
+                        }
                     }
-
-                    if(preItemList.size() == 0){
-                        textViewPreOrderLabel.setVisibility(View.GONE);
-                        recyclerViewPreOrders.setVisibility(View.GONE);
-                    }else{
-                        textViewPreOrderLabel.setVisibility(View.VISIBLE);
-                        recyclerViewPreOrders.setVisibility(View.VISIBLE);
-                        preItemAdapter.notifyDataSetChanged();
-                    }
-
-                    Log.i(TAG,"itemList "+itemList.size()+" pre item list "+preItemList.size());
                 }
 
             }else if (apiName.equals("saveFcmToken")) {
+                if(!sharedPreferences.getBoolean(Constants.STORE_OPEN_STATUS,false)){
+                    if(!sharedPreferences.getString(Constants.STORE_CLOSE_DATE,"").
+                            equals(Utility.getTimeStamp("yyyy-MM-dd"))){
+                        openingStore = true;
+                        showMyBothDialog("Open your store","Cancel","Open");
+                    }
+
+                }
                 if (response.getBoolean("status")) {
                     editor.putBoolean(Constants.IS_TOKEN_SAVED,true);
                     editor.commit();
+                }
+            }else if (apiName.equals("changeOpenStatus")) {
+                if (response.getBoolean("status")) {
+                    int status = response.getInt("result");
+                    if(status == 1){
+                        editor.putBoolean(Constants.STORE_OPEN_STATUS,true);
+                    }else{
+                        editor.putBoolean(Constants.STORE_OPEN_STATUS,false);
+                        editor.putString(Constants.STORE_CLOSE_DATE,Utility.getTimeStamp("yyyy-MM-dd"));
+                    }
+                    editor.commit();
+                    DialogAndToast.showDialog(response.getString("message"),this);
+                }else{
+                    DialogAndToast.showDialog(response.getString("message"),this);
                 }
             }
         }catch (JSONException e) {
@@ -313,7 +386,6 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
     private void resetItemList(){
         itemList.clear();
-        preItemList.clear();
         HomeListItem myItem = new HomeListItem();
         // myItem.setTitle("Sunday 16 December, 2018");
         myItem.setTitle(Utility.getTimeStamp("EEEE dd MMMM, yyyy"));
@@ -351,10 +423,10 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
     private void showNoData(boolean show){
         if(show){
-            recyclerView.setVisibility(View.GONE);
+           // recyclerView.setVisibility(View.GONE);
             textViewError.setVisibility(View.VISIBLE);
         }else{
-            recyclerView.setVisibility(View.VISIBLE);
+          //  recyclerView.setVisibility(View.VISIBLE);
             textViewError.setVisibility(View.GONE);
         }
     }
@@ -376,9 +448,19 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         if(type == 1){
             orderItem = (OrderItem)itemList.get(position);
             showImageDialog(orderItem.getOrderImage(),view);
-        }else{
-            orderItem = (OrderItem)preItemList.get(position);
-            showImageDialog(orderItem.getOrderImage(),view);
         }
+    }
+
+    @Override
+    public void onDialogPositiveClicked(){
+        if(openingStore){
+            openingStore = false;
+            changeStoreStatus("1");
+        }
+    }
+
+    @Override
+    public void onDialogNegativeClicked(){
+       openingStore =false;
     }
 }

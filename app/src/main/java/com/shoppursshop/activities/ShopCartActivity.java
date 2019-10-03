@@ -768,7 +768,7 @@ public class ShopCartActivity extends NetworkBaseActivity implements MyItemTypeC
                 if(response.getString("status").equals("true")||response.getString("status").equals(true)){
                     Log.d(TAG, "Ordeer Generated" );
                     orderNumber = response.getJSONObject("result").getString("orderNumber");
-                    Intent intent = new Intent(ShopCartActivity.this, PaymentActivity.class);
+                    Intent intent = new Intent(ShopCartActivity.this, CCAvenueWebViewActivity.class);
                     intent.putExtra("flag", "wallet");
                     intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",totalPrice));
                     intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);

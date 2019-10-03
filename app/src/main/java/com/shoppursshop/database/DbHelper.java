@@ -1139,6 +1139,30 @@ public class DbHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updatedCustomerInfo(MyCustomer item,String updatedAt){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NAME, item.getName());
+        contentValues.put(PHOTO, item.getImage());
+        contentValues.put(MOBILE_NO, item.getMobile());
+        contentValues.put(EMAIL, item.getEmail());
+        contentValues.put(ADDRESS, item.getAddress());
+        contentValues.put(COUNTRY, item.getCountry());
+        contentValues.put(STATE, item.getState());
+        contentValues.put(CITY, item.getCity());
+        contentValues.put(LOCALITY, item.getLocality());
+        contentValues.put(LATITUDE, item.getLatitude());
+        contentValues.put(LONGITUDE, item.getLongitude());
+        contentValues.put(IS_FAV, item.getIsFav());
+        contentValues.put(RATINGS, item.getRatings());
+        contentValues.put(USER_CREATE_STATUS, item.getCustUserCreateStatus());
+        contentValues.put(STATUS, item.getStatus());
+        contentValues.put(UPDATED_AT, updatedAt);
+        db.update(CUSTOMER_INFO_TABLE, contentValues,CODE + " = ?",new String[]{item.getCode()});
+        Log.i("DbHelper","Customer Row is updated");
+        return true;
+    }
+
 
     public String getCategoryName(String catId){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -1667,6 +1691,43 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         final String query="select * from "+PRODUCT_TABLE+" where "+ID+" = ?";
         Cursor res =  db.rawQuery(query, new String[]{String.valueOf(prodId)});
+        MyProductItem productItem = null;
+        if(res.moveToFirst()){
+            productItem=new MyProductItem();
+            productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
+            productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+            productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+            productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
+            productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));
+            productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
+            productItem.setProdReorderLevel(res.getInt(res.getColumnIndex(PROD_REORDER_LEVEL)));
+            productItem.setProdQoh(res.getInt(res.getColumnIndex(PROD_QOH)));
+            productItem.setProdHsnCode(res.getString(res.getColumnIndex(PROD_HSN_CODE)));
+            productItem.setProdCgst(res.getFloat(res.getColumnIndex(PROD_CGST)));
+            productItem.setProdIgst(res.getFloat(res.getColumnIndex(PROD_IGST)));
+            productItem.setProdSgst(res.getFloat(res.getColumnIndex(PROD_SGST)));
+            productItem.setProdWarranty(res.getFloat(res.getColumnIndex(PROD_WARRANTY)));
+            productItem.setProdMfgDate(res.getString(res.getColumnIndex(PROD_MFG_DATE)));
+            productItem.setProdExpiryDate(res.getString(res.getColumnIndex(PROD_EXPIRY_DATE)));
+            productItem.setProdMfgBy(res.getString(res.getColumnIndex(PROD_MFG_BY)));
+            productItem.setProdImage1(res.getString(res.getColumnIndex(PROD_IMAGE_1)));
+            productItem.setProdImage2(res.getString(res.getColumnIndex(PROD_IMAGE_2)));
+            productItem.setProdImage3(res.getString(res.getColumnIndex(PROD_IMAGE_3)));
+            productItem.setIsBarCodeAvailable(res.getString(res.getColumnIndex(IS_BARCODE_AVAILABLE)));
+            productItem.setProdMrp(res.getFloat(res.getColumnIndex(PROD_MRP)));
+            productItem.setProdSp(res.getFloat(res.getColumnIndex(PROD_SP)));
+            productItem.setProductUnitList(getProductUnitList(db,productItem.getProdId()));
+            productItem.setProductSizeList(getProductSizeList(db,productItem.getProdId()));
+        }
+
+        return productItem;
+    }
+
+    public MyProductItem getProductDetails(String prodCode){
+        Log.i("dbHelper",prodCode);
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+PRODUCT_TABLE+" where "+PROD_CODE+" = ?";
+        Cursor res =  db.rawQuery(query, new String[]{prodCode});
         MyProductItem productItem = null;
         if(res.moveToFirst()){
             productItem=new MyProductItem();
@@ -2764,9 +2825,9 @@ public class DbHelper extends SQLiteOpenHelper {
         return itemList;
     }
 
-    public List<Object> getCustomerList(String isFav){
+    public List<Object> getCustomerList(String isFav,int limit,int offset){
         SQLiteDatabase db = this.getReadableDatabase();
-        final String query="select * from "+CUSTOMER_INFO_TABLE+" where "+IS_FAV+" != ?";
+        final String query="select * from "+CUSTOMER_INFO_TABLE+" where "+IS_FAV+" = ?";
         Cursor res =  db.rawQuery(query, new String[]{isFav});
         List<Object> myCustomerList = new ArrayList<>();
         MyCustomer myCustomer = null;
@@ -2798,7 +2859,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return myCustomerList;
     }
 
-    public List<Object> getFavCustomerList(String isFav){
+    public List<Object> getFavCustomerList(String isFav,int limit,int offset){
         SQLiteDatabase db = this.getReadableDatabase();
         final String query="select * from "+CUSTOMER_INFO_TABLE+" where "+IS_FAV+" = ?";
         Cursor res =  db.rawQuery(query, new String[]{isFav});
@@ -2841,6 +2902,17 @@ public class DbHelper extends SQLiteOpenHelper {
         cursor.close();
         // return count
         return count;
+    }
+
+    public boolean checkCustomerExistInCart(String code){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+CUSTOMER_INFO_TABLE+" WHERE "+CODE+" = ?";
+        Cursor res =  db.rawQuery(query, new String[]{code});
+        if(res.getCount() > 0){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 
@@ -3008,10 +3080,41 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.i("dbhelper","sgst "+item.getProdSgst());
         contentValues.put(TOTAL_QTY, qty);
         contentValues.put(TOTAL_AMOUNT, totalAmount);
+        contentValues.put(PROD_SP, item.getProdSp());
+
+        float rate = ((item.getProdSp() * (item.getProdCgst()+item.getProdSgst()))/(100 +
+                (item.getProdCgst()+item.getProdSgst())));
+        Log.d("Rate ", ""+rate);
+        contentValues.put(PROD_CGST, rate/2);
+        contentValues.put(PROD_IGST, rate);
+        contentValues.put(PROD_SGST, rate/2);
+
         db.update(CART_TABLE,contentValues,ID+" = ? AND "+PROD_SP+" != ?",
                 new String[]{String.valueOf(item.getProdId()),String.valueOf(0f)});
         db.update(CART_TABLE,contentValues,PROD_BARCODE+" = ? AND "+PROD_SP+" != ?",
                 new String[]{item.getProdBarCode(),String.valueOf(0f)});
+
+    }
+
+    public void updateCartData(MyProductItem item,float totalAmount){
+        SQLiteDatabase db = this.getReadableDatabase();
+        // query="UPDATE "+PRODUCT_TABLE+" SET "+PROD_QOH+" = ? where "+PROD_CODE+" = ?";
+        ContentValues contentValues = new ContentValues();
+        Log.i("dbhelper","cgst "+item.getProdCgst());
+        Log.i("dbhelper","sgst "+item.getProdSgst());
+        Log.i("dbhelper","sp "+item.getProdSp());
+        contentValues.put(PROD_SP, item.getProdSp());
+        contentValues.put(TOTAL_AMOUNT, totalAmount);
+
+        float rate = ((item.getProdSp() * (item.getProdCgst()+item.getProdSgst()))/(100 +
+                (item.getProdCgst()+item.getProdSgst())));
+        Log.d("Rate ", ""+rate);
+        contentValues.put(PROD_CGST, rate/2);
+        contentValues.put(PROD_IGST, rate);
+        contentValues.put(PROD_SGST, rate/2);
+
+        db.update(CART_TABLE,contentValues,ID+" = ? AND "+PROD_SP+" != ?",
+                new String[]{String.valueOf(item.getProdId()),String.valueOf(0f)});
 
     }
 
@@ -3070,6 +3173,18 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put(FREE_PRODUCT_POSITION, position);
         db.update(SHOP_CART_TABLE,contentValues,ID+" = ? AND "+PROD_SP+" != ?",
                 new String[]{String.valueOf(prodId),String.valueOf(0f)});
+
+    }
+
+    public void updateFavStatus(String code,String status){
+        SQLiteDatabase db = this.getReadableDatabase();
+        // query="UPDATE "+PRODUCT_TABLE+" SET "+PROD_QOH+" = ? where "+PROD_CODE+" = ?";
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(IS_FAV, status);
+        db.update(CUSTOMER_INFO_TABLE,contentValues,CODE+" = ?",
+                new String[]{code});
+
+        Log.i("dbhelper","status updated "+status+" code "+code);
 
     }
 

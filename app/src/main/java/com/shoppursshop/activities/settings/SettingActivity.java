@@ -8,19 +8,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.BaseActivity;
 import com.shoppursshop.activities.LoginActivity;
+import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.ShoppursProductListActivity;
 import com.shoppursshop.adapters.SettingsAdapter;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.DialogAndToast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class SettingActivity extends BaseActivity implements MyItemClickListener {
+public class SettingActivity extends NetworkBaseActivity implements MyItemClickListener {
 
     private RecyclerView recyclerView;
     private List<String> itemList;
@@ -54,6 +62,7 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
         itemList.add("Payment Device");
         itemList.add("User License");
         itemList.add("Sync Data");
+        itemList.add("Chat");
         itemList.add("Display");
         itemList.add("Logout");
         recyclerView = findViewById(R.id.recycler_view);
@@ -72,6 +81,68 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
 
         initFooter(this,4);
     }
+
+    @Override
+    public void changeStoreStatus(){
+        Map<String,String> params=new HashMap<>();
+        params.put("status","0");
+        params.put("mobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+"/api/user/update_store_open_status";
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"changeOpenStatus");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject response, String apiName) {
+        try {
+            if (apiName.equals("changeOpenStatus")) {
+                if (response.getBoolean("status")) {
+                    String IMEI_NO = sharedPreferences.getString(Constants.IMEI_NO,"");
+                    String fcmToken = sharedPreferences.getString(Constants.FCM_TOKEN,"");
+                    editor.clear();
+                    editor.putString(Constants.IMEI_NO,IMEI_NO);
+                    editor.putString(Constants.FCM_TOKEN,fcmToken);
+                    editor.commit();
+                    dbHelper.deleteTable(DbHelper.CAT_TABLE);
+                    dbHelper.deleteTable(DbHelper.SUB_CAT_TABLE);
+                    dbHelper.deleteTable(DbHelper.PRODUCT_TABLE);
+                    dbHelper.deleteTable(DbHelper.PRODUCT_BARCODE_TABLE);
+                    dbHelper.deleteTable(DbHelper.PRODUCT_UNIT_TABLE);
+                    dbHelper.deleteTable(DbHelper.PRODUCT_SIZE_TABLE);
+                    dbHelper.deleteTable(DbHelper.PRODUCT_COLOR_TABLE);
+                    dbHelper.deleteTable(DbHelper.CART_TABLE);
+                    dbHelper.deleteTable(DbHelper.PROD_COMBO_TABLE);
+                    dbHelper.deleteTable(DbHelper.PROD_COMBO_DETAIL_TABLE);
+                    dbHelper.deleteTable(DbHelper.PROD_PRICE_TABLE);
+                    dbHelper.deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
+                    dbHelper.deleteTable(DbHelper.PROD_FREE_OFFER_TABLE);
+                    dbHelper.deleteTable(DbHelper.COUPON_TABLE);
+                    dbHelper.deleteTable(DbHelper.SHOP_CART_TABLE);
+                    dbHelper.deleteTable(DbHelper.CART_PROD_PRICE_TABLE);
+                    dbHelper.deleteTable(DbHelper.CART_PROD_PRICE_DETAIL_TABLE);
+                    dbHelper.deleteTable(DbHelper.CART_PROD_COMBO_TABLE);
+                    dbHelper.deleteTable(DbHelper.CART_PROD_COMBO_DETAIL_TABLE);
+                    dbHelper.deleteTable(DbHelper.CART_PROD_FREE_OFFER_TABLE);
+                    dbHelper.deleteTable(DbHelper.CART_COUPON_TABLE);
+                    dbHelper.deleteTable(DbHelper.CART_PRODUCT_UNIT_TABLE);
+                    dbHelper.deleteTable(DbHelper.CART_PRODUCT_SIZE_TABLE);
+                    dbHelper.deleteTable(DbHelper.CART_PRODUCT_COLOR_TABLE);
+                    dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
+
+                    Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }else{
+                    DialogAndToast.showDialog(response.getString("message"),this);
+                }
+            }
+        }catch (JSONException error){
+            error.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onItemClicked(int position) {
@@ -122,6 +193,10 @@ public class SettingActivity extends BaseActivity implements MyItemClickListener
         }else if(name.equals("Sync Data")){
             Intent intent = new Intent(this, SyncDataActivity.class);
             startActivity(intent);
+        }else if(name.equals("Chat")){
+            Intent intent = new Intent(this, UserListForChatActivity.class);
+            startActivity(intent);
+
         }else if(name.equals("Display")){
             Intent intent = new Intent(this, DisplaySettingsActivity.class);
             startActivity(intent);

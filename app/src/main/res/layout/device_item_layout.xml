@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="16dp"
+    android:background="?attr/borderBottomSolidBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_device_model_label"
+        android:text="Device Model"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_model_type"
+        android:layout_below="@+id/tv_device_model_label"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/text_allot_label"
+        android:text="Allotted to"
+        android:layout_below="@+id/tv_model_type"
+        android:layout_marginTop="10dp"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/text_user_name"
+        android:layout_below="@+id/text_allot_label"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/text_user_mobile"
+        android:layout_below="@+id/text_user_name"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/normal_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_device_ser_number_label"
+        android:text="Serial Number"
+        android:layout_alignParentRight="true"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/small_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_serial_number"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tv_device_ser_number_label"
+        android:textColor="?attr/primaryTextColor"
+        android:textSize="@dimen/large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_allocate"
+        android:layout_below="@+id/tv_serial_number"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/red_solid_round_corner_background"
+        android:textColor="@color/white"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="Allocate"
+        android:layout_alignParentRight="true"
+        android:textSize="@dimen/home_list_header_text_size"
+        android:textAllCaps="true"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp" />
+
+</RelativeLayout>

@@ -9,46 +9,130 @@
     tools:context=".activities.settings.AddPaymentDevice"
     tools:showIn="@layout/activity_add_payment_device">
 
-    <TextView
-        android:id="@+id/text_left_label"
-        android:text="Settings"
-        android:textColor="?attr/secondaryTextColor"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:textSize="@dimen/small_text_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:layout_below="@+id/text_left_label"
-        android:id="@+id/text_second_label"
-        android:text="Add Payment Device"
-        android:textColor="?attr/primaryTextColor"
-        android:textStyle="bold"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="5dp"
-        android:textSize="@dimen/list_very_large_text_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="10dp"
-        android:id="@+id/recyclerView"
-        android:layout_below="@+id/text_second_label"
+    <androidx.core.widget.NestedScrollView
         android:layout_above="@+id/rlfooterviewcart"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:scrollbars="none"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/text_left_label"
+                android:text="Settings"
+                android:textColor="?attr/secondaryTextColor"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:textSize="@dimen/small_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_below="@+id/text_left_label"
+                android:id="@+id/text_second_label"
+                android:text="Payment Devices"
+                android:textColor="?attr/primaryTextColor"
+                android:textStyle="bold"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="5dp"
+                android:textSize="@dimen/list_very_large_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:visibility="gone"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/text_second_label"
+                android:background="?attr/borderBottomSolidBackground"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+            <TextView
+                android:id="@+id/text_add_payment_device_label"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:text="Add Payment Device"
+                android:textColor="?attr/secondaryTextColor"
+                android:textSize="@dimen/home_list_desc_text_size"
+                android:visibility="visible"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvnoProductData"
+                android:visibility="gone"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="14dp"
+                android:textSize="@dimen/small_text_size"
+                android:textColor="?attr/secondaryTextColor"
+                android:text="No Payment devices available to buy..."
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="10dp"
+                android:id="@+id/recyclerView"
+                android:layout_below="@+id/text_add_payment_device_label"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent">
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/text_device_label"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:text="My Devices"
+                android:visibility="visible"
+                android:layout_below="@+id/text_title"
+                android:textColor="?attr/secondaryTextColor"
+                android:textStyle="bold"
+                android:textSize="@dimen/home_list_desc_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:visibility="gone"
+                android:id="@+id/customer_separator"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/text_device_label"
+                android:background="?attr/borderBottomSolidBackground"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+            <TextView
+                android:id="@+id/tvnoMyDeviceData"
+                android:visibility="gone"
+                android:layout_marginTop="30dp"
+                android:textSize="@dimen/small_text_size"
+                android:textColor="?attr/secondaryTextColor"
+                android:text="There is no device allocated to you."
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_my_devices"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
 
     <include layout="@layout/footer_viewcart_layout"/>
-
-    <TextView
-        android:id="@+id/tvnoData"
-        android:visibility="gone"
-        android:textColor="?attr/primaryTextColor"
-        android:text="No Data Available.."
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
 
 </RelativeLayout>

@@ -18,6 +18,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.LoginActivity;
 import com.shoppursshop.activities.SplashActivity;
+import com.shoppursshop.activities.settings.ChatActivity;
 
 public class NotificationService {
 
@@ -56,6 +57,34 @@ public class NotificationService {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(0, builder.build());
+
+    }
+
+    @SuppressWarnings({ "deprecation" })
+    public static void displayChatNotification(Context context, String message,String from) {
+
+        // Create an explicit intent for an Activity in your app
+        Intent intent = new Intent(context, ChatActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            setupChannels(context);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setContentTitle(from)
+                .setContentText(message)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(message))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        // notificationId is a unique int for each notification that you must define
         notificationManager.notify(0, builder.build());
 
     }

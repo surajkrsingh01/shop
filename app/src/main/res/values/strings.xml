@@ -26,6 +26,7 @@
     <string name="connection_error">There is some problem in connecting server.</string>
     <string name="json_parser_error">Json parsing errror.</string>
     <string name="full_name_required">Please enter full name.</string>
+    <string name="shop_name_required">Please enter Shop name.</string>
     <string name="address_required">Please enter your address.</string>
     <string name="pincode_required">Please enter your pincode.</string>
     <string name="email_required">Please enter Email Id.</string>
@@ -58,6 +59,7 @@
     <string name="register">Register</string>
     <string name="full_name">Full Name</string>
     <string name="name">Name</string>
+    <string name="shop_name">Shop Name</string>
     <string name="email">Email</string>
     <string name="address">Address</string>
     <string name="country">Country</string>
@@ -131,6 +133,8 @@
     <string name="dark_mode">Dark Mode</string>
     <string name="enable_dark_mode">Enable Dark Mode</string>
     <string name="color_theme">Color Themes</string>
+
+    <string name="pls_chk_cardreader_availble">Please check whether card reader available and its ON?</string>
 
 
     <!-- Dialogs. -->
@@ -305,5 +309,6 @@
     <string name="title_activity_reset_password">ResetPasswordActivity</string>
     <string name="title_activity_card_details">CardDetailsActivity</string>
     <string name="title_activity_other_payment_list">OtherPaymentListActivity</string>
+    <string name="title_activity_user_list_for_chat">UserListForChatActivity</string>
 
 </resources>

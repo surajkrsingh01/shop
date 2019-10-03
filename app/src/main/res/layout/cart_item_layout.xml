@@ -180,9 +180,16 @@
 
                 </RelativeLayout>
 
-
-
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/text_additional_discount"
+                android:text="Additional Discount"
+                android:clickable="true"
+                android:textColor="@color/green700"
+                android:textSize="@dimen/small_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <RelativeLayout
                 android:visibility="gone"

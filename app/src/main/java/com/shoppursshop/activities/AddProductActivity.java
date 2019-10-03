@@ -105,7 +105,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             relativeLayoutTeal,relativeLayoutIndigo,relativeLayoutPurple;
     private int colorValue;
     private String colorName;
-    private boolean colorSelected;
+    private boolean colorSelected,viewsDisabled;
 
 
     private MyProductItem myProductItem;
@@ -588,6 +588,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             @Override
             public void onClick(View view) {
                 imagePosition = 1;
+                if(!viewsDisabled)
                 selectImage();
             }
         });
@@ -596,6 +597,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             @Override
             public void onClick(View view) {
                 imagePosition = 2;
+                if(!viewsDisabled)
                 selectImage();
             }
         });
@@ -604,6 +606,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             @Override
             public void onClick(View view) {
                 imagePosition = 3;
+                if(!viewsDisabled)
                 selectImage();
             }
         });
@@ -612,12 +615,13 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             @Override
             public void onClick(View view) {
                 if(ConnectionDetector.isNetworkAvailable(AddProductActivity.this)){
-                    if(flag.equals("editProduct")){
-                        updateProduct();
-                    }else{
-                        attemptAddProduct();
+                    if(!viewsDisabled){
+                        if(flag.equals("editProduct")){
+                            updateProduct();
+                        }else{
+                            attemptAddProduct();
+                        }
                     }
-
                 }
             }
         });
@@ -631,6 +635,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
         tvUnitSizeColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!viewsDisabled)
                 rlProductSpecificationLayout.setVisibility(View.VISIBLE);
             }
         });
@@ -1385,27 +1390,37 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
 
 
     private void setSubCatItems(String catId){
+
         subCatListObject = dbHelper.getCatSubCategoriesAddProduct(catId);
-        for(SpinnerItem item : subCatListObject){
-            subCatList.add(item.getName());
-        }
 
-        //subCatAdapter.notifyDataSetChanged();
-
-        if(scanSelection){
-            int i = 0;
-            for(String name : subCatList){
-                if(name.equals(dbHelper.getSubCategoryName(myProductItem.getProdSubCatId()))){
-                    scanSelection = false;
-                    spinnerSubCategory.setSelection(i);
-                    break;
-                }
-                i++;
-            }
-            scanSelection = false;
+        if(subCatListObject.size() == 0){
+            DialogAndToast.showDialog("Sync Sub category for the selected Category. Contact Shoppurs Support from Profile section.",this);
+            disableViews(true);
         }else{
-            spinnerSubCategory.setSelection(0);
+            disableViews(false);
+            for(SpinnerItem item : subCatListObject){
+                subCatList.add(item.getName());
+            }
+
+            //subCatAdapter.notifyDataSetChanged();
+
+            if(scanSelection){
+                int i = 0;
+                for(String name : subCatList){
+                    if(name.equals(dbHelper.getSubCategoryName(myProductItem.getProdSubCatId()))){
+                        scanSelection = false;
+                        spinnerSubCategory.setSelection(i);
+                        break;
+                    }
+                    i++;
+                }
+                scanSelection = false;
+            }else{
+                spinnerSubCategory.setSelection(0);
+            }
         }
+
+
 
         subCatAdapter.notifyDataSetChanged();
     }
@@ -1717,5 +1732,49 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
               }
            }
        }
+    }
+
+    private void disableViews(boolean isDisable){
+        if(isDisable){
+            editTextMfgDate.setEnabled(false);
+            editTextExpiryDate.setEnabled(false);
+            editTextName.setEnabled(false);
+            editTextBarCode.setEnabled(false);
+            editTextHSN.setEnabled(false);
+            editTextDesc.setEnabled(false);
+            editTextMRP.setEnabled(false);
+            editTextSP.setEnabled(false);
+            editTextRL.setEnabled(false);
+            editTextQOH.setEnabled(false);
+            editTextMfgBy.setEnabled(false);
+            editTextWarranty.setEnabled(false);
+            editTextCGST.setEnabled(false);
+            editTextIGST.setEnabled(false);
+            editTextSGST.setEnabled(false);
+            checkBoxIsBarAvaialble.setEnabled(false);
+            editTextCode.setEnabled(false);
+            viewsDisabled = true;
+        }else{
+            if(viewsDisabled){
+                editTextMfgDate.setEnabled(true);
+                editTextExpiryDate.setEnabled(true);
+                editTextName.setEnabled(true);
+                editTextBarCode.setEnabled(true);
+                editTextHSN.setEnabled(true);
+                editTextDesc.setEnabled(true);
+                editTextMRP.setEnabled(true);
+                editTextSP.setEnabled(true);
+                editTextRL.setEnabled(true);
+                editTextQOH.setEnabled(true);
+                editTextMfgBy.setEnabled(true);
+                editTextWarranty.setEnabled(true);
+                editTextCGST.setEnabled(true);
+                editTextIGST.setEnabled(true);
+                editTextSGST.setEnabled(true);
+                checkBoxIsBarAvaialble.setEnabled(true);
+                editTextCode.setEnabled(true);
+                viewsDisabled = false;
+            }
+        }
     }
 }

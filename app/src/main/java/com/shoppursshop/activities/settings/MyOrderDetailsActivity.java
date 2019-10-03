@@ -90,7 +90,7 @@ public class MyOrderDetailsActivity extends NetworkBaseActivity {
 
         setTrackStatus(orderStatus);
 
-        textViewId.setText("Order No - "+intent.getStringExtra("id"));
+        textViewId.setText("Order No - "+intent.getStringExtra("orderNumber"));
         String[] orderDate = Utility.parseDate(intent.getStringExtra("date"),
                 "yyyy-MM-dd HH:mm:ss","HH:mm, MMM dd, yyyy").split(",");
         textViewOrderDate.setText(orderDate[0]+" hrs,"+orderDate[1]+orderDate[2]);

@@ -230,7 +230,7 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
     }
 
     private void buyUserLicense(){
-        Intent intent = new Intent(BuyUserLicenceActivity.this, PaymentActivity.class);
+        Intent intent = new Intent(BuyUserLicenceActivity.this, CCAvenueWebViewActivity.class);
         intent.putExtra("flag", "wallet");
         intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",totalAmount));
         intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);
@@ -255,6 +255,7 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
                     for(int i=0; i<len; i++){
                         jsonObject = jsonArray.getJSONObject(i);
                         item = new UserLicense();
+                        item.setId(jsonObject.getInt("id"));
                         item.setLicenseType(jsonObject.getString("licenseType"));
                         item.setPurchaseDate(jsonObject.getString("purchaseDate"));
                         item.setRenewdDate(jsonObject.getString("renewdDate"));

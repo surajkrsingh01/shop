@@ -70,23 +70,16 @@ public class SplashActivity extends NetworkBaseActivity {
 
         if (sharedPreferences.getBoolean(Constants.IS_LOGGED_IN, false)) {
 
-            String deviceType = sharedPreferences.getString(Constants.ANDROID_DEVICE_TYPE,"");
-            if(TextUtils.isEmpty(deviceType)){
-                intent = new Intent(SplashActivity.this, ChooseDeviceActivity.class);
-                intent.putExtra("flag", "splash");
-                moveToNextActivity();
+            intent = new Intent(SplashActivity.this, MainActivity.class);
+            intent.putExtra("flag", "wallet");
+            intent.putExtra("amount", 500);
+            //  intent.putExtra(AvenuesParams.ORDER_ID, orderID);
+            intent.putExtra(AvenuesParams.CURRENCY, "INR");
+            //  startActivityForResult(intent,1);
+            if(ConnectionDetector.isNetworkAvailable(this)){
+                authenticateUser();
             }else{
-                intent = new Intent(SplashActivity.this, MainActivity.class);
-                intent.putExtra("flag", "wallet");
-                intent.putExtra("amount", 500);
-                //  intent.putExtra(AvenuesParams.ORDER_ID, orderID);
-                intent.putExtra(AvenuesParams.CURRENCY, "INR");
-                //  startActivityForResult(intent,1);
-                if(ConnectionDetector.isNetworkAvailable(this)){
-                    authenticateUser();
-                }else{
-                    showMyDialog(getResources().getString(R.string.no_internet));
-                }
+                showMyDialog(getResources().getString(R.string.no_internet));
             }
         } else {
 
@@ -109,7 +102,7 @@ public class SplashActivity extends NetworkBaseActivity {
                 finish();
                 // overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
             }
-        }, 2000);
+        }, 0);
     }
 
 

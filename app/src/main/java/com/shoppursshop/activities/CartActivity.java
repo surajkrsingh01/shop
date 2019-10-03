@@ -11,12 +11,15 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -62,6 +65,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
     private RelativeLayout relativeLayoutCartFooter;
     private LinearLayout rlAddressBilling;
+    private EditText editTextAdditionDisAmt;
     private TextView tvItemCount,tvItemPrice,tvCheckout,tvItemTotal,tvTotalTaxes,tvSgst,tvTotalDiscount,
             tvDeliveryCharges,tvNetPayable,tvOfferName;
     private RelativeLayout relativeLayoutPayOptionLayout,rlDiscount,rlDelivery,rl_offer_applied_layout,rlOfferLayout;
@@ -70,7 +74,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     private ImageView imageViewScan,imageViewSearch,imageViewRemoveOffer;
 
     private float totalPrice,totalTax,totDiscount,offerPer,offerMaxAmount,deliveryDistance,deliveryCharges;
-    private int offerId,deliveryTypeId;
+    private int offerId,deliveryTypeId,additionalAmountType;
 
     private String offerName,paymentMode,orderNumber;
     private String deviceType;
@@ -165,18 +169,14 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             @Override
             public void onClick(View view) {
                 relativeLayoutPayOptionLayout.setVisibility(View.VISIBLE);
-
-                String deviceType = sharedPreferences.getString(Constants.ANDROID_DEVICE_TYPE,"");
-                Log.i(TAG,"device type "+deviceType);
-                if(deviceType.equals("N910")){
+                if(TextUtils.isEmpty(sharedPreferences.getString(Constants.MERCHANT_ID,""))){
                     tvMPos.setVisibility(View.GONE);
-                    tvCard.setVisibility(View.GONE);
-                    tvAndroidPos.setVisibility(View.VISIBLE);
-                }else if(deviceType.equals("Android")){
-                    tvAndroidPos.setVisibility(View.GONE);
-                    tvCard.setVisibility(View.GONE);
+                }else{
                     tvMPos.setVisibility(View.VISIBLE);
                 }
+
+                tvCard.setVisibility(View.GONE);
+                tvAndroidPos.setVisibility(View.GONE);
             }
         });
 
@@ -290,6 +290,40 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     }
                 }
 
+            }
+        });
+
+        findViewById(R.id.iv_additional_dis_clear).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.rl_additional_desc).setVisibility(View.GONE);
+                fabScan.setVisibility(View.VISIBLE);
+            }
+        });
+
+        Button btnApplyAdditionalDis = findViewById(R.id.btn_apply_additional_dis);
+        btnApplyAdditionalDis.setBackgroundColor(colorTheme);
+        btnApplyAdditionalDis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                applyAdditionalDiscount();
+            }
+        });
+        editTextAdditionDisAmt = findViewById(R.id.edit_additional_dis);
+        RadioGroup rgAmount = findViewById(R.id.rg_amount);
+        RadioButton rbAmount = findViewById(R.id.rb_amount);
+        rbAmount.setChecked(true);
+        additionalAmountType = R.id.rb_amount;
+        rgAmount.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId == R.id.rb_amount){
+                    editTextAdditionDisAmt.setHint("Enter Discount Amount");
+                    additionalAmountType = checkedId;
+                }else{
+                    editTextAdditionDisAmt.setHint("Enter Discount Percentage");
+                    additionalAmountType = checkedId;
+                }
             }
         });
 
@@ -613,6 +647,9 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             MyProductItem cartProductItem = null;
             for (MyProductItem cartItem : cartItemList) {
                 cartProductItem = dbHelper.getProductDetails(cartItem.getProdId());
+                if(cartProductItem == null){
+                    cartProductItem = new MyProductItem();
+                }
                 Log.d(TAG, cartItem.getProdBarCode()+"");
                 if (!tempShopList.contains(shopCode)) {
                     //Log.d("PRD list "+tempShopList.toString(), cartItem.getShopCode());
@@ -943,7 +980,12 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             recyclerViewOfferDesc.setAdapter(offerDescAdapter);
             recyclerViewOfferDesc.setNestedScrollingEnabled(false);
         }else if(type == 4){
-
+              RadioButton rbAmount = findViewById(R.id.rb_amount);
+              rbAmount.setChecked(true);
+              additionalAmountType = R.id.rb_amount;
+              editTextAdditionDisAmt.setText("");
+              findViewById(R.id.rl_additional_desc).setVisibility(View.VISIBLE);
+              fabScan.setVisibility(View.GONE);
         }
     }
 
@@ -1161,9 +1203,75 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         }
     }
 
+    private void applyAdditionalDiscount(){
+
+        MyProductItem item = itemList.get(position);
+
+        if(additionalAmountType == R.id.rb_amount){
+            int amount = 0;
+            try {
+                amount = Integer.parseInt(editTextAdditionDisAmt.getText().toString());
+            }catch (NumberFormatException nfe){
+
+            }
+
+            if(amount == 0){
+                DialogAndToast.showDialog("Please enter amount",this);
+                return;
+            }else if(amount > item.getProdSp()){
+                DialogAndToast.showDialog("Please enter discount amount less than selling price",this);
+                return;
+            }
+
+            item.setProdSp(item.getProdSp() - amount);
+
+            Log.i(TAG,"selling price "+item.getProdSp());
+            totalPrice = totalPrice - amount;
+            dbHelper.updateCartData(item,totalPrice);
+
+            setFooterValues();
+
+        }else{
+            float percentage = 0f;
+            try{
+                percentage = Float.parseFloat(editTextAdditionDisAmt.getText().toString());
+            }catch (NumberFormatException nfe){
+                nfe.printStackTrace();
+            }
+            if(percentage == 0f){
+                DialogAndToast.showDialog("Please enter percentage",this);
+                return;
+            }
+
+            int amount = (int)(item.getProdSp() * percentage/100);
+
+            if(amount > item.getProdSp()){
+                DialogAndToast.showDialog("Please enter discount amount less than selling price",this);
+                return;
+            }
+
+            item.setProdSp(item.getProdSp() - amount);
+            totalPrice = totalPrice - amount;
+            dbHelper.updateCartData(item,totalPrice);
+
+            setFooterValues();
+
+        }
+
+        myItemAdapter.notifyItemChanged(position);
+        findViewById(R.id.rl_additional_desc).setVisibility(View.GONE);
+        fabScan.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onImageClicked(int position, int type, View view) {
         MyProductItem item = (MyProductItem)itemList.get(position);
         showImageDialog(item.getProdImage1(),view);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        dbHelper.deleteTable(DbHelper.CART_TABLE);
     }
 }

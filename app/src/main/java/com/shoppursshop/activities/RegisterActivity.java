@@ -158,7 +158,7 @@ public class RegisterActivity extends BaseImageActivity implements OnFragmentInt
             trans.addToBackStack(null);
             trans.commit();*/
 
-            Intent intent = new Intent(RegisterActivity.this, ChooseDeviceActivity.class);
+            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
             intent.putExtra("flag", "register");
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
