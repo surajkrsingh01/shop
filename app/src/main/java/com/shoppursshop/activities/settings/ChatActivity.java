@@ -387,6 +387,12 @@ public class ChatActivity extends BaseImageActivity implements MyItemClickListen
             Log.i(TAG,"pos "+pos+" code "+chatMessage.getProdCode());
             Intent intent = new Intent(ChatActivity.this, ProductDetailActivity.class);
             intent.putExtra("code",chatMessage.getProdCode());
+            if(chatMessage.getMessageFrom().equals(sharedPreferences.getString(Constants.SHOP_CODE,""))){
+                intent.putExtra("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
+            }else{
+                intent.putExtra("shopCode","SHP1");
+            }
+
             intent.putExtra("flag","chatProduct");
             startActivity(intent);
         }

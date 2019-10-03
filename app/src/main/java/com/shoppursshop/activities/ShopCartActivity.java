@@ -590,7 +590,7 @@ public class ShopCartActivity extends NetworkBaseActivity implements MyItemTypeC
         Map<String,String> params=new HashMap<>();
         params.put("id", prodId); // as per user selected category from top horizontal categories list
         params.put("code", shopCode);
-        // params.put("dbName",shopCode);
+        params.put("dbName",shopCode);
         Log.d(TAG, params.toString());
         String url=getResources().getString(R.string.url)+"/api/customers/products/ret_products_details";
         jsonObjectApiRequest(Request.Method.POST, url,new JSONObject(params),"productDetails");

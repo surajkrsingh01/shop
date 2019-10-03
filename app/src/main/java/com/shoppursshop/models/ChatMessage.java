@@ -22,6 +22,7 @@ public class ChatMessage {
     private String fileUrl;
     private boolean isImageUploaded;
 
+
     public String getProdCode() {
         return prodCode;
     }

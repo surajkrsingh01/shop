@@ -547,6 +547,11 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
                         .error(R.drawable.ic_photo_black_192dp)
                         .into(imageView3);
             }
+        }else{
+            String timestamp = Utility.getTimeStamp();
+            timestamp = timestamp.replaceAll("-","").replaceAll(" ","").replaceAll(":","");
+            //timestamp = timestamp.replaceAll(":","");
+            editTextCode.setText(sharedPreferences.getString(Constants.SHOP_CODE,"")+"/prd/"+timestamp);
         }
 
         checkBoxIsBarAvaialble.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
