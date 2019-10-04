@@ -209,6 +209,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
     }
 
     private void getItemList(){
+        loading = true;
         Map<String,String> params=new HashMap<>();
         params.put("limit", ""+limit);
         params.put("offset",""+offset);
@@ -241,6 +242,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
         String url=getResources().getString(R.string.url)+"/api/user/update_store_open_status";
+        showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"changeOpenStatus");
     }
 

@@ -65,6 +65,7 @@ public class BaseActivity extends AppCompatActivity {
     protected int smallLimit = 4,smallOffset = 0;
     protected int visibleItemCount,pastVisibleItems,totalItemCount;
     protected boolean loading=false,isScroll = true;
+    protected AlertDialog alertDialog;
 
     protected String token,appName,appVersion;
 
@@ -406,7 +407,7 @@ public class BaseActivity extends AppCompatActivity {
                 });
 
         // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog = alertDialogBuilder.create();
 
         // show it
         alertDialog.show();

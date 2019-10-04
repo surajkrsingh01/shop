@@ -160,7 +160,7 @@ public class MyOrdersActivity extends NetworkBaseActivity implements MyImageClic
                         itemList.add(orderItem);
                     }
 
-                    if(len == 0){
+                    if(itemList.size() == 0){
                         showNoData(true);
                     }else{
                         showNoData(false);
