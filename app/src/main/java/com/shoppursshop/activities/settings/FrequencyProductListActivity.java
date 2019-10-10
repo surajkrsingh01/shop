@@ -92,11 +92,14 @@ public class FrequencyProductListActivity extends NetworkBaseActivity implements
                 loading = false;
                 if (response.getBoolean("status")) {
                     JSONArray dataArray = response.getJSONArray("result");
-                    JSONObject jsonObject = null;
+                    JSONObject dataObject = null,jsonObject = null;
+                    JSONArray productArray = null;
                     int len = dataArray.length();
                     FrequencyProduct productItem= null;
                     for (int i = 0; i < len; i++) {
-                        jsonObject = dataArray.getJSONObject(i);
+                        dataObject = dataArray.getJSONObject(i);
+                        productArray = dataObject.getJSONArray("myProductList");
+                        jsonObject = productArray.getJSONObject(0);
                         productItem = new FrequencyProduct();
                         productItem.setProdId(jsonObject.getInt("prodId"));
                         productItem.setProdName(jsonObject.getString("prodName"));

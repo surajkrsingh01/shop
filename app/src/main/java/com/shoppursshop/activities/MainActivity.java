@@ -246,6 +246,17 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"changeOpenStatus");
     }
 
+    private void generateFrequencyOrder(){
+        Map<String,String> params=new HashMap<>();
+        params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.GENERATE_FREQUENCY_ORDER;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"generateFrequencyOrder");
+    }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -290,8 +301,12 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                                 equals(Utility.getTimeStamp("yyyy-MM-dd"))){
                             openingStore = true;
                             showMyBothDialog("Open your store","Cancel","Open");
+                        }else{
+                            generateFrequencyOrder();
                         }
 
+                    }else{
+                        generateFrequencyOrder();
                     }
                 }
 
@@ -359,14 +374,21 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                             equals(Utility.getTimeStamp("yyyy-MM-dd"))){
                         openingStore = true;
                         showMyBothDialog("Open your store","Cancel","Open");
+                    }else{
+                        generateFrequencyOrder();
                     }
 
+                }else{
+                    generateFrequencyOrder();
                 }
                 if (response.getBoolean("status")) {
                     editor.putBoolean(Constants.IS_TOKEN_SAVED,true);
                     editor.commit();
                 }
             }else if (apiName.equals("changeOpenStatus")) {
+
+                generateFrequencyOrder();
+
                 if (response.getBoolean("status")) {
                     int status = response.getInt("result");
                     if(status == 1){
@@ -463,6 +485,9 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
     @Override
     public void onDialogNegativeClicked(){
-       openingStore =false;
+        if(openingStore){
+            openingStore =false;
+            generateFrequencyOrder();
+        }
     }
 }
