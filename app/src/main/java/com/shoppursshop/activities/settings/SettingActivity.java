@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.BaseActivity;
 import com.shoppursshop.activities.LoginActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.ShoppursProductListActivity;
@@ -57,6 +56,7 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         itemList.add("Shoppurs Products");
         itemList.add("Orders to Shoppurs");
         itemList.add("Customer Orders");
+        itemList.add("Frequency Customer Orders");
         itemList.add("Store Sales");
         itemList.add("Store Offers");
         itemList.add("Payment Device");
@@ -172,6 +172,10 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         }else if(name.equals("Customer Orders")){
             Intent intent = new Intent(this, MyOrdersActivity.class);
             intent.putExtra("flag","customerOrders");
+            startActivity(intent);
+        }else if(name.equals("Frequency Customer Orders")){
+            Intent intent = new Intent(this, FrequencyOrderCustomerListActivity.class);
+            intent.putExtra("flag","frequencyCustomerOrders");
             startActivity(intent);
         }else if(name.equals("My Orders")){
             Intent intent = new Intent(this, MyOrdersActivity.class);

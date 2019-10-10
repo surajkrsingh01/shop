@@ -310,5 +310,8 @@
     <string name="title_activity_card_details">CardDetailsActivity</string>
     <string name="title_activity_other_payment_list">OtherPaymentListActivity</string>
     <string name="title_activity_user_list_for_chat">UserListForChatActivity</string>
+    <string name="title_activity_fequency_order_customer_list">FequencyOrderCustomerListActivity
+    </string>
+    <string name="title_activity_frequency_product_list">FrequencyProductListActivity</string>
 
 </resources>

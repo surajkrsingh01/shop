@@ -2,6 +2,16 @@ apply plugin: 'com.android.application'
 
 
 android {
+
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword 'admin123'
+            storeFile file('../key/shoppursKey.jks')
+            storePassword 'admin123'
+        }
+    }
+
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.shoppursshop"
@@ -17,6 +27,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 

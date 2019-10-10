@@ -40,6 +40,7 @@ import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTouchListener;
 import com.shoppursshop.models.Category;
+import com.shoppursshop.models.FrequencyProduct;
 import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.models.MyHeader;
 import com.shoppursshop.models.MyItem;
@@ -484,6 +485,70 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    public class MyFrequencyOrderProductListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
+
+        private TextView textName,textSp,textMrp,textOffPer,textQty,textStartDate,textEndDate,textNextOrderDate,textStatus;
+        private ImageView imageView;
+        private View rootView;
+
+        public MyFrequencyOrderProductListViewHolder(View itemView) {
+            super(itemView);
+            rootView = itemView;
+            textName=itemView.findViewById(R.id.text_name);
+            textSp=itemView.findViewById(R.id.text_sp);
+            textMrp=itemView.findViewById(R.id.text_mrp);
+            textOffPer=itemView.findViewById(R.id.text_off_percentage);
+            textQty=itemView.findViewById(R.id.text_qty);
+            textStartDate=itemView.findViewById(R.id.text_start_date);
+            textEndDate=itemView.findViewById(R.id.text_end_date);
+            textNextOrderDate=itemView.findViewById(R.id.text_next_order_date);
+            textStatus=itemView.findViewById(R.id.text_status);
+            imageView=itemView.findViewById(R.id.image_view);
+            imageView.setOnClickListener(this);
+            rootView.setOnTouchListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+
+            if(view == imageView){
+                myImageClickListener.onImageClicked(getAdapterPosition(),1,imageView);
+            }
+
+        }
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    //Log.i("Adapter","onPressDown");
+                    zoomAnimation(true,rootView);
+                    //myItemTouchListener.onPressDown(getAdapterPosition());
+                    break;
+                // break;
+
+                case MotionEvent.ACTION_UP:
+                    // Log.i("Adapter","onPressUp");
+                    if(!type.equals("orderProductList")){
+                        MyProductItem item = (MyProductItem) itemList.get(getAdapterPosition());
+                        Intent intent = new Intent(context,ProductDetailActivity.class);
+                        intent.putExtra("id",item.getProdId());
+                        intent.putExtra("subCatName",subCatName);
+                        intent.putExtra("flag",flag);
+                        context.startActivity(intent);
+                    }
+
+                    zoomAnimation(false,rootView);
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    Log.i("Adapter","onPressCancel");
+                    zoomAnimation(false,rootView);
+                    break;
+            }
+            return true;
+        }
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView textHeader,textDesc;
@@ -571,6 +636,10 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 View v10 = inflater.inflate(R.layout.order_product_list_item, parent, false);
                 viewHolder = new MyOrderProductListViewHolder(v10);
                 break;
+            case 11:
+                View v11 = inflater.inflate(R.layout.frequency_order_product_list, parent, false);
+                viewHolder = new MyFrequencyOrderProductListViewHolder(v11);
+                break;
             default:
                 View v = inflater.inflate(R.layout.list_item_layout, parent, false);
                 viewHolder = new MyViewHolder(v);
@@ -622,8 +691,10 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return 8;
         }else if(type.equals("orderProductList")){
             return 10;
-        } else{
+        }else if(type.equals("frequencyOrderProductList")){
             return 11;
+        } else{
+            return 12;
         }
     }
 
@@ -849,6 +920,54 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             MyHomeHeader2ViewHolder myViewHolder = (MyHomeHeader2ViewHolder)holder;
             myViewHolder.textHeader.setText(item.getTitle());
 
+
+        }else if(holder instanceof MyFrequencyOrderProductListViewHolder){
+
+            FrequencyProduct item = (FrequencyProduct) itemList.get(position);
+            MyFrequencyOrderProductListViewHolder myViewHolder = (MyFrequencyOrderProductListViewHolder)holder;
+
+            myViewHolder.textName.setText(item.getProdName());
+            myViewHolder.textSp.setText(Utility.numberFormat(item.getProdSp()));
+            myViewHolder.textMrp.setText(Utility.numberFormat(item.getProdMrp()));
+            myViewHolder.textMrp.setPaintFlags(myViewHolder.textMrp.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            myViewHolder.textQty.setText("Qty: "+item.getFrequencyQty());
+            myViewHolder.textStartDate.setText("Start Date: "+Utility.parseDate(item.getFrequencyStartDate(),
+                    "yyyy-MM-dd","dd MMM yyyy"));
+            myViewHolder.textEndDate.setText("End Date: "+Utility.parseDate(item.getFrequencyEndDate(),
+                    "yyyy-MM-dd","dd MMM yyyy"));
+            myViewHolder.textNextOrderDate.setText("Next Order Date: "+Utility.parseDate(item.getNextOrderDate(),
+                    "yyyy-MM-dd","dd MMM yyyy"));
+
+            if(item.getStatus().equals("1")){
+                myViewHolder.textStatus.setText("Active");
+                myViewHolder.textStatus.setTextColor(context.getResources().getColor(R.color.green600));
+            }else{
+                myViewHolder.textStatus.setText("Inactive");
+                myViewHolder.textStatus.setTextColor(context.getResources().getColor(R.color.red_500));
+            }
+
+            float diff = item.getProdMrp() - item.getProdSp();
+            if(diff > 0f){
+                float percentage = diff * 100 /item.getProdMrp();
+                myViewHolder.textOffPer.setText(String.format("%.02f",percentage)+"% off");
+                myViewHolder.textMrp.setVisibility(View.VISIBLE);
+                myViewHolder.textOffPer.setVisibility(View.VISIBLE);
+            }else{
+                myViewHolder.textMrp.setVisibility(View.GONE);
+                myViewHolder.textOffPer.setVisibility(View.GONE);
+            }
+
+            RequestOptions requestOptions = new RequestOptions();
+            requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
+            // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
+            requestOptions.centerCrop();
+            requestOptions.skipMemoryCache(false);
+
+            Glide.with(context)
+                    .load(item.getProdImage1())
+                    .apply(requestOptions)
+                    .error(R.drawable.ic_photo_black_192dp)
+                    .into(myViewHolder.imageView);
 
         }
     }

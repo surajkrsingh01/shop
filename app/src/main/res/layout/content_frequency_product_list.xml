@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.settings.FrequencyProductListActivity"
+    tools:showIn="@layout/activity_frequency_product_list">
+
+    <TextView
+        android:id="@+id/text_header"
+        android:text="Products"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:textColor="?attr/secondaryTextColor"
+        android:textSize="@dimen/home_list_header_text_size"
+        android:textAllCaps="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/text_desc"
+        android:text="Frequency Order Products"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/text_header"
+        android:textColor="?attr/primaryTextColor"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/home_list_desc_text_margin"
+        android:textSize="@dimen/list_very_large_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_below="@+id/text_desc"
+        android:layout_above="@+id/linear_footer"
+        android:scrollbars="none"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <include layout="@layout/footer_layout"/>
+
+    <TextView
+        android:id="@+id/text_error"
+        android:visibility="gone"
+        android:text="No data available..."
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
