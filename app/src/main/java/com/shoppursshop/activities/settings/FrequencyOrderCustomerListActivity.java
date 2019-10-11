@@ -53,13 +53,36 @@ public class FrequencyOrderCustomerListActivity extends NetworkBaseActivity impl
         //imageViewSearch = findViewById(R.id.image_search);
         recyclerView=findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
+        final RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         myItemAdapter=new CustomerAdapter(this,itemList,"frequencyCustomerList");
         myItemAdapter.setMyItemClickListener(this);
         myItemAdapter.setMyImageClickListener(this);
         recyclerView.setAdapter(myItemAdapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (isScroll) {
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    Log.i(TAG,"visible "+visibleItemCount+" total "+totalItemCount);
+                    pastVisibleItems = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+                    Log.i(TAG,"past visible "+(pastVisibleItems));
+
+                    if (!loading) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            loading = true;
+                            offset = limit + offset;
+                            getItemList();
+                        }
+                    }
+
+                }
+            }
+        });
 
         if(ConnectionDetector.isNetworkAvailable(this)){
             getItemList();
@@ -86,7 +109,6 @@ public class FrequencyOrderCustomerListActivity extends NetworkBaseActivity impl
 
         try {
             if (apiName.equals("customerList") || apiName.equals("refreshCustomerList")) {
-                loading = false;
                 if (response.getBoolean("status")) {
                     JSONArray dataArray = response.getJSONArray("result");
                     JSONObject jsonObject = null;
@@ -123,7 +145,25 @@ public class FrequencyOrderCustomerListActivity extends NetworkBaseActivity impl
                         showNoData(true,"No data available");
                     }else{
                         showNoData(false,null);
-                        myItemAdapter.notifyDataSetChanged();
+                        if(len < limit){
+                            isScroll = false;
+                        }
+                        if(len > 0){
+                            if(offset == 0){
+                                myItemAdapter.notifyDataSetChanged();
+                            }else{
+                                recyclerView.post(new Runnable() {
+                                    public void run() {
+                                        myItemAdapter.notifyItemRangeInserted(offset,limit);
+                                        loading = false;
+                                    }
+                                });
+                                Log.d(TAG, "NEXT ITEMS LOADED");
+                            }
+                        }else{
+                            Log.d(TAG, "NO ITEMS FOUND");
+                        }
+                        // myItemAdapter.notifyDataSetChanged();
                     }
                 }
             }

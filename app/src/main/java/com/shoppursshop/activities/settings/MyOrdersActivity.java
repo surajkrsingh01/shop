@@ -108,6 +108,7 @@ public class MyOrdersActivity extends NetworkBaseActivity implements MyImageClic
     }
 
     private void getItemList(){
+        loading = true;
         Map<String,String> params=new HashMap<>();
         params.put("limit", ""+limit);
         params.put("offset",""+offset);

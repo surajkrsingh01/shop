@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -63,6 +64,29 @@ public class FrequencyProductListActivity extends NetworkBaseActivity implements
         myItemAdapter.setFlag("frequencyOrderProductList");
         recyclerView.setAdapter(myItemAdapter);
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (isScroll) {
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    Log.i(TAG,"visible "+visibleItemCount+" total "+totalItemCount);
+                    pastVisibleItems = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+                    Log.i(TAG,"past visible "+(pastVisibleItems));
+
+                    if (!loading) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            loading = true;
+                            offset = limit + offset;
+                            getItemList();
+                        }
+                    }
+
+                }
+            }
+        });
+
         if(ConnectionDetector.isNetworkAvailable(this)){
             getItemList();
         }else{
@@ -89,7 +113,6 @@ public class FrequencyProductListActivity extends NetworkBaseActivity implements
 
         try {
             if (apiName.equals("productList")) {
-                loading = false;
                 if (response.getBoolean("status")) {
                     JSONArray dataArray = response.getJSONArray("result");
                     JSONObject dataObject = null,jsonObject = null;
@@ -128,7 +151,25 @@ public class FrequencyProductListActivity extends NetworkBaseActivity implements
                         showNoData(true,"No data available");
                     }else{
                         showNoData(false,null);
-                        myItemAdapter.notifyDataSetChanged();
+                        if(len < limit){
+                            isScroll = false;
+                        }
+                        if(len > 0){
+                            if(offset == 0){
+                                myItemAdapter.notifyDataSetChanged();
+                            }else{
+                                recyclerView.post(new Runnable() {
+                                    public void run() {
+                                        myItemAdapter.notifyItemRangeInserted(offset,limit);
+                                        loading = false;
+                                    }
+                                });
+                                Log.d(TAG, "NEXT ITEMS LOADED");
+                            }
+                        }else{
+                            Log.d(TAG, "NO ITEMS FOUND");
+                        }
+                        // myItemAdapter.notifyDataSetChanged();
                     }
                 }
             }
