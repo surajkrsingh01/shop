@@ -941,9 +941,11 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if(item.getStatus().equals("1")){
                 myViewHolder.textStatus.setText("Active");
                 myViewHolder.textStatus.setTextColor(context.getResources().getColor(R.color.green600));
+                myViewHolder.textNextOrderDate.setVisibility(View.VISIBLE);
             }else{
                 myViewHolder.textStatus.setText("Inactive");
                 myViewHolder.textStatus.setTextColor(context.getResources().getColor(R.color.red_500));
+                myViewHolder.textNextOrderDate.setVisibility(View.GONE);
             }
 
             float diff = item.getProdMrp() - item.getProdSp();
