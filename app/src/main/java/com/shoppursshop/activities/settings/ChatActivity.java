@@ -84,7 +84,7 @@ public class ChatActivity extends BaseImageActivity implements MyItemClickListen
         final RecyclerView.LayoutManager layoutManagerHomeMenu=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManagerHomeMenu);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        myItemAdapter=new ChatAdapter(this,itemList,sharedPreferences.getString(Constants.SHOP_CODE,""));
+        myItemAdapter=new ChatAdapter(this,itemList,sharedPreferences.getString(Constants.MOBILE_NO,""));
         myItemAdapter.setMyItemClickListener(this);
         recyclerView.setAdapter(myItemAdapter);
 
@@ -189,6 +189,7 @@ public class ChatActivity extends BaseImageActivity implements MyItemClickListen
             chatMessage.setMessageType("text");
             chatMessage.setMessageTo("");
             chatMessage.setMessageFrom(sharedPreferences.getString(Constants.SHOP_CODE,""));
+            chatMessage.setMessageFromMobile(sharedPreferences.getString(Constants.MOBILE_NO,""));
             itemList.add(chatMessage);
             myItemAdapter.notifyItemInserted(itemList.size()-1);
             recyclerView.smoothScrollToPosition(itemList.size()-1);
@@ -230,6 +231,7 @@ public class ChatActivity extends BaseImageActivity implements MyItemClickListen
                             chatMessage.setMessageType(dataObject.getString("messageType"));
                             chatMessage.setMessageTo(dataObject.getString("messageToCode"));
                             chatMessage.setMessageFrom(dataObject.getString("messageFromCode"));
+                            chatMessage.setMessageFromMobile(dataObject.getString("messageFromMobile"));
                             chatMessage.setMessageFromPic(dataObject.getString("messageFromPic"));
                             if(chatMessage.getMessageType().equals("image")){
                                 chatMessage.setFileUrl(dataObject.getString("messageFileUrl"));
@@ -317,6 +319,7 @@ public class ChatActivity extends BaseImageActivity implements MyItemClickListen
         chatMessage.setFileUrl(imagePath);
         chatMessage.setMessageTo("");
         chatMessage.setMessageFrom(sharedPreferences.getString(Constants.SHOP_CODE,""));
+        chatMessage.setMessageFromMobile(sharedPreferences.getString(Constants.MOBILE_NO,""));
         itemList.add(chatMessage);
         myItemAdapter.notifyItemInserted(itemList.size()-1);
         recyclerView.smoothScrollToPosition(itemList.size()-1);
@@ -379,6 +382,7 @@ public class ChatActivity extends BaseImageActivity implements MyItemClickListen
             chatMessage.setFileUrl(imagePath);
             chatMessage.setMessageTo("");
             chatMessage.setMessageFrom(sharedPreferences.getString(Constants.SHOP_CODE,""));
+            chatMessage.setMessageFromMobile(sharedPreferences.getString(Constants.MOBILE_NO,""));
             itemList.add(chatMessage);
             myItemAdapter.notifyItemInserted(itemList.size()-1);
             recyclerView.smoothScrollToPosition(itemList.size()-1);
@@ -439,6 +443,7 @@ public class ChatActivity extends BaseImageActivity implements MyItemClickListen
                     }
                     chatMessage.setMessageTo(sharedPreferences.getString(Constants.SHOP_CODE,""));
                     chatMessage.setMessageFrom(jsonObject.getString("from"));
+                    chatMessage.setMessageFromMobile(jsonObject.getString("mobile"));
                     itemList.add(chatMessage);
                     myItemAdapter.notifyItemInserted(itemList.size()-1);
                     recyclerView.smoothScrollToPosition(itemList.size()-1);

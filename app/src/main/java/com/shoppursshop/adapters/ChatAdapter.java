@@ -98,7 +98,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public int getItemViewType(int position) {
-        String messageFrom = itemList.get(position).getMessageFrom();
+        String messageFrom = itemList.get(position).getMessageFromMobile();
         if(messageFrom.equals(userId))
             return GOING;
         else

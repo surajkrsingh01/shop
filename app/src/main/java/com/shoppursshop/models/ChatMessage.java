@@ -9,7 +9,7 @@ public class ChatMessage {
     private int messageId;
     private String messageText;
     private String prodCode;
-    private String messageFrom;
+    private String messageFrom,messageFromMobile;
     private String messageFromPic;
     private String messageTo;
     private String messageTime;
@@ -22,6 +22,13 @@ public class ChatMessage {
     private String fileUrl;
     private boolean isImageUploaded;
 
+    public String getMessageFromMobile() {
+        return messageFromMobile;
+    }
+
+    public void setMessageFromMobile(String messageFromMobile) {
+        this.messageFromMobile = messageFromMobile;
+    }
 
     public String getProdCode() {
         return prodCode;

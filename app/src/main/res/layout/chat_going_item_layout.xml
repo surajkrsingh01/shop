@@ -34,8 +34,8 @@
             android:id="@+id/rl_image_layout"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:layout_width="@dimen/chat_file_width"
-            android:layout_height="@dimen/chat_file_height">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/iv_image"

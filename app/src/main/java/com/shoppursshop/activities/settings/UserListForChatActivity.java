@@ -64,8 +64,8 @@ public class UserListForChatActivity extends NetworkBaseActivity implements MyIt
         offset = 0;
 
         itemList = new ArrayList<>();
-        if(!sharedPreferences.getString(Constants.SHOP_CODE,"").equals("SHP1")){
 
+        if(!sharedPreferences.getString(Constants.SHOP_CODE,"").equals("SHP1")){
             MyHeader myHeader = new MyHeader();
             myHeader.setTitle("Shoppurs Support");
             itemList.add(myHeader);
@@ -74,7 +74,7 @@ public class UserListForChatActivity extends NetworkBaseActivity implements MyIt
             item.setUserCode("SHP1");
             item.setLastMessage("");
             item.setLastMessageDate("");
-            item.setUserMobile("9810162596");
+            item.setUserMobile("9811851841");
             item.setUserName("Shoppurs Technical Support");
             item.setUserPic("");
             itemList.add(item);
@@ -83,7 +83,7 @@ public class UserListForChatActivity extends NetworkBaseActivity implements MyIt
             item.setUserCode("SHP1");
             item.setLastMessage("");
             item.setLastMessageDate("");
-            item.setUserMobile("9810162596");
+            item.setUserMobile("9990729207");
             item.setUserName("Shoppurs Sale Support");
             item.setUserPic("");
             itemList.add(item);
@@ -92,11 +92,13 @@ public class UserListForChatActivity extends NetworkBaseActivity implements MyIt
             item.setUserCode("SHP1");
             item.setLastMessage("");
             item.setLastMessageDate("");
-            item.setUserMobile("9810162596");
+            item.setUserMobile("9990729207");
             item.setUserName("Shoppurs Account Support");
             item.setUserPic("");
             itemList.add(item);
         }
+
+
 
         MyHeader myHeader = new MyHeader();
         myHeader.setTitle("Customer");

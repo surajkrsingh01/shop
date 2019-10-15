@@ -67,7 +67,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
     private NestedScrollView nestedScrollView;
 
     private ImageView ivMenu;
-    private boolean openingStore;
+    private boolean openingStore,refresh;
 
     private float MIN_WIDTH = 200,MIN_HEIGHT = 230,MAX_WIDTH = 200,MAX_HEIGHT = 290;
 
@@ -292,21 +292,25 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
         try {
             if (apiName.equals("orders")) {
-                if(!sharedPreferences.getBoolean(Constants.IS_TOKEN_SAVED,false) &&
-                        !TextUtils.isEmpty(sharedPreferences.getString(Constants.TOKEN,""))){
-                    saveFcmToken();
+                if(refresh){
+                    refresh = false;
                 }else{
-                    if(!sharedPreferences.getBoolean(Constants.STORE_OPEN_STATUS,false)){
-                        if(!sharedPreferences.getString(Constants.STORE_CLOSE_DATE,"").
-                                equals(Utility.getTimeStamp("yyyy-MM-dd"))){
-                            openingStore = true;
-                            showMyBothDialog("Open your store","Cancel","Open");
+                    if(!sharedPreferences.getBoolean(Constants.IS_TOKEN_SAVED,false) &&
+                            !TextUtils.isEmpty(sharedPreferences.getString(Constants.TOKEN,""))){
+                        saveFcmToken();
+                    }else{
+                        if(!sharedPreferences.getBoolean(Constants.STORE_OPEN_STATUS,false)){
+                            if(!sharedPreferences.getString(Constants.STORE_CLOSE_DATE,"").
+                                    equals(Utility.getTimeStamp("yyyy-MM-dd"))){
+                                openingStore = true;
+                                showMyBothDialog("Open your store","Cancel","Open");
+                            }else{
+                                generateFrequencyOrder();
+                            }
+
                         }else{
                             generateFrequencyOrder();
                         }
-
-                    }else{
-                        generateFrequencyOrder();
                     }
                 }
 
@@ -404,9 +408,14 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                 }
             }else if(apiName.equals("generateFrequencyOrder")){
                 if (response.getBoolean("status")) {
-                    offset = 0;
-                    itemList.clear();
-                    getItemList();
+
+                    if(!response.getString("result").equals("0")){
+                        offset = 0;
+                        resetItemList();
+                        refresh = true;
+                        getItemList();
+                    }
+
                 }
             }
         }catch (JSONException e) {
