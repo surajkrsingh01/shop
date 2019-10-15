@@ -402,6 +402,12 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }
+            }else if(apiName.equals("generateFrequencyOrder")){
+                if (response.getBoolean("status")) {
+                    offset = 0;
+                    itemList.clear();
+                    getItemList();
+                }
             }
         }catch (JSONException e) {
             e.printStackTrace();
