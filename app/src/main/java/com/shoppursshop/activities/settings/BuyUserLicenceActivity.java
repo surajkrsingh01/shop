@@ -30,6 +30,7 @@ import com.shoppursshop.adapters.PaymentSchemeAdapter;
 import com.shoppursshop.adapters.SettingsAdapter;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.models.ShoppursLicense;
 import com.shoppursshop.models.UserLicense;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
@@ -49,14 +50,14 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
 
     private TextView tvnoOfUser, tvtotalAmount;
     private Button btnProceed, btn_minus, btn_plus;
-    private List<MyProductItem> mschemeList;
+    private List<ShoppursLicense> mschemeList;
     private List<UserLicense> userLicenseList;
     private float totalAmount;
     private int noOfUser = 1, schemeCode =-1;
     private RecyclerView recyclerView,recyclerViewUserLicense;
     private PaymentSchemeAdapter paymentSchemeAdapter;
     private MySubscriptionAdapter mySubscriptionAdapter;
-    private MyProductItem item;
+    private ShoppursLicense item;
     private TextView tv_top_parent;
     private String orderNumber;
     private int userLicenseId,masterUserLicenseId;
@@ -82,21 +83,24 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
         btnProceed.setBackgroundColor(colorTheme);
 
         mschemeList = new ArrayList<>();
-        item = new MyProductItem();
-        item.setProdName("Monthly Payment");
-        item.setProdMrp(500);
+        item = new ShoppursLicense();
+        item.setName("Mobile App User License");
+        item.setPaymentMethod("Yearly Payment");
+        item.setAmount(499);
         item.setSelected(false);
         mschemeList.add(item);
 
-        item = new MyProductItem();
-        item.setProdName("Quarterly Payment");
-        item.setProdMrp(2500);
+        item = new ShoppursLicense();
+        item.setName("Mobile App User License + mPos");
+        item.setPaymentMethod("Yearly Payment");
+        item.setAmount(999);
         item.setSelected(false);
         mschemeList.add(item);
 
-        item = new MyProductItem();
-        item.setProdName("Yearly Payment");
-        item.setProdMrp(4500);
+        item = new ShoppursLicense();
+        item.setName("Android POS User License");
+        item.setPaymentMethod("Yearly Payment");
+        item.setAmount(1999);
         item.setSelected(false);
         mschemeList.add(item);
 
@@ -186,11 +190,11 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
     }
 
     private void getOrderNumber(){
-        MyProductItem item = mschemeList.get(schemeCode);
+        ShoppursLicense item = mschemeList.get(schemeCode);
         Map<String,String> params=new HashMap<>();
         params.put("numOfUsers",""+noOfUser);
         params.put("amount",""+totalAmount);
-        params.put("scheme",item.getProdName());
+        params.put("scheme",item.getPaymentMethod());
         params.put("purchaseDate","");
         params.put("expiryDate","");
         params.put("renewdDate","");
@@ -207,11 +211,11 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
     }
 
     private void updateLicenseStatus(){
-        MyProductItem item = mschemeList.get(schemeCode);
+        ShoppursLicense item = mschemeList.get(schemeCode);
         Map<String,String> params=new HashMap<>();
         params.put("numOfUsers",""+noOfUser);
         params.put("amount",""+totalAmount);
-        params.put("scheme",item.getProdName());
+        params.put("scheme",item.getPaymentMethod());
         params.put("purchaseDate","");
         params.put("expiryDate","");
         params.put("renewdDate","");
@@ -292,9 +296,9 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
     private void calculateTotal(){
         noOfUser = Integer.parseInt(tvnoOfUser.getText().toString());
         if(schemeCode>=0){
-            totalAmount = mschemeList.get(schemeCode).getProdMrp() * noOfUser;
+            totalAmount = mschemeList.get(schemeCode).getAmount()*12 * noOfUser;
         }
-        tvtotalAmount.setText(Utility.numberFormat(totalAmount));
+        tvtotalAmount.setText(Utility.numberFormat(totalAmount)+"/year");
     }
 
     @Override
