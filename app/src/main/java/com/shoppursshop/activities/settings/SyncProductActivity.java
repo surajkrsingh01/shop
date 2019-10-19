@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -91,6 +93,7 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
             for(Object ob1 : subCatList){
                 subCat = (MySimpleItem)ob1;
                 addSubCategory(subCat.getId(),subCat.getName(),itemList.size());
+                Log.i(TAG,"Sub cat "+subCat.getId()+" name "+subCat.getName());
                 if(subCats == null){
                     subCats = ""+subCat.getId();
                 }else{
@@ -187,7 +190,14 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
                     dataObject.put("prodImage2",subCat.getProdImage2());
                     dataObject.put("prodImage3",subCat.getProdImage3());
                     dataObject.put("isBarcodeAvailable",subCat.getIsBarCodeAvailable());
-                    dataObject.put("barcodeList",subCat.getBarcodeList());
+                    JSONArray barcodeArray = new JSONArray();
+                    JSONObject barcodeObject = null;
+                    for(Barcode barcode: subCat.getBarcodeList()){
+                        barcodeObject = new JSONObject();
+                        barcodeObject.put("barcode",barcode.getBarcode());
+                        barcodeArray.put(barcodeObject);
+                    }
+                    dataObject.put("barcodeList",barcodeArray);
                     dataObject.put("action","2");
                     dataObject.put("createdBy",subCat.getCreatedBy());
                     dataObject.put("updatedBy",subCat.getUpdatedBy());
@@ -254,6 +264,7 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
                             item.setUpdatedBy(jsonObject.getString("updatedBy"));
                             item.setCreatedDate(jsonObject.getString("createdDate"));
                             item.setUpdatedDate(jsonObject.getString("updatedDate"));
+                            item.setSelected(false);
                             barArray = jsonObject.getJSONArray("barcodeList");
                             barLen = barArray.length();
                             barCodeList = new ArrayList<>();
@@ -312,14 +323,15 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
     private void addProduct(MyProductItem item){
         CatListItem subCat = null;
         MySimpleItem mySimpleItem = null;
+        Log.i(TAG,"Adding item...");
         for(Object ob : itemList){
             subCat = (CatListItem) ob;
-            if(subCat.getId() == item.getProdCatId()){
-
+            if(subCat.getId() == item.getProdSubCatId()){
                 subCat.getItemList().add(item);
+                Log.i(TAG,"Item added...");
             }
 
-            itemAdapter.notifyItemChanged(subCat.getPosition());
+            itemAdapter.notifyItemInserted(subCat.getPosition());
         }
 
 
@@ -365,6 +377,7 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
                 if(selectedList.size() > 0){
                     mySelectedCatItem.setItemList(selectedList);
                     selectedItemList.add(mySelectedCatItem);
+                    Log.i(TAG,"item selected");
                 }
             }
 
@@ -373,6 +386,7 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
                 return;
             }
 
+            isAddingProduct = false;
             createProducts();
         }else{
             Intent intent = new Intent();

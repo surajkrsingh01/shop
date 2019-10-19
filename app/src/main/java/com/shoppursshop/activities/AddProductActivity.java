@@ -424,6 +424,20 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             }
         });
 
+        spinnerSubCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i > 0){
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
         calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -548,10 +562,10 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
                         .into(imageView3);
             }
         }else{
-            String timestamp = Utility.getTimeStamp();
-            timestamp = timestamp.replaceAll("-","").replaceAll(" ","").replaceAll(":","");
+           // String timestamp = Utility.getTimeStamp();
+          //  timestamp = timestamp.replaceAll("-","").replaceAll(" ","").replaceAll(":","");
             //timestamp = timestamp.replaceAll(":","");
-            editTextCode.setText(sharedPreferences.getString(Constants.SHOP_CODE,"")+"/prd/"+timestamp);
+         //   editTextCode.setText(sharedPreferences.getString(Constants.SHOP_CODE,"")+"/prd/"+timestamp);
         }
 
         checkBoxIsBarAvaialble.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -751,12 +765,10 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
        if(TextUtils.isEmpty(prodName)){
            DialogAndToast.showDialog("Please enter product name",this);
            return;
+       }else if(prodName.length() < 3){
+           DialogAndToast.showDialog("Product name must be more than 3 characters",this);
+           return;
        }
-
-        if(TextUtils.isEmpty(prodCode)){
-            DialogAndToast.showDialog("Please enter product code",this);
-            return;
-        }
 
         if(TextUtils.isEmpty(barCode)){
           //  DialogAndToast.showDialog("Please enter barcode",this);
@@ -843,6 +855,14 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
            focus.requestFocus();
            return;
        }else{
+
+           String shopCode = sharedPreferences.getString(Constants.SHOP_CODE,"");
+           shopCode =shopCode.replaceAll("HP","");
+           String subCat = subCatListObject.get(spinnerSubCategory.getSelectedItemPosition()-1).getName();
+           String cat= categoryListObject.get(spinnerCategory.getSelectedItemPosition()-1).getName();
+           String code = shopCode+cat.substring(0,3)+subCat.substring(0,3)+prodName.substring(0,3);
+           editTextCode.setText(code);
+
            Map<String,String> params=new HashMap<>();
            params.put("prodCatId",catId);
            params.put("prodSubCatId",subCatId);
