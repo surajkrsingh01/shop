@@ -139,7 +139,7 @@ public class SplashActivity extends NetworkBaseActivity {
                 break;
             case Utility.MY_PERMISSIONS_REQUEST_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if(sharedPreferences.getBoolean(Constants.INIT_DATA_LOADED,false)){
+                    if(!sharedPreferences.getBoolean(Constants.INIT_DATA_LOADED,false)){
                         if(ConnectionDetector.isNetworkAvailable(this)){
                             getInitData();
                         }else{

@@ -5,6 +5,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.widget.PopupMenu;
@@ -77,6 +79,10 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        //Crashlytics.getInstance().crash(); // Force a crash
+
 
         ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 

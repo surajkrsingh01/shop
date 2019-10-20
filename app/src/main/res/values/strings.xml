@@ -14,8 +14,8 @@
     <string name="base_image_url">http://www.shoppurs.in/images</string>
 
     <!-- Local.
-        <string name="url">http://192.168.42.195:8888</string>
-        <string name="base_url">http://192.168.42.195:8888</string>-->
+        <string name="url">http://192.168.42.169:8888</string>
+        <string name="base_url">http://192.168.42.169:8888</string>-->
 
 
     <string name="sign_up">Sign Up</string>
