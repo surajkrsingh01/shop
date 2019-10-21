@@ -118,14 +118,17 @@ public class AddSubCatActivity extends NetworkBaseActivity implements MyLevelIte
             @Override
             public void onClick(View view) {
                 MySimpleItem item = null;
+                CatListItem category = null;
                 for(Object ob : itemList){
-                    item = (MySimpleItem) ob;
-                    if(isSelectingAll){
-                        item.setSelected(true);
-                    }else{
-                        item.setSelected(false);
+                    category = (CatListItem) ob;
+                    for(Object ob1 : category.getItemList()){
+                        item = (MySimpleItem)ob1;
+                        if(isSelectingAll){
+                            item.setSelected(true);
+                        }else{
+                            item.setSelected(false);
+                        }
                     }
-
                 }
 
                 if(isSelectingAll){
