@@ -169,6 +169,8 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                 myProductItem = (MyProductItem) getIntent().getSerializableExtra("myProduct");
             }else if(flag.equals("buyProduct")){
                 myProductItem = (MyProductItem) getIntent().getSerializableExtra("MyProduct");
+            }else if(flag.equals("syncedProductList")){
+                myProductItem = (MyProductItem) getIntent().getSerializableExtra("MyProduct");
             }else if(flag.equals("chatProduct")){
                 shopCode = intent.getStringExtra("shopCode");
                 findViewById(R.id.ll_shop_product_layout).setVisibility(View.GONE);

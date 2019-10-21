@@ -409,8 +409,9 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         MyProductItem item = (MyProductItem) itemList.get(getAdapterPosition());
                         Intent intent = new Intent(context,ProductDetailActivity.class);
                         intent.putExtra("id",item.getProdId());
+                        intent.putExtra("MyProduct",item);
                         intent.putExtra("subCatName",subCatName);
-                        intent.putExtra("flag",flag);
+                        intent.putExtra("flag",type);
                         context.startActivity(intent);
                     }
 
@@ -678,7 +679,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }else{
                 return 6;
             }
-        }else if(type.equals("productList")){
+        }else if(type.equals("productList") || type.equals("syncedProductList")){
             Object item = itemList.get(position);
            /* if(position == 0){
                 return 7;
@@ -821,7 +822,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             myViewHolder.textHeader.setText(item.getTitle());
             myViewHolder.textDesc.setText(item.getDesc());
 
-            if(!type.equals("productList")){
+            if(!type.equals("productList") && !type.equals("syncedProductList")){
                 StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams)myViewHolder.itemView.getLayoutParams();
                 layoutParams.setFullSpan(true);
             }

@@ -296,6 +296,7 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
                         subCat = (CatListItem) ob;
                         for (Object ob1 : subCat.getItemList()) {
                             productItem = (MyProductItem) ob1;
+                            productItem.setProdId(dbHelper.getNextProductId());
                             dbHelper.addProduct(productItem, Utility.getTimeStamp(),Utility.getTimeStamp());
                         }
                     }

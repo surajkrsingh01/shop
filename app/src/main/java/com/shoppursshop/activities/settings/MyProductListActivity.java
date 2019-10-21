@@ -63,9 +63,9 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
         // staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        itemAdapter=new ProductAdapter(this,itemList,"productList");
+        itemAdapter=new ProductAdapter(this,itemList,"syncedProductList");
         itemAdapter.setMyImageClickListener(this);
-        itemAdapter.setFlag("productList");
+        itemAdapter.setFlag("syncedProductList");
         itemAdapter.setSubCatName("");
         itemAdapter.setMyItemClickListener(this);
         recyclerView.setAdapter(itemAdapter);

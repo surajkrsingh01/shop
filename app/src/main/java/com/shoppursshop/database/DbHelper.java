@@ -1250,6 +1250,20 @@ public class DbHelper extends SQLiteOpenHelper {
         }
     }
 
+    public int getNextProductId(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select max(ID) as counter from "+PRODUCT_TABLE;
+        Cursor res =  db.rawQuery(query, null);
+        boolean isExist = false;
+        int count = 0;
+        if(res.moveToFirst()){
+            count = res.getInt(res.getColumnIndex("counter"));
+            count++;
+        }
+
+        return count;
+    }
+
     public ArrayList<Object> getCategories(){
         SQLiteDatabase db = this.getReadableDatabase();
         final String query="select * from "+CAT_TABLE;
