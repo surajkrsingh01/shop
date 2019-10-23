@@ -42,6 +42,7 @@ public class Constants {
     public static String DB_NAME="dbName";
     public static String DB_USER_NAME="dbUserName";
     public static String DB_PASSWORD="dbPassword";
+    public static String DB_VERSION="dbVersion";
    // public static String DOB="dob";
     public static String LOCATION="location";
     public static String FULL_NAME="fullName";
@@ -201,5 +202,7 @@ public class Constants {
     public static String GENERATE_FREQUENCY_ORDER="/api/order/frequency_order";
     public static String FREQUENCY_CUSTOMER_LIST="/api/order/get_frequency_order_customer_list";
     public static String GET_FREQUENCY_PRODUCT_LIST="/api/order/get_frequency_order";
+
+    public static String UPDATE_DB_VERSION="/api/db_version/handle_change_version";
 
 }
