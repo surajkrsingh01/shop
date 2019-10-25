@@ -238,6 +238,14 @@ public class SplashActivity extends NetworkBaseActivity {
                 }
             }else if (apiName.equals("updateDbVersion")) {
                 if (response.getBoolean("status")) {
+                    editor.putString(Constants.DB_VERSION,response.getString("result"));
+                    editor.commit();
+                    if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
+                        getMacID();
+                    } else {
+                        moveToNextActivity();
+                    }
+                }else{
                     if (TextUtils.isEmpty(sharedPreferences.getString(Constants.IMEI_NO, ""))) {
                         getMacID();
                     } else {

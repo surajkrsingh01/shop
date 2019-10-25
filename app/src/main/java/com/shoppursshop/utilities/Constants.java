@@ -159,6 +159,7 @@ public class Constants {
     public static String UPDATE_ADDRESS="/api/shop/profile/update_address";
     public static String UPDATE_DELIVERY_STAUS="/api/shop/profile/update_delivery_status";
     public static String GET_INVOICE="/api/trans/get_invoice";
+    public static String GET_INVOICE_BY_INV_NO="/api/trans/get_invoice_inv";
 
     public static String GENERATE_ORDER="/api/shop/order/generate_order";
     public static String PLACE_ORDER="/api/shop/order/place_order";
@@ -204,5 +205,6 @@ public class Constants {
     public static String GET_FREQUENCY_PRODUCT_LIST="/api/order/get_frequency_order";
 
     public static String UPDATE_DB_VERSION="/api/db_version/handle_change_version";
+    public static String RETURN_PRODUCT="/api/return/send_return_request";
 
 }

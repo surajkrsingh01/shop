@@ -34,6 +34,7 @@ import com.shoppursshop.activities.settings.ComboProductOfferActivity;
 import com.shoppursshop.activities.settings.CreateCouponOfferActivity;
 import com.shoppursshop.activities.settings.FreeProductOfferActivity;
 import com.shoppursshop.activities.settings.ProductPriceOfferActivity;
+import com.shoppursshop.activities.settings.ReturnProductActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.activities.settings.SyncDataActivity;
 import com.shoppursshop.activities.settings.SyncProductActivity;
@@ -211,7 +212,20 @@ public class BaseActivity extends AppCompatActivity {
             tv.setText("Add User");
         }else if(context instanceof SyncDataActivity){
             tv.setText("Sync Data");
+        }else if(context instanceof ReturnProductActivity){
+            tv.setText("Search Invoice");
         }
+
+        findViewById(R.id.relative_footer_action).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFooterActionClicked();
+            }
+        });
+    }
+
+    protected void onFooterActionClicked(){
+
     }
 
     public void changeViewBackgroundColor(View view) {

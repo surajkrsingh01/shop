@@ -208,8 +208,8 @@
     <string name="diamond_icon">&#xe043;</string>
     <string name="hourglass_icon">&#xe018;</string>
 
-    <string name="notifications_channel_name">notification</string>
-    <string name="notifications_channel_description">noti</string>
+    <string name="notifications_channel_name">Message Notification</string>
+    <string name="notifications_channel_description">notification</string>
 
     <string name="address_found">Address Found</string>
     <string name="lbl_you_are_at">YOU ARE AT</string>
@@ -313,5 +313,6 @@
     <string name="title_activity_fequency_order_customer_list">FequencyOrderCustomerListActivity
     </string>
     <string name="title_activity_frequency_product_list">FrequencyProductListActivity</string>
+    <string name="title_activity_return_product">ReturnProductActivity</string>
 
 </resources>

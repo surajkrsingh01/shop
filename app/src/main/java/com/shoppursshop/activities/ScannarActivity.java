@@ -84,7 +84,8 @@ public class ScannarActivity extends NetworkBaseActivity {
 
     private void processResult(String rawValue){
         try {
-            if(type.equals("addProduct") || type.equals("addProductBarcode") || type.equals("updateStock")){
+            if(type.equals("addProduct") || type.equals("addProductBarcode") || type.equals("updateStock")
+                    || type.equals("searchInvoice")){
                 Intent intent = new Intent();
                 intent.putExtra("barCode",rawValue);
                 setResult(-1,intent);

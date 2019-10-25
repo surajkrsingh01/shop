@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Vibrator;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -19,6 +20,9 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.LoginActivity;
 import com.shoppursshop.activities.SplashActivity;
 import com.shoppursshop.activities.settings.ChatActivity;
+
+import static androidx.core.app.NotificationCompat.DEFAULT_SOUND;
+import static androidx.core.app.NotificationCompat.DEFAULT_VIBRATE;
 
 public class NotificationService {
 
@@ -51,8 +55,9 @@ public class NotificationService {
                 .setContentText(message)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(message))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentIntent(pendingIntent)
+                .setDefaults(DEFAULT_SOUND | DEFAULT_VIBRATE)
                 .setAutoCancel(true);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
@@ -83,8 +88,9 @@ public class NotificationService {
                 .setContentText(message)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(message))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentIntent(pendingIntent)
+                .setDefaults(DEFAULT_SOUND | DEFAULT_VIBRATE)
                 .setAutoCancel(true);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
@@ -103,6 +109,8 @@ public class NotificationService {
         NotificationChannel adminChannel;
         adminChannel = new NotificationChannel(CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_HIGH);
         adminChannel.setDescription(channelDescription);
+        adminChannel.setShowBadge(true);
+        adminChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         adminChannel.enableLights(true);
         adminChannel.setLightColor(Color.RED);
         adminChannel.enableVibration(true);

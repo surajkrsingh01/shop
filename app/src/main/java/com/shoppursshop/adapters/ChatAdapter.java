@@ -120,10 +120,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 // requestOptions.centerCrop();
                 requestOptions.skipMemoryCache(false);
 
-                Glide.with(context)
-                        .load(chatMessage.getMessageFromPic())
-                        .apply(requestOptions)
-                        .into(myViewHolder.profilePic);
+                if(myViewHolder.profilePic != null){
+                    Glide.with(context)
+                            .load(chatMessage.getMessageFromPic())
+                            .apply(requestOptions)
+                            .into(myViewHolder.profilePic);
+                }
+
+
             }
 
             if(chatMessage.getMessageType().equals("image")){

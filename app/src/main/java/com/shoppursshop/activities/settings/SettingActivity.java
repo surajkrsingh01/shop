@@ -54,6 +54,7 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         itemList.add("Store Sub Category");
         itemList.add("Add Products to Store");
         itemList.add("Shoppurs Products");
+        itemList.add("Return Products");
         itemList.add("Orders to Shoppurs");
         itemList.add("Customer Orders");
         itemList.add("Frequency Customer Orders");
@@ -200,9 +201,11 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         }else if(name.equals("Chat")){
             Intent intent = new Intent(this, UserListForChatActivity.class);
             startActivity(intent);
-
         }else if(name.equals("Display")){
             Intent intent = new Intent(this, DisplaySettingsActivity.class);
+            startActivity(intent);
+        }else if(name.equals("Return Products")){
+            Intent intent = new Intent(this, ReturnProductActivity.class);
             startActivity(intent);
         }else if(name.equals("Logout")){
             logout();
