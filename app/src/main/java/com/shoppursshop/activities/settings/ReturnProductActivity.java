@@ -1,6 +1,9 @@
 package com.shoppursshop.activities.settings;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -56,6 +59,7 @@ public class ReturnProductActivity extends NetworkBaseActivity implements MyImag
     private RelativeLayout rl_invoice_details;
     private FloatingActionButton fab;
     private int position;
+    private IntentFilter intentFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +98,10 @@ public class ReturnProductActivity extends NetworkBaseActivity implements MyImag
                 openScannar();
             }
         });
+
+        intentFilter=new IntentFilter();
+        intentFilter.addAction("com.shoppursshop.broadcast.salesReturnAccepted");
+        intentFilter.addAction("com.shoppursshop.broadcast.salesReturnCancelled");
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -187,6 +195,7 @@ public class ReturnProductActivity extends NetworkBaseActivity implements MyImag
                         item.setProdCgst(Float.parseFloat(jsonObject.getString("invDCGST")));
                         item.setProdSgst(Float.parseFloat(jsonObject.getString("invDSGST")));
                         item.setProdIgst(Float.parseFloat(jsonObject.getString("invDIGST")));
+                        item.setProdSp((float) jsonObject.getDouble("invDSp"));
                         item.setProdMrp((float) jsonObject.getDouble("invDMrp"));
                         item.setUnit(jsonObject.getString("invdProdUnit"));
                         item.setColor(jsonObject.getString("invdProdColor"));
@@ -206,6 +215,8 @@ public class ReturnProductActivity extends NetworkBaseActivity implements MyImag
                 }
             }else if(apiName.equals("returnProduct")){
                 if (response.getBoolean("status")) {
+                    itemList.get(position).setStatus("2");
+                    myItemAdapter.notifyItemChanged(position);
                     showMyDialog(response.getString("message"));
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
@@ -250,4 +261,30 @@ public class ReturnProductActivity extends NetworkBaseActivity implements MyImag
 
        getInvoice(invoiceNo);
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        registerReceiver(broadcastReceiver, intentFilter);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        unregisterReceiver(broadcastReceiver);
+    }
+
+    private BroadcastReceiver broadcastReceiver=new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent serviceIntent) {
+            if (serviceIntent.getAction().equals("com.shoppursshop.broadcast.salesReturnCancelled")) {
+                itemList.get(position).setStatus("0");
+                myItemAdapter.notifyItemChanged(position);
+            }else if (serviceIntent.getAction().equals("com.shoppursshop.broadcast.salesReturnAccepted")) {
+                itemList.get(position).setStatus("3");
+                myItemAdapter.notifyItemChanged(position);
+            }
+        }
+    };
 }

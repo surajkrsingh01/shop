@@ -83,7 +83,6 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         initFooter(this,4);
     }
 
-    @Override
     public void changeStoreStatus(){
         Map<String,String> params=new HashMap<>();
         params.put("status","0");
@@ -208,7 +207,7 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
             Intent intent = new Intent(this, ReturnProductActivity.class);
             startActivity(intent);
         }else if(name.equals("Logout")){
-            logout();
+            changeStoreStatus();
         }
     }
 

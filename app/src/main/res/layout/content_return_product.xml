@@ -103,7 +103,6 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_below="@+id/rl_date"
-            android:background="?attr/solidPrimaryStrokeBorderBackground"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

@@ -92,9 +92,13 @@ public class ReturnProductListAdapter extends RecyclerView.Adapter<ReturnProduct
                     myViewHolder.text_return_status.setVisibility(View.GONE);
                 } else {
                     myViewHolder.relative_return_product.setVisibility(View.GONE);
+                    myViewHolder.text_return_status.setVisibility(View.VISIBLE);
                     if (item.getStatus().equals("0"))
                         myViewHolder.text_return_status.setText("Cancelled");
-                    else myViewHolder.text_return_status.setText("Returned");
+                    else if (item.getStatus().equals("2"))
+                        myViewHolder.text_return_status.setText("Pending");
+                    else if (item.getStatus().equals("3"))
+                        myViewHolder.text_return_status.setText("Returned");
                 }
 
             float diff = Float.valueOf(item.getProdMrp()) - Float.valueOf(item.getProdSp());
