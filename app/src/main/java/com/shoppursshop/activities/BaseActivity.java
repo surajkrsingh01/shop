@@ -216,12 +216,12 @@ public class BaseActivity extends AppCompatActivity {
             tv.setText("Search Invoice");
         }
 
-        findViewById(R.id.relative_footer_action).setOnClickListener(new View.OnClickListener() {
+        /*findViewById(R.id.relative_footer_action).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onFooterActionClicked();
             }
-        });
+        });*/
     }
 
     protected void onFooterActionClicked(){

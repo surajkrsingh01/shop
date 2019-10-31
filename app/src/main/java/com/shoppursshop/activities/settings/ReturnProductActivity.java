@@ -110,6 +110,13 @@ public class ReturnProductActivity extends NetworkBaseActivity implements MyImag
                 openScannar();
             }
         });
+
+        findViewById(R.id.relative_footer_action).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFooterActionClicked();
+            }
+        });
     }
 
     private void openScannar(){
