@@ -856,12 +856,12 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
            return;
        }else{
 
-           String shopCode = sharedPreferences.getString(Constants.SHOP_CODE,"");
+          /* String shopCode = sharedPreferences.getString(Constants.SHOP_CODE,"");
            shopCode =shopCode.replaceAll("HP","");
            String subCat = subCatListObject.get(spinnerSubCategory.getSelectedItemPosition()-1).getName();
            String cat= categoryListObject.get(spinnerCategory.getSelectedItemPosition()-1).getName();
            String code = shopCode+cat.substring(0,3)+subCat.substring(0,3)+prodName.substring(0,3);
-           editTextCode.setText(code);
+           editTextCode.setText(code);*/
 
            Map<String,String> params=new HashMap<>();
            params.put("prodCatId",catId);
@@ -869,7 +869,6 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
            params.put("prodReorderLevel",reorderLevel);
            params.put("prodQoh",qoh);
            params.put("prodName",prodName);
-           params.put("prodCode",prodCode);
            params.put("prodBarCode",barCode);
            params.put("prodDesc",desc);
            params.put("prodCgst",cgst);
