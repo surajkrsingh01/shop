@@ -111,7 +111,8 @@ public class SubCatListActivity extends BaseActivity {
                             if(nextItemList.size() > 0){
                                 recyclerView.post(new Runnable() {
                                     public void run() {
-                                        myItemAdapter.notifyItemRangeInserted(offset,limit);
+                                        myItemAdapter.notifyDataSetChanged();
+                                       // myItemAdapter.notifyItemRangeInserted(offset,limit);
                                         loading = false;
                                     }
                                 });

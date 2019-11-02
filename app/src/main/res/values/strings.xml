@@ -208,6 +208,8 @@
     <string name="diamond_icon">&#xe043;</string>
     <string name="hourglass_icon">&#xe018;</string>
 
+    <string name="expiration_goods_notice">Please Check the Expirable Goods and the good reorder level to maintain an Optimum Stock level at the Store.</string>
+
     <string name="notifications_channel_name">Message Notification</string>
     <string name="notifications_channel_description">notification</string>
 

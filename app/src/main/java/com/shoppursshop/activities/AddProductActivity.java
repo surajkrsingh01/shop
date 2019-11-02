@@ -106,6 +106,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
     private int colorValue;
     private String colorName;
     private boolean colorSelected,viewsDisabled;
+    private Calendar mfgCal;
 
 
     private MyProductItem myProductItem;
@@ -447,11 +448,11 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
 
             @Override
             public void onDateSet(DatePicker datePicker, int yr, int mon, int dy) {
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.YEAR,yr);
-                cal.set(Calendar.MONTH,mon);
-                cal.set(Calendar.DATE,dy);
-                editTextMfgDate.setText(Utility.parseDate(cal,"yyyy-MM-dd"));
+                mfgCal = Calendar.getInstance();
+                mfgCal.set(Calendar.YEAR,yr);
+                mfgCal.set(Calendar.MONTH,mon);
+                mfgCal.set(Calendar.DATE,dy);
+                editTextMfgDate.setText(Utility.parseDate(mfgCal,"yyyy-MM-dd"));
             }
         },year,month,day);
         datePicker1.setCancelable(false);
@@ -465,7 +466,13 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
                 cal.set(Calendar.YEAR,yr);
                 cal.set(Calendar.MONTH,mon);
                 cal.set(Calendar.DATE,dy);
-                editTextExpiryDate.setText(Utility.parseDate(cal,"yyyy-MM-dd"));
+                if(mfgCal == null){
+                    DialogAndToast.showDialog("Please select manufacture date.",AddProductActivity.this);
+                }else if(mfgCal.getTimeInMillis() > cal.getTimeInMillis()){
+                    DialogAndToast.showDialog("Please select expiry date greater than manufaturing date.",AddProductActivity.this);
+                }else{
+                    editTextExpiryDate.setText(Utility.parseDate(cal,"yyyy-MM-dd"));
+                }
             }
         },year,month,day);
         datePicker2.setCancelable(false);

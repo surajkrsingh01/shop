@@ -195,6 +195,7 @@ public class Constants {
     public static String GET_PRODUCT_OFFERS_BY_CAT="/api/customers/products/ret_productslist_with_offers_by_cat";
 
     public static String UPDATE_STOCK="/api/products/update_stock";
+    public static String UPDATE_STATUS="/api/products/update_status";
 
     public static String GET_CHAT_USERS="/api/chat/get_chat_users";
     public static String SEND_MESSAGE="/api/chat/chat_for_support";

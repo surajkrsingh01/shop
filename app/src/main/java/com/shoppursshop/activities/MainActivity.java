@@ -300,6 +300,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
             if (apiName.equals("orders")) {
                 if(refresh){
                     refresh = false;
+                    DialogAndToast.showDialog(getResources().getString(R.string.expiration_goods_notice),this);
                 }else{
                     if(!sharedPreferences.getBoolean(Constants.IS_TOKEN_SAVED,false) &&
                             !TextUtils.isEmpty(sharedPreferences.getString(Constants.TOKEN,""))){
@@ -420,6 +421,8 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                         resetItemList();
                         refresh = true;
                         getItemList();
+                    }else{
+                        DialogAndToast.showDialog(getResources().getString(R.string.expiration_goods_notice),this);
                     }
 
                 }
