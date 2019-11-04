@@ -170,12 +170,6 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.yellow500));
         }*/
-
-        if(itemList.size() == 0 && itemListFav.size() == 0){
-            if (ConnectionDetector.isNetworkAvailable(this)){
-                getItemList();
-            }
-        }
         initFooter(this,2);
     }
 
@@ -206,6 +200,12 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
         }else{
             showNoFavData(false);
             myItemAdapterFav.notifyDataSetChanged();
+        }
+
+        if(itemList.size() == 0 && itemListFav.size() == 0){
+            if (ConnectionDetector.isNetworkAvailable(this)){
+                getItemList();
+            }
         }
     }
 
@@ -309,6 +309,10 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
                         myCustomer.setRatings((float)jsonObject.getDouble("ratings"));
                         myCustomer.setStatus(jsonObject.getString("isActive"));
                         myCustomer.setCustUserCreateStatus(jsonObject.getString("userCreateStatus"));
+
+                        if(!myCustomer.getIsFav().equals("Y")){
+                            myCustomer.setIsFav("N");
+                        }
 
                         if(!dbHelper.checkCustomerExistInCart(jsonObject.getString("code"))){
                             if(myCustomer.getIsFav().equals("Y")){

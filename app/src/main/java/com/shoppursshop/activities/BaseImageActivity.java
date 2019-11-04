@@ -196,13 +196,29 @@ public class BaseImageActivity extends NetworkBaseActivity {
 
     public void onSelectFromGalleryResult(Intent data){
         filePath = data.getData();
+        Bitmap bmp = null;
+        try {
+            bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(filePath));
+            saveBitmap(bmp);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         // imagePath = filePath.getPath();
         // textViewImageStatus.setVisibility(View.VISIBLE);
         //  textViewImageStatus.setText("Pan card image added.");
         //  imagePath=getPath(filePath);
         try {
             //   bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-            bitmap = compressImage(getRealPathFromURI(filePath.toString()));
+            if(bmp != null){
+                bitmap = compressImage(imagePath);
+                File file = new File(imagePath);
+                if(file.exists()){
+                    file.delete();
+                }
+            }else{
+                bitmap = compressImage(getRealPathFromURI(filePath.toString()));
+            }
+
            // bitmap=getBitmapFromUri(filePath);
             saveBitmap(bitmap);
             //convertToBase64(new File(imagePath));
