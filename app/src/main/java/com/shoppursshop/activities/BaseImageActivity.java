@@ -14,22 +14,39 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
 import com.shoppursshop.R;
+import com.shoppursshop.adapters.BrowseImageAdapter;
 import com.shoppursshop.fragments.BottomSearchFragment;
+import com.shoppursshop.interfaces.MyItemClickListener;
+import com.shoppursshop.services.FirebaseImageUploadService;
 import com.shoppursshop.utilities.Utility;
 
 import java.io.ByteArrayOutputStream;
@@ -44,7 +61,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class BaseImageActivity extends NetworkBaseActivity {
+public class BaseImageActivity extends NetworkBaseActivity implements MyItemClickListener {
 
     private final float DEST_WIDTH = 600f;
     private final float DEST_HEIGHT = 800f;
@@ -61,6 +78,13 @@ public class BaseImageActivity extends NetworkBaseActivity {
     protected String imageBase64;
     protected AlertDialog alertDialog;
     protected RequestOptions requestOptions;
+
+    private List<String> itemList;
+    private RecyclerView recyclerView;
+    private BrowseImageAdapter itemAdapter;
+    private String cat;
+    private ProgressBar progress_bar;
+    private TextView text_no_files;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,8 +198,89 @@ public class BaseImageActivity extends NetworkBaseActivity {
         alertDialog.show();
     }
 
+    protected void selectProductImage(String cat){
+
+        if(this.cat == null || !this.cat.equals(cat)){
+            if(itemList == null)
+                itemList = new ArrayList<>();
+            else
+                itemList.clear();
+        }
+
+
+
+        int view=R.layout.select_product_image_dialog;
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder
+                .setCancelable(false)
+                .setView(view);
+
+        // create alert dialog
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+      //  itemList.add("https://firebasestorage.googleapis.com/v0/b/shoppurs-2a1ac.appspot.com/o/images%2Fcat%2Fgrc%2Fgrocery.jpg?alt=media&token=3f72a1a9-fc00-4fb5-863b-c148ba0a2975");
+        // final TextView textHeader=(TextView) alertDialog.findViewById(R.id.text_header);
+        final ImageView imageCancel=(ImageView) alertDialog.findViewById(R.id.image_close);
+        final Button btnGallery=(Button) alertDialog.findViewById(R.id.btn_gallery);
+        final Button btnCamera=(Button) alertDialog.findViewById(R.id.btn_camera);
+        text_no_files = alertDialog.findViewById(R.id.text_no_files);
+        progress_bar = alertDialog.findViewById(R.id.progress_bar);
+        recyclerView = alertDialog.findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        if(itemAdapter == null){
+            itemAdapter=new BrowseImageAdapter(this,itemList);
+            itemAdapter.setMyItemClickListener(this);
+        }
+
+        recyclerView.setAdapter(itemAdapter);
+
+        imageCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+        btnCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userChoosenTask = "Camera";
+                boolean result = Utility.verifyCameraPermissions(BaseImageActivity.this);
+                if (result)
+                    cameraIntent();
+            }
+        });
+
+        btnGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userChoosenTask = "Gallery";
+                boolean result = Utility.verifyStorageOnlyPermissions(BaseImageActivity.this);
+                if (result)
+                    galleryIntent();
+            }
+        });
+
+        if(this.cat == null || !this.cat.equals(cat)){
+            progress_bar.setVisibility(View.VISIBLE);
+            browseCategoryImages(cat);
+            this.cat = cat;
+        }
+
+
+        alertDialog.show();
+    }
+
     public void selectProduct(){
 
+    }
+
+    protected void browseCategoryImages(String cat){
+        listFiles("cat/"+cat,null);
     }
 
     private void cameraIntent(){
@@ -550,4 +655,72 @@ public class BaseImageActivity extends NetworkBaseActivity {
         }
     }
 
+    public void listFiles(final String dir,String pageToken){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference listRef = storageRef.child("images/"+dir);
+// Fetch the next page of results, using the pageToken if we have one.
+        Task<ListResult> listPageTask = pageToken != null
+                ? listRef.list(100, pageToken)
+                : listRef.list(100);
+
+        listPageTask
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        List<StorageReference> prefixes = listResult.getPrefixes();
+                        List<StorageReference> items = listResult.getItems();
+
+                        for(StorageReference storageReference : items){
+                            Log.i(TAG,"storage "+storageReference.getBucket());
+                            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Log.i(TAG,"Downloaded "+uri.toString());
+                                    itemList.add(uri.toString());
+                                    Log.i(TAG,"list size "+itemList.size());
+                                    itemAdapter.notifyItemInserted(itemList.size()-1);
+                                    if(progress_bar.getVisibility() == View.VISIBLE){
+                                        progress_bar.setVisibility(View.GONE);
+                                    }
+                                }
+                            });
+                        }
+                        if(items == null || items.size() == 0){
+                            showError();
+                        }
+
+                        // Recurse onto next page
+                        if (listResult.getPageToken() != null) {
+                            Log.i(TAG,"Loading next itmes...");
+                            listFiles(dir,listResult.getPageToken());
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG,"failed..."+e.getMessage());
+                showError();
+                // Uh-oh, an error occurred.
+            }
+        });
+
+
+    }
+
+    private void showError(){
+        text_no_files.setVisibility(View.VISIBLE);
+        progress_bar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+      imagePath = itemList.get(position);
+      browseImageSelected();
+      alertDialog.dismiss();
+    }
+
+    protected void browseImageSelected(){
+
+    }
 }

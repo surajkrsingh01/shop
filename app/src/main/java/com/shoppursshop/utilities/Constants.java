@@ -156,6 +156,7 @@ public class Constants {
     public static String GET_BAR_CODE="/api/products/products_barcode_list";
     public static String SEARCH_CUSTOMER="/api/search/shop_customers";
     public static String UPDATE_BASIC_PROFILE="/api/shop/profile/update_basic_details";
+    public static String UPDATE_PROFILE_IMAGE="/api/shop/profile/update_profile_image";
     public static String UPDATE_ADDRESS="/api/shop/profile/update_address";
     public static String UPDATE_DELIVERY_STAUS="/api/shop/profile/update_delivery_status";
     public static String GET_INVOICE="/api/trans/get_invoice";

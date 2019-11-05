@@ -9,22 +9,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
-import com.google.firebase.storage.OnPausedListener;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageException;
-import com.google.firebase.storage.StorageMetadata;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -646,8 +630,8 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             @Override
             public void onClick(View view) {
                 imagePosition = 1;
-                if(!viewsDisabled)
-                selectImage();
+                checkPhotoUpload();
+
             }
         });
 
@@ -655,8 +639,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             @Override
             public void onClick(View view) {
                 imagePosition = 2;
-                if(!viewsDisabled)
-                selectImage();
+                checkPhotoUpload();
             }
         });
 
@@ -664,8 +647,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             @Override
             public void onClick(View view) {
                 imagePosition = 3;
-                if(!viewsDisabled)
-                selectImage();
+                checkPhotoUpload();
             }
         });
 
@@ -771,6 +753,20 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
         initUnitColorSizeList();
         initUnitList();
         //initFooter(this,1);
+
+    }
+
+    private void checkPhotoUpload(){
+        if(!viewsDisabled){
+            int catPosition = spinnerCategory.getSelectedItemPosition();
+            if(catPosition == 0){
+                DialogAndToast.showDialog("Please select category before attaching product images.",AddProductActivity.this);
+            }else{
+                String name = categoryListObject.get(spinnerCategory.getSelectedItemPosition()-1).getName();
+                name = name.substring(0,3).toLowerCase();
+                selectProductImage(name);
+            }
+        }
 
     }
 
@@ -1593,6 +1589,33 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
        //  imageList.set(imagePosition-1,convertToBase64(new File(imagePath)));
          imageList.set(imagePosition-1,imagePath);
          Log.i(TAG,"added image is "+imageList.get(imagePosition-1));
+    }
+
+    @Override
+    protected void browseImageSelected() {
+        if(imagePosition == 1){
+            imageView1.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(imagePath)
+                    .apply(requestOptions)
+                    .into(imageView1);
+            imageUrl1 = imagePath;
+        }else if(imagePosition == 2){
+            imageView2.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(imagePath)
+                    .apply(requestOptions)
+                    .into(imageView2);
+            imageUrl2 = imagePath;
+        }else{
+            imageView3.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(imagePath)
+                    .apply(requestOptions)
+                    .into(imageView3);
+            imageUrl3 = imagePath;
+        }
+        imagePath = null;
     }
 
     private void initUnitColorSizeList(){
