@@ -63,9 +63,9 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
         // staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        itemAdapter=new ProductAdapter(this,itemList,"productList");
+        itemAdapter=new ProductAdapter(this,itemList,"syncedProductList");
         itemAdapter.setMyImageClickListener(this);
-        itemAdapter.setFlag("productList");
+        itemAdapter.setFlag("syncedProductList");
         itemAdapter.setSubCatName("");
         itemAdapter.setMyItemClickListener(this);
         recyclerView.setAdapter(itemAdapter);
@@ -81,30 +81,11 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
                     pastVisibleItems = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
                     Log.i(TAG,"total visible "+(visibleItemCount+pastVisibleItems));
 
-                    if (loading) {
+                    if (!loading) {
                         if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                            loading = false;
+                            loading = true;
                             offset = limit + offset;
-                            List<Object> nextItemList = dbHelper.getProducts(limit,offset);
-                            for(Object ob : nextItemList){
-                                itemList.add(ob);
-                               // itemAdapter.add(ob);
-                            }
-                            if(nextItemList.size() < limit){
-                                isScroll = false;
-                            }
-                            if(nextItemList.size() > 0){
-                                recyclerView.post(new Runnable() {
-                                    public void run() {
-                                        itemAdapter.notifyItemRangeInserted(offset,limit);
-                                        loading = true;
-                                    }
-                                });
-                                Log.d(TAG, "NEXT ITEMS LOADED");
-                            }else{
-                                Log.d(TAG, "NO ITEMS FOUND");
-                            }
-
+                            getProductList();
                         }
                     }
                 }
@@ -136,7 +117,10 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
     }
 
     private void getProductList(){
+        loading = true;
         Map<String,String> params=new HashMap<>();
+        params.put("limit",""+limit);
+        params.put("offset",""+offset);
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
@@ -153,20 +137,11 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
 
         if (requestCode == 2){
             if(data != null){
-                resetList();
+               offset = 0;
+               itemList.clear();
+               getProductList();
             }
         }
-    }
-
-    private void resetList(){
-        offset = 0;
-        List<Object> itemCatList = dbHelper.getProducts(limit,offset);
-        itemList.clear();
-        for(Object ob : itemCatList){
-            itemList.add(ob);
-        }
-
-        itemAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -183,7 +158,7 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
         JSONArray jsonArray = new JSONArray();
         StringBuilder sb = new StringBuilder();
         try {
-            sb.append(item.getProdId());
+            sb.append(item.getProdCode());
             String prodIds = sb.toString();
             //catIds = catIds.substring(0,catIds.length()-1);
             jsonObject.put("prodIds",prodIds);
@@ -208,7 +183,7 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
 
                 if(response.getBoolean("status")){
                     MyProductItem item = (MyProductItem) itemList.get(position);
-                    dbHelper.deleteProductById(item.getProdId());
+                    dbHelper.deleteProductByCode(item.getProdCode());
                     itemList.remove(position);
                     itemAdapter.notifyItemRemoved(position);
                 }else{
@@ -224,13 +199,34 @@ public class MyProductListActivity extends NetworkBaseActivity implements MyItem
                     for(int i=0; i<len; i++){
                         jsonObject = productArray.getJSONObject(i);
                         productItem = dbHelper.getProductDetailsByCode(jsonObject.getString("prodCode"));
+
+                        if(productItem != null)
                         itemList.add(productItem);
                     }
 
-                    if(len == 0){
+                    if(itemList.size() == 0){
                         showError("Please click on + icon to add products.");
                     }else{
-                        itemAdapter.notifyDataSetChanged();
+                        tvError.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        if(len < limit){
+                            isScroll = false;
+                        }
+                        if(len > 0){
+                            if(offset == 0){
+                                itemAdapter.notifyDataSetChanged();
+                            }else{
+                                recyclerView.post(new Runnable() {
+                                    public void run() {
+                                        itemAdapter.notifyItemRangeInserted(offset,limit);
+                                        loading = false;
+                                    }
+                                });
+                                Log.d(TAG, "NEXT ITEMS LOADED");
+                            }
+                        }else{
+                            Log.d(TAG, "NO ITEMS FOUND");
+                        }
                     }
 
                 }else{

@@ -98,7 +98,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public int getItemViewType(int position) {
-        String messageFrom = itemList.get(position).getMessageFrom();
+        String messageFrom = itemList.get(position).getMessageFromMobile();
         if(messageFrom.equals(userId))
             return GOING;
         else
@@ -120,10 +120,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 // requestOptions.centerCrop();
                 requestOptions.skipMemoryCache(false);
 
-                Glide.with(context)
-                        .load(chatMessage.getMessageFromPic())
-                        .apply(requestOptions)
-                        .into(myViewHolder.profilePic);
+                if(myViewHolder.profilePic != null){
+                    Glide.with(context)
+                            .load(chatMessage.getMessageFromPic())
+                            .apply(requestOptions)
+                            .into(myViewHolder.profilePic);
+                }
+
+
             }
 
             if(chatMessage.getMessageType().equals("image")){

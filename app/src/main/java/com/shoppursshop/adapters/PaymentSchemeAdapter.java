@@ -11,13 +11,14 @@ import android.widget.TextView;
 import com.shoppursshop.R;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.models.ShoppursLicense;
 import com.shoppursshop.utilities.Utility;
 
 import java.util.List;
 
 public class PaymentSchemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<MyProductItem> itemList;
+    private List<ShoppursLicense> itemList;
     private Context context;
 
     private MyItemClickListener myItemClickListener;
@@ -26,7 +27,7 @@ public class PaymentSchemeAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.myItemClickListener = myItemClickListener;
     }
 
-    public PaymentSchemeAdapter(Context context, List<MyProductItem> itemList) {
+    public PaymentSchemeAdapter(Context context, List<ShoppursLicense> itemList) {
         this.itemList = itemList;
         this.context=context;
 
@@ -74,9 +75,9 @@ public class PaymentSchemeAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MyHomeHeaderViewHolder){
             MyHomeHeaderViewHolder myViewHolder = (MyHomeHeaderViewHolder)holder;
-            MyProductItem productItem = itemList.get(position);
-            myViewHolder.textHeader.setText(productItem.getProdName());
-            myViewHolder.textAmount.setText(Utility.numberFormat(productItem.getProdMrp()));
+            ShoppursLicense productItem = itemList.get(position);
+            myViewHolder.textHeader.setText(productItem.getName());
+            myViewHolder.textAmount.setText(Utility.numberFormat(productItem.getAmount())+"/month");
             if(productItem.isSelected()) {
                 myViewHolder.imageViewSelected.setVisibility(View.VISIBLE);
             }

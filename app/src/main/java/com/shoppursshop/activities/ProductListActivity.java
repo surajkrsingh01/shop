@@ -3,6 +3,8 @@ package com.shoppursshop.activities;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+
+import com.android.volley.Request;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -28,16 +30,23 @@ import com.shoppursshop.adapters.OrderAdapter;
 import com.shoppursshop.adapters.ProductAdapter;
 import com.shoppursshop.fragments.BottomSearchFragment;
 import com.shoppursshop.interfaces.MyImageClickListener;
+import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.models.MyHeader;
 import com.shoppursshop.models.MyProduct;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class ProductListActivity extends BaseActivity implements MyImageClickListener {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ProductListActivity extends NetworkBaseActivity implements MyImageClickListener, MyItemClickListener {
 
     private RecyclerView recyclerView;
     private ProductAdapter myItemAdapter;
@@ -47,6 +56,8 @@ public class ProductListActivity extends BaseActivity implements MyImageClickLis
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
     private String catName,subCatName,subCatID;
+
+    private int position;
 
     private BottomSearchFragment bottomSearchFragment;
 
@@ -95,6 +106,7 @@ public class ProductListActivity extends BaseActivity implements MyImageClickLis
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         myItemAdapter=new ProductAdapter(this,itemList,"productList");
         myItemAdapter.setMyImageClickListener(this);
+        myItemAdapter.setMyItemClickListener(this);
         myItemAdapter.setFlag(getIntent().getStringExtra("flag"));
         myItemAdapter.setSubCatName(subCatName);
         recyclerView.setAdapter(myItemAdapter);
@@ -270,4 +282,45 @@ public class ProductListActivity extends BaseActivity implements MyImageClickLis
 
         showImageDialog(item.getProdImage1(),view);
     }
+
+    @Override
+    public void onItemClicked(int position) {
+        this.position = position;
+        showMyBothDialog("Your action will delete the products and affect your stock control. Do you wish to continue?","Cancel","Ok");
+    }
+
+    @Override
+    public void onDialogPositiveClicked(){
+        MyProductItem item = (MyProductItem) itemList.get(position);
+        Map<String,String> params=new HashMap<>();
+        params.put("status","Y");
+        params.put("code",""+item.getProdCode());
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.UPDATE_STATUS;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"updateStatus");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject response, String apiName) {
+
+        try {
+            if (apiName.equals("updateStatus")) {
+                if (response.getBoolean("status")) {
+                    MyProductItem item = (MyProductItem) itemList.get(position);
+                    dbHelper.deleteProductById(item.getProdId());
+                    itemList.remove(position);
+                    myItemAdapter.notifyItemRemoved(position);
+                    DialogAndToast.showDialog("Product has been removed successfully.",this);
+                }else{
+                    DialogAndToast.showDialog(response.getString("message"),this);
+                }
+            }
+        }catch (JSONException error){
+            error.printStackTrace();
+        }
+    }
+
 }

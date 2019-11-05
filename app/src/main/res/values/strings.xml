@@ -14,8 +14,8 @@
     <string name="base_image_url">http://www.shoppurs.in/images</string>
 
     <!-- Local.
-        <string name="url">http://192.168.42.195:8888</string>
-        <string name="base_url">http://192.168.42.195:8888</string>-->
+        <string name="url">http://192.168.42.169:8888</string>
+        <string name="base_url">http://192.168.42.169:8888</string>-->
 
 
     <string name="sign_up">Sign Up</string>
@@ -208,8 +208,10 @@
     <string name="diamond_icon">&#xe043;</string>
     <string name="hourglass_icon">&#xe018;</string>
 
-    <string name="notifications_channel_name">notification</string>
-    <string name="notifications_channel_description">noti</string>
+    <string name="expiration_goods_notice">Please Check the Expirable Goods and the good reorder level to maintain an Optimum Stock level at the Store.</string>
+
+    <string name="notifications_channel_name">Message Notification</string>
+    <string name="notifications_channel_description">notification</string>
 
     <string name="address_found">Address Found</string>
     <string name="lbl_you_are_at">YOU ARE AT</string>
@@ -310,5 +312,9 @@
     <string name="title_activity_card_details">CardDetailsActivity</string>
     <string name="title_activity_other_payment_list">OtherPaymentListActivity</string>
     <string name="title_activity_user_list_for_chat">UserListForChatActivity</string>
+    <string name="title_activity_fequency_order_customer_list">FequencyOrderCustomerListActivity
+    </string>
+    <string name="title_activity_frequency_product_list">FrequencyProductListActivity</string>
+    <string name="title_activity_return_product">ReturnProductActivity</string>
 
 </resources>

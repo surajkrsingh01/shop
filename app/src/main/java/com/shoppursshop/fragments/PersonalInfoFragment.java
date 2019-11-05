@@ -350,6 +350,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
                     editor.putString(Constants.DB_PASSWORD, dataObject.getString("dbPassword"));
                     editor.putString(Constants.USER_TYPE, "Seller");
                     editor.putString(Constants.TOKEN,dataObject.getString("token"));
+                    editor.putString(Constants.DB_VERSION,dataObject.getString("dbVersion"));
                     token = dataObject.getString("token");
                     editor.putString(Constants.GOOGLE_MAP_API_KEY,dataObject.getString("googleMapApiKey"));
                     editor.putBoolean(Constants.IS_LOGGED_IN, true);

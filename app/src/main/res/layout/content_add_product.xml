@@ -241,10 +241,10 @@
                     <EditText
                         android:id="@+id/edit_product_code"
                         android:hint="@string/product_code"
-                        android:inputType="text"
+                        android:inputType="none"
+                        android:focusable="false"
                         android:textColor="?attr/primaryTextColor"
                         android:textColorHint="?attr/secondaryTextColor"
-                        android:imeOptions="actionNext"
                         android:textSize="@dimen/edit_text_small_text_size"
                         android:paddingBottom="@dimen/edit_text_small_vertical_padding"
                         android:paddingTop="@dimen/edit_text_small_vertical_padding"

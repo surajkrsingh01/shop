@@ -34,6 +34,7 @@ import com.shoppursshop.activities.settings.ComboProductOfferActivity;
 import com.shoppursshop.activities.settings.CreateCouponOfferActivity;
 import com.shoppursshop.activities.settings.FreeProductOfferActivity;
 import com.shoppursshop.activities.settings.ProductPriceOfferActivity;
+import com.shoppursshop.activities.settings.ReturnProductActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.activities.settings.SyncDataActivity;
 import com.shoppursshop.activities.settings.SyncProductActivity;
@@ -65,6 +66,7 @@ public class BaseActivity extends AppCompatActivity {
     protected int smallLimit = 4,smallOffset = 0;
     protected int visibleItemCount,pastVisibleItems,totalItemCount;
     protected boolean loading=false,isScroll = true;
+    protected AlertDialog alertDialog;
 
     protected String token,appName,appVersion;
 
@@ -210,7 +212,20 @@ public class BaseActivity extends AppCompatActivity {
             tv.setText("Add User");
         }else if(context instanceof SyncDataActivity){
             tv.setText("Sync Data");
+        }else if(context instanceof ReturnProductActivity){
+            tv.setText("Search Invoice");
         }
+
+        /*findViewById(R.id.relative_footer_action).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFooterActionClicked();
+            }
+        });*/
+    }
+
+    protected void onFooterActionClicked(){
+
     }
 
     public void changeViewBackgroundColor(View view) {
@@ -368,7 +383,7 @@ public class BaseActivity extends AppCompatActivity {
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if(msg.equals("You are not authorized to perform this action.")){
-                          logout();
+                            logout();
                         }else{
                             onDialogPositiveClicked();
                         }
@@ -406,7 +421,7 @@ public class BaseActivity extends AppCompatActivity {
                 });
 
         // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog = alertDialogBuilder.create();
 
         // show it
         alertDialog.show();
@@ -452,7 +467,41 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void logout(){
-        changeStoreStatus();
+        String IMEI_NO = sharedPreferences.getString(Constants.IMEI_NO,"");
+        String fcmToken = sharedPreferences.getString(Constants.FCM_TOKEN,"");
+        editor.clear();
+        editor.putString(Constants.IMEI_NO,IMEI_NO);
+        editor.putString(Constants.FCM_TOKEN,fcmToken);
+        editor.commit();
+        dbHelper.deleteTable(DbHelper.CAT_TABLE);
+        dbHelper.deleteTable(DbHelper.SUB_CAT_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_BARCODE_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_UNIT_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_SIZE_TABLE);
+        dbHelper.deleteTable(DbHelper.PRODUCT_COLOR_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_COMBO_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_COMBO_DETAIL_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_PRICE_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
+        dbHelper.deleteTable(DbHelper.PROD_FREE_OFFER_TABLE);
+        dbHelper.deleteTable(DbHelper.COUPON_TABLE);
+        dbHelper.deleteTable(DbHelper.SHOP_CART_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PROD_PRICE_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PROD_PRICE_DETAIL_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PROD_COMBO_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PROD_COMBO_DETAIL_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PROD_FREE_OFFER_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_COUPON_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PRODUCT_UNIT_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PRODUCT_SIZE_TABLE);
+        dbHelper.deleteTable(DbHelper.CART_PRODUCT_COLOR_TABLE);
+        dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
+
+        Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     void showProgress(boolean show,String message){
@@ -486,10 +535,6 @@ public class BaseActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void changeStoreStatus(){
-
     }
 
 }

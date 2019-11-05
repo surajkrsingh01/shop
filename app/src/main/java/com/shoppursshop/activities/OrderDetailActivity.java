@@ -152,7 +152,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         textViewOrderDate.setText(orderDate[0]+" hrs,"+orderDate[1]+orderDate[2]);
         textViewTotalAmount.setText(Utility.numberFormat(intent.getFloatExtra("totalAmount",0f)));
         String deliveryMode = intent.getStringExtra("deliveryMode");
-        if(deliveryMode.equals("Self")){
+        if(deliveryMode.equals("Self") || deliveryMode.equals("self")){
 
         }else{
             relativeLayoutDeliveryContainer.setVisibility(View.VISIBLE);

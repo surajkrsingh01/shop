@@ -211,23 +211,27 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 case MotionEvent.ACTION_UP:
                     // Log.i("Adapter","onPressUp");
-                    MyCustomer item = (MyCustomer)itemList.get(getAdapterPosition());
-                    Intent intent = new Intent(context,CustomerProfileActivity.class);
-                    intent.putExtra("name",item.getName());
-                    intent.putExtra("address",item.getAddress());
-                    intent.putExtra("mobile",item.getMobile());
-                    intent.putExtra("country",item.getCountry());
-                    intent.putExtra("stateCity",item.getState()+", "+item.getCity());
-                    intent.putExtra("locality",item.getLocality());
-                    intent.putExtra("longitude",item.getLongitude());
-                    intent.putExtra("latitude",item.getLatitude());
-                    intent.putExtra("customerImage",item.getImage());
-                    intent.putExtra("isFav",item.getIsFav());
-                    intent.putExtra("custCode",item.getCode());
-                    intent.putExtra("custId",item.getId());
-                    intent.putExtra("ratings",item.getRatings());
-                    context.startActivity(intent);
                     zoomAnimation(false,rootView);
+                    if(type.equals("frequencyCustomerList")){
+                        myItemClickListener.onItemClicked(getAdapterPosition(),0);
+                    }else{
+                        MyCustomer item = (MyCustomer)itemList.get(getAdapterPosition());
+                        Intent intent = new Intent(context,CustomerProfileActivity.class);
+                        intent.putExtra("name",item.getName());
+                        intent.putExtra("address",item.getAddress());
+                        intent.putExtra("mobile",item.getMobile());
+                        intent.putExtra("country",item.getCountry());
+                        intent.putExtra("stateCity",item.getState()+", "+item.getCity());
+                        intent.putExtra("locality",item.getLocality());
+                        intent.putExtra("longitude",item.getLongitude());
+                        intent.putExtra("latitude",item.getLatitude());
+                        intent.putExtra("customerImage",item.getImage());
+                        intent.putExtra("isFav",item.getIsFav());
+                        intent.putExtra("custCode",item.getCode());
+                        intent.putExtra("custId",item.getId());
+                        intent.putExtra("ratings",item.getRatings());
+                        context.startActivity(intent);
+                    }
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     Log.i("Adapter","onPressCancel");

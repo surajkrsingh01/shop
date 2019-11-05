@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.BaseActivity;
 import com.shoppursshop.activities.LoginActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.ShoppursProductListActivity;
@@ -55,8 +54,10 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         itemList.add("Store Sub Category");
         itemList.add("Add Products to Store");
         itemList.add("Shoppurs Products");
+        itemList.add("Return Products");
         itemList.add("Orders to Shoppurs");
         itemList.add("Customer Orders");
+        itemList.add("Frequency Customer Orders");
         itemList.add("Store Sales");
         itemList.add("Store Offers");
         itemList.add("Payment Device");
@@ -82,7 +83,6 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         initFooter(this,4);
     }
 
-    @Override
     public void changeStoreStatus(){
         Map<String,String> params=new HashMap<>();
         params.put("status","0");
@@ -173,6 +173,10 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
             Intent intent = new Intent(this, MyOrdersActivity.class);
             intent.putExtra("flag","customerOrders");
             startActivity(intent);
+        }else if(name.equals("Frequency Customer Orders")){
+            Intent intent = new Intent(this, FrequencyOrderCustomerListActivity.class);
+            intent.putExtra("flag","frequencyCustomerOrders");
+            startActivity(intent);
         }else if(name.equals("My Orders")){
             Intent intent = new Intent(this, MyOrdersActivity.class);
             startActivity(intent);
@@ -196,12 +200,14 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         }else if(name.equals("Chat")){
             Intent intent = new Intent(this, UserListForChatActivity.class);
             startActivity(intent);
-
         }else if(name.equals("Display")){
             Intent intent = new Intent(this, DisplaySettingsActivity.class);
             startActivity(intent);
+        }else if(name.equals("Return Products")){
+            Intent intent = new Intent(this, ReturnProductActivity.class);
+            startActivity(intent);
         }else if(name.equals("Logout")){
-            logout();
+            changeStoreStatus();
         }
     }
 
@@ -211,7 +217,7 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.app_name));
             String sAux = "\n Download "+getResources().getString(R.string.app_name)+" app from below link \n\n";
-            sAux = sAux + "https://app.box.com/s/ky40pmzmzuf0e5aiifpan0illv1pavou \n\n";
+            sAux = sAux + "https://play.google.com/store/apps/details?id=com.shoppursshop \n\n";
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             startActivity(Intent.createChooser(i, "Choose one"));
         } catch(Exception e) {

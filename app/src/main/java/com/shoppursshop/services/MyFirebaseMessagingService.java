@@ -81,7 +81,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     JSONObject jsonObject = new JSONObject(message.split("=")[1]);
                     if(jsonObject.getString("flag").equals("chat")){
                         NotificationService.displayChatNotification(this,
-                                jsonObject.getString("message"),jsonObject.getString("from"));
+                                jsonObject.getString("message"),jsonObject.getString("from"),
+                                jsonObject.getString("code"),jsonObject.getString("mobile"),
+                                jsonObject.getString("pic"));
                         if(ChatActivity.isVisible){
                             Intent messageReceived=new Intent();
                             messageReceived.setAction("com.shoppursshop.broadcast.messageReceived");
@@ -90,6 +92,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             Log.i("MessageService","Message broadcast sent.");
                         }
 
+                    }else if(jsonObject.getString("flag").equals("salesReturnAccepted")){
+                        Intent messageReceived=new Intent();
+                        messageReceived.setAction("com.shoppursshop.broadcast.salesReturnAccepted");
+                        messageReceived.putExtra("data",jsonObject.toString());
+                        sendBroadcast(messageReceived);
+                    }else if(jsonObject.getString("flag").equals("salesReturnCancelled")){
+                        Intent messageReceived=new Intent();
+                        messageReceived.setAction("com.shoppursshop.broadcast.salesReturnCancelled");
+                        messageReceived.putExtra("data",jsonObject.toString());
+                        sendBroadcast(messageReceived);
                     }else{
                         NotificationService.displayNotification(this,jsonObject.getString("message"));
                     }

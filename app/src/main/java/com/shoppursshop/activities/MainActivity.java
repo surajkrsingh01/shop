@@ -5,6 +5,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.widget.PopupMenu;
@@ -67,7 +69,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
     private NestedScrollView nestedScrollView;
 
     private ImageView ivMenu;
-    private boolean openingStore;
+    private boolean openingStore,refresh;
 
     private float MIN_WIDTH = 200,MIN_HEIGHT = 230,MAX_WIDTH = 200,MAX_HEIGHT = 290;
 
@@ -77,6 +79,10 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        //Crashlytics.getInstance().crash(); // Force a crash
+
 
         ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 
@@ -209,6 +215,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
     }
 
     private void getItemList(){
+        loading = true;
         Map<String,String> params=new HashMap<>();
         params.put("limit", ""+limit);
         params.put("offset",""+offset);
@@ -241,7 +248,19 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
         String url=getResources().getString(R.string.url)+"/api/user/update_store_open_status";
+        showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"changeOpenStatus");
+    }
+
+    private void generateFrequencyOrder(){
+        Map<String,String> params=new HashMap<>();
+        params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.GENERATE_FREQUENCY_ORDER;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"generateFrequencyOrder");
     }
 
     @Override
@@ -279,17 +298,26 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
         try {
             if (apiName.equals("orders")) {
-                if(!sharedPreferences.getBoolean(Constants.IS_TOKEN_SAVED,false) &&
-                        !TextUtils.isEmpty(sharedPreferences.getString(Constants.TOKEN,""))){
-                    saveFcmToken();
+                if(refresh){
+                    refresh = false;
+                    DialogAndToast.showDialog(getResources().getString(R.string.expiration_goods_notice),this);
                 }else{
-                    if(!sharedPreferences.getBoolean(Constants.STORE_OPEN_STATUS,false)){
-                        if(!sharedPreferences.getString(Constants.STORE_CLOSE_DATE,"").
-                                equals(Utility.getTimeStamp("yyyy-MM-dd"))){
-                            openingStore = true;
-                            showMyBothDialog("Open your store","Cancel","Open");
-                        }
+                    if(!sharedPreferences.getBoolean(Constants.IS_TOKEN_SAVED,false) &&
+                            !TextUtils.isEmpty(sharedPreferences.getString(Constants.TOKEN,""))){
+                        saveFcmToken();
+                    }else{
+                        if(!sharedPreferences.getBoolean(Constants.STORE_OPEN_STATUS,false)){
+                            if(!sharedPreferences.getString(Constants.STORE_CLOSE_DATE,"").
+                                    equals(Utility.getTimeStamp("yyyy-MM-dd"))){
+                                openingStore = true;
+                                showMyBothDialog("Open your store","Cancel","Open");
+                            }else{
+                                generateFrequencyOrder();
+                            }
 
+                        }else{
+                            generateFrequencyOrder();
+                        }
                     }
                 }
 
@@ -357,14 +385,21 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                             equals(Utility.getTimeStamp("yyyy-MM-dd"))){
                         openingStore = true;
                         showMyBothDialog("Open your store","Cancel","Open");
+                    }else{
+                        generateFrequencyOrder();
                     }
 
+                }else{
+                    generateFrequencyOrder();
                 }
                 if (response.getBoolean("status")) {
                     editor.putBoolean(Constants.IS_TOKEN_SAVED,true);
                     editor.commit();
                 }
             }else if (apiName.equals("changeOpenStatus")) {
+
+                generateFrequencyOrder();
+
                 if (response.getBoolean("status")) {
                     int status = response.getInt("result");
                     if(status == 1){
@@ -377,6 +412,19 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
+                }
+            }else if(apiName.equals("generateFrequencyOrder")){
+                if (response.getBoolean("status")) {
+
+                    if(!response.getString("result").equals("0")){
+                        offset = 0;
+                        resetItemList();
+                        refresh = true;
+                        getItemList();
+                    }else{
+                        DialogAndToast.showDialog(getResources().getString(R.string.expiration_goods_notice),this);
+                    }
+
                 }
             }
         }catch (JSONException e) {
@@ -461,6 +509,9 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
 
     @Override
     public void onDialogNegativeClicked(){
-       openingStore =false;
+        if(openingStore){
+            openingStore =false;
+            generateFrequencyOrder();
+        }
     }
 }

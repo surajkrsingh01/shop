@@ -150,4 +150,14 @@ public class AddUserActivity extends NetworkBaseActivity {
         finish();
     }
 
+    @Override
+    protected void onFooterActionClicked() {
+        super.onFooterActionClicked();
+
+        if(ConnectionDetector.isNetworkAvailable(AddUserActivity.this)){
+            attemptAddUser();
+        }else{
+            DialogAndToast.showDialog(getResources().getString(R.string.no_internet),AddUserActivity.this);
+        }
+    }
 }

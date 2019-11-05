@@ -5,9 +5,27 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.OnPausedListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,6 +55,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.shoppursshop.R;
 import com.shoppursshop.adapters.SpecificationAdapter;
 import com.shoppursshop.fragments.NetworkBaseFragment;
+import com.shoppursshop.interfaces.FirebaseImageUploadListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.MyColor;
@@ -46,6 +65,7 @@ import com.shoppursshop.models.ProductColor;
 import com.shoppursshop.models.ProductSize;
 import com.shoppursshop.models.ProductUnit;
 import com.shoppursshop.models.SpinnerItem;
+import com.shoppursshop.services.FirebaseImageUploadService;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
@@ -62,7 +82,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AddProductActivity extends BaseImageActivity implements View.OnClickListener, MyItemTypeClickListener {
+public class AddProductActivity extends BaseImageActivity implements View.OnClickListener,
+        MyItemTypeClickListener, FirebaseImageUploadListener {
 
     private final int UNIT = 1,SIZE = 2,COLOR = 3;
 
@@ -106,7 +127,13 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
     private int colorValue;
     private String colorName;
     private boolean colorSelected,viewsDisabled;
+    private Calendar mfgCal;
 
+    private String prodCode,prodId,imageUrl1,imageUrl2,imageUrl3;
+    private JSONObject jsonObject;
+    private int uploadCounter,counter;
+
+    private FirebaseImageUploadService firebaseImageUploadService;
 
     private MyProductItem myProductItem;
 
@@ -126,6 +153,9 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
         imageList.add("no");
         imageList.add("no");
         imageList.add("no");
+        imageUrl1="no";
+        imageUrl2="no";
+        imageUrl3="no";
         flag = getIntent().getStringExtra("flag");
         tvHeaderLabel = findViewById(R.id.text_sub_header);
         tvUnitSizeColor = findViewById(R.id.tvUnitSizeColor);
@@ -424,6 +454,20 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             }
         });
 
+        spinnerSubCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i > 0){
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
         calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -433,11 +477,11 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
 
             @Override
             public void onDateSet(DatePicker datePicker, int yr, int mon, int dy) {
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.YEAR,yr);
-                cal.set(Calendar.MONTH,mon);
-                cal.set(Calendar.DATE,dy);
-                editTextMfgDate.setText(Utility.parseDate(cal,"yyyy-MM-dd"));
+                mfgCal = Calendar.getInstance();
+                mfgCal.set(Calendar.YEAR,yr);
+                mfgCal.set(Calendar.MONTH,mon);
+                mfgCal.set(Calendar.DATE,dy);
+                editTextMfgDate.setText(Utility.parseDate(mfgCal,"yyyy-MM-dd"));
             }
         },year,month,day);
         datePicker1.setCancelable(false);
@@ -451,7 +495,13 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
                 cal.set(Calendar.YEAR,yr);
                 cal.set(Calendar.MONTH,mon);
                 cal.set(Calendar.DATE,dy);
-                editTextExpiryDate.setText(Utility.parseDate(cal,"yyyy-MM-dd"));
+                if(mfgCal == null){
+                    DialogAndToast.showDialog("Please select manufacture date.",AddProductActivity.this);
+                }else if(mfgCal.getTimeInMillis() > cal.getTimeInMillis()){
+                    DialogAndToast.showDialog("Please select expiry date greater than manufaturing date.",AddProductActivity.this);
+                }else{
+                    editTextExpiryDate.setText(Utility.parseDate(cal,"yyyy-MM-dd"));
+                }
             }
         },year,month,day);
         datePicker2.setCancelable(false);
@@ -520,6 +570,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             spinnerSubCategory.setEnabled(false);
 
             if(myProductItem.getProdImage1().contains("http")){
+                imageUrl1 = myProductItem.getProdImage1();
                 imageView1.setVisibility(View.VISIBLE);
                 requestOptions.signature(new ObjectKey(sharedPreferences.getString("product_signature"+myProductItem.getProdId()+"_1","")));
                 Glide.with(this)
@@ -529,6 +580,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
                         .into(imageView1);
             }
             if(myProductItem.getProdImage2().contains("http")){
+                imageUrl2 = myProductItem.getProdImage2();
                 imageView2.setVisibility(View.VISIBLE);
                 requestOptions.signature(new ObjectKey(sharedPreferences.getString("product_signature"+myProductItem.getProdId()+"_2","")));
                 Glide.with(this)
@@ -539,6 +591,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             }
 
             if(myProductItem.getProdImage3().contains("http")){
+                imageUrl3 = myProductItem.getProdImage3();
                 imageView3.setVisibility(View.VISIBLE);
                 requestOptions.signature(new ObjectKey(sharedPreferences.getString("product_signature"+myProductItem.getProdId()+"_3","")));
                 Glide.with(this)
@@ -547,6 +600,11 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
                         .error(R.drawable.ic_photo_black_192dp)
                         .into(imageView3);
             }
+        }else{
+           // String timestamp = Utility.getTimeStamp();
+          //  timestamp = timestamp.replaceAll("-","").replaceAll(" ","").replaceAll(":","");
+            //timestamp = timestamp.replaceAll(":","");
+         //   editTextCode.setText(sharedPreferences.getString(Constants.SHOP_CODE,"")+"/prd/"+timestamp);
         }
 
         checkBoxIsBarAvaialble.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -707,6 +765,9 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             }
         });
 
+        firebaseImageUploadService = FirebaseImageUploadService.getInstance();
+
+
         initUnitColorSizeList();
         initUnitList();
         //initFooter(this,1);
@@ -746,12 +807,10 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
        if(TextUtils.isEmpty(prodName)){
            DialogAndToast.showDialog("Please enter product name",this);
            return;
+       }else if(prodName.length() < 3){
+           DialogAndToast.showDialog("Product name must be more than 3 characters",this);
+           return;
        }
-
-        if(TextUtils.isEmpty(prodCode)){
-            DialogAndToast.showDialog("Please enter product code",this);
-            return;
-        }
 
         if(TextUtils.isEmpty(barCode)){
           //  DialogAndToast.showDialog("Please enter barcode",this);
@@ -838,13 +897,20 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
            focus.requestFocus();
            return;
        }else{
+
+          /* String shopCode = sharedPreferences.getString(Constants.SHOP_CODE,"");
+           shopCode =shopCode.replaceAll("HP","");
+           String subCat = subCatListObject.get(spinnerSubCategory.getSelectedItemPosition()-1).getName();
+           String cat= categoryListObject.get(spinnerCategory.getSelectedItemPosition()-1).getName();
+           String code = shopCode+cat.substring(0,3)+subCat.substring(0,3)+prodName.substring(0,3);
+           editTextCode.setText(code);*/
+
            Map<String,String> params=new HashMap<>();
            params.put("prodCatId",catId);
            params.put("prodSubCatId",subCatId);
            params.put("prodReorderLevel",reorderLevel);
            params.put("prodQoh",qoh);
            params.put("prodName",prodName);
-           params.put("prodCode",prodCode);
            params.put("prodBarCode",barCode);
            params.put("prodDesc",desc);
            params.put("prodCgst",cgst);
@@ -858,9 +924,9 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
            params.put("prodExpiryDate",expiryDate);
            params.put("prodMfgBy",mfgBy);
            params.put("action","3");
-           params.put("prodImage1",imageList.get(0));
-           params.put("prodImage2",imageList.get(1));
-           params.put("prodImage3",imageList.get(2));
+           params.put("prodImage1",imageUrl1);
+           params.put("prodImage2",imageUrl2);
+           params.put("prodImage3",imageUrl3);
            params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
            params.put("createdBy",sharedPreferences.getString(Constants.FULL_NAME,""));
            params.put("updatedBy",sharedPreferences.getString(Constants.FULL_NAME,""));
@@ -1072,9 +1138,9 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
                 dataObject.put("prodExpiryDate", expiryDate);
                 dataObject.put("prodMfgBy", mfgBy);
                 dataObject.put("action", "3");
-                dataObject.put("prodImage1", imageList.get(0));
-                dataObject.put("prodImage2", imageList.get(1));
-                dataObject.put("prodImage3", imageList.get(2));
+                dataObject.put("prodImage1", imageUrl1);
+                dataObject.put("prodImage2", imageUrl2);
+                dataObject.put("prodImage3", imageUrl3);
                 dataObject.put("shopCode", sharedPreferences.getString(Constants.SHOP_CODE, ""));
                 dataObject.put("createdBy", sharedPreferences.getString(Constants.FULL_NAME, ""));
                 dataObject.put("updatedBy", sharedPreferences.getString(Constants.FULL_NAME, ""));
@@ -1143,101 +1209,26 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
         }
     }
 
+    private void updateProductImages(){
+        HashMap<String,String> params = new HashMap<>();
+        params.put("prodCode",prodCode);
+        params.put("image1",imageUrl1);
+        params.put("image2",imageUrl2);
+        params.put("image3",imageUrl3);
+        String url = getResources().getString(R.string.url) + "/api/products/update_product_images";
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST, url, new JSONObject(params), "update_product_images");
+    }
+
     @Override
     public void onJsonObjectResponse(JSONObject response, String apiName) {
         if(apiName.equals("addProduct")){
             try {
                   if(response.getBoolean("status")){
-                      JSONObject jsonObject = response.getJSONObject("result");
-                      JSONArray barArray = null;
-                      JSONArray tempArray = null;
-                      JSONObject tempObject = null;
-                      ProductUnit productUnit = null;
-                      ProductSize productSize = null;
-                      ProductColor productColor = null;
-                      int barLen = 0;
-                      MyProductItem productItem = new MyProductItem();
-                      productItem.setProdId(jsonObject.getInt("prodId"));
-                      productItem.setProdCatId(jsonObject.getInt("prodCatId"));
-                      productItem.setProdSubCatId(jsonObject.getInt("prodSubCatId"));
-                      productItem.setProdName(jsonObject.getString("prodName"));
-                      productItem.setProdCode(jsonObject.getString("prodCode"));
-                      productItem.setProdDesc(jsonObject.getString("prodDesc"));
-                      productItem.setProdReorderLevel(jsonObject.getInt("prodReorderLevel"));
-                      productItem.setProdQoh(jsonObject.getInt("prodQoh"));
-                      productItem.setProdHsnCode(jsonObject.getString("prodHsnCode"));
-                      productItem.setProdCgst(Float.parseFloat(jsonObject.getString("prodCgst")));
-                      productItem.setProdIgst(Float.parseFloat(jsonObject.getString("prodIgst")));
-                      productItem.setProdSgst(Float.parseFloat(jsonObject.getString("prodSgst")));
-                      productItem.setProdWarranty(Float.parseFloat(jsonObject.getString("prodWarranty")));
-                      productItem.setProdMfgDate(jsonObject.getString("prodMfgDate"));
-                      productItem.setProdExpiryDate(jsonObject.getString("prodExpiryDate"));
-                      productItem.setProdMfgBy(jsonObject.getString("prodMfgBy"));
-                      productItem.setProdImage1(jsonObject.getString("prodImage1"));
-                      productItem.setProdImage2(jsonObject.getString("prodImage2"));
-                      productItem.setProdImage3(jsonObject.getString("prodImage3"));
-                      productItem.setProdMrp(Float.parseFloat(jsonObject.getString("prodMrp")));
-                      productItem.setProdSp(Float.parseFloat(jsonObject.getString("prodSp")));
-                      productItem.setCreatedBy(jsonObject.getString("createdBy"));
-                      productItem.setUpdatedBy(jsonObject.getString("updatedBy"));
-                      productItem.setCreatedDate(jsonObject.getString("createdDate"));
-                      productItem.setUpdatedDate(jsonObject.getString("updatedDate"));
-                      productItem.setIsBarCodeAvailable(jsonObject.getString("isBarcodeAvailable"));
-                      dbHelper.addProduct(productItem,Utility.getTimeStamp(),Utility.getTimeStamp());
-                      if(!jsonObject.getString("barcodeList").equals("null")){
-                          barArray = jsonObject.getJSONArray("barcodeList");
-                          barLen = barArray.length();
-                          for(int j = 0; j<barLen; j++){
-                              dbHelper.addProductBarcode(productItem.getProdId(),barArray.getJSONObject(j).getString("barcode"));
-                          }
-                      }
-
-                      if(!jsonObject.getString("productUnitList").equals("null")){
-                          tempArray = jsonObject.getJSONArray("productUnitList");
-                          int tempLen = tempArray.length();
-
-                          for(int unitCounter = 0; unitCounter < tempLen ; unitCounter++){
-                              tempObject = tempArray.getJSONObject(unitCounter);
-                              productUnit = new ProductUnit();
-                              productUnit.setId(tempObject.getInt("id"));
-                              productUnit.setUnitName(tempObject.getString("unitName"));
-                              productUnit.setUnitValue(tempObject.getString("unitValue"));
-                              productUnit.setStatus(tempObject.getString("status"));
-                              dbHelper.addProductUnit(productUnit,productItem.getProdId());
-                          }
-                      }
-
-                      if(!jsonObject.getString("productSizeList").equals("null")){
-                          tempArray = jsonObject.getJSONArray("productSizeList");
-                          int tempLen = tempArray.length();
-
-                          for(int unitCounter = 0; unitCounter < tempLen ; unitCounter++){
-                              tempObject = tempArray.getJSONObject(unitCounter);
-                              productSize = new ProductSize();
-                              productSize.setId(tempObject.getInt("id"));
-                              productSize.setSize(tempObject.getString("size"));
-                              productSize.setStatus(tempObject.getString("status"));
-                              dbHelper.addProductSize(productSize,productItem.getProdId());
-                              if(!tempObject.getString("productSizeList").equals("null")){
-                                  JSONArray colorArray = tempObject.getJSONArray("productColorList");
-                                  for(int colorCounter = 0; colorCounter < colorArray.length() ; colorCounter++){
-                                      tempObject = colorArray.getJSONObject(colorCounter);
-                                      productColor = new ProductColor();
-                                      productColor.setId(tempObject.getInt("id"));
-                                      productColor.setSizeId(tempObject.getInt("sizeId"));
-                                      productColor.setColorName(tempObject.getString("colorName"));
-                                      productColor.setColorValue(tempObject.getString("colorValue"));
-                                      productColor.setStatus(tempObject.getString("status"));
-                                      dbHelper.addProductColor(productColor,productItem.getId());
-                                  }
-                              }
-
-                          }
-                      }
-
-
-                      clearData();
-                      DialogAndToast.showToast(response.getString("message"),AddProductActivity.this);
+                      jsonObject = response.getJSONObject("result");
+                      prodCode = jsonObject.getString("prodCode");
+                      prodId = jsonObject.getString("prodId");
+                      uploadImagesToFirebase();
                   }else{
                       DialogAndToast.showDialog(response.getString("message"),AddProductActivity.this);
                   }
@@ -1247,87 +1238,24 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
         }else if(apiName.equals("updateProduct")){
             try {
                 if(response.getBoolean("status")){
-                    JSONObject jsonObject = response.getJSONObject("result");
-                    JSONArray barArray = null;
-                    int barLen = 0;
-                    MyProductItem productItem = new MyProductItem();
-                    productItem.setProdId(jsonObject.getInt("prodId"));
-                    productItem.setProdCatId(jsonObject.getInt("prodCatId"));
-                    productItem.setProdName(jsonObject.getString("prodName"));
-                    productItem.setProdCode(jsonObject.getString("prodCode"));
-                    productItem.setProdDesc(jsonObject.getString("prodDesc"));
-                    productItem.setProdReorderLevel(jsonObject.getInt("prodReorderLevel"));
-                    productItem.setProdQoh(jsonObject.getInt("prodQoh"));
-                    productItem.setProdHsnCode(jsonObject.getString("prodHsnCode"));
-                    productItem.setProdCgst(Float.parseFloat(jsonObject.getString("prodCgst")));
-                    productItem.setProdIgst(Float.parseFloat(jsonObject.getString("prodIgst")));
-                    productItem.setProdSgst(Float.parseFloat(jsonObject.getString("prodSgst")));
-                    productItem.setProdWarranty(Float.parseFloat(jsonObject.getString("prodWarranty")));
-                    productItem.setProdMfgDate(jsonObject.getString("prodMfgDate"));
-                    productItem.setProdExpiryDate(jsonObject.getString("prodExpiryDate"));
-                    productItem.setProdMfgBy(jsonObject.getString("prodMfgBy"));
-                    productItem.setProdImage1(jsonObject.getString("prodImage1"));
-                    productItem.setProdImage2(jsonObject.getString("prodImage2"));
-                    productItem.setProdImage3(jsonObject.getString("prodImage3"));
-                    productItem.setProdMrp(Float.parseFloat(jsonObject.getString("prodMrp")));
-                    productItem.setProdSp(Float.parseFloat(jsonObject.getString("prodSp")));
-                    productItem.setUpdatedBy(jsonObject.getString("updatedBy"));
-                    productItem.setUpdatedDate(jsonObject.getString("updatedDate"));
-                    dbHelper.updateProduct(productItem,Utility.getTimeStamp());
-                   // "product_signature"+myProductItem.getProdId()+"_3"
-                    String timestamp = Utility.getTimeStamp();
-                    if(!imageList.get(0).equals("no")){
-                        timestamp = timestamp + "_1";
-                        editor.putString("product_signature"+productItem.getProdId()+"_1",timestamp);
-                    }
+                    jsonObject = response.getJSONObject("result");
+                    prodCode = jsonObject.getString("prodCode");
+                    prodId = jsonObject.getString("prodId");
+                    uploadImagesToFirebase();
+                }else{
+                    DialogAndToast.showDialog(response.getString("message"),AddProductActivity.this);
+                }
+            }catch (JSONException e){
 
-                    if(!imageList.get(1).equals("no")){
-                        timestamp = Utility.getTimeStamp();
-                        timestamp = timestamp + "_2";
-                        editor.putString("product_signature"+productItem.getProdId()+"_2",timestamp);
+            }
+        }else if(apiName.equals("update_product_images")){
+            try {
+                if(response.getBoolean("status")){
+                    if(flag.equals("editProduct")){
+                        updateLocalProduct();
+                    }else{
+                        addProductLocal();
                     }
-
-                    if(!imageList.get(2).equals("no")){
-                        timestamp = Utility.getTimeStamp();
-                        timestamp = timestamp + "_3";
-                        editor.putString("product_signature"+productItem.getProdId()+"_3",timestamp);
-                    }
-
-                    ProductUnit unit = null;
-                    for(Object ob : unitList){
-                        unit = (ProductUnit)ob;
-                        if(unit.getStatus().equals("A")){
-                            unit.setStatus("N");
-                            Log.i(TAG,"Adding unit..."+unit.getUnitValue());
-                            dbHelper.addProductUnit(unit,productItem.getProdId());
-                        }else if(unit.getStatus().equals("D")){
-                            Log.i(TAG,"Removing unit..."+unit.getUnitValue());
-                            dbHelper.removeUnit(unit.getId());
-                        }
-                    }
-
-                    ProductSize size = null;
-                    for(Object ob : sizeList){
-                        size = (ProductSize)ob;
-                        if(size.getStatus().equals("A")){
-                            dbHelper.addProductSize(size,productItem.getProdId());
-                        }else if(size.getStatus().equals("D")){
-                            dbHelper.removeSize(unit.getId());
-                        }
-                    }
-
-                    ProductColor color = null;
-                    for(Object ob : colorList){
-                        color = (ProductColor)ob;
-                        if(color.getStatus().equals("A")){
-                            dbHelper.addProductColor(color,productItem.getProdId());
-                        }else if(color.getStatus().equals("D")){
-                            dbHelper.removeColor(unit.getId());
-                        }
-                    }
-
-                    showMyDialog(response.getString("message"));
-                    finish();
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),AddProductActivity.this);
                 }
@@ -1335,6 +1263,193 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
 
             }
         }
+    }
+
+    private void addProductLocal(){
+        try{
+
+            JSONArray barArray = null;
+            JSONArray tempArray = null;
+            JSONObject tempObject = null;
+            ProductUnit productUnit = null;
+            ProductSize productSize = null;
+            ProductColor productColor = null;
+            int barLen = 0;
+            MyProductItem productItem = new MyProductItem();
+            productItem.setProdId(jsonObject.getInt("prodId"));
+            productItem.setProdCatId(jsonObject.getInt("prodCatId"));
+            productItem.setProdSubCatId(jsonObject.getInt("prodSubCatId"));
+            productItem.setProdName(jsonObject.getString("prodName"));
+            productItem.setProdCode(jsonObject.getString("prodCode"));
+            productItem.setProdDesc(jsonObject.getString("prodDesc"));
+            productItem.setProdReorderLevel(jsonObject.getInt("prodReorderLevel"));
+            productItem.setProdQoh(jsonObject.getInt("prodQoh"));
+            productItem.setProdHsnCode(jsonObject.getString("prodHsnCode"));
+            productItem.setProdCgst(Float.parseFloat(jsonObject.getString("prodCgst")));
+            productItem.setProdIgst(Float.parseFloat(jsonObject.getString("prodIgst")));
+            productItem.setProdSgst(Float.parseFloat(jsonObject.getString("prodSgst")));
+            productItem.setProdWarranty(Float.parseFloat(jsonObject.getString("prodWarranty")));
+            productItem.setProdMfgDate(jsonObject.getString("prodMfgDate"));
+            productItem.setProdExpiryDate(jsonObject.getString("prodExpiryDate"));
+            productItem.setProdMfgBy(jsonObject.getString("prodMfgBy"));
+            productItem.setProdImage1(imageUrl1);
+            productItem.setProdImage2(imageUrl2);
+            productItem.setProdImage3(imageUrl3);
+            productItem.setProdMrp(Float.parseFloat(jsonObject.getString("prodMrp")));
+            productItem.setProdSp(Float.parseFloat(jsonObject.getString("prodSp")));
+            productItem.setCreatedBy(jsonObject.getString("createdBy"));
+            productItem.setUpdatedBy(jsonObject.getString("updatedBy"));
+            productItem.setCreatedDate(jsonObject.getString("createdDate"));
+            productItem.setUpdatedDate(jsonObject.getString("updatedDate"));
+            productItem.setIsBarCodeAvailable(jsonObject.getString("isBarcodeAvailable"));
+            dbHelper.addProduct(productItem,Utility.getTimeStamp(),Utility.getTimeStamp());
+            if(!jsonObject.getString("barcodeList").equals("null")){
+                barArray = jsonObject.getJSONArray("barcodeList");
+                barLen = barArray.length();
+                for(int j = 0; j<barLen; j++){
+                    dbHelper.addProductBarcode(productItem.getProdId(),barArray.getJSONObject(j).getString("barcode"));
+                }
+            }
+
+            if(!jsonObject.getString("productUnitList").equals("null")){
+                tempArray = jsonObject.getJSONArray("productUnitList");
+                int tempLen = tempArray.length();
+
+                for(int unitCounter = 0; unitCounter < tempLen ; unitCounter++){
+                    tempObject = tempArray.getJSONObject(unitCounter);
+                    productUnit = new ProductUnit();
+                    productUnit.setId(tempObject.getInt("id"));
+                    productUnit.setUnitName(tempObject.getString("unitName"));
+                    productUnit.setUnitValue(tempObject.getString("unitValue"));
+                    productUnit.setStatus(tempObject.getString("status"));
+                    dbHelper.addProductUnit(productUnit,productItem.getProdId());
+                }
+            }
+
+            if(!jsonObject.getString("productSizeList").equals("null")){
+                tempArray = jsonObject.getJSONArray("productSizeList");
+                int tempLen = tempArray.length();
+
+                for(int unitCounter = 0; unitCounter < tempLen ; unitCounter++){
+                    tempObject = tempArray.getJSONObject(unitCounter);
+                    productSize = new ProductSize();
+                    productSize.setId(tempObject.getInt("id"));
+                    productSize.setSize(tempObject.getString("size"));
+                    productSize.setStatus(tempObject.getString("status"));
+                    dbHelper.addProductSize(productSize,productItem.getProdId());
+                    if(!tempObject.getString("productSizeList").equals("null")){
+                        JSONArray colorArray = tempObject.getJSONArray("productColorList");
+                        for(int colorCounter = 0; colorCounter < colorArray.length() ; colorCounter++){
+                            tempObject = colorArray.getJSONObject(colorCounter);
+                            productColor = new ProductColor();
+                            productColor.setId(tempObject.getInt("id"));
+                            productColor.setSizeId(tempObject.getInt("sizeId"));
+                            productColor.setColorName(tempObject.getString("colorName"));
+                            productColor.setColorValue(tempObject.getString("colorValue"));
+                            productColor.setStatus(tempObject.getString("status"));
+                            dbHelper.addProductColor(productColor,productItem.getId());
+                        }
+                    }
+
+                }
+            }
+
+            clearData();
+            DialogAndToast.showToast("Product has been added successfully.",AddProductActivity.this);
+
+        }catch (JSONException error){
+            error.printStackTrace();
+        }
+    }
+
+    private void updateLocalProduct(){
+        try{
+
+            JSONArray barArray = null;
+            int barLen = 0;
+            MyProductItem productItem = new MyProductItem();
+            productItem.setProdId(jsonObject.getInt("prodId"));
+            productItem.setProdCatId(jsonObject.getInt("prodCatId"));
+            productItem.setProdName(jsonObject.getString("prodName"));
+            productItem.setProdCode(jsonObject.getString("prodCode"));
+            productItem.setProdDesc(jsonObject.getString("prodDesc"));
+            productItem.setProdReorderLevel(jsonObject.getInt("prodReorderLevel"));
+            productItem.setProdQoh(jsonObject.getInt("prodQoh"));
+            productItem.setProdHsnCode(jsonObject.getString("prodHsnCode"));
+            productItem.setProdCgst(Float.parseFloat(jsonObject.getString("prodCgst")));
+            productItem.setProdIgst(Float.parseFloat(jsonObject.getString("prodIgst")));
+            productItem.setProdSgst(Float.parseFloat(jsonObject.getString("prodSgst")));
+            productItem.setProdWarranty(Float.parseFloat(jsonObject.getString("prodWarranty")));
+            productItem.setProdMfgDate(jsonObject.getString("prodMfgDate"));
+            productItem.setProdExpiryDate(jsonObject.getString("prodExpiryDate"));
+            productItem.setProdMfgBy(jsonObject.getString("prodMfgBy"));
+            productItem.setProdImage1(imageUrl1);
+            productItem.setProdImage2(imageUrl2);
+            productItem.setProdImage3(imageUrl3);
+            productItem.setProdMrp(Float.parseFloat(jsonObject.getString("prodMrp")));
+            productItem.setProdSp(Float.parseFloat(jsonObject.getString("prodSp")));
+            productItem.setUpdatedBy(jsonObject.getString("updatedBy"));
+            productItem.setUpdatedDate(jsonObject.getString("updatedDate"));
+            dbHelper.updateProduct(productItem,Utility.getTimeStamp());
+            // "product_signature"+myProductItem.getProdId()+"_3"
+            String timestamp = Utility.getTimeStamp();
+            if(!imageList.get(0).equals("no")){
+                timestamp = timestamp + "_1";
+                editor.putString("product_signature"+productItem.getProdId()+"_1",timestamp);
+            }
+
+            if(!imageList.get(1).equals("no")){
+                timestamp = Utility.getTimeStamp();
+                timestamp = timestamp + "_2";
+                editor.putString("product_signature"+productItem.getProdId()+"_2",timestamp);
+            }
+
+            if(!imageList.get(2).equals("no")){
+                timestamp = Utility.getTimeStamp();
+                timestamp = timestamp + "_3";
+                editor.putString("product_signature"+productItem.getProdId()+"_3",timestamp);
+            }
+
+            ProductUnit unit = null;
+            for(Object ob : unitList){
+                unit = (ProductUnit)ob;
+                if(unit.getStatus().equals("A")){
+                    unit.setStatus("N");
+                    Log.i(TAG,"Adding unit..."+unit.getUnitValue());
+                    dbHelper.addProductUnit(unit,productItem.getProdId());
+                }else if(unit.getStatus().equals("D")){
+                    Log.i(TAG,"Removing unit..."+unit.getUnitValue());
+                    dbHelper.removeUnit(unit.getId());
+                }
+            }
+
+            ProductSize size = null;
+            for(Object ob : sizeList){
+                size = (ProductSize)ob;
+                if(size.getStatus().equals("A")){
+                    dbHelper.addProductSize(size,productItem.getProdId());
+                }else if(size.getStatus().equals("D")){
+                    dbHelper.removeSize(unit.getId());
+                }
+            }
+
+            ProductColor color = null;
+            for(Object ob : colorList){
+                color = (ProductColor)ob;
+                if(color.getStatus().equals("A")){
+                    dbHelper.addProductColor(color,productItem.getProdId());
+                }else if(color.getStatus().equals("D")){
+                    dbHelper.removeColor(unit.getId());
+                }
+            }
+
+            showMyDialog("Product has been updated successfully.");
+           // finish();
+
+        }catch (JSONException error){
+            error.printStackTrace();
+        }
+
     }
 
     @Override
@@ -1365,6 +1480,9 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
         imageList.set(0,"no");
         imageList.set(1,"no");
         imageList.set(2,"no");
+        imageUrl1="no";
+        imageUrl2="no";
+        imageUrl3="no";
         spinnerCategory.setSelection(0);
         spinnerSubCategory.setSelection(0);
         Glide.with(this).clear(imageView1);
@@ -1443,18 +1561,28 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
     protected void imageAdded(){
 
         if(imagePosition == 1){
+            if(imageList.get(0).equals("no")){
+                uploadCounter++;
+            }
+
             imageView1.setVisibility(View.VISIBLE);
             Glide.with(this)
                     .load(imagePath)
                     .apply(requestOptions)
                     .into(imageView1);
         }else if(imagePosition == 2){
+            if(imageList.get(1).equals("no")){
+                uploadCounter++;
+            }
             imageView2.setVisibility(View.VISIBLE);
             Glide.with(this)
                     .load(imagePath)
                     .apply(requestOptions)
                     .into(imageView2);
         }else{
+            if(imageList.get(2).equals("no")){
+                uploadCounter++;
+            }
             imageView3.setVisibility(View.VISIBLE);
             Glide.with(this)
                     .load(imagePath)
@@ -1462,7 +1590,8 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
                     .into(imageView3);
         }
 
-         imageList.set(imagePosition-1,convertToBase64(new File(imagePath)));
+       //  imageList.set(imagePosition-1,convertToBase64(new File(imagePath)));
+         imageList.set(imagePosition-1,imagePath);
          Log.i(TAG,"added image is "+imageList.get(imagePosition-1));
     }
 
@@ -1774,6 +1903,58 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
                 checkBoxIsBarAvaialble.setEnabled(true);
                 editTextCode.setEnabled(true);
                 viewsDisabled = false;
+            }
+        }
+    }
+
+    private void uploadImagesToFirebase(){
+        Log.i(TAG,"uploading images to firebase..");
+        if(uploadCounter > 0){
+            showProgress(true);
+            firebaseImageUploadService.setFirebaseImageUploadListener(this);
+            firebaseImageUploadService.uploadProdImage(prodId,
+                    sharedPreferences.getString(Constants.SHOP_CODE,""),imageList);
+        }else{
+            if(flag.equals("editProduct")){
+                updateLocalProduct();
+            }else{
+                addProductLocal();
+            }
+        }
+
+    }
+
+    @Override
+    public void onImageUploaded(String position, String url) {
+        if(position.equals("1")){
+            imageUrl1 = url;
+        }else if(position.equals("2")){
+            imageUrl2 = url;
+        }else if(position.equals("3")){
+            imageUrl3 = url;
+        }
+        counter++;
+        hideUploadProgress();
+    }
+
+    @Override
+    public void onImageFailed(String position) {
+        counter++;
+        hideUploadProgress();
+    }
+
+    private void hideUploadProgress(){
+        Log.i(TAG,"Hide progress "+counter+" "+uploadCounter);
+        if(counter == uploadCounter){
+            showProgress(false);
+            if(imageUrl1.equals("no") && imageUrl2.equals("no") && imageUrl3.equals("no")){
+                if(flag.equals("editProduct")){
+                    updateLocalProduct();
+                }else{
+                    addProductLocal();
+                }
+            }else{
+                updateProductImages();
             }
         }
     }

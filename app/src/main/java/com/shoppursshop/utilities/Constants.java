@@ -42,6 +42,7 @@ public class Constants {
     public static String DB_NAME="dbName";
     public static String DB_USER_NAME="dbUserName";
     public static String DB_PASSWORD="dbPassword";
+    public static String DB_VERSION="dbVersion";
    // public static String DOB="dob";
     public static String LOCATION="location";
     public static String FULL_NAME="fullName";
@@ -158,6 +159,7 @@ public class Constants {
     public static String UPDATE_ADDRESS="/api/shop/profile/update_address";
     public static String UPDATE_DELIVERY_STAUS="/api/shop/profile/update_delivery_status";
     public static String GET_INVOICE="/api/trans/get_invoice";
+    public static String GET_INVOICE_BY_INV_NO="/api/trans/get_invoice_inv";
 
     public static String GENERATE_ORDER="/api/shop/order/generate_order";
     public static String PLACE_ORDER="/api/shop/order/place_order";
@@ -193,9 +195,17 @@ public class Constants {
     public static String GET_PRODUCT_OFFERS_BY_CAT="/api/customers/products/ret_productslist_with_offers_by_cat";
 
     public static String UPDATE_STOCK="/api/products/update_stock";
+    public static String UPDATE_STATUS="/api/products/update_status";
 
     public static String GET_CHAT_USERS="/api/chat/get_chat_users";
     public static String SEND_MESSAGE="/api/chat/chat_for_support";
     public static String GET_MESSAGE="/api/chat/get_chat_for_support";
+
+    public static String GENERATE_FREQUENCY_ORDER="/api/order/frequency_order";
+    public static String FREQUENCY_CUSTOMER_LIST="/api/order/get_frequency_order_customer_list";
+    public static String GET_FREQUENCY_PRODUCT_LIST="/api/order/get_frequency_order";
+
+    public static String UPDATE_DB_VERSION="/api/db_version/handle_change_version";
+    public static String RETURN_PRODUCT="/api/return/send_return_request";
 
 }

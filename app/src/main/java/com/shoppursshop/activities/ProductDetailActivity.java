@@ -47,6 +47,7 @@ import com.shoppursshop.models.ProductSize;
 import com.shoppursshop.models.ProductUnit;
 import com.shoppursshop.models.SpinnerItem;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
 
 import org.json.JSONArray;
@@ -85,7 +86,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
 
     private MultipleBarcodeBottomFragment multipleBarcodeBottomFragment;
 
-    private String flag ;
+    private String flag,shopCode ;
 
     private TextView tvUnitSizeColor;
     private RelativeLayout rlProductSpecificationLayout;
@@ -168,8 +169,15 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                 myProductItem = (MyProductItem) getIntent().getSerializableExtra("myProduct");
             }else if(flag.equals("buyProduct")){
                 myProductItem = (MyProductItem) getIntent().getSerializableExtra("MyProduct");
+            }else if(flag.equals("syncedProductList")){
+                myProductItem = (MyProductItem) getIntent().getSerializableExtra("MyProduct");
             }else if(flag.equals("chatProduct")){
-                myProductItem = dbHelper.getProductDetails(intent.getStringExtra("code"));
+                shopCode = intent.getStringExtra("shopCode");
+                findViewById(R.id.ll_shop_product_layout).setVisibility(View.GONE);
+                if(shopCode.equals(sharedPreferences.getString(Constants.SHOP_CODE,""))){
+                    myProductItem = dbHelper.getProductDetails(intent.getStringExtra("code"));
+                }
+
             } else{
                 myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
             }
@@ -177,265 +185,287 @@ public class ProductDetailActivity extends NetworkBaseActivity {
             myProductItem = dbHelper.getProductDetails(intent.getIntExtra("id",0));
         }
 
-        if(myProductItem.getProductUnitList() != null){
-            Log.i(TAG,"unit size "+myProductItem.getProductUnitList().size());
+        if(flag.equals("chatProduct")){
+            if(shopCode.equals("SHP1")){
+                getProductDetails();
+            }else{
+                setProductDetails();
+            }
         }else{
-            Log.i(TAG,"unit size null");
-        }
 
-        textViewSubCatName.setText(dbHelper.getSubCatName(myProductItem.getProdId()));
-
-        textViewProductName.setText(myProductItem.getProdName());
-        textViewMrp.setText(Utility.numberFormat(myProductItem.getProdSp()));
-        tvMrp.setText(Utility.numberFormat(myProductItem.getProdMrp()));
-        textViewCode.setText(myProductItem.getProdBarCode());
-
-        if(myProductItem.getProdDesc().length() > 200){
-            textViewDesc.setText(myProductItem.getProdDesc().substring(0,200)+"...");
-            tvReadMore.setVisibility(View.VISIBLE);
-        }else{
-            textViewDesc.setText(myProductItem.getProdDesc());
-        }
-
-        textReorderLevel.setText(""+myProductItem.getProdReorderLevel());
-        textViewQoh.setText(""+myProductItem.getProdQoh());
-
-        float diff = myProductItem.getProdMrp() - myProductItem.getProdSp();
-        if(diff > 0f){
-            float percentage = diff * 100 /myProductItem.getProdMrp();
-            tvDiscount.setText(String.format("%.02f",percentage)+"% off");
-        }else{
-            tvDiscount.setVisibility(View.GONE);
-            tvMrp.setVisibility(View.GONE);
-        }
-
-        if(myProductItem.getIsBarCodeAvailable()!=null && myProductItem.getIsBarCodeAvailable().equals("N")){
-            buttonAddMultipleBarcode.setVisibility(View.GONE);
-        }
-
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
-        // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
-        requestOptions.centerCrop();
-        requestOptions.skipMemoryCache(false);
-
-        Glide.with(this)
-                .load(myProductItem.getProdImage1())
-                .apply(requestOptions)
-                .error(R.drawable.ic_photo_black_192dp)
-                .into(imageView2);
-
-        Glide.with(this)
-                .load(myProductItem.getProdImage2())
-                .apply(requestOptions)
-                .error(R.drawable.ic_photo_black_192dp)
-                .into(imageView3);
-
-        Glide.with(this)
-                .load(myProductItem.getProdImage3())
-                .apply(requestOptions)
-                .error(R.drawable.ic_photo_black_192dp)
-                .into(imageView4);
-
-        barList = new ArrayList<>();
-        productSaleList = new ArrayList<>();
-        initMonthlySaleList();
-        recyclerViewMonthlyGraph=(RecyclerView)findViewById(R.id.recycler_view_monthly_graph);
-        recyclerViewMonthlyGraph.setItemAnimator(new DefaultItemAnimator());
-        recyclerViewMonthlyGraph.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManagerMonthlyGraph=new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
-        recyclerViewMonthlyGraph.setLayoutManager(layoutManagerMonthlyGraph);
-        monthlyGraphAdapter=new MonthlyGraphAdapter(this,barList,1);
-       ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget(25000);
-        recyclerViewMonthlyGraph.setAdapter(monthlyGraphAdapter);
-
-        myReviewList = new ArrayList<>();
-        recyclerViewReview=(RecyclerView)findViewById(R.id.recycler_view_review);
-        recyclerViewReview.setItemAnimator(new DefaultItemAnimator());
-        recyclerViewReview.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManagerReview=new LinearLayoutManager(this);
-        recyclerViewReview.setLayoutManager(layoutManagerReview);
-        myReviewAdapter=new MyReviewAdapter(this,myReviewList,"productReview");
-        recyclerViewReview.setAdapter(myReviewAdapter);
-        recyclerViewReview.setNestedScrollingEnabled(false);
-
-        checkBoxMultipleBarcode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
+            if(myProductItem.getProductUnitList() != null){
+                Log.i(TAG,"unit size "+myProductItem.getProductUnitList().size());
+            }else{
+                Log.i(TAG,"unit size null");
             }
-        });
 
-        buttonAddMultipleBarcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                multipleBarcodeBottomFragment = new MultipleBarcodeBottomFragment();
-                multipleBarcodeBottomFragment.setProdCode(myProductItem.getProdCode());
-                multipleBarcodeBottomFragment.setProdId(myProductItem.getProdId());
-                multipleBarcodeBottomFragment.show(getSupportFragmentManager(), "Multiple Barcode Bottom Sheet");
+            setProductDetails();
+            textReorderLevel.setText(""+myProductItem.getProdReorderLevel());
+            textViewQoh.setText(""+myProductItem.getProdQoh());
+
+            if(myProductItem.getIsBarCodeAvailable()!=null && myProductItem.getIsBarCodeAvailable().equals("N")){
+                buttonAddMultipleBarcode.setVisibility(View.GONE);
             }
-        });
 
-        textViewDesc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DescBottomFragment descBottomFragment = new DescBottomFragment();
-                descBottomFragment.setDesc(myProductItem.getProdDesc());
-                descBottomFragment.show(getSupportFragmentManager(), "Description Bottom Sheet");
-            }
-        });
+            barList = new ArrayList<>();
+            productSaleList = new ArrayList<>();
+            initMonthlySaleList();
+            recyclerViewMonthlyGraph=(RecyclerView)findViewById(R.id.recycler_view_monthly_graph);
+            recyclerViewMonthlyGraph.setItemAnimator(new DefaultItemAnimator());
+            recyclerViewMonthlyGraph.setHasFixedSize(true);
+            RecyclerView.LayoutManager layoutManagerMonthlyGraph=new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
+            recyclerViewMonthlyGraph.setLayoutManager(layoutManagerMonthlyGraph);
+            monthlyGraphAdapter=new MonthlyGraphAdapter(this,barList,1);
+            ((MonthlyGraphAdapter) monthlyGraphAdapter).setTotalTarget(25000);
+            recyclerViewMonthlyGraph.setAdapter(monthlyGraphAdapter);
 
-        tvReadMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DescBottomFragment descBottomFragment = new DescBottomFragment();
-                descBottomFragment.setDesc(myProductItem.getProdDesc());
-                descBottomFragment.show(getSupportFragmentManager(), "Description Bottom Sheet");
-            }
-        });
+            myReviewList = new ArrayList<>();
+            recyclerViewReview=(RecyclerView)findViewById(R.id.recycler_view_review);
+            recyclerViewReview.setItemAnimator(new DefaultItemAnimator());
+            recyclerViewReview.setHasFixedSize(true);
+            RecyclerView.LayoutManager layoutManagerReview=new LinearLayoutManager(this);
+            recyclerViewReview.setLayoutManager(layoutManagerReview);
+            myReviewAdapter=new MyReviewAdapter(this,myReviewList,"productReview");
+            recyclerViewReview.setAdapter(myReviewAdapter);
+            recyclerViewReview.setNestedScrollingEnabled(false);
 
-        if(flag!=null && flag.equals("shoppurs_product")){
-            recyclerViewMonthlyGraph.setVisibility(View.GONE);
-            // recyclerViewOffers.setVisibility(View.GONE);
-            recyclerViewReview.setVisibility(View.GONE);
-            buttonAddMultipleBarcode.setVisibility(View.GONE);
-        }
+            checkBoxMultipleBarcode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-        sizeSpinnerList = new ArrayList<>();
-        spinnerSize = findViewById(R.id.spinner_size);
-        tvUnitSizeColor = findViewById(R.id.tvUnitSizeColor);
-        rlProductSpecificationLayout = findViewById(R.id.rl_product_specification_layout);
-        specificationType = UNIT;
-
-        sizeSpinnerAdapter = new ArrayAdapter<String>(this, R.layout.simple_dropdown_list_item, sizeSpinnerList){
-            @Override
-            public boolean isEnabled(int position){
-                if(position == 0){
-                    return false;
-                }else{
-                    return true;
                 }
+            });
+
+            buttonAddMultipleBarcode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    multipleBarcodeBottomFragment = new MultipleBarcodeBottomFragment();
+                    multipleBarcodeBottomFragment.setProdCode(myProductItem.getProdCode());
+                    multipleBarcodeBottomFragment.setProdId(myProductItem.getProdId());
+                    multipleBarcodeBottomFragment.show(getSupportFragmentManager(), "Multiple Barcode Bottom Sheet");
+                }
+            });
+
+            if(flag!=null && flag.equals("shoppurs_product")){
+                recyclerViewMonthlyGraph.setVisibility(View.GONE);
+                // recyclerViewOffers.setVisibility(View.GONE);
+                recyclerViewReview.setVisibility(View.GONE);
+                buttonAddMultipleBarcode.setVisibility(View.GONE);
             }
-            @Override
-            public View getView(int position, View convertView,
-                                ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView tv = (TextView) view;
-                if(position == 0){
-                    // Set the hint text color gray
-                    tv.setTextColor(getResources().getColor(R.color.grey500));
-                }else{
-                    if(isDarkTheme){
-                        tv.setTextColor(getResources().getColor(R.color.white));
+
+            sizeSpinnerList = new ArrayList<>();
+            spinnerSize = findViewById(R.id.spinner_size);
+            tvUnitSizeColor = findViewById(R.id.tvUnitSizeColor);
+            rlProductSpecificationLayout = findViewById(R.id.rl_product_specification_layout);
+            specificationType = UNIT;
+
+            sizeSpinnerAdapter = new ArrayAdapter<String>(this, R.layout.simple_dropdown_list_item, sizeSpinnerList){
+                @Override
+                public boolean isEnabled(int position){
+                    if(position == 0){
+                        return false;
                     }else{
-                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                        return true;
                     }
                 }
-                return view;
-            }
-            @Override
-            public View getDropDownView(int position, View convertView,
-                                        ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                if(isDarkTheme){
-                    view.setBackgroundColor(getResources().getColor(R.color.dark_color));
-                }else{
-                    view.setBackgroundColor(getResources().getColor(R.color.white));
-                }
-                TextView tv = (TextView) view;
-                if(position == 0){
-                    // Set the hint text color gray
-                    tv.setTextColor(getResources().getColor(R.color.grey500));
-                }else{
-                    if(isDarkTheme){
-                        tv.setTextColor(getResources().getColor(R.color.white));
+                @Override
+                public View getView(int position, View convertView,
+                                    ViewGroup parent) {
+                    View view = super.getView(position, convertView, parent);
+                    TextView tv = (TextView) view;
+                    if(position == 0){
+                        // Set the hint text color gray
+                        tv.setTextColor(getResources().getColor(R.color.grey500));
                     }else{
-                        tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                        if(isDarkTheme){
+                            tv.setTextColor(getResources().getColor(R.color.white));
+                        }else{
+                            tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                        }
+                    }
+                    return view;
+                }
+                @Override
+                public View getDropDownView(int position, View convertView,
+                                            ViewGroup parent) {
+                    View view = super.getDropDownView(position, convertView, parent);
+                    if(isDarkTheme){
+                        view.setBackgroundColor(getResources().getColor(R.color.dark_color));
+                    }else{
+                        view.setBackgroundColor(getResources().getColor(R.color.white));
+                    }
+                    TextView tv = (TextView) view;
+                    if(position == 0){
+                        // Set the hint text color gray
+                        tv.setTextColor(getResources().getColor(R.color.grey500));
+                    }else{
+                        if(isDarkTheme){
+                            tv.setTextColor(getResources().getColor(R.color.white));
+                        }else{
+                            tv.setTextColor(getResources().getColor(R.color.primary_text_color));
+                        }
+                    }
+                    tv.setPadding(20,20,20,20);
+                    return view;
+                }
+            };
+
+            spinnerSize.setAdapter(sizeSpinnerAdapter);
+
+            spinnerSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if(i > 0){
+                        colorList.clear();
+                        ProductSize size = (ProductSize)sizeList.get(i);
+                        for(ProductColor color : size.getProductColorList()){
+                            colorList.add(color);
+                        }
+                        colorAdapter.notifyDataSetChanged();
                     }
                 }
-                tv.setPadding(20,20,20,20);
-                return view;
-            }
-        };
 
-        spinnerSize.setAdapter(sizeSpinnerAdapter);
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
 
-        spinnerSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i > 0){
-                    colorList.clear();
-                    ProductSize size = (ProductSize)sizeList.get(i);
-                    for(ProductColor color : size.getProductColorList()){
-                        colorList.add(color);
-                    }
-                    colorAdapter.notifyDataSetChanged();
                 }
-            }
+            });
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            tvUnitSizeColor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    rlProductSpecificationLayout.setVisibility(View.VISIBLE);
+                }
+            });
 
-            }
-        });
+            ImageView ivClear = findViewById(R.id.iv_clear);
+            ivClear.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    rlProductSpecificationLayout.setVisibility(View.GONE);
+                }
+            });
 
-        tvUnitSizeColor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                rlProductSpecificationLayout.setVisibility(View.VISIBLE);
-            }
-        });
+            TextView tvUnit = findViewById(R.id.tvUnit);
+            tvUnit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    specificationType = UNIT;
+                    relative_size.setVisibility(View.GONE);
+                    initUnitList();
+                }
+            });
 
-        ImageView ivClear = findViewById(R.id.iv_clear);
-        ivClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                rlProductSpecificationLayout.setVisibility(View.GONE);
-            }
-        });
+            TextView tvSize = findViewById(R.id.tvSize);
+            tvSize.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    specificationType = SIZE;
+                    relative_size.setVisibility(View.VISIBLE);
+                    initSizeList();
+                }
+            });
 
-        TextView tvUnit = findViewById(R.id.tvUnit);
-        tvUnit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                specificationType = UNIT;
-                relative_size.setVisibility(View.GONE);
-                initUnitList();
-            }
-        });
+            TextView tvColor = findViewById(R.id.tvColor);
+            tvColor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    specificationType = COLOR;
+                    relative_size.setVisibility(View.GONE);
+                    initColorList();
+                }
+            });
 
-        TextView tvSize = findViewById(R.id.tvSize);
-        tvSize.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                specificationType = SIZE;
-                relative_size.setVisibility(View.VISIBLE);
-                initSizeList();
-            }
-        });
+            initUnitColorSizeList();
+            initUnitList();
 
-        TextView tvColor = findViewById(R.id.tvColor);
-        tvColor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                specificationType = COLOR;
-                relative_size.setVisibility(View.GONE);
-                initColorList();
-            }
-        });
+            setReviews();
+            //getOffers();
+            getSaleData();
 
-        initUnitColorSizeList();
-        initUnitList();
+            getRatingsData();
 
-        setReviews();
-        //getOffers();
-        getSaleData();
+        }
 
-        getRatingsData();
+
 
     }
 
+    private void getProductDetails(){
+        Map<String,String> params=new HashMap<>();
+        params.put("code",getIntent().getStringExtra("code"));
+        params.put("dbName",shopCode);
+        String url=getResources().getString(R.string.url)+"/api/customers/products/ret_products_details";
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"productDetails");
+    }
 
+   private void setProductDetails(){
+       textViewSubCatName.setText(dbHelper.getSubCatName(myProductItem.getProdId()));
+
+       textViewProductName.setText(myProductItem.getProdName());
+       textViewMrp.setText(Utility.numberFormat(myProductItem.getProdSp()));
+       tvMrp.setText(Utility.numberFormat(myProductItem.getProdMrp()));
+       textViewCode.setText(myProductItem.getProdBarCode());
+
+       if(myProductItem.getProdDesc().length() > 200){
+           textViewDesc.setText(myProductItem.getProdDesc().substring(0,200)+"...");
+           tvReadMore.setVisibility(View.VISIBLE);
+       }else{
+           textViewDesc.setText(myProductItem.getProdDesc());
+       }
+
+       float diff = myProductItem.getProdMrp() - myProductItem.getProdSp();
+       if(diff > 0f){
+           float percentage = diff * 100 /myProductItem.getProdMrp();
+           tvDiscount.setText(String.format("%.02f",percentage)+"% off");
+       }else{
+           tvDiscount.setVisibility(View.GONE);
+           tvMrp.setVisibility(View.GONE);
+       }
+
+       RequestOptions requestOptions = new RequestOptions();
+       requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
+       // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
+       requestOptions.centerCrop();
+       requestOptions.skipMemoryCache(false);
+
+       Glide.with(this)
+               .load(myProductItem.getProdImage1())
+               .apply(requestOptions)
+               .error(R.drawable.ic_photo_black_192dp)
+               .into(imageView2);
+
+       Glide.with(this)
+               .load(myProductItem.getProdImage2())
+               .apply(requestOptions)
+               .error(R.drawable.ic_photo_black_192dp)
+               .into(imageView3);
+
+       Glide.with(this)
+               .load(myProductItem.getProdImage3())
+               .apply(requestOptions)
+               .error(R.drawable.ic_photo_black_192dp)
+               .into(imageView4);
+
+       textViewDesc.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               DescBottomFragment descBottomFragment = new DescBottomFragment();
+               descBottomFragment.setDesc(myProductItem.getProdDesc());
+               descBottomFragment.show(getSupportFragmentManager(), "Description Bottom Sheet");
+           }
+       });
+
+       tvReadMore.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               DescBottomFragment descBottomFragment = new DescBottomFragment();
+               descBottomFragment.setDesc(myProductItem.getProdDesc());
+               descBottomFragment.show(getSupportFragmentManager(), "Description Bottom Sheet");
+           }
+       });
+   }
 
     private void setReviews(){
         Map<String,String> params=new HashMap<>();
@@ -567,6 +597,40 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                         tvNumRatings.setText(jsonObject.getInt("ratingHits")+" Ratings");
                     }
 
+                }
+            }else if(apiName.equals("productDetails")){
+                if(response.getString("status").equals("true")||response.getString("status").equals(true)){
+                    JSONObject jsonObject = response.getJSONObject("result");
+                    myProductItem = new MyProductItem();
+                    myProductItem.setId(jsonObject.getInt("prodId"));
+                    myProductItem.setProdId(jsonObject.getInt("prodId"));
+                    myProductItem.setProdCatId(jsonObject.getInt("prodCatId"));
+                    myProductItem.setProdSubCatId(jsonObject.getInt("prodSubCatId"));
+                    myProductItem.setProdName(jsonObject.getString("prodName"));
+                    myProductItem.setProdQoh(jsonObject.getInt("prodQoh"));
+                    //myProductItem.setQty(1);
+                    myProductItem.setProdMrp(Float.parseFloat(jsonObject.getString("prodMrp")));
+                    myProductItem.setProdSp(Float.parseFloat(jsonObject.getString("prodSp")));
+                    myProductItem.setProdCode(jsonObject.getString("prodCode"));
+                    myProductItem.setIsBarCodeAvailable(jsonObject.getString("isBarcodeAvailable"));
+                    //myProduct.setBarCode(productJArray.getJSONObject(i).getString("prodBarCode"));
+                    myProductItem.setProdDesc(jsonObject.getString("prodDesc"));
+                    myProductItem.setProdImage1(jsonObject.getString("prodImage1"));
+                    myProductItem.setProdImage2(jsonObject.getString("prodImage2"));
+                    myProductItem.setProdImage3(jsonObject.getString("prodImage3"));
+                    myProductItem.setProdHsnCode(jsonObject.getString("prodHsnCode"));
+                    myProductItem.setProdMfgDate(jsonObject.getString("prodMfgDate"));
+                    myProductItem.setProdExpiryDate(jsonObject.getString("prodExpiryDate"));
+                    myProductItem.setProdMfgBy(jsonObject.getString("prodMfgBy"));
+                    myProductItem.setProdExpiryDate(jsonObject.getString("prodExpiryDate"));
+                    myProductItem.setOfferId(jsonObject.getString("offerId"));
+                    myProductItem.setProdCgst(Float.parseFloat(jsonObject.getString("prodCgst")));
+                    myProductItem.setProdIgst(Float.parseFloat(jsonObject.getString("prodIgst")));
+                    myProductItem.setProdSgst(Float.parseFloat(jsonObject.getString("prodSgst")));
+                    myProductItem.setProdWarranty(Float.parseFloat(jsonObject.getString("prodWarranty")));
+                    setProductDetails();
+                }else {
+                    DialogAndToast.showToast("Something went wrong, Please try again", ProductDetailActivity.this);
                 }
             }
         }catch (JSONException e) {

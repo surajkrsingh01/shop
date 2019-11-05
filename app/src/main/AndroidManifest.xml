@@ -32,9 +32,21 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:icon,android:theme">
         <activity
+            android:name=".activities.settings.ReturnProductActivity"
+            android:label="@string/title_activity_return_product"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+        <activity
+            android:name=".activities.settings.FrequencyProductListActivity"
+            android:label="@string/title_activity_frequency_product_list"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".activities.settings.FrequencyOrderCustomerListActivity"
+            android:label="@string/title_activity_fequency_order_customer_list"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
+        <activity
             android:name=".activities.settings.UserListForChatActivity"
             android:label="@string/title_activity_user_list_for_chat"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.ChatActivity"
             android:label="@string/title_activity_other_payment_list"
