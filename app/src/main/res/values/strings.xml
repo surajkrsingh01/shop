@@ -4,6 +4,8 @@
     <string name="app_name">Shoppurs Shop</string>
     <string name="action_settings">Settings</string>
 
+    <string name ="scan_dit_key">AQ2dUhhEBkecKXxPLRnAmdQV5A0IO0jqmzJjmBshCS42ea9Kx2Kw4Sok0ntHX1qVYE+oftB9bs22fDCGywPa+dNUOHNZSq5P6TF2quR5a3w4RskH73KJyK8er5AaN8pHvSbd5ZXvF5BKCMgtY1YhYXDFKO9SLSnyDXubKLYGpmgchaAXFFD97G9a0lTzlJ5Gt1wXFRc0F2PIRNvfjD6/qmOCe/keW9zPC7ZSux4oAPwYH/CDkhSQtctrYBtOcfXAWnqJOO8/85opDdzEY7o9FOoiINN/CN3eZdPnULeU9LlbtiDsTW8p67OoHd0Ae+s2JnqBy7iUhANKc5SNRpfbtrhun5WOq/BeoEeuFI15EDj5UHLBDz12wltM+mC0Na7Z67TIrht7tWKDpBhIILZH4VlbHfORIZw1eqp1wjIpVrO+7rAX9wtQkOhLa4Ik90MSplJYY2ICkjcqhe0yKNqAs4twSacxuZaYVdWssInAxK1yBDMLC4jvMAObBImhZYTJG9O/RasrVJFdh4gInXP8+JJYfjHv3mrkcgAu5pc2I7l1n8qnE5yL//sHKXGwrR00wkqKFeFql/WfW2FBPYAMhO4w2Yxl9c0P0UWUqVcMdMaVIpJnglW3KIzxwpzfh0sJCOjSGhfsX6gtItJtLdKcg491yPvJPIAeSxkXzB+H3x3dSgV8wkQyfui3qj7SCZoBWA+ZbaBlwNHT/tBmHVlKVmr5o8YD4Qiqh+OivW/p0lhc9Qiu1LZi1cu60X5A/9wmWQHPPClNM4JLApllwwyU3YBQdLjJcZIKaHsjN0ir7r7x5gE=</string>
+
     <!-- Remote AWS.
     <string name="url">http://ec2-3-130-105-101.us-east-2.compute.amazonaws.com:8080/shoppursWeb</string>
     <string name="base_url">http://ec2-3-130-105-101.us-east-2.compute.amazonaws.com:8080/shoppursWeb</string>-->

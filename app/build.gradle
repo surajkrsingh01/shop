@@ -43,10 +43,21 @@ android {
         exclude 'META-INF/ASL2.0'
         exclude 'AndroidManifest.xml'
         exclude 'res/raw/sdk.properties'
+        pickFirst '**/*.so'
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
 
 dependencies {
+
+    //api(name: 'ScanditCaptureCore', ext: 'aar')
+   // api(name: 'ScanditBarcodeCapture', ext: 'aar')
+
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -76,10 +87,14 @@ dependencies {
     // implementation 'com.google.android.gms:play-services-places:16.1.0'
     // implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.libraries.places:places:1.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.50"
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.itextpdf:itextg:5.5.10'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.itextpdf:itextg:5.5.10'
+    //implementation "com.scandit.datacapture:core:6.0.3"
+    //implementation "com.scandit.datacapture:barcode:6.0.3"
+    //implementation "com.scandit.datacapture:parser:6.0.3"
     implementation group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'
     implementation group: 'commons-io', name: 'commons-io', version: '2.4'
     implementation group: 'commons-lang', name: 'commons-lang', version: '2.3'
