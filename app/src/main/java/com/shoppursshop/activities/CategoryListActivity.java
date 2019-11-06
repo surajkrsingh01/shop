@@ -113,6 +113,7 @@ public class CategoryListActivity extends BaseActivity {
                 List<Object> subCatList = dbHelper.getCatSubCategoriesForActivity(cat.getId(),smallLimit,smallOffset);
                 if(subCatList.size() > 0){
                     SubCategory s1 = (SubCategory) subCatList.get(0);
+                    s1.setCatId(""+myItem.getId());
                     s1.setWidth(MIN_WIDTH);
                     s1.setHeight(MIN_HEIGHT);
                     s1 = (SubCategory) subCatList.get(subCatList.size()-1);

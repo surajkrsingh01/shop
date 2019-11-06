@@ -303,6 +303,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     SubCategory myItem = (SubCategory) itemList.get(getAdapterPosition());
                     Intent intent = new Intent(context,ProductListActivity.class);
                     intent.putExtra("subCatID",myItem.getId());
+                    intent.putExtra("catId",myItem.getCatId());
                     intent.putExtra("subCatName",myItem.getName());
                     intent.putExtra("flag",flag);
                     context.startActivity(intent);

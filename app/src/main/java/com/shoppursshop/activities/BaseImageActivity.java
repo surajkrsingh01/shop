@@ -198,16 +198,7 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
         alertDialog.show();
     }
 
-    protected void selectProductImage(String cat){
-
-        if(this.cat == null || !this.cat.equals(cat)){
-            if(itemList == null)
-                itemList = new ArrayList<>();
-            else
-                itemList.clear();
-        }
-
-
+    protected void selectProductImage(final String cat){
 
         int view=R.layout.select_product_image_dialog;
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -224,19 +215,7 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
         final ImageView imageCancel=(ImageView) alertDialog.findViewById(R.id.image_close);
         final Button btnGallery=(Button) alertDialog.findViewById(R.id.btn_gallery);
         final Button btnCamera=(Button) alertDialog.findViewById(R.id.btn_camera);
-        text_no_files = alertDialog.findViewById(R.id.text_no_files);
-        progress_bar = alertDialog.findViewById(R.id.progress_bar);
-        recyclerView = alertDialog.findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        if(itemAdapter == null){
-            itemAdapter=new BrowseImageAdapter(this,itemList);
-            itemAdapter.setMyItemClickListener(this);
-        }
-
-        recyclerView.setAdapter(itemAdapter);
+        final Button btn_browse=(Button) alertDialog.findViewById(R.id.btn_browse);
 
         imageCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -265,12 +244,14 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
             }
         });
 
-        if(this.cat == null || !this.cat.equals(cat)){
-            progress_bar.setVisibility(View.VISIBLE);
-            browseCategoryImages(cat);
-            this.cat = cat;
-        }
-
+        btn_browse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BaseImageActivity.this,BrowseImagesActivity.class);
+                intent.putExtra("cat",cat);
+                startActivityForResult(intent,5);
+            }
+        });
 
         alertDialog.show();
     }
@@ -495,6 +476,15 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
             Log.i(TAG,"data "+data);
             Log.i(TAG,"image captured "+imagePath);
             onCaptureImageResult();
+        }else if (requestCode == 5){
+
+            if(data != null){
+                imagePath = data.getStringExtra("imagePath");
+                browseImageSelected();
+                if(alertDialog != null && alertDialog.isShowing()){
+                    alertDialog.dismiss();
+                }
+            }
         }
     }
 

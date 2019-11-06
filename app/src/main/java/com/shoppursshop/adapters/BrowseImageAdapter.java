@@ -15,12 +15,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
 import com.shoppursshop.interfaces.MyItemClickListener;
+import com.shoppursshop.models.MyImage;
 
 import java.util.List;
 
 public class BrowseImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<String> itemList;
+    private List<MyImage> itemList;
     private Context context;
     private String type;
 
@@ -30,7 +31,7 @@ public class BrowseImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.myItemClickListener = myItemClickListener;
     }
 
-    public BrowseImageAdapter(Context context, List<String> itemList) {
+    public BrowseImageAdapter(Context context, List<MyImage> itemList) {
         this.itemList = itemList;
         this.context=context;
 
@@ -38,12 +39,14 @@ public class BrowseImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class MyHomeHeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
+        private TextView tvName;
         private ImageView imageView;
 
         public MyHomeHeaderViewHolder(View itemView) {
             super(itemView);
+            tvName=itemView.findViewById(R.id.tv_name);
             imageView=itemView.findViewById(R.id.iv_image);
-            itemView.setOnClickListener(this);
+            imageView.setOnClickListener(this);
         }
 
         @Override
@@ -82,13 +85,14 @@ public class BrowseImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MyHomeHeaderViewHolder){
             MyHomeHeaderViewHolder myViewHolder = (MyHomeHeaderViewHolder)holder;
-
+            MyImage item = itemList.get(position);
+            myViewHolder.tvName.setText(item.getName());
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
             requestOptions.centerCrop();
             requestOptions.skipMemoryCache(false);
             Glide.with(context)
-                    .load(itemList.get(position))
+                    .load(item.getUrl())
                     .apply(requestOptions)
                     .error(R.drawable.ic_photo_black_192dp)
                     .into(myViewHolder.imageView);

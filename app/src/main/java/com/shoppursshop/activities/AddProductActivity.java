@@ -506,6 +506,14 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
         });
 
 
+        if(flag.equals("manual")){
+            Log.i(TAG,"cat "+getIntent().getStringExtra("cat")+" subcat "+
+                    getIntent().getStringExtra("subCat"));
+            setCatSelection(getIntent().getStringExtra("cat"));
+            scanSelection = true;
+        }
+
+
 
         if(flag.equals("scan")){
             try {
@@ -934,12 +942,12 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
            JSONArray dataArray = new JSONArray();
            JSONObject dataObject = new JSONObject(params);
            if(!TextUtils.isEmpty(barCode)){
-               List<Barcode> barcodeList = new ArrayList<>();
-               Barcode barcode = new Barcode();
-               barcode.setBarcode(barCode);
-               barcodeList.add(barcode);
+               JSONArray barcodeArray = new JSONArray();
+               JSONObject barcodeObject = new JSONObject();
                try {
-                   dataObject.put("barcodeList",barcodeList);
+                   barcodeObject.put("barcode",barCode);
+                   barcodeArray.put(barcodeObject);
+                   dataObject.put("barcodeList",barcodeArray);
                } catch (JSONException e) {
                    e.printStackTrace();
                }
@@ -1520,8 +1528,14 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
 
             if(scanSelection){
                 int i = 0;
+                String subCat = null;
                 for(String name : subCatList){
-                    if(name.equals(dbHelper.getSubCategoryName(myProductItem.getProdSubCatId()))){
+                    if(flag.equals("manual")){
+                        subCat = getIntent().getStringExtra("subCat");
+                    }else{
+                        subCat = dbHelper.getSubCategoryName(myProductItem.getProdSubCatId());
+                    }
+                    if(name.equals(subCat)){
                         scanSelection = false;
                         spinnerSubCategory.setSelection(i);
                         break;

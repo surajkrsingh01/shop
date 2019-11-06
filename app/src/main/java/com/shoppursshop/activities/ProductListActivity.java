@@ -74,6 +74,7 @@ public class ProductListActivity extends NetworkBaseActivity implements MyImageC
 
         subCatName = getIntent().getStringExtra("subCatName");
         subCatID = getIntent().getStringExtra("subCatID");
+        catName = dbHelper.getCategoryName(getIntent().getStringExtra("catId"));
 
         Log.d("subCatId ", subCatID);
 
@@ -170,6 +171,8 @@ public class ProductListActivity extends NetworkBaseActivity implements MyImageC
             public void onClick(View view) {
                 Intent intent = new Intent(ProductListActivity.this,AddProductActivity.class);
                 intent.putExtra("flag","manual");
+                intent.putExtra("cat",catName);
+                intent.putExtra("subCat",subCatName);
                 intent.putExtra("type",getIntent().getStringExtra("flag"));
                 startActivity(intent);
             }

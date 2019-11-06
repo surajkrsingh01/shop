@@ -2,12 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_marginRight="10dp"
-    android:layout_width="@dimen/browse_image_width"
-    android:layout_height="@dimen/browse_image_height">
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/iv_image"
-        android:layout_width="@dimen/browse_image_width"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/browse_image_height"/>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_marginTop="5dp"
+        android:text="Grocer.png"
+        android:textColor="?attr/secondaryTextColor"
+        android:textSize="@dimen/normal_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

@@ -79,40 +79,13 @@
             android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/btn_product"
+            android:id="@+id/btn_browse"
             android:layout_below="@+id/text_or_1"
-            android:text="SELECT BELOW"
+            android:text="BROWSE IMAGES"
             android:textColor="@color/white"
             android:background="@drawable/accent_color_4_solid_small_round_corner_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:visibility="gone"
-            android:layout_below="@+id/btn_product"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/text_no_files"
-            android:layout_below="@+id/btn_product"
-            android:text="No images to browse..."
-            android:textSize="12sp"
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_below="@+id/btn_product"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
 
     </RelativeLayout>
