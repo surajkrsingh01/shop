@@ -8,6 +8,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,8 @@ import com.shoppursshop.activities.BaseActivity;
 import com.shoppursshop.activities.BaseImageActivity;
 import com.shoppursshop.activities.settings.ProfileActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
+import com.shoppursshop.interfaces.FirebaseImageUploadListener;
+import com.shoppursshop.services.FirebaseImageUploadService;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
@@ -40,14 +43,15 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class BasicProfileActivity extends BaseImageActivity {
+public class BasicProfileActivity extends BaseImageActivity implements FirebaseImageUploadListener {
 
     private EditText etUsername,etShopName,etGstNo,etEmail,etMobile;
     private CircleImageView profileImage;
     private RelativeLayout rlImageLayout;
-    private String imageBase64;
+    private String imageUrl;
     private TextView tv_top_parent, tv_parent;
     private ImageView btn_camera;
+    private FirebaseImageUploadService firebaseImageUploadService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,8 @@ public class BasicProfileActivity extends BaseImageActivity {
         etGstNo.setText(sharedPreferences.getString(Constants.GST_NO,""));
         etMobile.setText(sharedPreferences.getString(Constants.MOBILE_NO,""));
         etEmail.setText(sharedPreferences.getString(Constants.EMAIL,""));
+
+        imageUrl = sharedPreferences.getString(Constants.PROFILE_PIC,"");
 
         requestOptions.signature(new ObjectKey(sharedPreferences.getString("profile_image_signature","")));
         Glide.with(this)
@@ -119,6 +125,9 @@ public class BasicProfileActivity extends BaseImageActivity {
                 finish();
             }
         });
+
+        firebaseImageUploadService = FirebaseImageUploadService.getInstance();
+
     }
 
     private void updateProfile(){
@@ -162,7 +171,7 @@ public class BasicProfileActivity extends BaseImageActivity {
         params.put("gstNo",gstNo);
         params.put("email",email);
         params.put("mobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
-        params.put("profileImage",imageBase64);
+        params.put("profileImage",imageUrl);
         params.put("id",sharedPreferences.getString(Constants.USER_ID,""));
         params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
@@ -177,6 +186,16 @@ public class BasicProfileActivity extends BaseImageActivity {
 
     }
 
+    private void updateProfileImage(){
+        HashMap<String,String> params = new HashMap<>();
+        params.put("profileImage",imageUrl);
+        params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
+        String url=getResources().getString(R.string.url)+Constants.UPDATE_PROFILE_IMAGE;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"updateProfileImage");
+
+    }
+
     @Override
     public void onJsonObjectResponse(JSONObject response, String apiName) {
         if (apiName.equals("updateBasicProfile")) {
@@ -187,22 +206,33 @@ public class BasicProfileActivity extends BaseImageActivity {
                    editor.putString(Constants.MOBILE_NO,etMobile.getText().toString());
                    editor.putString(Constants.EMAIL,etEmail.getText().toString());
                    editor.putString(Constants.GST_NO,etGstNo.getText().toString());
-                   if(!imageBase64.equals("no")){
-                       String timestamp = Utility.getTimeStamp();
-                       requestOptions.signature(new ObjectKey(timestamp));
-                       editor.putString(Constants.PROFILE_PIC,getResources().getString(R.string.base_image_url)+
-                               "/shops/"+sharedPreferences.getString(Constants.SHOP_CODE,"")+"/photo.jpg");
-                       editor.putString("profile_image_signature",timestamp);
+                   if(imagePath != null ){
+                       uploadImagesToFirebase();
+                   }else{
+                       editor.commit();
+                       DialogAndToast.showToast(response.getString("message"),this);
                    }
 
-                   editor.commit();
-                   DialogAndToast.showToast(response.getString("message"),this);
                }else{
                    DialogAndToast.showDialog(response.getString("message"),this);
                }
            }catch (JSONException e){
                e.printStackTrace();
            }
+        }else if (apiName.equals("updateProfileImage")) {
+            try{
+                if(response.getBoolean("status")){
+                    String timestamp = Utility.getTimeStamp();
+                    requestOptions.signature(new ObjectKey(timestamp));
+                    editor.putString(Constants.PROFILE_PIC,imageUrl);
+                    editor.putString("profile_image_signature",timestamp);
+                    editor.commit();
+                }else{
+                    DialogAndToast.showDialog(response.getString("message"),this);
+                }
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -212,7 +242,21 @@ public class BasicProfileActivity extends BaseImageActivity {
                 .load(imagePath)
                 .apply(requestOptions)
                 .into(profileImage);
-       imageBase64 = convertToBase64(new File(imagePath));
+      // imageBase64 = convertToBase64(new File(imagePath));
+
+    }
+
+    private void uploadImagesToFirebase(){
+        Log.i(TAG,"uploading images to firebase..");
+        if(imagePath != null){
+            showProgress(true);
+            firebaseImageUploadService.setFirebaseImageUploadListener(this);
+            firebaseImageUploadService.uploadImage(
+                    sharedPreferences.getString("shops/"+Constants.SHOP_CODE,"")+"photo.jpg",
+                    imagePath);
+        }else{
+
+        }
 
     }
 
@@ -232,4 +276,14 @@ public class BasicProfileActivity extends BaseImageActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onImageUploaded(String position, String url) {
+        imageUrl = url;
+        updateProfileImage();
+    }
+
+    @Override
+    public void onImageFailed(String position) {
+
+    }
 }

@@ -1,6 +1,7 @@
 package com.shoppursshop.activities.settings;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -9,6 +10,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +20,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.BaseActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
@@ -69,11 +77,13 @@ public class ProfileActivity extends BaseActivity implements MyItemClickListener
         requestOptions.centerCrop();
         requestOptions.skipMemoryCache(false);
 
-        Glide.with(this)
+        generateBarcode(sharedPreferences.getString(Constants.MOBILE_NO,""));
+
+        /*Glide.with(this)
                 .load(getResources().getString(R.string.base_image_url)+"/shops/"+
                         sharedPreferences.getString(Constants.SHOP_CODE,"")+"/qrcode.PNG")
                 .apply(requestOptions)
-                .into(imageQrCode);
+                .into(imageQrCode);*/
 
         itemList = new ArrayList<>();
         itemList.add("Store Details");
@@ -135,6 +145,29 @@ public class ProfileActivity extends BaseActivity implements MyItemClickListener
         }else if(name.equals("KYC Details")){
             Intent intent = new Intent(this, KYCActivity.class);
             startActivity(intent);
+        }
+    }
+
+    private void generateBarcode(String text){
+        Log.i(TAG,"Generating qrcode...");
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
+        // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
+        requestOptions.centerCrop();
+        requestOptions.skipMemoryCache(false);
+
+        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+        try {
+            BitMatrix bitMatrix = multiFormatWriter.encode(text, BarcodeFormat.QR_CODE,200,100);
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            Bitmap barcodeImage = barcodeEncoder.createBitmap(bitMatrix);
+            imageQrCode.setImageBitmap(barcodeImage);
+            Glide.with(this)
+                    .load(barcodeImage)
+                    .apply(requestOptions)
+                    .into(imageQrCode);
+        } catch (WriterException e) {
+            e.printStackTrace();
         }
     }
 }

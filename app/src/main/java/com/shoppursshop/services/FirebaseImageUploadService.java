@@ -11,8 +11,10 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.shoppursshop.activities.AddProductActivity;
@@ -20,6 +22,7 @@ import com.shoppursshop.interfaces.FirebaseImageUploadListener;
 import com.shoppursshop.utilities.Constants;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FirebaseImageUploadService {
@@ -127,7 +130,7 @@ public class FirebaseImageUploadService {
             final String prodId = strings[3];
             final String shopCode = strings[4];
             Uri uri = Uri.fromFile(new File(path));
-            String dir = shopCode+"/products/"+prodId+"/"+fileName;
+            String dir = "shops/"+shopCode+"/products/"+prodId+"/"+fileName;
             final StorageReference imageRef = storageRef.child("images/"+dir);
             UploadTask uploadTask = imageRef.putFile(uri);
 
