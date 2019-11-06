@@ -119,7 +119,7 @@
     <dimen name="product_list_large_text_size">22sp</dimen>
 
     <dimen name="browse_image_width">100dp</dimen>
-    <dimen name="browse_image_height">100dp</dimen>
+    <dimen name="browse_image_height">150dp</dimen>
 
     <!--product Detail. -->
     <dimen name="product_image_height">100dp</dimen>
