@@ -130,7 +130,13 @@ public class FirebaseImageUploadService {
             final String prodId = strings[3];
             final String shopCode = strings[4];
             Uri uri = Uri.fromFile(new File(path));
-            String dir = "shops/"+shopCode+"/products/"+prodId+"/"+fileName;
+            String dir = null;
+            if(shopCode.equals("SHP1")){
+                dir = "cat/"+prodId+"/"+fileName;
+            }else{
+                dir = "shops/"+shopCode+"/products/"+prodId+"/"+fileName;
+            }
+
             final StorageReference imageRef = storageRef.child("images/"+dir);
             UploadTask uploadTask = imageRef.putFile(uri);
 

@@ -1948,9 +1948,17 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
         Log.i(TAG,"uploading images to firebase..");
         if(uploadCounter > 0){
             showProgress(true);
+            String shopCode = sharedPreferences.getString(Constants.SHOP_CODE,"");
             firebaseImageUploadService.setFirebaseImageUploadListener(this);
-            firebaseImageUploadService.uploadProdImage(prodId,
-                    sharedPreferences.getString(Constants.SHOP_CODE,""),imageList);
+            if(shopCode.equals("SHP1")){
+                String name = categoryListObject.get(spinnerCategory.getSelectedItemPosition()-1).getName();
+                name = name.substring(0,3).toLowerCase();
+                firebaseImageUploadService.uploadProdImage(name,
+                        shopCode,imageList);
+            }else{
+                firebaseImageUploadService.uploadProdImage(prodId,
+                        shopCode,imageList);
+            }
         }else{
             if(flag.equals("editProduct")){
                 updateLocalProduct();

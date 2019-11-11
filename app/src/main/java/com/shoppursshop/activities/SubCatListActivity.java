@@ -51,7 +51,6 @@ public class SubCatListActivity extends BaseActivity {
         itemList = dbHelper.getCatSubCategoriesForActivity(catID,limit,offset);
         if(itemList.size() > 0){
             SubCategory s1 = (SubCategory) itemList.get(0);
-            s1.setCatId(catID);
             s1.setWidth(MIN_WIDTH);
             s1.setHeight(MIN_HEIGHT);
             s1 = (SubCategory) itemList.get(itemList.size()-1);

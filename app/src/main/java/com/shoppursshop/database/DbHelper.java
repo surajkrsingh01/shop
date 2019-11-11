@@ -1411,6 +1411,7 @@ public class DbHelper extends SQLiteOpenHelper {
             do{
                 item=new SubCategory();
                 item.setId(""+res.getInt(res.getColumnIndex(ID)));
+                item.setCatId(caId);
                 item.setName(res.getString(res.getColumnIndex(NAME)));
                 item.setImage(res.getString(res.getColumnIndex(IMAGE)));
                 item.setWidth(CategoryListActivity.MAX_WIDTH);

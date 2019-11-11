@@ -72,6 +72,8 @@ public class ProductListActivity extends NetworkBaseActivity implements MyImageC
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.grey900), PorterDuff.Mode.SRC_ATOP);
 
+        Log.d("catId ", getIntent().getStringExtra("catId"));
+
         subCatName = getIntent().getStringExtra("subCatName");
         subCatID = getIntent().getStringExtra("subCatID");
         catName = dbHelper.getCategoryName(getIntent().getStringExtra("catId"));
