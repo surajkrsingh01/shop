@@ -171,8 +171,8 @@ public class DbHelper extends SQLiteOpenHelper {
             " "+PROD_DESC+" TEXT, " +
             " "+PROD_MRP+" TEXT, " +
             " "+PROD_SP+" TEXT, " +
-            " "+PROD_REORDER_LEVEL+" TEXT, " +
-            " "+PROD_QOH+" TEXT, " +
+            " "+PROD_REORDER_LEVEL+" INTEGER, " +
+            " "+PROD_QOH+" INTEGER, " +
             " "+PROD_HSN_CODE+" TEXT, " +
             " "+PROD_CGST+" TEXT, " +
             " "+PROD_IGST+" TEXT, " +
@@ -497,7 +497,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME, null, 30);
+        super(context, DATABASE_NAME, null, 31);
         this.context=context;
     }
 
@@ -533,29 +533,11 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        db.execSQL("DROP TABLE IF EXISTS "+CART_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+SHOP_CART_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+CART_PRODUCT_SIZE_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+CART_PRODUCT_UNIT_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+CART_PRODUCT_COLOR_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+CART_PROD_FREE_OFFER_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+CART_PROD_PRICE_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+CART_PROD_PRICE_DETAIL_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+CART_PROD_COMBO_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+CART_PROD_COMBO_DETAIL_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+CART_COUPON_TABLE);
-        db.execSQL(CREATE_CART_TABLE);
-        db.execSQL(CREATE_SHOP_CART_TABLE);
-        db.execSQL(CREATE_CART_PRODUCT_SIZE_TABLE);
-        db.execSQL(CREATE_CART_PRODUCT_UNIT_TABLE);
-        db.execSQL(CREATE_CART_PRODUCT_COLOR_TABLE);
-        db.execSQL(CREATE_CART_PROD_FREE_OFFER_TABLE);
-        db.execSQL(CREATE_CART_PROD_PRICE_TABLE);
-        db.execSQL(CREATE_CART_PROD_PRICE_DETAIL_TABLE);
-        db.execSQL(CREATE_CART_PROD_COMBO_TABLE);
-        db.execSQL(CREATE_CART_PROD_COMBO_DETAIL_TABLE);
-        db.execSQL(CREATE_CART_COUPON_TABLE);
-
+       // db.execSQL("ALTER TABLE "+PRODUCT_TABLE+" RENAME TO TempProductTable");
+      //  db.execSQL(CREATE_PRODUCT_TABLE);
+      //  db.execSQL("insert into "+PRODUCT_TABLE+" ("+PROD_ID+")");
+        db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_TABLE);
+        db.execSQL(CREATE_PRODUCT_TABLE);
     }
 
     public boolean addCategory(MySimpleItem item, String createdAt, String updatedAt){
@@ -1459,6 +1441,88 @@ public class DbHelper extends SQLiteOpenHelper {
                 productItem.setProductUnitList(getProductUnitList(db,productItem.getProdId()));
                 productItem.setProductSizeList(getProductSizeList(db,productItem.getProdId()));
 
+                itemList.add(productItem);
+            }while (res.moveToNext());
+        }
+
+        return itemList;
+    }
+
+    public ArrayList<MyProductItem> getReorderLevelProducts(int limit,int offset){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+PRODUCT_TABLE+" where "+PROD_REORDER_LEVEL+" >= "+PROD_QOH+" LIMIT ? OFFSET ?";
+        Cursor res =  db.rawQuery(query, new String[]{String.valueOf(limit),String.valueOf(offset)});
+        ArrayList<MyProductItem> itemList=new ArrayList<>();
+        MyProductItem productItem = null;
+        if(res.moveToFirst()){
+            do{
+                productItem=new MyProductItem();
+                productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
+                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+                productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+                productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
+                productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));
+                productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
+                productItem.setProdReorderLevel(res.getInt(res.getColumnIndex(PROD_REORDER_LEVEL)));
+                productItem.setProdQoh(res.getInt(res.getColumnIndex(PROD_QOH)));
+                productItem.setProdHsnCode(res.getString(res.getColumnIndex(PROD_HSN_CODE)));
+                productItem.setProdCgst(res.getFloat(res.getColumnIndex(PROD_CGST)));
+                productItem.setProdIgst(res.getFloat(res.getColumnIndex(PROD_IGST)));
+                productItem.setProdSgst(res.getFloat(res.getColumnIndex(PROD_SGST)));
+                productItem.setProdWarranty(res.getFloat(res.getColumnIndex(PROD_WARRANTY)));
+                productItem.setProdMfgDate(res.getString(res.getColumnIndex(PROD_MFG_DATE)));
+                productItem.setProdExpiryDate(res.getString(res.getColumnIndex(PROD_EXPIRY_DATE)));
+                productItem.setProdMfgBy(res.getString(res.getColumnIndex(PROD_MFG_BY)));
+                productItem.setProdImage1(res.getString(res.getColumnIndex(PROD_IMAGE_1)));
+                productItem.setProdImage2(res.getString(res.getColumnIndex(PROD_IMAGE_2)));
+                productItem.setProdImage3(res.getString(res.getColumnIndex(PROD_IMAGE_3)));
+                productItem.setIsBarCodeAvailable(res.getString(res.getColumnIndex(IS_BARCODE_AVAILABLE)));
+                productItem.setProdMrp(res.getFloat(res.getColumnIndex(PROD_MRP)));
+                productItem.setProdSp(res.getFloat(res.getColumnIndex(PROD_SP)));
+                productItem.setProductUnitList(getProductUnitList(db,productItem.getProdId()));
+                productItem.setProductSizeList(getProductSizeList(db,productItem.getProdId()));
+                itemList.add(productItem);
+            }while (res.moveToNext());
+        }
+
+        return itemList;
+    }
+
+    public ArrayList<MyProductItem> getExpiredProducts(String startDate,String endDate,int limit,int offset){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+PRODUCT_TABLE+" where "+
+                PROD_EXPIRY_DATE+" >= Datetime('"+startDate+"') and "+
+                PROD_EXPIRY_DATE+" <= Datetime('"+endDate+"') LIMIT ? OFFSET ?";
+        Cursor res =  db.rawQuery(query, new String[]{String.valueOf(limit),String.valueOf(offset)});
+        ArrayList<MyProductItem> itemList=new ArrayList<>();
+        MyProductItem productItem = null;
+        if(res.moveToFirst()){
+            do{
+                productItem=new MyProductItem();
+                productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
+                productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+                productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
+                productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
+                productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));
+                productItem.setProdDesc(res.getString(res.getColumnIndex(PROD_DESC)));
+                productItem.setProdReorderLevel(res.getInt(res.getColumnIndex(PROD_REORDER_LEVEL)));
+                productItem.setProdQoh(res.getInt(res.getColumnIndex(PROD_QOH)));
+                productItem.setProdHsnCode(res.getString(res.getColumnIndex(PROD_HSN_CODE)));
+                productItem.setProdCgst(res.getFloat(res.getColumnIndex(PROD_CGST)));
+                productItem.setProdIgst(res.getFloat(res.getColumnIndex(PROD_IGST)));
+                productItem.setProdSgst(res.getFloat(res.getColumnIndex(PROD_SGST)));
+                productItem.setProdWarranty(res.getFloat(res.getColumnIndex(PROD_WARRANTY)));
+                productItem.setProdMfgDate(res.getString(res.getColumnIndex(PROD_MFG_DATE)));
+                productItem.setProdExpiryDate(res.getString(res.getColumnIndex(PROD_EXPIRY_DATE)));
+                productItem.setProdMfgBy(res.getString(res.getColumnIndex(PROD_MFG_BY)));
+                productItem.setProdImage1(res.getString(res.getColumnIndex(PROD_IMAGE_1)));
+                productItem.setProdImage2(res.getString(res.getColumnIndex(PROD_IMAGE_2)));
+                productItem.setProdImage3(res.getString(res.getColumnIndex(PROD_IMAGE_3)));
+                productItem.setIsBarCodeAvailable(res.getString(res.getColumnIndex(IS_BARCODE_AVAILABLE)));
+                productItem.setProdMrp(res.getFloat(res.getColumnIndex(PROD_MRP)));
+                productItem.setProdSp(res.getFloat(res.getColumnIndex(PROD_SP)));
+                productItem.setProductUnitList(getProductUnitList(db,productItem.getProdId()));
+                productItem.setProductSizeList(getProductSizeList(db,productItem.getProdId()));
                 itemList.add(productItem);
             }while (res.moveToNext());
         }

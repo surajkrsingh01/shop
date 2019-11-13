@@ -319,5 +319,7 @@
     <string name="title_activity_frequency_product_list">FrequencyProductListActivity</string>
     <string name="title_activity_return_product">ReturnProductActivity</string>
     <string name="title_activity_browse_images">BrowseImagesActivity</string>
+    <string name="title_activity_rlevel_and_expired_product">RlevelAndExpiredProductActivity
+    </string>
 
 </resources>

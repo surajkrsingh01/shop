@@ -32,9 +32,13 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:icon,android:theme">
         <activity
+            android:name=".activities.settings.RlevelAndExpiredProductActivity"
+            android:label="@string/title_activity_rlevel_and_expired_product"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+        <activity
             android:name=".activities.BrowseImagesActivity"
             android:label="@string/title_activity_browse_images"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".activities.settings.ReturnProductActivity"
             android:label="@string/title_activity_return_product"
