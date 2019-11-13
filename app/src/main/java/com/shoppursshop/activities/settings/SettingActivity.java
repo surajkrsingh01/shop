@@ -209,6 +209,7 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
             startActivity(intent);
         }else if(name.equals("Check Reorder Level/Expired Products")){
             Intent intent = new Intent(this, RlevelAndExpiredProductActivity.class);
+            intent.putExtra("flag","settings");
             startActivity(intent);
         }else if(name.equals("Logout")){
             changeStoreStatus();

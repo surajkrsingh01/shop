@@ -37,6 +37,8 @@ public class RlevelAndExpiredProductActivity extends BaseActivity implements MyI
     private ReorderLevelAdapter reorderLevelAdapter;
     private List<MyProductItem> itemList;
     private RlevelExpiredProductFragment bottomSearchFragment;
+    private int type;
+    private String startDate,endDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +50,8 @@ public class RlevelAndExpiredProductActivity extends BaseActivity implements MyI
     private void init(){
         itemList = new ArrayList<>();
         text_sub_header = findViewById(R.id.text_sub_header);
-        bottomSearchFragment = RlevelExpiredProductFragment.newInstance("","",colorTheme);
-        bottomSearchFragment.show(getSupportFragmentManager(), "Reorder Level / Expired Products Bottom Sheet");
 
+        String flag = getIntent().getStringExtra("flag");
         ImageView imageViewSearch = findViewById(R.id.image_search);
 
         imageViewSearch.setOnClickListener(new View.OnClickListener() {
@@ -62,14 +63,78 @@ public class RlevelAndExpiredProductActivity extends BaseActivity implements MyI
         });
 
         recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
+       // recyclerView.setHasFixedSize(true);
+        final RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         expiredProductAdapter=new ExpiredProductAdapter(this,itemList);
         reorderLevelAdapter=new ReorderLevelAdapter(this,itemList);
         expiredProductAdapter.setMyImageClickListener(this);
         reorderLevelAdapter.setMyImageClickListener(this);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (isScroll) {
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    Log.i(TAG,"visible "+visibleItemCount+" total "+totalItemCount);
+                    pastVisibleItems = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+                    Log.i(TAG,"past visible "+(pastVisibleItems));
+
+                    if (!loading) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            loading = true;
+                            offset = limit + offset;
+                            List<MyProductItem> itemNewList = null;
+                            if(type == 1){
+                                itemNewList = dbHelper.getExpiredProducts(startDate,endDate,limit,offset);
+                            }else{
+                                itemNewList = dbHelper.getReorderLevelProducts(limit,offset);
+                            }
+
+                            itemList.addAll(itemNewList);
+
+                            if(itemNewList.size() < limit){
+                                isScroll = false;
+                            }
+                            if(itemNewList.size() > 0){
+                                recyclerView.post(new Runnable() {
+                                    public void run() {
+                                        if(type == 1){
+                                            expiredProductAdapter.notifyItemRangeInserted(limit,offset);
+                                        }else{
+                                            reorderLevelAdapter.notifyItemRangeInserted(limit,offset);
+                                        }
+                                        loading = false;
+                                    }
+                                });
+                                Log.d(TAG, "NEXT ITEMS LOADED");
+                            }else{
+                                Log.d(TAG, "NO ITEMS FOUND");
+                            }
+
+                        }
+                    }
+
+                }
+            }
+        });
+
+        if(flag.equals("settings")){
+            bottomSearchFragment = RlevelExpiredProductFragment.newInstance("","",colorTheme);
+            bottomSearchFragment.show(getSupportFragmentManager(), "Reorder Level / Expired Products Bottom Sheet");
+        }else{
+            String type = getIntent().getStringExtra("type");
+            if(type.equals("expire")){
+                startDate = getIntent().getStringExtra("startDate");
+                endDate = getIntent().getStringExtra("endDate");
+               onSubmitCalled(startDate,endDate,R.id.rb_expired_products);
+            }else{
+               onSubmitCalled("","",R.id.rb_reorder_level);
+            }
+        }
 
     }
 
@@ -81,6 +146,9 @@ public class RlevelAndExpiredProductActivity extends BaseActivity implements MyI
 
         }
         if(type == R.id.rb_expired_products){
+            this.type = 1;
+            this.startDate = startDate;
+            this.endDate = endDate;
             text_sub_header.setText("Expired Products");
             startDate = startDate +" 00:00:00";
             endDate = endDate +" 00:00:00";
@@ -91,6 +159,7 @@ public class RlevelAndExpiredProductActivity extends BaseActivity implements MyI
             expiredProductAdapter.notifyDataSetChanged();
             Log.i(TAG,"Expired size "+itemList.size());
         }else {
+            this.type = 2;
             text_sub_header.setText("Reorder Level");
             List<MyProductItem> itemRLList = dbHelper.getReorderLevelProducts(limit,offset);
             itemList.clear();

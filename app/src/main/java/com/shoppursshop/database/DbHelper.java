@@ -1530,6 +1530,30 @@ public class DbHelper extends SQLiteOpenHelper {
         return itemList;
     }
 
+    public int getExpiredProductSize(String startDate,String endDate){
+        int size = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select count(*) as total_product from "+PRODUCT_TABLE+" where "+
+                PROD_EXPIRY_DATE+" >= Datetime('"+startDate+"') and "+
+                PROD_EXPIRY_DATE+" <= Datetime('"+endDate+"')";
+        Cursor res =  db.rawQuery(query, null);
+        if(res.moveToFirst()){
+            size = res.getInt(res.getColumnIndex("total_product"));
+        }
+        return size;
+    }
+
+    public int getReorderedProductSize(){
+        int size = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select count(*) as total_product from "+PRODUCT_TABLE+" where "+PROD_REORDER_LEVEL+" >= "+PROD_QOH;
+        Cursor res =  db.rawQuery(query, null);
+        if(res.moveToFirst()){
+            size = res.getInt(res.getColumnIndex("total_product"));
+        }
+        return size;
+    }
+
     public List<ProductUnit> getProductUnitList(SQLiteDatabase db,int prodId){
         String unitSql="select * from "+PRODUCT_UNIT_TABLE+" WHERE "+PROD_ID+" = ? AND "+STATUS+" = 'N'";
         Cursor res =  db.rawQuery(unitSql, new String[]{String.valueOf(prodId)});

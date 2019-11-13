@@ -28,11 +28,14 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
+import com.shoppursshop.activities.settings.RlevelAndExpiredProductActivity;
 import com.shoppursshop.adapters.MyItemAdapter;
 import com.shoppursshop.adapters.OrderAdapter;
 import com.shoppursshop.interfaces.MyImageClickListener;
@@ -48,6 +51,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,9 +65,11 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
-
-    private Button btnUpdateStock,btnLoadMore;
     private FloatingActionButton fabNewOrder;
+    private TextView textHeader,textDesc,tv_expire_product,tv_reorder_product;
+    private LinearLayout ll_rl_and_expire_layout;
+    private RelativeLayout rl_expire_layout,rl_reorder_layout;
+
 
     private CoordinatorLayout coordinatorLayout;
     private NestedScrollView nestedScrollView;
@@ -94,8 +100,15 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         myItem.setTitle(Utility.getTimeStamp("EEE dd MMMM, yyyy"));
         myItem.setDesc("Today Orders");
         myItem.setType(0);
-        itemList.add(myItem);
+       // itemList.add(myItem);
 
+        textHeader=findViewById(R.id.text_small_desc);
+        textDesc=findViewById(R.id.text_desc);
+        ll_rl_and_expire_layout=findViewById(R.id.ll_rl_and_expire_layout);
+        rl_expire_layout=findViewById(R.id.rl_expire_layout);
+        rl_reorder_layout=findViewById(R.id.rl_reorder_layout);
+        tv_expire_product=findViewById(R.id.tv_expire_product);
+        tv_reorder_product=findViewById(R.id.tv_reorder_product);
         swipeRefreshLayout=findViewById(R.id.swipe_refresh);
         progressBar=findViewById(R.id.progress_bar);
         textViewError = findViewById(R.id.text_error);
@@ -108,6 +121,53 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         myItemAdapter.setMyImageClickListener(this);
         recyclerView.setAdapter(myItemAdapter);
 
+        textHeader.setText(Utility.getTimeStamp("EEE dd MMMM, yyyy"));
+        textDesc.setText("Today Orders");
+
+        Calendar calendar = Calendar.getInstance();
+        final String startDate = Utility.parseDate(calendar,"yyyy-MM-dd HH:mm:ss");
+        calendar.add(Calendar.DATE,7);
+        final String endDate = Utility.parseDate(calendar,"yyyy-MM-dd HH:mm:ss");
+        int expiredSize = dbHelper.getExpiredProductSize(startDate,endDate);
+        int reorderSize = dbHelper.getReorderedProductSize();
+
+        if(expiredSize > 0 || reorderSize > 0){
+            ll_rl_and_expire_layout.setVisibility(View.VISIBLE);
+            if(expiredSize > 0){
+                tv_expire_product.setText(""+expiredSize);
+            }else{
+                rl_expire_layout.setVisibility(View.GONE);
+            }
+
+            if(reorderSize > 0){
+                tv_reorder_product.setText(""+reorderSize);
+            }else{
+                rl_reorder_layout.setVisibility(View.GONE);
+            }
+
+        }
+
+        rl_expire_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RlevelAndExpiredProductActivity.class);
+                intent.putExtra("flag","home");
+                intent.putExtra("type","expire");
+                intent.putExtra("startDate",startDate.split(" ")[0]);
+                intent.putExtra("endDate",endDate.split(" ")[0]);
+                startActivity(intent);
+            }
+        });
+
+        rl_reorder_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RlevelAndExpiredProductActivity.class);
+                intent.putExtra("flag","home");
+                intent.putExtra("type","reorder");
+                startActivity(intent);
+            }
+        });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -138,15 +198,6 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,CustomerInfoActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btnUpdateStock = findViewById(R.id.btn_update_stock);
-        btnUpdateStock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,UpdateStockActivity.class);
                 startActivity(intent);
             }
         });
@@ -300,7 +351,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
             if (apiName.equals("orders")) {
                 if(refresh){
                     refresh = false;
-                    DialogAndToast.showDialog(getResources().getString(R.string.expiration_goods_notice),this);
+                   // DialogAndToast.showDialog(getResources().getString(R.string.expiration_goods_notice),this);
                 }else{
                     if(!sharedPreferences.getBoolean(Constants.IS_TOKEN_SAVED,false) &&
                             !TextUtils.isEmpty(sharedPreferences.getString(Constants.TOKEN,""))){
@@ -354,7 +405,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                         //preItemList.add(orderItem);
                     }
 
-                    if(itemList.size() == 1){
+                    if(itemList.size() == 0){
                         showNoData(true);
                     }else{
                         showNoData(false);
@@ -422,7 +473,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                         refresh = true;
                         getItemList();
                     }else{
-                        DialogAndToast.showDialog(getResources().getString(R.string.expiration_goods_notice),this);
+                        //DialogAndToast.showDialog(getResources().getString(R.string.expiration_goods_notice),this);
                     }
 
                 }
@@ -439,7 +490,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         myItem.setTitle(Utility.getTimeStamp("EEEE dd MMMM, yyyy"));
         myItem.setDesc("Today Orders");
         myItem.setType(0);
-        itemList.add(myItem);
+       // itemList.add(myItem);
     }
 
     private void runLayoutAnimation() {
