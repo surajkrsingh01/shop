@@ -128,7 +128,6 @@
 
                 <RelativeLayout
                     android:id="@+id/relative_unit"
-                    android:layout_toLeftOf="@+id/rl_plus_minus"
                     android:layout_marginRight="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/cart_action_size"
