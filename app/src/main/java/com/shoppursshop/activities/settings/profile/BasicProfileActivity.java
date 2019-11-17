@@ -227,6 +227,7 @@ public class BasicProfileActivity extends BaseImageActivity implements FirebaseI
                     editor.putString(Constants.PROFILE_PIC,imageUrl);
                     editor.putString("profile_image_signature",timestamp);
                     editor.commit();
+                    DialogAndToast.showDialog("Profile has been updated successfully.",this);
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }
@@ -252,7 +253,7 @@ public class BasicProfileActivity extends BaseImageActivity implements FirebaseI
             showProgress(true);
             firebaseImageUploadService.setFirebaseImageUploadListener(this);
             firebaseImageUploadService.uploadImage(
-                    sharedPreferences.getString("shops/"+Constants.SHOP_CODE,"")+"photo.jpg",
+                    "shops/"+sharedPreferences.getString(Constants.SHOP_CODE,"")+"/photo.jpg",
                     imagePath);
         }else{
 

@@ -57,7 +57,7 @@ public class FirebaseImageUploadService {
         //sharedPreferences = context.getSharedPreferences(Constants.MYPREFERENCEKEY,context.MODE_PRIVATE);
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
-        Log.i(TAG,"uploading image to firebase..");
+        Log.i(TAG,"uploading image to firebase.."+dir);
 
         Uri uri = Uri.fromFile(new File(path));
         final StorageReference imageRef = storageRef.child("images/"+dir);
