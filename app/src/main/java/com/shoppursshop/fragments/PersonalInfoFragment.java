@@ -63,11 +63,11 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
     private String language, mParam1;
     private String mParam2;
     private EditText editFullName,edit_shop_name, editAddress, editEmail, editMobile, editPassword,
-            editConfPassword, editPanCard, editAadharCard, editGstNo;
+            editConfPassword, editPanCard, editAadharCard, editGstNo,edit_affilate_code;
     private CheckBox checkBoxTerms;
     private Button btnRegister, btnBack;
     private String fullName,shopName, address,country,state,city, pincode, email, mobile,
-            password, confPassword, panNo, aadharNo, gstNo, idProof, IMEI;
+            password, confPassword, panNo, aadharNo, gstNo, idProof, IMEI,affilateCode;
     private double latitude,longitude;
     private MyUser myUser;
     private View rootView;
@@ -131,6 +131,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
         editPanCard = rootView.findViewById(R.id.edit_pan_card);
         editAadharCard = rootView.findViewById(R.id.edit_aadhar_card);
         editGstNo = rootView.findViewById(R.id.edit_gst_no);
+        edit_affilate_code = rootView.findViewById(R.id.edit_affilate_code);
         checkBoxTerms = (CheckBox) rootView.findViewById(R.id.checkbox_terms_condition);
 
         editAddress.setOnClickListener(new View.OnClickListener() {
@@ -171,6 +172,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
         confPassword = editConfPassword.getText().toString();
         panNo = editPanCard.getText().toString();
         aadharNo = editAadharCard.getText().toString();
+        affilateCode = edit_affilate_code.getText().toString();
         // confPassword="Vipin@12345";
         boolean isChecked = checkBoxTerms.isChecked();
 
@@ -254,6 +256,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
                     params.put("idProof", idProof);
                     params.put("panNo", panNo);
                     params.put("aadharNo", aadharNo);
+                    params.put("affilateCode", affilateCode);
                     params.put("gstNo", "");
                     params.put("userLat", ""+latitude);
                     params.put("userLong", ""+longitude);

@@ -17,8 +17,8 @@ android {
         applicationId "com.shoppursshop"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 5
-        versionName "1.1.7"
+        versionCode 6
+        versionName "1.1.8"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
