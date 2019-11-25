@@ -7,6 +7,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,15 +18,20 @@ import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.settings.ProfileActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.fragments.BankFragment;
+import com.shoppursshop.interfaces.FirebaseImageUploadListener;
 import com.shoppursshop.interfaces.OnFragmentInteraction;
+import com.shoppursshop.services.FirebaseImageUploadService;
+import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 
 import java.io.File;
 
-public class BankDetailsActivity extends BaseImageActivity implements OnFragmentInteraction {
+public class BankDetailsActivity extends BaseImageActivity implements OnFragmentInteraction, FirebaseImageUploadListener {
 
     private BankFragment bankFragment;
     private TextView tv_top_parent, tv_parent;
+
+    private FirebaseImageUploadService firebaseImageUploadService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +74,8 @@ public class BankDetailsActivity extends BaseImageActivity implements OnFragment
                 finish();
             }
         });
+
+        firebaseImageUploadService = FirebaseImageUploadService.getInstance();
     }
 
     @Override
@@ -75,12 +84,39 @@ public class BankDetailsActivity extends BaseImageActivity implements OnFragment
             selectImage();
         }
         else{
-            DialogAndToast.showDialog("Bank details successfully updated",this);
+            if(imagePath == null){
+                DialogAndToast.showDialog("Bank details successfully updated",this);
+            }else{
+                uploadImagesToFirebase();
+            }
+
+            //DialogAndToast.showDialog("Bank details successfully updated",this);
         }
     }
 
     @Override
     protected void imageAdded(){
        bankFragment.setImageBase64(convertToBase64(new File(imagePath)),imagePath);
+    }
+
+    private void uploadImagesToFirebase(){
+        Log.i(TAG,"uploading images to firebase..");
+        showProgress(true);
+        firebaseImageUploadService.setFirebaseImageUploadListener(this);
+        firebaseImageUploadService.uploadImage(
+                "shops/"+sharedPreferences.getString(Constants.SHOP_CODE,"")+"/chequeImage.jpg",
+                imagePath);
+    }
+
+    @Override
+    public void onImageUploaded(String position, String url) {
+        imagePath = null;
+        showProgress(false);
+        bankFragment.attemptUpdateBankDetails(url);
+    }
+
+    @Override
+    public void onImageFailed(String position) {
+
     }
 }

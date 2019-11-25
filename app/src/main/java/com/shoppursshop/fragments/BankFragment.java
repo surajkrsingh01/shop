@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.RegisterActivity;
 import com.shoppursshop.interfaces.OnFragmentInteraction;
 import com.shoppursshop.models.MyUser;
+import com.shoppursshop.services.FirebaseImageUploadService;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
@@ -57,7 +59,7 @@ public class BankFragment extends NetworkBaseFragment {
     private ImageView imageViewCheque,imageViewCamera;
     private RelativeLayout rvCheque;
     private EditText editTextShopName,editTextBankName,editTextIfscCode,editTextAccountNo,editTextBranchAddress;
-    private String shopName,bankName,accountNo,ifscCode,branchAddress,imageBase64;
+    private String shopName,bankName,accountNo,ifscCode,branchAddress,imageUrl;
     private Button btnSubmit,btnBack;
     private MyUser myUser;
     private RequestOptions requestOptions;
@@ -119,7 +121,7 @@ public class BankFragment extends NetworkBaseFragment {
     }
 
     private void init(){
-        imageBase64 = "no";
+        imageUrl = "";
         requestOptions = new RequestOptions();
         requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
         // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
@@ -133,7 +135,7 @@ public class BankFragment extends NetworkBaseFragment {
                 public void onClick(View view) {
                     myUser = new MyUser();
                     // mListener.onFragmentInteraction(myUser,RegisterActivity.BANK);
-                    attemptUpdateBankDetails();
+                    attemptUpdateBankDetails(imageUrl);
                 }
             });
         }else{
@@ -144,7 +146,7 @@ public class BankFragment extends NetworkBaseFragment {
                 public void onClick(View view) {
                     myUser = new MyUser();
                     // mListener.onFragmentInteraction(myUser,RegisterActivity.BANK);
-                    attemptUpdateBankDetails();
+                    attemptUpdateBankDetails(imageUrl);
                 }
             });
 
@@ -175,6 +177,7 @@ public class BankFragment extends NetworkBaseFragment {
         editTextBranchAddress.setText(sharedPreferences.getString(Constants.BRANCH_ADRESS,""));
 
         if(!TextUtils.isEmpty(sharedPreferences.getString(Constants.CHEQUE_IMAGE,""))){
+            imageUrl = sharedPreferences.getString(Constants.CHEQUE_IMAGE,"");
             imageViewCheque.setVisibility(View.VISIBLE);
            // imageViewCamera.setVisibility(View.GONE);
             requestOptions.signature(new ObjectKey(sharedPreferences.getString("bank_cheque_signature","")));
@@ -182,11 +185,9 @@ public class BankFragment extends NetworkBaseFragment {
                     .load(sharedPreferences.getString(Constants.CHEQUE_IMAGE,""))
                     .apply(requestOptions)
                     .into(imageViewCheque);
+        }else{
+            imageUrl = "";
         }
-
-
-
-
 
         rvCheque.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,10 +195,10 @@ public class BankFragment extends NetworkBaseFragment {
                 mListener.onFragmentInteraction("image",0);
             }
         });
+
     }
 
     public void setImageBase64(String image,String imagePath){
-        imageBase64 = image;
         imageViewCheque.setVisibility(View.VISIBLE);
         //imageViewCamera.setVisibility(View.GONE);
         Glide.with(this)
@@ -206,7 +207,8 @@ public class BankFragment extends NetworkBaseFragment {
                 .into(imageViewCheque);
     }
 
-    private void attemptUpdateBankDetails(){
+    public void attemptUpdateBankDetails(String imageUrl){
+        this.imageUrl = imageUrl;
         shopName = editTextShopName.getText().toString();
         bankName = editTextBankName.getText().toString();
         accountNo = editTextAccountNo.getText().toString();
@@ -261,7 +263,7 @@ public class BankFragment extends NetworkBaseFragment {
                 params.put("acctNo",accountNo);
                 params.put("ifscCode",ifscCode);
                 params.put("branchAddress",branchAddress);
-                params.put("chequeImage",imageBase64);
+                params.put("chequeImage",imageUrl);
                // params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
                // params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
                // params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
@@ -293,7 +295,7 @@ public class BankFragment extends NetworkBaseFragment {
                     editor.putString(Constants.ACCOUNT_NO,editTextAccountNo.getText().toString());
                     editor.putString(Constants.BRANCH_ADRESS,editTextBranchAddress.getText().toString());
                     editor.putString(Constants.IFSC_CODE,editTextIfscCode.getText().toString());
-                    if(!imageBase64.equals("no")){
+                    if(!imageUrl.equals("")){
                         String timestamp = Utility.getTimeStamp();
                         requestOptions.signature(new ObjectKey(timestamp));
                         editor.putString(Constants.CHEQUE_IMAGE,response.getJSONObject("result").getString("chequeImage"));
@@ -301,7 +303,12 @@ public class BankFragment extends NetworkBaseFragment {
                         //Glide.get(getActivity()).clearDiskCache();
                     }
                     editor.commit();
-                    mListener.onFragmentInteraction(myUser,RegisterActivity.BANK);
+                    if(!imageUrl.equals("")){
+                        mListener.onFragmentInteraction(myUser,RegisterActivity.BANK);
+                    }else{
+                        mListener.onFragmentInteraction(myUser,RegisterActivity.BANK);
+                    }
+
                 }else{
                    DialogAndToast.showDialog(response.getString("message"),getActivity());
                 }
@@ -310,7 +317,6 @@ public class BankFragment extends NetworkBaseFragment {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void onAttach(Context context) {

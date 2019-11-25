@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.shoppursshop.activities.OrderSelectProductListActivity"
+    tools:context="com.shoppurspartner.activities.OrderSelectProductListActivity"
     tools:showIn="@layout/activity_order_select_product_list">
 
 
