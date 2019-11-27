@@ -2,6 +2,8 @@ package com.shoppursshop.activities.settings.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.fragment.app.FragmentTransaction;
@@ -23,6 +25,7 @@ import com.shoppursshop.interfaces.OnFragmentInteraction;
 import com.shoppursshop.services.FirebaseImageUploadService;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
+import com.shoppursshop.utilities.Utility;
 
 import java.io.File;
 
@@ -82,6 +85,8 @@ public class BankDetailsActivity extends BaseImageActivity implements OnFragment
     public void onFragmentInteraction(Object item, int type) {
         if(type == 0){
             selectImage();
+        }else if(type == 10){
+            downloadImage(1,sharedPreferences.getString(Constants.CHEQUE_IMAGE,""),this);
         }
         else{
             if(imagePath == null){
@@ -118,5 +123,17 @@ public class BankDetailsActivity extends BaseImageActivity implements OnFragment
     @Override
     public void onImageFailed(String position) {
 
+    }
+
+    @Override
+    protected void imageDownloaded() {
+        super.imageDownloaded();
+        Log.i(TAG,"Downloaded image...");
+        // showProgress(false);
+        editor.putString(Constants.CHEQUE_IMAGE_LOCAL,imagePath);
+        editor.putString("bank_cheque_signature", Utility.getTimeStamp());
+        editor.commit();
+        bankFragment.setImageBase64(convertToBase64(new File(imagePath)),imagePath);
+        imagePath = null;
     }
 }

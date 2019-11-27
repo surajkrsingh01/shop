@@ -2,6 +2,8 @@ package com.shoppursshop.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -9,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.shoppursshop.activities.CategoryListActivity;
+import com.shoppursshop.activities.LoginActivity;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.CatListItem;
 import com.shoppursshop.models.Category;
@@ -66,6 +69,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String CAT_ID = "cat_id";
     public static final String NAME = "name";
     public static final String IMAGE = "image";
+    public static final String IMAGE_LOCAL = "image_local";
     public static final String PROD_SUB_CAT_ID = "PROD_SUB_CAT_ID";
     public static final String PROD_CAT_ID = "PROD_CAT_ID";
     public static final String PROD_NAME = "PROD_NAME";
@@ -91,6 +95,9 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String PROD_IMAGE_1 = "PROD_IMAGE_1";
     public static final String PROD_IMAGE_2 = "PROD_IMAGE_2";
     public static final String PROD_IMAGE_3 = "PROD_IMAGE_3";
+    public static final String PROD_IMAGE_LOCAL_1 = "PROD_IMAGE_LOCAL_1";
+    public static final String PROD_IMAGE_LOCAL_2 = "PROD_IMAGE_LOCAL_2";
+    public static final String PROD_IMAGE_LOCAL_3 = "PROD_IMAGE_LOCAL_3";
     public static final String TOTAL_AMOUNT = "totalAmount";
     public static final String TOTAL_MRP_AMOUNT = "totalMRPAmount";
     public static final String TOTAL_QTY = "totalQty";
@@ -151,6 +158,7 @@ public class DbHelper extends SQLiteOpenHelper {
             "("+ID+" TEXT NOT NULL, " +
             " "+NAME+" TEXT NOT NULL, " +
             " "+IMAGE+" TEXT, " +
+            " "+IMAGE_LOCAL+" TEXT, " +
             " "+CREATED_AT+" TEXT, " +
             " "+UPDATED_AT+" TEXT)";
 
@@ -159,6 +167,7 @@ public class DbHelper extends SQLiteOpenHelper {
             " "+CAT_ID+" TEXT NOT NULL, " +
             " "+NAME+" TEXT NOT NULL, " +
             " "+IMAGE+" TEXT, " +
+            " "+IMAGE_LOCAL+" TEXT, " +
             " "+CREATED_AT+" TEXT, " +
             " "+UPDATED_AT+" TEXT)";
 
@@ -184,6 +193,9 @@ public class DbHelper extends SQLiteOpenHelper {
             " "+PROD_IMAGE_1+" TEXT, " +
             " "+PROD_IMAGE_2+" TEXT, " +
             " "+PROD_IMAGE_3+" TEXT, " +
+            " "+PROD_IMAGE_LOCAL_1+" TEXT, " +
+            " "+PROD_IMAGE_LOCAL_2+" TEXT, " +
+            " "+PROD_IMAGE_LOCAL_3+" TEXT, " +
             " "+IS_BARCODE_AVAILABLE+" TEXT, " +
             " "+CREATED_BY+" TEXT, " +
             " "+UPDATED_BY+" TEXT, " +
@@ -486,6 +498,7 @@ public class DbHelper extends SQLiteOpenHelper {
             " "+LATITUDE+" TEXT, " +
             " "+LONGITUDE+" TEXT, " +
             " "+PHOTO+" TEXT, " +
+            " "+IMAGE_LOCAL+" TEXT, " +
             " "+IS_FAV+" TEXT, " +
             " "+RATINGS+" TEXT, " +
             " "+USER_CREATE_STATUS+" TEXT, " +
@@ -497,7 +510,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME, null, 31);
+        super(context, DATABASE_NAME, null, 32);
         this.context=context;
     }
 
@@ -532,12 +545,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-       // db.execSQL("ALTER TABLE "+PRODUCT_TABLE+" RENAME TO TempProductTable");
-      //  db.execSQL(CREATE_PRODUCT_TABLE);
-      //  db.execSQL("insert into "+PRODUCT_TABLE+" ("+PROD_ID+")");
-        db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_TABLE);
-        db.execSQL(CREATE_PRODUCT_TABLE);
+        logout(db);
     }
 
     public boolean addCategory(MySimpleItem item, String createdAt, String updatedAt){
@@ -546,6 +554,7 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put(ID, item.getId());
         contentValues.put(NAME, item.getName());
         contentValues.put(IMAGE, item.getImage());
+        contentValues.put(IMAGE_LOCAL, item.getLocalImage());
         contentValues.put(CREATED_AT, createdAt);
         contentValues.put(UPDATED_AT, updatedAt);
         db.insert(CAT_TABLE, null, contentValues);
@@ -560,6 +569,7 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put(CAT_ID, catId);
         contentValues.put(NAME, item.getName());
         contentValues.put(IMAGE, item.getImage());
+        contentValues.put(IMAGE_LOCAL, item.getLocalImage());
         contentValues.put(CREATED_AT, createdAt);
         contentValues.put(UPDATED_AT, updatedAt);
         db.insert(SUB_CAT_TABLE, null, contentValues);
@@ -2950,6 +2960,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 myCustomer.setLatitude(res.getString(res.getColumnIndex(LATITUDE)));
                 myCustomer.setLongitude(res.getString(res.getColumnIndex(LONGITUDE)));
                 myCustomer.setImage(res.getString(res.getColumnIndex(PHOTO)));
+                myCustomer.setLocalImage(res.getString(res.getColumnIndex(IMAGE_LOCAL)));
                 myCustomer.setIsFav(res.getString(res.getColumnIndex(IS_FAV)));
                 myCustomer.setRatings(res.getFloat(res.getColumnIndex(RATINGS)));
                 myCustomer.setStatus(res.getString(res.getColumnIndex(STATUS)));
@@ -2984,6 +2995,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 myCustomer.setLatitude(res.getString(res.getColumnIndex(LATITUDE)));
                 myCustomer.setLongitude(res.getString(res.getColumnIndex(LONGITUDE)));
                 myCustomer.setImage(res.getString(res.getColumnIndex(PHOTO)));
+                myCustomer.setLocalImage(res.getString(res.getColumnIndex(IMAGE_LOCAL)));
                 myCustomer.setIsFav(res.getString(res.getColumnIndex(IS_FAV)));
                 myCustomer.setRatings(res.getFloat(res.getColumnIndex(RATINGS)));
                 myCustomer.setStatus(res.getString(res.getColumnIndex(STATUS)));
@@ -3384,32 +3396,77 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void deleteAllTable(){
-        deleteTable(DbHelper.CAT_TABLE);
-        deleteTable(DbHelper.SUB_CAT_TABLE);
-        deleteTable(DbHelper.PRODUCT_TABLE);
-        deleteTable(DbHelper.PRODUCT_BARCODE_TABLE);
-        deleteTable(DbHelper.PRODUCT_UNIT_TABLE);
-        deleteTable(DbHelper.PRODUCT_SIZE_TABLE);
-        deleteTable(DbHelper.PRODUCT_COLOR_TABLE);
-        deleteTable(DbHelper.CART_TABLE);
-        deleteTable(DbHelper.PROD_COMBO_TABLE);
-        deleteTable(DbHelper.PROD_COMBO_DETAIL_TABLE);
-        deleteTable(DbHelper.PROD_PRICE_TABLE);
-        deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
-        deleteTable(DbHelper.PROD_FREE_OFFER_TABLE);
-        deleteTable(DbHelper.COUPON_TABLE);
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(CAT_TABLE, null, null);
+        db.delete(SUB_CAT_TABLE, null, null);
+        db.delete(PRODUCT_TABLE, null, null);
+        db.delete(PRODUCT_BARCODE_TABLE, null, null);
+        db.delete(PRODUCT_UNIT_TABLE, null, null);
+        db.delete(PRODUCT_SIZE_TABLE, null, null);
+        db.delete(PRODUCT_COLOR_TABLE, null, null);
+        db.delete(CART_TABLE, null, null);
+        db.delete(PROD_COMBO_TABLE, null, null);
+        db.delete(PROD_COMBO_DETAIL_TABLE, null, null);
+        db.delete(PROD_PRICE_TABLE, null, null);
+        db.delete(PROD_PRICE_DETAIL_TABLE, null, null);
+        db.delete(PROD_FREE_OFFER_TABLE, null, null);
+        db.delete(COUPON_TABLE, null, null);
+        db.delete(SHOP_CART_TABLE, null, null);
+        db.delete(CART_PROD_PRICE_TABLE, null, null);
+        db.delete(CART_PROD_PRICE_DETAIL_TABLE, null, null);
+        db.delete(CART_PROD_COMBO_TABLE, null, null);
+        db.delete(CART_PROD_COMBO_DETAIL_TABLE, null, null);
+        db.delete(CART_PROD_FREE_OFFER_TABLE, null, null);
+        db.delete(CART_COUPON_TABLE, null, null);
+        db.delete(CART_PRODUCT_UNIT_TABLE, null, null);
+        db.delete(CART_PRODUCT_SIZE_TABLE, null, null);
+        db.delete(CART_PRODUCT_COLOR_TABLE, null, null);
+        db.delete(CUSTOMER_INFO_TABLE, null, null);
     }
 
-    public boolean dropAndCreateBookingTable(){
-        SQLiteDatabase db = this.getWritableDatabase();
+    public boolean dropAndCreateBookingTable(SQLiteDatabase db){
         db.execSQL("DROP TABLE IF EXISTS "+CAT_TABLE);
         db.execSQL("DROP TABLE IF EXISTS "+SUB_CAT_TABLE);
         db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_TABLE);
         db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_BARCODE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_UNIT_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_SIZE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_COLOR_TABLE);
         db.execSQL("DROP TABLE IF EXISTS "+CART_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+PROD_COMBO_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+PROD_COMBO_DETAIL_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+PROD_PRICE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+PROD_PRICE_DETAIL_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+PROD_FREE_OFFER_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+COUPON_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+SHOP_CART_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+CART_PROD_PRICE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+CART_PROD_PRICE_DETAIL_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+CART_PROD_COMBO_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+CART_PROD_COMBO_DETAIL_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+CART_PROD_FREE_OFFER_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+CART_COUPON_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+CART_PRODUCT_UNIT_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+CART_PRODUCT_SIZE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+CART_PRODUCT_COLOR_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+CUSTOMER_INFO_TABLE);
         onCreate(db);
         return true;
     }
 
+    public void logout(SQLiteDatabase db){
+        SharedPreferences sharedPreferences=context.getSharedPreferences(Constants.MYPREFERENCEKEY,context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        String IMEI_NO = sharedPreferences.getString(Constants.IMEI_NO,"");
+        String fcmToken = sharedPreferences.getString(Constants.FCM_TOKEN,"");
+        editor.clear();
+        editor.putString(Constants.IMEI_NO,IMEI_NO);
+        editor.putString(Constants.FCM_TOKEN,fcmToken);
+        editor.commit();
+        dropAndCreateBookingTable(db);
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
 
 }

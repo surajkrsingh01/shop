@@ -1,5 +1,6 @@
 package com.shoppursshop.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -8,23 +9,28 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.media.ExifInterface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -265,11 +271,11 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
     }
 
     private void cameraIntent(){
-        mHighQualityImageUri = FileProvider.getUriForFile(this,
+        filePath = FileProvider.getUriForFile(this,
                 getApplicationContext().getPackageName() + ".provider", getFile());
         //filePath = Ur;
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, mHighQualityImageUri);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, filePath);
         startActivityForResult(intent, REQUEST_CAMERA);
     }
 
@@ -571,7 +577,7 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
         //      check the rotation of the image and display it properly
         ExifInterface exif;
         try {
-            exif = new ExifInterface(path);
+            exif = new ExifInterface(getContentResolver().openInputStream(filePath));
 
             int orientation = exif.getAttributeInt(
                     ExifInterface.TAG_ORIENTATION, 0);
@@ -711,6 +717,28 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
     }
 
     protected void browseImageSelected(){
+
+    }
+
+    protected void downloadImage(int type,String imageUrl, Context context){
+        Glide.with(context)
+                .asBitmap()
+                .load(imageUrl)
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        saveBitmap(resource);
+                        imageDownloaded();
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+    }
+
+
+    protected void imageDownloaded(){
 
     }
 }

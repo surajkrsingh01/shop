@@ -390,7 +390,6 @@ public class SyncDataActivity extends NetworkBaseActivity {
                         myCustomer.setRatings((float)dataObject.getDouble("ratings"));
                         myCustomer.setStatus(dataObject.getString("isActive"));
                         myCustomer.setCustUserCreateStatus(dataObject.getString("userCreateStatus"));
-                        myCustomer.setLocalImage(R.drawable.author_1);
                         if(myCustomer.getIsFav().equals("Y")){
                         }else{
                             myCustomer.setIsFav("N");

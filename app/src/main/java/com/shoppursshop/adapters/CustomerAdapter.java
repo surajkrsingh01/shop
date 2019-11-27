@@ -38,6 +38,7 @@ import com.shoppursshop.models.MyHeader;
 import com.shoppursshop.models.MyItem;
 import com.shoppursshop.utilities.Utility;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -372,10 +373,41 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if(item.getImage() != null && item.getImage().contains("http")){
                 myViewHolder.textInitial.setVisibility(View.GONE);
                 myViewHolder.imageView.setVisibility(View.VISIBLE);
+                RequestOptions requestOptions = new RequestOptions();
+                requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
+                requestOptions.dontTransform();
+                requestOptions.skipMemoryCache(false);
+                Glide.with(context)
+                        .load(item.getImage())
+                        .apply(requestOptions)
+                        .into(myViewHolder.imageView);
+                /*File file = new File(item.getLocalImage());
+                if(file.exists()){
+                    myViewHolder.textInitial.setVisibility(View.GONE);
+                    myViewHolder.imageView.setVisibility(View.VISIBLE);
+                    RequestOptions requestOptions = new RequestOptions();
+                    requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
+                    requestOptions.dontTransform();
+                    requestOptions.skipMemoryCache(false);
+                    Glide.with(context)
+                            .load(item.getLocalImage())
+                            .apply(requestOptions)
+                            .into(myViewHolder.imageView);
+                }else{
+                    myViewHolder.textInitial.setVisibility(View.VISIBLE);
+                    myViewHolder.imageView.setVisibility(View.GONE);
+                    //  myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+                    Utility.setColorFilter(myViewHolder.textInitial.getBackground(),getTvColor(counter));
+
+                    counter++;
+                    if(counter == 12){
+                        counter = 0;
+                    }
+                }*/
             }else{
                 myViewHolder.textInitial.setVisibility(View.VISIBLE);
                 myViewHolder.imageView.setVisibility(View.GONE);
-              //  myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+                //  myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
                 Utility.setColorFilter(myViewHolder.textInitial.getBackground(),getTvColor(counter));
 
                 counter++;
@@ -383,21 +415,6 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     counter = 0;
                 }
             }
-
-           // myViewHolder.textAddress.setText(item.getAddress());
-          //  myViewHolder.textStateCity.setText(item.getState()+", "+item.getCity());
-
-            RequestOptions requestOptions = new RequestOptions();
-            requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
-            requestOptions.dontTransform();
-            // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
-            // requestOptions.centerCrop();
-            requestOptions.skipMemoryCache(false);
-
-            Glide.with(context)
-                    .load(item.getImage())
-                    .apply(requestOptions)
-                    .into(myViewHolder.imageView);
 
         }
     }

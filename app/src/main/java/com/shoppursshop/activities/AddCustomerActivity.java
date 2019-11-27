@@ -125,7 +125,6 @@ public class AddCustomerActivity extends NetworkBaseActivity {
                     myCustomer.setRatings((float)jsonObject.getDouble("ratings"));
                     myCustomer.setStatus(jsonObject.getString("isActive"));
                     myCustomer.setCustUserCreateStatus(jsonObject.getString("userCreateStatus"));
-                    myCustomer.setLocalImage(R.drawable.author_1);
                     dbHelper.addCustomerInfo(myCustomer, Utility.getTimeStamp(),Utility.getTimeStamp());
                     showMyDialog(response.getString("message"));
                 }else{

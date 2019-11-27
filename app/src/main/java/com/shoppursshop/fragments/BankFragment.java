@@ -33,6 +33,7 @@ import com.shoppursshop.utilities.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -181,10 +182,17 @@ public class BankFragment extends NetworkBaseFragment {
             imageViewCheque.setVisibility(View.VISIBLE);
            // imageViewCamera.setVisibility(View.GONE);
             requestOptions.signature(new ObjectKey(sharedPreferences.getString("bank_cheque_signature","")));
-            Glide.with(this)
-                    .load(sharedPreferences.getString(Constants.CHEQUE_IMAGE,""))
-                    .apply(requestOptions)
-                    .into(imageViewCheque);
+            String chequePicLocal = sharedPreferences.getString(Constants.CHEQUE_IMAGE_LOCAL,"");
+            File fileLocal = new File(chequePicLocal);
+            if(fileLocal.exists()){
+                Glide.with(this)
+                        .load(chequePicLocal)
+                        .apply(requestOptions)
+                        .into(imageViewCheque);
+            }else{
+                mListener.onFragmentInteraction("download",10);
+            }
+
         }else{
             imageUrl = "";
         }
