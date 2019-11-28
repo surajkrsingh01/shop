@@ -65,7 +65,7 @@ public class BaseActivity extends AppCompatActivity {
     protected int limit = 20,offset = 0;
     protected int smallLimit = 4,smallOffset = 0;
     protected int visibleItemCount,pastVisibleItems,totalItemCount;
-    protected boolean loading=false,isScroll = true;
+    protected boolean loading=false,isScroll = true,isSplash;
     protected AlertDialog alertDialog;
 
     protected String token,appName,appVersion;
@@ -87,11 +87,15 @@ public class BaseActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        if(isDarkTheme){
-            setTheme(R.style.Dark);
-        }else{
-            setTheme(R.style.Light);
+
+        if(!isSplash){
+            if(isDarkTheme){
+                setTheme(R.style.Dark);
+            }else{
+                setTheme(R.style.Light);
+            }
         }
+
 
        // setTheme(R.style.Dark);
 
@@ -113,12 +117,16 @@ public class BaseActivity extends AppCompatActivity {
         progressDialog.setOnKeyListener(keyListener);
     }
 
+    protected void setSplash(){
+        isSplash = true;
+    }
+
     @Override
     public void onResume(){
         super.onResume();
         colorTheme = sharedPreferences.getInt(Constants.COLOR_THEME,getResources().getColor(R.color.red_500));
         boolean isDarkTheme = sharedPreferences.getBoolean(Constants.IS_DARK_THEME,false);
-        if(this.isDarkTheme != isDarkTheme)
+        if(this.isDarkTheme != isDarkTheme && !isSplash)
             recreate();
     }
 

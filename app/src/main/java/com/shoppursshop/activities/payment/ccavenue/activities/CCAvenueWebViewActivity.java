@@ -120,8 +120,9 @@ public class CCAvenueWebViewActivity extends NetworkBaseActivity {
         Log.i(TAG,"orderID "+orderId);
         get_RSA();*/
 
-
+        get_RSA();
         Log.i(TAG,"amount "+mainIntent.getStringExtra(AvenuesParams.AMOUNT));
+        Log.i(TAG,"orderNumber "+orderNumber);
 
       //  get_RSA_key(ACCESS_CODE,orderId);
 

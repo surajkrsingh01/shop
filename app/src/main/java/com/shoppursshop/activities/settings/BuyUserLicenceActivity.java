@@ -237,7 +237,7 @@ public class BuyUserLicenceActivity extends NetworkBaseActivity implements MyIte
         Intent intent = new Intent(BuyUserLicenceActivity.this, CCAvenueWebViewActivity.class);
         intent.putExtra("flag", "wallet");
         intent.putExtra(AvenuesParams.AMOUNT, String.format("%.02f",totalAmount));
-        intent.putExtra(AvenuesParams.ORDER_ID, orderNumber);
+        intent.putExtra(AvenuesParams.ORDER_ID, ""+masterUserLicenseId);
         intent.putExtra(AvenuesParams.CURRENCY, "INR");
         intent.putExtra("flag", "buyUserLicense");
        // intent.putExtra("shopArray",shopArray.toString());
