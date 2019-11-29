@@ -11,7 +11,8 @@
     <string name="base_url">http://ec2-3-130-105-101.us-east-2.compute.amazonaws.com:8080/shoppursWeb</string>-->
 
     <!-- Remote-->
-    <string name="url">http://api.shoppurs.in:8085/ShoppursApp</string>
+    <string name="url">http://api.shoppurs.in:8085/ShoppursShopApp</string>
+    <string name="cust_url">http://api.shoppurs.in:8085/ShoppursCustomerApp</string>
     <string name="base_url">http://api.shoppurs.in:8085</string>
     <string name="base_image_url">http://www.shoppurs.in/images</string>
 

@@ -309,7 +309,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
-        String url=getResources().getString(R.string.url)+Constants.GENERATE_FREQUENCY_ORDER;
+        String url=getResources().getString(R.string.cust_url)+Constants.GENERATE_FREQUENCY_ORDER;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"generateFrequencyOrder");
     }
