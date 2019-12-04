@@ -265,15 +265,18 @@ public class SyncProductActivity extends NetworkBaseActivity implements MyLevelI
                             item.setCreatedDate(jsonObject.getString("createdDate"));
                             item.setUpdatedDate(jsonObject.getString("updatedDate"));
                             item.setSelected(false);
-                            barArray = jsonObject.getJSONArray("barcodeList");
-                            barLen = barArray.length();
-                            barCodeList = new ArrayList<>();
-                            for(int j = 0; j<barLen; j++){
-                                barcode = new Barcode();
-                                barcode.setBarcode(barArray.getJSONObject(j).getString("barcode"));
-                                barCodeList.add(barcode);
+                            if(!jsonObject.getString("barcodeList").equals("null")){
+                                barArray = jsonObject.getJSONArray("barcodeList");
+                                barLen = barArray.length();
+                                barCodeList = new ArrayList<>();
+                                for(int j = 0; j<barLen; j++){
+                                    barcode = new Barcode();
+                                    barcode.setBarcode(barArray.getJSONObject(j).getString("barcode"));
+                                    barCodeList.add(barcode);
+                                }
+                                item.setBarcodeList(barCodeList);
                             }
-                            item.setBarcodeList(barCodeList);
+
                             addProduct(item);
                         }
                         // productList.add(item);

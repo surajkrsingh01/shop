@@ -2,9 +2,16 @@ package com.shoppursshop.activities;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -153,6 +160,20 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
             Glide.with(this)
                     .load(image)
                     .apply(requestOptions)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            textViewInitials.setVisibility(View.VISIBLE);
+                            imageView2.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            //on load success
+                            return false;
+                        }
+                    })
                     .into(imageView2);
 
             imageView2.setOnClickListener(new View.OnClickListener() {
@@ -393,14 +414,14 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
                             response.getString("result").equals("null")){
                         setMonthlyBar();
                     }else{
-                        float totalSale = 0;
+                        double totalSale = 0;
                         JSONArray dataArray = response.getJSONArray("result");
                         JSONObject jsonObject = null;
                         int len = dataArray.length();
                         double maxValue = 0;
                         for (int i = 0; i < len; i++) {
                             jsonObject = dataArray.getJSONObject(i);
-                            totalSale = totalSale + (float) jsonObject.getDouble("amount");
+                            totalSale = totalSale + jsonObject.getDouble("amount");
                             if(maxValue < jsonObject.getDouble("amount")){
                                 maxValue = jsonObject.getDouble("amount");
                             }

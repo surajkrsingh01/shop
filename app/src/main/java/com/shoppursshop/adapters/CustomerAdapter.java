@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,8 +27,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.AddCustomerActivity;
 import com.shoppursshop.activities.CustomerProfileActivity;
@@ -343,7 +350,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }else if(holder instanceof MyCustomerListViewHolder){
 
             MyCustomer item = (MyCustomer) itemList.get(position);
-            MyCustomerListViewHolder myViewHolder = (MyCustomerListViewHolder)holder;
+           final  MyCustomerListViewHolder myViewHolder = (MyCustomerListViewHolder)holder;
             myViewHolder.textCustName.setText(item.getName());
             myViewHolder.textMobile.setText(item.getMobile());
             if(TextUtils.isEmpty(item.getAddress()) || item.getAddress().equals("null")){
@@ -380,6 +387,27 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Glide.with(context)
                         .load(item.getImage())
                         .apply(requestOptions)
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                myViewHolder.textInitial.setVisibility(View.VISIBLE);
+                                myViewHolder.imageView.setVisibility(View.GONE);
+                                //  myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+                                Utility.setColorFilter(myViewHolder.textInitial.getBackground(),getTvColor(counter));
+
+                                counter++;
+                                if(counter == 12){
+                                    counter = 0;
+                                }
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                //on load success
+                                return false;
+                            }
+                        })
                         .into(myViewHolder.imageView);
                 /*File file = new File(item.getLocalImage());
                 if(file.exists()){
