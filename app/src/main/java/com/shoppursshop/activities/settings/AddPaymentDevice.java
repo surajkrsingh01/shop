@@ -301,7 +301,7 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
         params.put("dbUserName",dbUserName);
         params.put("dbPassword",dbPassword);
         Log.d(TAG, params.toString());
-        String url=getResources().getString(R.string.url)+"/api/customers/products/ret_productslist";
+        String url=getResources().getString(R.string.cust_url)+"/api/customers/products/ret_productslist";
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"productfromshop");
     }
@@ -415,33 +415,38 @@ public class AddPaymentDevice extends NetworkBaseActivity implements MyImageClic
                 }
             } else if(apiName.equals("getMyDevices")){
                 if(response.getBoolean("status")){
-                    JSONArray jsonArray = response.getJSONArray("result");
-                    MyDevice item = null;
-                    JSONObject jsonObject = null;
-                    int len = jsonArray.length();
-                    deviceList.clear();
-                    for(int i=0; i<len; i++){
-                        jsonObject = jsonArray.getJSONObject(i);
-                        item = new MyDevice();
-                        item.setId(jsonObject.getInt("id"));
-                        item.setSerialNumber(jsonObject.getString("serialNumber"));
-                        item.setModel(jsonObject.getString("model"));
-                        item.setAllotment(jsonObject.getString("allotment"));
-                        item.setMerchantId(jsonObject.getString("merchantId"));
-                        item.setMerchantName(jsonObject.getString("merchantName"));
-                        item.setMaker(jsonObject.getString("maker"));
-                        item.setAllottedUserId(jsonObject.getString("allottedUserId"));
-                        item.setAllottedUserName(jsonObject.getString("allottedUserName"));
-                        item.setAllottedUserMobile(jsonObject.getString("allottedUserMobile"));
-                        item.setStatus(jsonObject.getString("status"));
-                        deviceList.add(item);
+                    if(response.getString("result") != null && !response.getString("result").equals("null")){
+                        JSONArray jsonArray = response.getJSONArray("result");
+                        MyDevice item = null;
+                        JSONObject jsonObject = null;
+                        int len = jsonArray.length();
+                        deviceList.clear();
+                        for(int i=0; i<len; i++){
+                            jsonObject = jsonArray.getJSONObject(i);
+                            item = new MyDevice();
+                            item.setId(jsonObject.getInt("id"));
+                            item.setSerialNumber(jsonObject.getString("serialNumber"));
+                            item.setModel(jsonObject.getString("model"));
+                            item.setAllotment(jsonObject.getString("allotment"));
+                            item.setMerchantId(jsonObject.getString("merchantId"));
+                            item.setMerchantName(jsonObject.getString("merchantName"));
+                            item.setMaker(jsonObject.getString("maker"));
+                            item.setAllottedUserId(jsonObject.getString("allottedUserId"));
+                            item.setAllottedUserName(jsonObject.getString("allottedUserName"));
+                            item.setAllottedUserMobile(jsonObject.getString("allottedUserMobile"));
+                            item.setStatus(jsonObject.getString("status"));
+                            deviceList.add(item);
+                        }
+
+                        if(deviceList.size() == 0){
+                            showNoMyDevice(true);
+                        }else{
+                            myDeviceAdapter.notifyDataSetChanged();
+                        }
+                    }else{
+                        showNoMyDevice(true);
                     }
 
-                    if(deviceList.size() == 0){
-                        showNoMyDevice(true);
-                    }else{
-                        myDeviceAdapter.notifyDataSetChanged();
-                    }
                 }else{
                     DialogAndToast.showToast(response.getString("message"),AddPaymentDevice.this);
                 }
