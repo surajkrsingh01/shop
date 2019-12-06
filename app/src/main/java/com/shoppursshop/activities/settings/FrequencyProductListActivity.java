@@ -103,7 +103,7 @@ public class FrequencyProductListActivity extends NetworkBaseActivity implements
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
-        String url=getResources().getString(R.string.url)+Constants.GET_FREQUENCY_PRODUCT_LIST;
+        String url=getResources().getString(R.string.cust_url)+Constants.GET_FREQUENCY_PRODUCT_LIST;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"productList");
     }

@@ -17,8 +17,8 @@ android {
         applicationId "com.shoppursshop"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 5
-        versionName "1.1.5"
+        versionCode 7
+        versionName "1.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -27,7 +27,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+            //  signingConfig signingConfigs.config
         }
     }
 
@@ -92,6 +92,7 @@ dependencies {
     implementation 'com.itextpdf:itextg:5.5.10'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.itextpdf:itextg:5.5.10'
+    implementation 'androidx.exifinterface:exifinterface:1.1.0'
     //implementation "com.scandit.datacapture:core:6.0.3"
     //implementation "com.scandit.datacapture:barcode:6.0.3"
     //implementation "com.scandit.datacapture:parser:6.0.3"

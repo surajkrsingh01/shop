@@ -6,7 +6,9 @@ import java.util.List;
 public class MyProductItem implements Serializable {
 
     private int id,pcoId,prodId,prodCatId,prodSubCatId,prodReorderLevel,prodQoh,qty;
-    private String offerId,offerType,comboProductIds,prodName,prodCode,prodBarCode,prodDesc,prodHsnCode,prodMfgDate,prodExpiryDate,prodMfgBy,prodImage1,prodImage2,prodImage3,
+    private String offerId,offerType,comboProductIds,prodName,prodCode,prodBarCode,
+            prodDesc,prodHsnCode,prodMfgDate,prodExpiryDate,prodMfgBy,prodImage1,prodImage2,prodImage3,
+            prodImageLocal1,prodImageLocal2,prodImageLocal3,
             createdBy,updatedBy,createdDate,updatedDate,status,isBarCodeAvailable;
     private String unit,color,size,retRetailerId,dbName,dbUserName,dbPassword;
     private float offerPrice,prodCgst,prodIgst,prodSgst,prodWarranty,prodMrp,prodSp,totalAmount;
@@ -30,6 +32,30 @@ public class MyProductItem implements Serializable {
 
     public void setProductSizeList(List<ProductSize> productSizeList) {
         this.productSizeList = productSizeList;
+    }
+
+    public String getProdImageLocal1() {
+        return prodImageLocal1;
+    }
+
+    public void setProdImageLocal1(String prodImageLocal1) {
+        this.prodImageLocal1 = prodImageLocal1;
+    }
+
+    public String getProdImageLocal2() {
+        return prodImageLocal2;
+    }
+
+    public void setProdImageLocal2(String prodImageLocal2) {
+        this.prodImageLocal2 = prodImageLocal2;
+    }
+
+    public String getProdImageLocal3() {
+        return prodImageLocal3;
+    }
+
+    public void setProdImageLocal3(String prodImageLocal3) {
+        this.prodImageLocal3 = prodImageLocal3;
     }
 
     public String getUnit() {

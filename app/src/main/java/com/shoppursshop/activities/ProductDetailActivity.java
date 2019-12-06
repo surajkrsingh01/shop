@@ -98,7 +98,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
     List<String> sizeSpinnerList;
     private ArrayAdapter<String> sizeSpinnerAdapter;
     private RelativeLayout relative_size;
-    private int limit = 5,offset = 0;
+    private int limit = 50,offset = 0;
 
 
 
@@ -384,6 +384,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
             getSaleData();
 
             getRatingsData();
+            getReviews();
 
         }
 
@@ -465,6 +466,14 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                descBottomFragment.show(getSupportFragmentManager(), "Description Bottom Sheet");
            }
        });
+
+       btnLoadMoreReviews.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               offset = offset + limit;
+               getReviews();
+           }
+       });
    }
 
     private void setReviews(){
@@ -479,10 +488,6 @@ public class ProductDetailActivity extends NetworkBaseActivity {
         String url=getResources().getString(R.string.url)+Constants.REVIEW_LIST;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"reviewList");
-
-    }
-
-    private void getOffers(){
 
     }
 
@@ -508,6 +513,20 @@ public class ProductDetailActivity extends NetworkBaseActivity {
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"productRatingsData");
     }
 
+    private void getReviews(){
+        Map<String,String> params=new HashMap<>();
+        params.put("prodCode",""+myProductItem.getProdCode());
+        params.put("limit",""+limit);
+        params.put("offset",""+offset);
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.PRODUCT_REVIEWS_DATA;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"reviewList");
+    }
+
+
     @Override
     public void onJsonObjectResponse(JSONObject response, String apiName) {
 
@@ -518,24 +537,31 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                     JSONObject jsonObject = null;
                     int len = dataArray.length();
                     MyReview myReview= null;
-                    myReviewList.clear();
+                    float ratings = 0;
                     for (int i = 0; i < len; i++) {
                         jsonObject = dataArray.getJSONObject(i);
+                        try {
+                            ratings = Float.parseFloat(jsonObject.getString("rating"));
+                        }catch (Exception e){
+
+                        }
                         myReview = new MyReview();
                         myReview.setUserName(jsonObject.getString("customerName"));
-                        myReview.setDateTime(jsonObject.getString("createdDate"));
-                        myReview.setRating(Float.parseFloat(jsonObject.getString("rating")));
+                        myReview.setDateTime(Utility.parseDate(jsonObject.getString("createdDate"),
+                                "yyyy-MM-dd HH:mm:ss","dd MMM yyyy HH:mm:ss"));
+                        myReview.setRating(ratings);
                         myReview.setReview(jsonObject.getString("reviewMessage"));
+                        if(ratings > 0)
                         myReviewList.add(myReview);
                     }
 
-                    if(len == 5){
+                    if(len == limit){
                         btnLoadMoreReviews.setVisibility(View.VISIBLE);
                     }else{
                         btnLoadMoreReviews.setVisibility(View.GONE);
                     }
 
-                    if(len == 0){
+                    if(myReviewList.size() == 0){
                         textViewNoReviews.setVisibility(View.VISIBLE);
                         recyclerViewReview.setVisibility(View.GONE);
                     }else{
@@ -543,12 +569,16 @@ public class ProductDetailActivity extends NetworkBaseActivity {
                         recyclerViewReview.setVisibility(View.VISIBLE);
                     }
 
-                    if(myReviewList.size()==0){
-                        recyclerViewReview.setVisibility(View.GONE);
-                        textViewNoReviews.setVisibility(View.VISIBLE);
+                    if(offset == 0){
+                        myReviewAdapter.notifyDataSetChanged();
+                    }else{
+                        recyclerView.post(new Runnable() {
+                            public void run() {
+                                myReviewAdapter.notifyItemRangeInserted(offset,limit);
+                            }
+                        });
+                        Log.d(TAG, "NEXT ITEMS LOADED");
                     }
-
-                    myReviewAdapter.notifyDataSetChanged();
                 }
             }else if (apiName.equals("productSaleData")) {
                 if (response.getBoolean("status")) {

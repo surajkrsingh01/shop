@@ -65,7 +65,7 @@ public class BaseActivity extends AppCompatActivity {
     protected int limit = 20,offset = 0;
     protected int smallLimit = 4,smallOffset = 0;
     protected int visibleItemCount,pastVisibleItems,totalItemCount;
-    protected boolean loading=false,isScroll = true;
+    protected boolean loading=false,isScroll = true,isSplash;
     protected AlertDialog alertDialog;
 
     protected String token,appName,appVersion;
@@ -87,11 +87,15 @@ public class BaseActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        if(isDarkTheme){
-            setTheme(R.style.Dark);
-        }else{
-            setTheme(R.style.Light);
+
+        if(!isSplash){
+            if(isDarkTheme){
+                setTheme(R.style.Dark);
+            }else{
+                setTheme(R.style.Light);
+            }
         }
+
 
        // setTheme(R.style.Dark);
 
@@ -113,12 +117,16 @@ public class BaseActivity extends AppCompatActivity {
         progressDialog.setOnKeyListener(keyListener);
     }
 
+    protected void setSplash(){
+        isSplash = true;
+    }
+
     @Override
     public void onResume(){
         super.onResume();
         colorTheme = sharedPreferences.getInt(Constants.COLOR_THEME,getResources().getColor(R.color.red_500));
         boolean isDarkTheme = sharedPreferences.getBoolean(Constants.IS_DARK_THEME,false);
-        if(this.isDarkTheme != isDarkTheme)
+        if(this.isDarkTheme != isDarkTheme && !isSplash)
             recreate();
     }
 
@@ -473,32 +481,7 @@ public class BaseActivity extends AppCompatActivity {
         editor.putString(Constants.IMEI_NO,IMEI_NO);
         editor.putString(Constants.FCM_TOKEN,fcmToken);
         editor.commit();
-        dbHelper.deleteTable(DbHelper.CAT_TABLE);
-        dbHelper.deleteTable(DbHelper.SUB_CAT_TABLE);
-        dbHelper.deleteTable(DbHelper.PRODUCT_TABLE);
-        dbHelper.deleteTable(DbHelper.PRODUCT_BARCODE_TABLE);
-        dbHelper.deleteTable(DbHelper.PRODUCT_UNIT_TABLE);
-        dbHelper.deleteTable(DbHelper.PRODUCT_SIZE_TABLE);
-        dbHelper.deleteTable(DbHelper.PRODUCT_COLOR_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_TABLE);
-        dbHelper.deleteTable(DbHelper.PROD_COMBO_TABLE);
-        dbHelper.deleteTable(DbHelper.PROD_COMBO_DETAIL_TABLE);
-        dbHelper.deleteTable(DbHelper.PROD_PRICE_TABLE);
-        dbHelper.deleteTable(DbHelper.PROD_PRICE_DETAIL_TABLE);
-        dbHelper.deleteTable(DbHelper.PROD_FREE_OFFER_TABLE);
-        dbHelper.deleteTable(DbHelper.COUPON_TABLE);
-        dbHelper.deleteTable(DbHelper.SHOP_CART_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PROD_PRICE_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PROD_PRICE_DETAIL_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PROD_COMBO_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PROD_COMBO_DETAIL_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PROD_FREE_OFFER_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_COUPON_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PRODUCT_UNIT_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PRODUCT_SIZE_TABLE);
-        dbHelper.deleteTable(DbHelper.CART_PRODUCT_COLOR_TABLE);
-        dbHelper.deleteTable(DbHelper.CUSTOMER_INFO_TABLE);
-
+        dbHelper.deleteAllTable();
         Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

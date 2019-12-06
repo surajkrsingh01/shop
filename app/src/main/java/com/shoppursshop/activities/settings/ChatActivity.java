@@ -26,11 +26,14 @@ import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.ProductDetailActivity;
 import com.shoppursshop.adapters.ChatAdapter;
 import com.shoppursshop.fragments.BottomSearchFragment;
+import com.shoppursshop.interfaces.FirebaseImageUploadListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.ChatMessage;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.services.FirebaseImageUploadService;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
+import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
 
 import org.json.JSONArray;
@@ -46,7 +49,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class ChatActivity extends BaseImageActivity implements MyItemClickListener {
+public class ChatActivity extends BaseImageActivity implements MyItemClickListener, FirebaseImageUploadListener {
 
     public static boolean isVisible = false;
 
@@ -58,6 +61,9 @@ public class ChatActivity extends BaseImageActivity implements MyItemClickListen
     private String messageType,messageTo,messageToMobile,messageToPic,messageToName;
     private boolean isSearchingProduct;
     private IntentFilter intentFilter;
+    private String messageFileName;
+
+    private FirebaseImageUploadService firebaseImageUploadService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +142,8 @@ public class ChatActivity extends BaseImageActivity implements MyItemClickListen
         }else{
 
         }
+
+        firebaseImageUploadService = FirebaseImageUploadService.getInstance();
 
         intentFilter=new IntentFilter();
         intentFilter.addAction("com.shoppursshop.broadcast.messageReceived");
@@ -281,48 +289,7 @@ public class ChatActivity extends BaseImageActivity implements MyItemClickListen
     @Override
     protected void imageAdded(){
         messageType = "image";
-        Map<String,String> params=new HashMap<>();
-        params.put("message","Image");
-        File file = new File(imagePath);
-        params.put("messageFileUrl",convertToBase64(file));
-        String timestamp = Utility.getTimeStamp();
-        timestamp =timestamp.replaceAll(" ","").replaceAll(":","").replaceAll("-","");
-        params.put("messageFileName",timestamp+".jpg");
-        params.put("position",""+(itemList.size()));
-        params.put("messageFromName",sharedPreferences.getString(Constants.SHOP_NAME,""));
-        params.put("createdBy",sharedPreferences.getString(Constants.SHOP_NAME,""));
-        params.put("messageFromMobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
-        params.put("messageFromPic",sharedPreferences.getString(Constants.PHOTO,""));
-        params.put("messageFromCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
-        params.put("messageToCode",messageTo);
-        params.put("messageToName",messageToName);
-        params.put("messageToMobile",messageToMobile);
-        params.put("messageToPic",messageToPic);
-        params.put("messageType","image");
-
-        String url=getResources().getString(R.string.url)+Constants.SEND_MESSAGE;
-        showProgress(true);
-        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"sendMessage");
-
-        Calendar calendar = Calendar.getInstance(Locale.getDefault());
-        String timeStamp=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calendar.getTime());
-        String[] time = timeStamp.split(" ")[1].split(":");
-        ChatMessage chatMessage=new ChatMessage();
-        chatMessage.setMessageId(1);
-        chatMessage.setMessageText("Image");
-        chatMessage.setMessageTime(time[0]+":"+time[1]);
-        chatMessage.setMessageStatus("notSent");
-        chatMessage.setMessageReadStatus("read");
-        chatMessage.setNotificationReadSatus("read");
-        chatMessage.setMessageType("image");
-        chatMessage.setMessageStatus("uploading");
-        chatMessage.setFileUrl(imagePath);
-        chatMessage.setMessageTo("");
-        chatMessage.setMessageFrom(sharedPreferences.getString(Constants.SHOP_CODE,""));
-        chatMessage.setMessageFromMobile(sharedPreferences.getString(Constants.MOBILE_NO,""));
-        itemList.add(chatMessage);
-        myItemAdapter.notifyItemInserted(itemList.size()-1);
-        recyclerView.smoothScrollToPosition(itemList.size()-1);
+        uploadImagesToFirebase();
     }
 
     @Override
@@ -453,4 +420,70 @@ public class ChatActivity extends BaseImageActivity implements MyItemClickListen
             }
         }
     };
+
+    private void uploadImagesToFirebase(){
+        Log.i(TAG,"uploading images to firebase..");
+        if(imagePath != null){
+            String timestamp = Utility.getTimeStamp();
+            timestamp =timestamp.replaceAll(" ","").replaceAll(":","").replaceAll("-","");
+            messageFileName = timestamp+".jpg";
+            showProgress(true);
+            firebaseImageUploadService.setFirebaseImageUploadListener(this);
+            firebaseImageUploadService.uploadImage(
+                    "chats/"+sharedPreferences.getString(Constants.SHOP_CODE,"")+"/"+messageTo+"/"+messageFileName,
+                    imagePath);
+        }else{
+
+        }
+
+    }
+
+    @Override
+    public void onImageUploaded(String position, String imageUrl) {
+        Map<String,String> params=new HashMap<>();
+        params.put("message","Image");
+       // File file = new File(imagePath);
+        params.put("messageFileUrl",imageUrl);
+        params.put("messageFileName",messageFileName);
+        params.put("position",""+(itemList.size()));
+        params.put("messageFromName",sharedPreferences.getString(Constants.SHOP_NAME,""));
+        params.put("createdBy",sharedPreferences.getString(Constants.SHOP_NAME,""));
+        params.put("messageFromMobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
+        params.put("messageFromPic",sharedPreferences.getString(Constants.PHOTO,""));
+        params.put("messageFromCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
+        params.put("messageToCode",messageTo);
+        params.put("messageToName",messageToName);
+        params.put("messageToMobile",messageToMobile);
+        params.put("messageToPic",messageToPic);
+        params.put("messageType","image");
+
+        String url=getResources().getString(R.string.url)+Constants.SEND_MESSAGE;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"sendMessage");
+
+        Calendar calendar = Calendar.getInstance(Locale.getDefault());
+        String timeStamp=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calendar.getTime());
+        String[] time = timeStamp.split(" ")[1].split(":");
+        ChatMessage chatMessage=new ChatMessage();
+        chatMessage.setMessageId(1);
+        chatMessage.setMessageText("Image");
+        chatMessage.setMessageTime(time[0]+":"+time[1]);
+        chatMessage.setMessageStatus("notSent");
+        chatMessage.setMessageReadStatus("read");
+        chatMessage.setNotificationReadSatus("read");
+        chatMessage.setMessageType("image");
+        chatMessage.setMessageStatus("uploading");
+        chatMessage.setFileUrl(imagePath);
+        chatMessage.setMessageTo("");
+        chatMessage.setMessageFrom(sharedPreferences.getString(Constants.SHOP_CODE,""));
+        chatMessage.setMessageFromMobile(sharedPreferences.getString(Constants.MOBILE_NO,""));
+        itemList.add(chatMessage);
+        myItemAdapter.notifyItemInserted(itemList.size()-1);
+        recyclerView.smoothScrollToPosition(itemList.size()-1);
+    }
+
+    @Override
+    public void onImageFailed(String position) {
+        DialogAndToast.showToast("There is some problem occurred in uploading image. Please try again later",this);
+    }
 }

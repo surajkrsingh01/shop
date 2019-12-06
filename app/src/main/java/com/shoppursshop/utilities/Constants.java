@@ -17,6 +17,7 @@ public class Constants {
     public static String EMAIL="email";
     public static String PASSWORD="password";
     public static String PROFILE_PIC="profilePic";
+    public static String PROFILE_PIC_LOCAL="profilePicLocal";
     public static String MOBILE_NO="mobileNo";
     public static String SHOP_NAME="shopName";
     public static String SHOP_CODE="shopCode";
@@ -66,6 +67,7 @@ public class Constants {
     public static String IFSC_CODE="ifscCode";
     public static String BRANCH_ADRESS="branchAddress";
     public static String CHEQUE_IMAGE="chequeImage";
+    public static String CHEQUE_IMAGE_LOCAL="chequeImageLocal";
     public static String KYC_NAME="kycName";
     public static String KYC_DOC_NUMBER="kycDocNumber";
     public static String KYC_DOC_TYPE="kycDocType";
@@ -134,6 +136,7 @@ public class Constants {
     public static String REVIEW_LIST="/api/product_review/getReview";
     public static String PRODUCT_SALE_DATA="/api/products/product_sale_data";
     public static String PRODUCT_RATINGS_DATA="/api/products/product_ratings";
+    public static String PRODUCT_REVIEWS_DATA="/api/products/getReview";
     public static String SHOP_SALE_DATE="/api/user/shop_sale_data";
     public static String IS_CUSTOMER_REGISTERED="/api/shop_customer/is_registered";
     public static String REGISTER_CUSTOMER="/api/shop_customer/register_shop_customer";

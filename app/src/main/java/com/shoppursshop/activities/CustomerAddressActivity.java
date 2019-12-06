@@ -1,6 +1,7 @@
 package com.shoppursshop.activities;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,7 +19,9 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.view.Gravity;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
@@ -31,6 +34,7 @@ public class CustomerAddressActivity extends NetworkBaseActivity implements OnMa
     private final float ZOOM = 15f;
     private TextView tv_parent, tv_top_parent;
     private LatLng shopLatLng;
+    private String address,mobile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,8 @@ public class CustomerAddressActivity extends NetworkBaseActivity implements OnMa
         tv_parent = findViewById(R.id.text_right_label);
 
         Intent intent = getIntent();
+        address = getIntent().getStringExtra("address");
+        mobile = getIntent().getStringExtra("mobile");
         double latitude = Double.parseDouble(intent.getStringExtra("latitude"));
         double longitude = Double.parseDouble(intent.getStringExtra("longitude"));
         if(latitude != 0d){
@@ -90,7 +96,37 @@ public class CustomerAddressActivity extends NetworkBaseActivity implements OnMa
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(latLng)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                .title("Current Location"));
+                .title(getIntent().getStringExtra("name"))
+                .snippet(address+"\n"+mobile));
+
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                LinearLayout info = new LinearLayout(CustomerAddressActivity.this);
+                info.setOrientation(LinearLayout.VERTICAL);
+
+                TextView title = new TextView(CustomerAddressActivity.this);
+                title.setTextColor(getResources().getColor(R.color.primary_text_color));
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());
+
+                TextView snippet = new TextView(CustomerAddressActivity.this);
+                snippet.setTextColor(getResources().getColor(R.color.secondary_text_color));
+                snippet.setGravity(Gravity.CENTER);
+                snippet.setText(marker.getSnippet());
+
+                info.addView(title);
+                info.addView(snippet);
+
+                return info;
+            }
+        });
 
         mMap.getUiSettings().setZoomControlsEnabled(false); // true to enable
         mMap.setTrafficEnabled(true);

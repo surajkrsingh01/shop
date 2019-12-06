@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.shoppursshop.activities.OffersActivity"
+    tools:context="com.shoppurspartner.activities.OffersActivity"
     tools:showIn="@layout/activity_offers">
 
     <LinearLayout

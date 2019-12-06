@@ -195,7 +195,7 @@ public class OffersActivity extends NetworkBaseActivity implements MyItemTypeCli
         params.put("dbName",shopCode);
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
-        String url=getResources().getString(R.string.url)+Constants.GET_PRODUCT_OFFERS;
+        String url=getResources().getString(R.string.cust_url)+Constants.GET_PRODUCT_OFFERS;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"productList");
     }

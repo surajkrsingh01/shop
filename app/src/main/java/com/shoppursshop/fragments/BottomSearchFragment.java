@@ -227,7 +227,6 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
         myCustomer.setImage("");
         myCustomer.setIsFav("Y");
         myCustomer.setRatings(4.5f);
-        myCustomer.setLocalImage(R.drawable.author_1);
         //myCustomerList.add(myCustomer);
         recyclerView_Search.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(getActivity());
@@ -320,7 +319,6 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
                           myCustomer.setIsFav(jsonObject.getString("isFav"));
                           myCustomer.setCustUserCreateStatus(jsonObject.getString("userCreateStatus"));
                           myCustomer.setRatings((float)jsonObject.getDouble("ratings"));
-                          myCustomer.setLocalImage(R.drawable.author_1);
                           myCustomerList.add(myCustomer);
                       }
                       customerAdapter.notifyDataSetChanged();

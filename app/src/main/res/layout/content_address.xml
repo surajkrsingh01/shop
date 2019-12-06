@@ -112,7 +112,7 @@
                     android:hint="@string/address"
                     android:textSize="@dimen/edit_text_small_text_size"
                     android:gravity="top"
-                    android:inputType="textMultiLine"
+                    android:inputType="textMultiLine|textCapWords"
                     android:imeOptions="actionNext"
                     android:layout_marginTop="@dimen/edit_text_margin"
                     android:paddingBottom="@dimen/edit_text_small_vertical_padding"

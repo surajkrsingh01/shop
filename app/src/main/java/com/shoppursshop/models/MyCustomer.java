@@ -3,11 +3,11 @@ package com.shoppursshop.models;
 import java.io.Serializable;
 
 public class MyCustomer implements Serializable {
-    String id,code,name,email,image,mobile,address,country,locality,latitude,longitude,state,city,custUserCreateStatus,status;
+    private String id,code,name,email,image,localImage,mobile,address,country,locality,latitude,longitude,state,city,custUserCreateStatus,status;
     private String isFav;
     private float ratings;
 
-    private int localImage;
+
 
     public String getLocality() {
         return locality;
@@ -121,11 +121,11 @@ public class MyCustomer implements Serializable {
         this.city = city;
     }
 
-    public int getLocalImage() {
+    public String getLocalImage() {
         return localImage;
     }
 
-    public void setLocalImage(int localImage) {
+    public void setLocalImage(String localImage) {
         this.localImage = localImage;
     }
 

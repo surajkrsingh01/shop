@@ -46,6 +46,8 @@ public class SplashActivity extends NetworkBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setSplash();
+
         // sharedPreferences=getSharedPreferences(Constants.MYPREFERENCEKEY,MODE_PRIVATE);
 
      //   startActivityForResult(new Intent(SplashActivity.this, DeliveryAddressActivity.class), 101);

@@ -55,6 +55,7 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         itemList.add("Add Products to Store");
         itemList.add("Shoppurs Products");
         itemList.add("Return Products");
+        itemList.add("Check Reorder Level/Expired Products");
         itemList.add("Orders to Shoppurs");
         itemList.add("Customer Orders");
         itemList.add("Frequency Customer Orders");
@@ -205,6 +206,10 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
             startActivity(intent);
         }else if(name.equals("Return Products")){
             Intent intent = new Intent(this, ReturnProductActivity.class);
+            startActivity(intent);
+        }else if(name.equals("Check Reorder Level/Expired Products")){
+            Intent intent = new Intent(this, RlevelAndExpiredProductActivity.class);
+            intent.putExtra("flag","settings");
             startActivity(intent);
         }else if(name.equals("Logout")){
             changeStoreStatus();

@@ -1,9 +1,17 @@
 package com.shoppursshop.models;
 
 public class MySimpleItem {
-    private String name,image;
+    private String name,image,localImage;
     private boolean isSelected;
     private int id,type,position;
+
+    public String getLocalImage() {
+        return localImage;
+    }
+
+    public void setLocalImage(String localImage) {
+        this.localImage = localImage;
+    }
 
     public int getId() {
         return id;

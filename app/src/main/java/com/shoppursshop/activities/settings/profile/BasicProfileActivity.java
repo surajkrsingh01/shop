@@ -88,11 +88,19 @@ public class BasicProfileActivity extends BaseImageActivity implements FirebaseI
         imageUrl = sharedPreferences.getString(Constants.PROFILE_PIC,"");
 
         requestOptions.signature(new ObjectKey(sharedPreferences.getString("profile_image_signature","")));
-        Glide.with(this)
-                .load(sharedPreferences.getString(Constants.PROFILE_PIC,""))
-                .apply(requestOptions)
-                .error(R.drawable.ic_photo_black_192dp)
-                .into(profileImage);
+        String profilePicLocal = sharedPreferences.getString(Constants.PROFILE_PIC_LOCAL,"");
+        File fileLocal = new File(profilePicLocal);
+        if(fileLocal.exists()){
+            Glide.with(this)
+                    .load(profilePicLocal)
+                    .apply(requestOptions)
+                    .error(R.drawable.ic_photo_black_192dp)
+                    .into(profileImage);
+        }else{
+            Log.i(TAG,"Downloading image..."+sharedPreferences.getString(Constants.PROFILE_PIC,""));
+            if(!sharedPreferences.getString(Constants.PROFILE_PIC,"").equals(""))
+            downloadImage(1,sharedPreferences.getString(Constants.PROFILE_PIC,""),this);
+        }
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,8 +233,10 @@ public class BasicProfileActivity extends BaseImageActivity implements FirebaseI
                     String timestamp = Utility.getTimeStamp();
                     requestOptions.signature(new ObjectKey(timestamp));
                     editor.putString(Constants.PROFILE_PIC,imageUrl);
+                    editor.putString(Constants.PROFILE_PIC_LOCAL,imagePath);
                     editor.putString("profile_image_signature",timestamp);
                     editor.commit();
+                    DialogAndToast.showDialog("Profile has been updated successfully.",this);
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }
@@ -252,7 +262,7 @@ public class BasicProfileActivity extends BaseImageActivity implements FirebaseI
             showProgress(true);
             firebaseImageUploadService.setFirebaseImageUploadListener(this);
             firebaseImageUploadService.uploadImage(
-                    sharedPreferences.getString("shops/"+Constants.SHOP_CODE,"")+"photo.jpg",
+                    "shops/"+sharedPreferences.getString(Constants.SHOP_CODE,"")+"/photo.jpg",
                     imagePath);
         }else{
 
@@ -285,5 +295,21 @@ public class BasicProfileActivity extends BaseImageActivity implements FirebaseI
     @Override
     public void onImageFailed(String position) {
 
+    }
+
+    @Override
+    protected void imageDownloaded() {
+        super.imageDownloaded();
+        Log.i(TAG,"Downloaded image...");
+       // showProgress(false);
+        editor.putString(Constants.PROFILE_PIC_LOCAL,imagePath);
+        editor.putString("profile_image_signature",Utility.getTimeStamp());
+        editor.commit();
+        Glide.with(this)
+                .load(imagePath)
+                .apply(requestOptions)
+                .error(R.drawable.ic_photo_black_192dp)
+                .into(profileImage);
+        imagePath = null;
     }
 }
