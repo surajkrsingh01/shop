@@ -379,8 +379,8 @@ public class ProductDetailActivity extends NetworkBaseActivity {
             initUnitColorSizeList();
             initUnitList();
 
-            setReviews();
-            //getOffers();
+             // setReviews();
+            // getOffers();
             getSaleData();
 
             getRatingsData();

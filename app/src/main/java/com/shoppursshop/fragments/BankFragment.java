@@ -215,6 +215,10 @@ public class BankFragment extends NetworkBaseFragment {
                 .into(imageViewCheque);
     }
 
+    public void imageDownloadFailed(){
+        imageViewCheque.setVisibility(View.VISIBLE);
+    }
+
     public void attemptUpdateBankDetails(String imageUrl){
         this.imageUrl = imageUrl;
         shopName = editTextShopName.getText().toString();

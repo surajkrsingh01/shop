@@ -78,7 +78,7 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
     protected String imagePath="";
     private String fileName="";
     private Uri filePath;
-    private Bitmap bitmap;
+    private Bitmap bitmap,tempBitmap;
     private String userChoosenTask,flag;
     private boolean successfullyUpdated,isNewRider;
     protected String imageBase64;
@@ -340,30 +340,35 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
     }
 
     public void saveBitmap(Bitmap bitmap){
+        userChoosenTask = "savingBitmap";
+        this.tempBitmap = bitmap;
+        if(Utility.verifyStorageOnlyPermissions(this)){
+            Log.i(TAG,"bitmap width "+bitmap.getWidth()+
+                    " bitmap height "+bitmap.getHeight());
 
-        Log.i(TAG,"bitmap width "+bitmap.getWidth()+
-                " bitmap height "+bitmap.getHeight());
+            FileOutputStream out = null;
+            File filename = getFile();
 
-        FileOutputStream out = null;
-        File filename = getFile();
-
-        try {
-            out = new FileOutputStream(filename);
-//          write the compressed bitmap at the destination specified by filename.
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
-            out.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
             try {
+                out = new FileOutputStream(filename);
+//          write the compressed bitmap at the destination specified by filename.
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
                 out.close();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            }finally {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
+
     }
 
     public File getFile() {
@@ -447,6 +452,9 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
                         cameraIntent();
                     else if(userChoosenTask.equals("Gallery"))
                         galleryIntent();
+                    else if(userChoosenTask.equals("savingBitmap")){
+                        saveBitmap(tempBitmap);
+                    }
 
                 } else {
                     //code for deny
@@ -727,8 +735,13 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        saveBitmap(resource);
-                        imageDownloaded();
+                        if(resource != null){
+                            saveBitmap(resource);
+                            imageDownloaded();
+                        }else{
+                            imageDownloadedFailed();
+                        }
+
                     }
 
                     @Override
@@ -739,6 +752,10 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
 
 
     protected void imageDownloaded(){
+
+    }
+
+    protected void imageDownloadedFailed(){
 
     }
 }
