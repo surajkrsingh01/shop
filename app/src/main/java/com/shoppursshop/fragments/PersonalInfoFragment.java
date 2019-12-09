@@ -210,6 +210,11 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
             focus = editEmail;
             cancel = true;
             editEmail.setError(getResources().getString(R.string.email_required));
+        }else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email)
+                .matches()){
+            editEmail.setError(getResources().getString(R.string.valid_email));
+            focus=editEmail;
+            cancel=true;
         }
 
         if (TextUtils.isEmpty(address)) {
