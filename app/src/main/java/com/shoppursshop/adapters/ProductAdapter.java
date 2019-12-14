@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -28,8 +30,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.AddProductActivity;
 import com.shoppursshop.activities.ProductDetailActivity;
@@ -61,7 +67,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<Object> itemList;
     private Context context;
     private String type,subCatName,flag;
-    private int colorTheme;
+    private int colorTheme,counter;
 
     private MyItemTouchListener myItemTouchListener;
 
@@ -335,7 +341,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class MyProductListType1ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
 
-        private TextView textBarCode,textName,textSp,textMrp,textOffPer,textStatus;
+        private TextView textBarCode,textName,textSp,textMrp,textOffPer,textStatus,tvInitials;
         private ImageView imageView,imageMenu;
         private Button btnAddToCart;
         private View rootView;
@@ -349,6 +355,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             textMrp=itemView.findViewById(R.id.text_mrp);
             textOffPer=itemView.findViewById(R.id.text_off_percentage);
             textStatus=itemView.findViewById(R.id.text_status);
+            tvInitials=itemView.findViewById(R.id.tvInitial);
             btnAddToCart=itemView.findViewById(R.id.btn_add_to_cart);
             imageView=itemView.findViewById(R.id.image_view);
             imageMenu=itemView.findViewById(R.id.image_menu);
@@ -429,7 +436,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class MyOrderProductListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
 
-        private TextView textName,textSp,textMrp,textOffPer,textQty;
+        private TextView textName,textSp,textMrp,textOffPer,textQty,tvInitials;
         private ImageView imageView;
         private View rootView;
 
@@ -440,6 +447,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             textSp=itemView.findViewById(R.id.text_sp);
             textMrp=itemView.findViewById(R.id.text_mrp);
             textOffPer=itemView.findViewById(R.id.text_off_percentage);
+            tvInitials=itemView.findViewById(R.id.tvInitial);
             textQty=itemView.findViewById(R.id.text_qty);
             imageView=itemView.findViewById(R.id.image_view);
             imageView.setOnClickListener(this);
@@ -489,7 +497,8 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class MyFrequencyOrderProductListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnTouchListener {
 
-        private TextView textName,textSp,textMrp,textOffPer,textQty,textStartDate,textEndDate,textNextOrderDate,textStatus;
+        private TextView textName,textSp,textMrp,textOffPer,textQty,
+                textStartDate,textEndDate,textNextOrderDate,textStatus,tvInitials;
         private ImageView imageView;
         private View rootView;
 
@@ -501,6 +510,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             textMrp=itemView.findViewById(R.id.text_mrp);
             textOffPer=itemView.findViewById(R.id.text_off_percentage);
             textQty=itemView.findViewById(R.id.text_qty);
+            tvInitials=itemView.findViewById(R.id.tvInitial);
             textStartDate=itemView.findViewById(R.id.text_start_date);
             textEndDate=itemView.findViewById(R.id.text_end_date);
             textNextOrderDate=itemView.findViewById(R.id.text_next_order_date);
@@ -831,7 +841,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         }else if(holder instanceof MyProductListType1ViewHolder){
             MyProductItem item = (MyProductItem) itemList.get(position);
-            MyProductListType1ViewHolder myViewHolder = (MyProductListType1ViewHolder)holder;
+            final MyProductListType1ViewHolder myViewHolder = (MyProductListType1ViewHolder)holder;
 
             myViewHolder.textBarCode.setText(item.getProdBarCode());
             myViewHolder.textName.setText(item.getProdName());
@@ -868,6 +878,20 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
 
+            String initials = "";
+            if(item.getProdName().contains(" ")){
+                String[] name = item.getProdName().split(" ");
+                if(name[1].startsWith("(")){
+                    initials = name[0].substring(0,1)+name[1].substring(1,2);
+                }else{
+                    initials = name[0].substring(0,1)+name[1].substring(0,1);
+                }
+            }else{
+                initials = item.getProdName().substring(0,2);
+            }
+
+            myViewHolder.tvInitials.setText(initials);
+
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
             // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
@@ -877,13 +901,33 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Glide.with(context)
                     .load(item.getProdImage1())
                     .apply(requestOptions)
-                    .error(R.drawable.ic_photo_black_192dp)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            myViewHolder.tvInitials.setVisibility(View.VISIBLE);
+                            myViewHolder.imageView.setVisibility(View.GONE);
+                            //  myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+                            Utility.setColorFilter(myViewHolder.tvInitials.getBackground(),getTvColor(counter));
+
+                            counter++;
+                            if(counter == 12){
+                                counter = 0;
+                            }
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            //on load success
+                            return false;
+                        }
+                    })
                     .into(myViewHolder.imageView);
 
 
         }else if(holder instanceof MyOrderProductListViewHolder){
             MyProductItem item = (MyProductItem) itemList.get(position);
-            MyOrderProductListViewHolder myViewHolder = (MyOrderProductListViewHolder)holder;
+            final MyOrderProductListViewHolder myViewHolder = (MyOrderProductListViewHolder)holder;
 
             myViewHolder.textName.setText(item.getProdName());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
@@ -903,6 +947,20 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             myViewHolder.textQty.setText("Qty: "+item.getQty());
 
+            String initials = "";
+            if(item.getProdName().contains(" ")){
+                String[] name = item.getProdName().split(" ");
+                if(name[1].startsWith("(")){
+                    initials = name[0].substring(0,1)+name[1].substring(1,2);
+                }else{
+                    initials = name[0].substring(0,1)+name[1].substring(0,1);
+                }
+            }else{
+                initials = item.getProdName().substring(0,2);
+            }
+
+            myViewHolder.tvInitials.setText(initials);
+
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
             // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
@@ -912,7 +970,27 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Glide.with(context)
                     .load(item.getProdImage1())
                     .apply(requestOptions)
-                    .error(R.drawable.ic_photo_black_192dp)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            myViewHolder.tvInitials.setVisibility(View.VISIBLE);
+                            myViewHolder.imageView.setVisibility(View.GONE);
+                            //  myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+                            Utility.setColorFilter(myViewHolder.tvInitials.getBackground(),getTvColor(counter));
+
+                            counter++;
+                            if(counter == 12){
+                                counter = 0;
+                            }
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            //on load success
+                            return false;
+                        }
+                    })
                     .into(myViewHolder.imageView);
 
 
@@ -926,7 +1004,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }else if(holder instanceof MyFrequencyOrderProductListViewHolder){
 
             FrequencyProduct item = (FrequencyProduct) itemList.get(position);
-            MyFrequencyOrderProductListViewHolder myViewHolder = (MyFrequencyOrderProductListViewHolder)holder;
+            final MyFrequencyOrderProductListViewHolder myViewHolder = (MyFrequencyOrderProductListViewHolder)holder;
 
             myViewHolder.textName.setText(item.getProdName());
             myViewHolder.textSp.setText(Utility.numberFormat(item.getProdSp()));
@@ -961,6 +1039,20 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 myViewHolder.textOffPer.setVisibility(View.GONE);
             }
 
+            String initials = "";
+            if(item.getProdName().contains(" ")){
+                String[] name = item.getProdName().split(" ");
+                if(name[1].startsWith("(")){
+                    initials = name[0].substring(0,1)+name[1].substring(1,2);
+                }else{
+                    initials = name[0].substring(0,1)+name[1].substring(0,1);
+                }
+            }else{
+                initials = item.getProdName().substring(0,2);
+            }
+
+            myViewHolder.tvInitials.setText(initials);
+
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
             // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
@@ -970,7 +1062,27 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Glide.with(context)
                     .load(item.getProdImage1())
                     .apply(requestOptions)
-                    .error(R.drawable.ic_photo_black_192dp)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            myViewHolder.tvInitials.setVisibility(View.VISIBLE);
+                            myViewHolder.imageView.setVisibility(View.GONE);
+                            //  myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+                            Utility.setColorFilter(myViewHolder.tvInitials.getBackground(),getTvColor(counter));
+
+                            counter++;
+                            if(counter == 12){
+                                counter = 0;
+                            }
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            //on load success
+                            return false;
+                        }
+                    })
                     .into(myViewHolder.imageView);
 
         }
@@ -993,5 +1105,22 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             aniSlide.setFillAfter(true);
             view.startAnimation(aniSlide);
         }
+    }
+
+    private int getTvColor(int position){
+
+        if(position >= 12){
+            position = 0;
+        }
+
+        int[] tvColor={context.getResources().getColor(R.color.light_blue500),
+                context.getResources().getColor(R.color.yellow500),context.getResources().getColor(R.color.green500),
+                context.getResources().getColor(R.color.orange500),context.getResources().getColor(R.color.red_500),
+                context.getResources().getColor(R.color.teal_500),context.getResources().getColor(R.color.cyan500),
+                context.getResources().getColor(R.color.deep_orange500),context.getResources().getColor(R.color.blue500),
+                context.getResources().getColor(R.color.purple500),context.getResources().getColor(R.color.amber500),
+                context.getResources().getColor(R.color.light_green500)};
+
+        return tvColor[position];
     }
 }

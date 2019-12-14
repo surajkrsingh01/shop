@@ -291,9 +291,9 @@ public class ShoppursProductListActivity extends NetworkBaseActivity implements 
         Log.d(TAG, params.toString());
         String url="";
         if(action.equals("")){
-            url=getResources().getString(R.string.url)+"/api/customers/products/ret_productslist";
+            url=getResources().getString(R.string.cust_url)+"/api/customers/products/ret_productslist";
         }else{
-            url=getResources().getString(R.string.url)+"/api/customers/products/ret_productslist_with_offers_by_cat";
+            url=getResources().getString(R.string.cust_url)+"/api/customers/products/ret_productslist_with_offers_by_cat";
         }
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST, url,new JSONObject(params),"productfromshop");

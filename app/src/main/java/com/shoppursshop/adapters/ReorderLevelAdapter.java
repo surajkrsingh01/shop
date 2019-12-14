@@ -2,6 +2,7 @@ package com.shoppursshop.adapters;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.shoppursshop.R;
 import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
@@ -33,7 +39,7 @@ public class ReorderLevelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<MyProductItem> itemList;
     private Context context;
     private boolean isDarkTheme;
-
+    private int counter;
     public void setDarkTheme(boolean darkTheme) {
         isDarkTheme = darkTheme;
     }
@@ -57,7 +63,7 @@ public class ReorderLevelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView textName,textMrp,textSp,textOffPer,textCounter,textStock,text_reorder_level;
+        private TextView textName,textMrp,textSp,textOffPer,textCounter,textStock,text_reorder_level,tvInitials;
         private ImageView imageView;
         private RelativeLayout relativeLayoutUnit;
         private Spinner spinnerUnit;
@@ -72,6 +78,7 @@ public class ReorderLevelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textOffPer=itemView.findViewById(R.id.text_off_percentage);
             textCounter=itemView.findViewById(R.id.tv_counter);
             textStock=itemView.findViewById(R.id.text_stock);
+            tvInitials=itemView.findViewById(R.id.tvInitial);
             text_reorder_level=itemView.findViewById(R.id.text_reorder_level);
             imageView=itemView.findViewById(R.id.image_view);
             viewSeparator=itemView.findViewById(R.id.view_separator);
@@ -126,7 +133,7 @@ public class ReorderLevelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final MyProductItem item = (MyProductItem) itemList.get(position);
         if(holder instanceof MyViewHolder){
-            MyViewHolder myViewHolder = (MyViewHolder)holder;
+            final MyViewHolder myViewHolder = (MyViewHolder)holder;
             //  myViewHolder.textBarCode.setText(item.getProdBarCode());
             myViewHolder.textName.setText(item.getProdName());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
@@ -218,6 +225,21 @@ public class ReorderLevelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 myViewHolder.relativeLayoutUnit.setVisibility(View.GONE);
             }
 
+            String initials = "";
+            if(item.getProdName().contains(" ")){
+                String[] name = item.getProdName().split(" ");
+                if(name[1].startsWith("(")){
+                    initials = name[0].substring(0,1)+name[1].substring(1,2);
+                }else{
+                    initials = name[0].substring(0,1)+name[1].substring(0,1);
+                }
+
+            }else{
+                initials = item.getProdName().substring(0,2);
+            }
+
+            myViewHolder.tvInitials.setText(initials);
+
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
             // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
@@ -227,14 +249,50 @@ public class ReorderLevelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             Glide.with(context)
                     .load(item.getProdImage1())
                     .apply(requestOptions)
-                    .error(R.drawable.ic_photo_black_192dp)
-                    .into(myViewHolder.imageView);
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            myViewHolder.tvInitials.setVisibility(View.VISIBLE);
+                            myViewHolder.imageView.setVisibility(View.GONE);
+                            //  myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+                            Utility.setColorFilter(myViewHolder.tvInitials.getBackground(),getTvColor(counter));
 
+                            counter++;
+                            if(counter == 12){
+                                counter = 0;
+                            }
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            //on load success
+                            return false;
+                        }
+                    })
+                    .into(myViewHolder.imageView);
         }
     }
 
     @Override
     public int getItemCount() {
         return itemList.size();
+    }
+
+    private int getTvColor(int position){
+
+        if(position >= 12){
+            position = 0;
+        }
+
+        int[] tvColor={context.getResources().getColor(R.color.light_blue500),
+                context.getResources().getColor(R.color.yellow500),context.getResources().getColor(R.color.green500),
+                context.getResources().getColor(R.color.orange500),context.getResources().getColor(R.color.red_500),
+                context.getResources().getColor(R.color.teal_500),context.getResources().getColor(R.color.cyan500),
+                context.getResources().getColor(R.color.deep_orange500),context.getResources().getColor(R.color.blue500),
+                context.getResources().getColor(R.color.purple500),context.getResources().getColor(R.color.amber500),
+                context.getResources().getColor(R.color.light_green500)};
+
+        return tvColor[position];
     }
 }
