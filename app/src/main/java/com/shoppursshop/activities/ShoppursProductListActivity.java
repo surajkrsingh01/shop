@@ -305,7 +305,7 @@ public class ShoppursProductListActivity extends NetworkBaseActivity implements 
         params.put("limit",""+limit);
         params.put("offset",""+offset);
         Log.d(TAG, params.toString());
-        String url=getResources().getString(R.string.url)+"/api/customers/products/ret_productslist_with_offers";
+        String url=getResources().getString(R.string.cust_url)+"/api/customers/products/ret_productslist_with_offers";
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST, url,new JSONObject(params),"productfromshop");
     }
@@ -318,7 +318,7 @@ public class ShoppursProductListActivity extends NetworkBaseActivity implements 
         params.put("code", shopCode);
        // params.put("dbName",shopCode);
         Log.d(TAG, params.toString());
-        String url=getResources().getString(R.string.url)+"/api/customers/products/ret_products_details";
+        String url=getResources().getString(R.string.cust_url)+"/api/customers/products/ret_products_details";
         jsonObjectApiRequest(Request.Method.POST, url,new JSONObject(params),"productDetails");
     }
 
