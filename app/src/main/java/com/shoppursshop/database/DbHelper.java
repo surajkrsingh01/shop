@@ -1975,6 +1975,7 @@ public class DbHelper extends SQLiteOpenHelper {
             productItem=new MyProductItem();
             productItem.setProdId(res.getInt(res.getColumnIndex(ID)));
             productItem.setProdCatId(res.getInt(res.getColumnIndex(PROD_CAT_ID)));
+            productItem.setProdBarCode(res.getString(res.getColumnIndex(PROD_BARCODE)));
             productItem.setProdSubCatId(res.getInt(res.getColumnIndex(PROD_SUB_CAT_ID)));
             productItem.setProdName(res.getString(res.getColumnIndex(PROD_NAME)));
             productItem.setProdCode(res.getString(res.getColumnIndex(PROD_CODE)));

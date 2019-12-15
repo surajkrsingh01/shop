@@ -97,6 +97,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     private String state;
     private String city;
     private String zip;
+    private boolean addingCart;
 
     private BottomSearchFragment bottomSearchFragment;
 
@@ -473,7 +474,14 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             if(intent != null){
                 String rawValue = intent.getStringExtra("barCode");
                 MyProductItem myProductItem = dbHelper.getProductDetailsByBarCode(rawValue);
-                if(myProductItem.getIsBarCodeAvailable().equals("Y")){
+                myProductItem.setQty(1);
+                float netSellingPrice = getOfferAmount(myProductItem,2);
+                myProductItem.setTotalAmount(netSellingPrice);
+                dbHelper.addProductToCart(myProductItem);
+                addingCart  = true;
+                showMyBothDialog("Product is added in cart.","Checkout","Scan More");
+
+                /*if(myProductItem.getIsBarCodeAvailable().equals("Y")){
                     myProductItem.setBarcodeList(dbHelper.getBarCodesForCart(myProductItem.getProdId()));
                 }
                 if(myProductItem.getBarcodeList().size() > 0){
@@ -481,10 +489,11 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     float netSellingPrice = getOfferAmount(myProductItem,2);
                     myProductItem.setTotalAmount(netSellingPrice);
                     dbHelper.addProductToCart(myProductItem);
+                    addingCart  = true;
                     showMyBothDialog("Product is added in cart.","Checkout","Scan More");
                 }else{
                     showMyDialog("Product is out of stock.");
-                }
+                }*/
             }
 
         }
@@ -543,6 +552,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         if(itemList.size() > 0){
             setFooterValues();
             relativeLayoutCartFooter.setVisibility(View.VISIBLE);
+            linearLayoutScanCenter.setVisibility(View.GONE);
             myItemAdapter.notifyDataSetChanged();
         }else{
             relativeLayoutCartFooter.setVisibility(View.GONE);
@@ -723,8 +733,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     productObject.put("comboProdIds", cartItem.getComboProductIds());
 
                     if(cartItem.getIsBarCodeAvailable().equals("Y")){
-                        productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
-                        productObject.put("barcodeList",  tempbarcodeArray);
+                        productObject.put("prodBarCode", cartItem.getProdBarCode());
+                       // productObject.put("barcodeList",  tempbarcodeArray);
                     }
 
                     productObject.put("qty", cartItem.getQty());
@@ -758,8 +768,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     productObject.put("prodHsnCode", cartItem.getProdHsnCode());
                     productObject.put("prodId", cartItem.getProdId());
                     if(cartItem.getIsBarCodeAvailable().equals("Y")){
-                        productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
-                        productObject.put("barcodeList",  tempbarcodeArray);
+                        productObject.put("prodBarCode", cartItem.getProdBarCode());
+                        //productObject.put("barcodeList",  tempbarcodeArray);
                     }
                     productObject.put("qty", cartItem.getQty());
                     productObject.put("prodName",cartItem.getProdName());
@@ -818,9 +828,10 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                         for (MyProductItem cartItem : cartItemList) {
                             dbHelper.setQoh(cartItem.getProdId(),-cartItem.getQty());
                             if(cartItem.getIsBarCodeAvailable().equals("Y")){
-                                for(Barcode barcode : cartItem.getBarcodeList()){
+                                dbHelper.removeBarCode(cartItem.getProdBarCode());
+                                /*for(Barcode barcode : cartItem.getBarcodeList()){
                                     dbHelper.removeBarCode(barcode.getBarcode());
-                                }
+                                }*/
                             }
                         }
                         showMyDialog("Take Cash Rs "+Utility.numberFormat(totalPrice));
@@ -867,10 +878,24 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
     @Override
     public void onDialogPositiveClicked(){
-      Intent intent = new Intent(CartActivity.this,InvoiceActivity.class);
-      intent.putExtra("orderNumber",orderNumber);
-      startActivity(intent);
-      finish();
+        if(addingCart){
+            addingCart = false;
+            openScannar();
+        }else{
+            Intent intent = new Intent(CartActivity.this,InvoiceActivity.class);
+            intent.putExtra("orderNumber",orderNumber);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    @Override
+    public void onDialogNegativeClicked() {
+        super.onDialogNegativeClicked();
+        if(addingCart){
+            addingCart = false;
+        }
+
     }
 
     @Override
@@ -1270,8 +1295,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     }
 
     @Override
-    public void onStop(){
-        super.onStop();
-        dbHelper.deleteTable(DbHelper.CART_TABLE);
+    public void onDestroy(){
+        super.onDestroy();
+        //dbHelper.deleteTable(DbHelper.CART_TABLE);
     }
 }

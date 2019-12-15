@@ -83,9 +83,9 @@ public class ScannarActivity extends NetworkBaseActivity {
                 }else{
                     if(dbHelper.checkProdExistInCart(rawValue)){
                         showMyDialog("Product is already added in cart.");
-                      //  DialogAndToast.showToast("Product is already added in cart.",this);
-                     //   finish();
+                      Log.i(TAG,"prod already exist.. "+rawValue);
                     }else{
+                        Log.i(TAG,"prod not exist.. "+rawValue);
                         Intent intent = new Intent();
                         intent.putExtra("barCode",rawValue);
                         setResult(-1,intent);

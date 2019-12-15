@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import com.android.volley.AuthFailureError;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import androidx.fragment.app.Fragment;
@@ -197,7 +199,16 @@ public class MultipleBarcodeBottomFragment extends BottomSheetDialogFragment {
                 onServerErrorResponse(error,apiName);
                 // DialogAndToast.showDialog(getResources().getString(R.string.connection_error),BaseActivity.this);
             }
-        });
+        }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("Authorization", "Bearer "+sharedPreferences.getString(Constants.TOKEN,""));
+                //params.put("VndUserDetail", appVersion+"#"+deviceName+"#"+osVersionName);
+                return params;
+            }
+        };
 
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
                 30000,

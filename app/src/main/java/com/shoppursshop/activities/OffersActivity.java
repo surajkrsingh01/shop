@@ -141,8 +141,8 @@ public class OffersActivity extends NetworkBaseActivity implements MyItemTypeCli
                 for(MyProductItem item : cartList){
                     for(Object ob : itemList){
                         if(ob instanceof MyProductItem){
+                            myProductItem = (MyProductItem)ob;
                             if(item.getProdId() == myProductItem.getProdId()){
-                                myProductItem = (MyProductItem)ob;
                                 Log.i(TAG,"Qty Before"+myProductItem.getQty());
                                 myProductItem.setQty(item.getQty());
                                 Log.i(TAG,"Qty After"+myProductItem.getQty());
