@@ -19,8 +19,10 @@
     <color name="dialog_background_scrim">#99323232</color>
 
     <color name="dark_color">@color/grey900</color>
+    <color name="separator_color">@color/grey400</color>
     <color name="dark_separator_color">@color/grey800</color>
     <color name="primary_text_color">@color/grey900</color>
+    <color name="primary_sub_text_color">@color/grey700</color>
     <color name="secondary_text_color">@color/grey500</color>
     <color name="ternary_text_color">@color/grey400</color>
 
@@ -169,6 +171,7 @@
     <color name="accent_purple_A_700">#AA00FF</color>
 
 
+    <color name="deep_purple_20">#F3F1F7</color>
     <color name="deep_purple_50">#ede7f6</color>
     <color name="deep_purple_100">#d1c4e9</color>
     <color name="deep_purple_200">#b39ddb</color>
@@ -184,7 +187,7 @@
     <color name="deep_accent_purple_A_400">#651FFF</color>
     <color name="deep_accent_purple_A_700">#6200EA</color>
 
-
+    <color name="indigo_20">#F2F3F8</color>
     <color name="indigo_50">#e8eaf6</color>
     <color name="indigo_100">#c5cae9</color>
     <color name="indigo_200">#9fa8da</color>

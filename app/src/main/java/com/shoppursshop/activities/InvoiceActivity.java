@@ -27,9 +27,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -120,8 +125,13 @@ public class InvoiceActivity extends NetworkBaseActivity {
     private InvoiceItemAdapter itemAdapter;
 
     private TextView tvShopName,tvShopAddress,tvShopEmail,tvShopPhone,tvShopGSTIN,tvInvoiceNo,tvDate,tvCustomerName,
-                      tvSubTotAmt,tvGrossTotAmt,tvTotSgst,tvTotCgst,tvTotIgst,tvShortExcess,tvNetPayableAmt,tvNetPayableWords,
-                      tvPaidAmt,tvBalAmt,tvTotQty,tvDiscount,tvPaymentMethod,tvPaymentBrand,tvTransId,tvPaymentAmount,tvTotSavings;
+                      textCustomerMobile,textBarcodeNo,
+                      tvSubTotAmt,tvGrossTotAmt,tvTotSgst,tvTotCgst,tvTotIgst,textTotalAmount,tvDiscountedItems,
+                      textBaseCgstAmount,textBaseSgstAmount,textBaseIgstAmount,
+                      tvPaidAmt,tvTotQty,tvDiscount,tvPaymentMethod,tvPaymentBrand,tvTransId,tvPaymentAmount,tvTotSavings;
+    private LinearLayout llFeedback;
+    private EditText etFeedback;
+    private RatingBar ratingBar;
 
     private ImageView image_barcode;
     private RelativeLayout rlCouponLayout;
@@ -136,7 +146,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
     private File pdfFile;
     private List<Bitmap> bitmaps;
     private Bitmap barcodeImage;
-    private String transId,invoiceNo;
+    private String custCode,transId,invoiceNo,netPayableAmt,netPayableWords,shortExcess;
 
     private float totalAmount;
 
@@ -175,24 +185,35 @@ public class InvoiceActivity extends NetworkBaseActivity {
         tvInvoiceNo = findViewById(R.id.text_invoice_no);
         tvDate = findViewById(R.id.text_date);
         tvCustomerName = findViewById(R.id.text_customer_name);
+        textCustomerMobile = findViewById(R.id.textCustomerMobile);
         tvSubTotAmt = findViewById(R.id.text_sub_total_amount);
         tvGrossTotAmt = findViewById(R.id.text_gross_total_amount);
-        tvTotSgst = findViewById(R.id.text_sgst);
-        tvTotCgst = findViewById(R.id.text_cgst);
-        tvTotIgst = findViewById(R.id.text_igst);
-        tvShortExcess = findViewById(R.id.text_short_excess);
-        tvNetPayableAmt = findViewById(R.id.text_net_payable_amount);
-        tvNetPayableWords = findViewById(R.id.text_net_payable_amount_words);
-        tvPaidAmt = findViewById(R.id.text_paid_amount);
-        tvBalAmt = findViewById(R.id.text_balance);
-        tvDiscount = findViewById(R.id.text_discount);
+        tvTotSgst = findViewById(R.id.text_sgst_tax_amt);
+        tvTotCgst = findViewById(R.id.text_cgst_tax_amt);
+        tvTotIgst = findViewById(R.id.text_igst_tax_amt);
+        textTotalAmount = findViewById(R.id.textTotalAmount);
+        tvPaidAmt = findViewById(R.id.textPaidAmount);
+        tvDiscount = findViewById(R.id.text_total_savings);
+        tvDiscountedItems = findViewById(R.id.tvDiscountedItems);
         tvPaymentMethod = findViewById(R.id.text_payment_method);
         tvPaymentBrand = findViewById(R.id.text_payment_brand);
         tvTransId = findViewById(R.id.text_payment_transaction_id);
-        tvPaymentAmount = findViewById(R.id.text_paid_amount);
         tvTotSavings = findViewById(R.id.text_total_savings);
-        tvTotQty = findViewById(R.id.text_total_qty);
+        tvTotQty = findViewById(R.id.text_total_items);
         image_barcode = findViewById(R.id.image_barcode);
+        textBaseCgstAmount = findViewById(R.id.textBaseCgstAmount);
+        textBaseSgstAmount = findViewById(R.id.textBaseSgstAmount);
+        textBaseIgstAmount = findViewById(R.id.textBaseIgstAmount);
+        textBarcodeNo = findViewById(R.id.textBarcodeNo);
+        etFeedback = findViewById(R.id.etFeedback);
+        ratingBar = findViewById(R.id.ratingBar);
+        llFeedback = findViewById(R.id.llFeedback);
+        Button btn_submit = findViewById(R.id.btn_submit);
+
+        TextView tvDearCustomerInfo = findViewById(R.id.tvDearCustomerInfo);
+        String dearCustomer = "<p>Dear Customer<br/>Thank you for shopping at Shoppurs.<br/>In case you would like to Exchange" +
+                " any of the articles purchased, we request you to carry your bill along. It will be our pleasure to serve you again.</p>";
+        tvDearCustomerInfo.setText(Html.fromHtml(dearCustomer));
 
         rlCouponLayout = findViewById(R.id.rl_coupon_layout);
         tvCouponOfferName = findViewById(R.id.tv_offer_name);
@@ -244,6 +265,13 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 onBackPressed();
             }
         });
+
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitFeedback();
+            }
+        });
     }
 
     private void getInvoice(){
@@ -255,6 +283,23 @@ public class InvoiceActivity extends NetworkBaseActivity {
         String url=getResources().getString(R.string.url)+Constants.GET_INVOICE;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"orders");
+    }
+
+    private void submitFeedback(){
+        String remarks = etFeedback.getText().toString();
+        float ratings = ratingBar.getRating();
+
+        Map<String,String> params=new HashMap<>();
+        params.put("number",getIntent().getStringExtra("orderNumber"));
+        params.put("reviewMessage",remarks);
+        params.put("rating",""+ratings);
+        params.put("custCode",custCode);
+        params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
+        String url=getResources().getString(R.string.url)+Constants.SUBMIT_FEEDBACK;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"submitFeedback");
     }
 
     @Override
@@ -273,8 +318,15 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     tvShopGSTIN.setText("GSTIN: "+jsonObject.getString("invShopGSTIn"));
                     tvDate.setText(jsonObject.getString("invDate"));
                     tvCustomerName.setText(jsonObject.getString("invCustName"));
-                    tvInvoiceNo.setText("Invoice No: "+jsonObject.getString("invNo"));
+                    custCode = jsonObject.getString("custCode");
+                    if(jsonObject.has("invCustMobile"))
+                    textCustomerMobile.setText(jsonObject.getString("invCustMobile"));
+                    else{
+                        textCustomerMobile.setVisibility(View.GONE);
+                    }
+                    tvInvoiceNo.setText("Tax Invoice No: "+jsonObject.getString("invNo"));
                     invoiceNo = jsonObject.getString("invNo");
+                    textBarcodeNo.setText(invoiceNo);
                     generateBarcode(invoiceNo);
                     float subTotal = Float.parseFloat(""+(jsonObject.getDouble("invTotAmount") - jsonObject.getDouble("invTotTaxAmount")));
                     tvSubTotAmt.setText(Utility.numberFormat(subTotal));
@@ -282,34 +334,37 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     tvTotIgst.setText(Utility.numberFormat(jsonObject.getDouble("invTotIGST")));
                     tvTotSgst.setText(Utility.numberFormat(jsonObject.getDouble("invTotSGST")));
                     tvTotCgst.setText(Utility.numberFormat(jsonObject.getDouble("invTotCGST")));
+                    shortExcess = Utility.numberFormat(jsonObject.getDouble("invTotDisAmount"));
                    // tvShortExcess.setText(Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
                     float netPayable = (float) Math.round(jsonObject.getDouble("invTotNetPayable"));
-                    tvNetPayableAmt.setText(Utility.numberFormat(netPayable));
-                    tvShortExcess.setText(Utility.numberFormat(netPayable - (float)jsonObject.getDouble("invTotNetPayable")));
+                    netPayableAmt = Utility.numberFormat(netPayable);
+                    //tvNetPayableAmt.setText(Utility.numberFormat(netPayable));
+                   // tvShortExcess.setText(Utility.numberFormat(netPayable - (float)jsonObject.getDouble("invTotNetPayable")));
                     tvPaidAmt.setText(Utility.numberFormat(netPayable));
-                    tvNetPayableWords.setText(EnglishNumberToWords.convert((int)netPayable)+" rupees");
+                    netPayableWords = EnglishNumberToWords.convert((int)netPayable)+" rupees";
+                 //   tvNetPayableWords.setText(EnglishNumberToWords.convert((int)netPayable)+" rupees");
                     tvPaymentMethod.setText(jsonObject.getString("paymentMethod"));
                     tvPaymentBrand.setText(jsonObject.getString("paymentBrand"));
                     tvTransId.setText(jsonObject.getString("invTransId"));
                     transId = jsonObject.getString("invTransId");
-                    tvPaymentAmount.setText(Utility.numberFormat(netPayable));
-                    tvTotSavings.setText("Total Savings(Rupees) "+Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
-                    tvDiscount.setText("-"+Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
+                   // tvPaymentAmount.setText(Utility.numberFormat(netPayable));
+                    tvTotSavings.setText(Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
+                    tvDiscount.setText(Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
 
                    // totDiscount = (float) jsonObject.getDouble("invTotDisAmount");
                    // tvDiscount.setText("-"+Utility.numberFormat(totDiscount));
-                    int couponId = jsonObject.getInt("invCoupenId");
+                   /* int couponId = jsonObject.getInt("invCoupenId");
                     if(couponId == 0){
                         rlCouponLayout.setVisibility(View.GONE);
                     }else{
                         rlCouponLayout.setVisibility(View.VISIBLE);
                         Coupon coupon = dbHelper.getCouponOffer(String.valueOf(couponId));
                         tvCouponOfferName.setText(coupon.getName());
-                    }
+                    }*/
 
                     int len = invoiceDetailsArray.length();
                   //  InvoiceDetail invoiceDetail= null;
-                    int totQty = 0;
+                    int totQty = 0,disItems  = 0;
                     for (int i = 0; i < len; i++) {
                         jsonObject = invoiceDetailsArray.getJSONObject(i);
                         //invoiceDetail = new InvoiceDetail();
@@ -322,7 +377,11 @@ public class InvoiceActivity extends NetworkBaseActivity {
                         item.setSgst(Float.parseFloat(jsonObject.getString("invDSGST")));
                         item.setIgst(Float.parseFloat(jsonObject.getString("invDIGST")));
                         item.setMrp((float) jsonObject.getDouble("invDMrp"));
-
+                        item.setDisAmt((float) jsonObject.getDouble("invDDisAmount"));
+                        if(item.getDisAmt() > 0){
+                            disItems = disItems + 1;
+                        }
+                        item.setSp((float) jsonObject.getDouble("invDSp"));
                         float rate = Float.parseFloat(jsonObject.getString("invDSp"));
                         float cgst = Float.parseFloat(jsonObject.getString("invDCGST"));
                         float sgst = Float.parseFloat(jsonObject.getString("invDSGST"));
@@ -340,10 +399,24 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     }
 
                     tvSubTotAmt.setText(Utility.numberFormat(totalAmount));
-                    tvGrossTotAmt.setText(Utility.numberFormat(totalAmount));
+                    tvGrossTotAmt.setText(Utility.numberFormat(netPayable));
+                    textTotalAmount.setText(Utility.numberFormat(netPayable));
+                    textBaseCgstAmount.setText(Utility.numberFormat(totalAmount));
+                    textBaseSgstAmount.setText(Utility.numberFormat(totalAmount));
+                    textBaseIgstAmount.setText(Utility.numberFormat(totalAmount));
                     tvTotQty.setText(""+totQty);
+                    tvDiscountedItems.setText("Discounted Items: "+disItems);
                     itemAdapter.notifyDataSetChanged();
 
+                    if(jsonObject.getString("invShopRemarks").equals("null")){
+                        llFeedback.setVisibility(View.GONE);
+                    }
+
+                }
+            }if (apiName.equals("submitFeedback")) {
+                if (response.getBoolean("status")) {
+                    llFeedback.setVisibility(View.GONE);
+                    DialogAndToast.showToast(response.getString("message"),this);
                 }
             }
         }catch (JSONException e) {
@@ -890,7 +963,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 shortExcessLabelCell.addElement(shortExcessLabelParagraph);
                 amtDetailsPdfPTable.addCell(shortExcessLabelCell);
 
-                Chunk shortExcessChunk = new Chunk(tvShortExcess.getText().toString(), descFont);
+                Chunk shortExcessChunk = new Chunk(shortExcess, descFont);
                 PdfPCell shortExcessCell = new PdfPCell();
                 Paragraph shortExcessParagraph = new Paragraph(shortExcessChunk);
                 shortExcessParagraph.setAlignment(Element.ALIGN_RIGHT);
@@ -974,7 +1047,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 netPayableLabelCell.addElement(netPayableLabelParagraph);
                 netPayablePdfPTable.addCell(netPayableLabelCell);
 
-                Chunk netPayablelChunk = new Chunk(tvNetPayableAmt.getText().toString(), descFont);
+                Chunk netPayablelChunk = new Chunk(netPayableAmt, descFont);
                 PdfPCell netPayableCell = new PdfPCell();
                 Paragraph netPayableParagraph = new Paragraph(netPayablelChunk);
                 netPayableParagraph.setAlignment(Element.ALIGN_RIGHT);
@@ -989,7 +1062,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
                 document.add(new Chunk(lineSeparator));
 
-                Chunk netWordsChunk = new Chunk(tvNetPayableWords.getText().toString(), descFont);
+                Chunk netWordsChunk = new Chunk(netPayableWords, descFont);
                 Paragraph netWordsParagraph = new Paragraph(netWordsChunk);
                 document.add(netWordsParagraph);
 
@@ -1339,15 +1412,15 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 scriptBuffer.append("*text l " + this.getfinalString("+CGST",
                         tvTotCgst.getText().toString(), 32) + "\n");
                 scriptBuffer.append("*text l " + this.getfinalString("Short/Excess(+/-)",
-                        tvShortExcess.getText().toString(), 32) + "\n");
+                        shortExcess, 32) + "\n");
                 scriptBuffer.append("*line\n");
                 scriptBuffer.append("*text l " + this.getfinalString("Total Discount",
                         tvDiscount.getText().toString(), 32) + "\n");
                 scriptBuffer.append("*line\n");
                 scriptBuffer.append("*text l " + this.getfinalString("Net Payable(Rupees)",
-                        tvNetPayableAmt.getText().toString(), 32) + "\n");
+                        netPayableAmt, 32) + "\n");
                 scriptBuffer.append("*line\n");
-                scriptBuffer.append("*text l " + this.getfinalString(tvNetPayableWords.getText().toString(),
+                scriptBuffer.append("*text l " + this.getfinalString(netPayableWords,
                         "", 32) + "\n");
                 scriptBuffer.append("*line\n");
                 scriptBuffer.append("*text l " + this.getfinalString("Payment Method",
@@ -1357,7 +1430,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 scriptBuffer.append("*text l " + this.getfinalString("Transaction id",
                         tvTransId.getText().toString(), 32) + "\n");
                 scriptBuffer.append("*text l " + this.getfinalString("Amount",
-                        tvNetPayableAmt.getText().toString(), 32) + "\n");
+                        netPayableAmt, 32) + "\n");
 
                 scriptBuffer.append("*text c " + "Total Savings(Rupees) "+tvDiscount.getText().toString() + "\n");
                 scriptBuffer.append("*text c HAVE A NICE DAY " + "\n");
