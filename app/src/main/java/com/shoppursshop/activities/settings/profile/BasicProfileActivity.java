@@ -312,4 +312,13 @@ public class BasicProfileActivity extends BaseImageActivity implements FirebaseI
                 .into(profileImage);
         imagePath = null;
     }
+
+    @Override
+    protected void imageDownloadedFailed() {
+        super.imageDownloadedFailed();
+        Glide.with(this)
+                .load(R.drawable.ic_photo_black_192dp)
+                .apply(requestOptions)
+                .into(profileImage);
+    }
 }

@@ -592,7 +592,7 @@ public class ShopCartActivity extends NetworkBaseActivity implements MyItemTypeC
         params.put("code", shopCode);
         params.put("dbName",shopCode);
         Log.d(TAG, params.toString());
-        String url=getResources().getString(R.string.url)+"/api/customers/products/ret_products_details";
+        String url=getResources().getString(R.string.cust_url)+"/api/customers/products/ret_products_details";
         jsonObjectApiRequest(Request.Method.POST, url,new JSONObject(params),"productDetails");
     }
 

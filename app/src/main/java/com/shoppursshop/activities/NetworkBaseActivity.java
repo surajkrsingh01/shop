@@ -230,7 +230,7 @@ public class NetworkBaseActivity extends BaseActivity {
         showProgress(false);
         if(error.networkResponse != null){
             if(error.networkResponse.statusCode == 500 || error.networkResponse.statusCode == 503){
-                DialogAndToast.showDialog("There is some problem occurred. Please try gain later.",NetworkBaseActivity.this);
+                DialogAndToast.showDialog(getResources().getString(R.string.connection_error),NetworkBaseActivity.this);
             }else if(error.networkResponse.statusCode == 400 ||
                     error.networkResponse.statusCode == 401 || error.networkResponse.statusCode == 403){
                 showMyDialog("You are not authorized to perform this action.");

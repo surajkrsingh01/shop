@@ -164,6 +164,7 @@ public class Constants {
     public static String UPDATE_DELIVERY_STAUS="/api/shop/profile/update_delivery_status";
     public static String GET_INVOICE="/api/trans/get_invoice";
     public static String GET_INVOICE_BY_INV_NO="/api/trans/get_invoice_inv";
+    public static String SUBMIT_FEEDBACK="/api/shop/order/rate_review";
 
     public static String GENERATE_ORDER="/api/shop/order/generate_order";
     public static String PLACE_ORDER="/api/shop/order/place_order";

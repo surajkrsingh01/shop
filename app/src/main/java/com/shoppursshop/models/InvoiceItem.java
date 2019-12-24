@@ -4,7 +4,23 @@ public class InvoiceItem {
 
     private String unit,color,size,itemName,hsn,offerId,offerType;
     private int qty,freeItems;
-    private float cgst,sgst,igst,gst,mrp,rate,amount;
+    private float cgst,sgst,igst,gst,mrp,sp,rate,amount,disAmt;
+
+    public float getSp() {
+        return sp;
+    }
+
+    public void setSp(float sp) {
+        this.sp = sp;
+    }
+
+    public float getDisAmt() {
+        return disAmt;
+    }
+
+    public void setDisAmt(float disAmt) {
+        this.disAmt = disAmt;
+    }
 
     public float getCgst() {
         return cgst;

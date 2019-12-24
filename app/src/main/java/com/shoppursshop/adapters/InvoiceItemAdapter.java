@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
@@ -28,18 +29,20 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class MyHomeHeaderViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvName,tvQty,tvHsn,tvMrp,tvRate,tvAmt,tvSgst,tvCgst;
-
+        private TextView tvName,tvQty,tvHsn,tvMrp,tvTaxAmt,tvDisAmt,tvAmt,tvSgst,tvCgst;
+        private RelativeLayout rlContainer;
         public MyHomeHeaderViewHolder(View itemView) {
             super(itemView);
             tvName=itemView.findViewById(R.id.text_name);
             tvQty=itemView.findViewById(R.id.text_qty);
             tvMrp=itemView.findViewById(R.id.text_mrp);
-            tvRate=itemView.findViewById(R.id.text_rate);
+            tvTaxAmt=itemView.findViewById(R.id.text_tax_amount);
+            tvDisAmt=itemView.findViewById(R.id.text_dis_amount);
             tvAmt=itemView.findViewById(R.id.text_amount);
             tvSgst=itemView.findViewById(R.id.text_sgst_rate);
             tvCgst=itemView.findViewById(R.id.text_cgst_rate);
             tvHsn=itemView.findViewById(R.id.text_hsn);
+            rlContainer=itemView.findViewById(R.id.rlContainer);
         }
     }
 
@@ -84,10 +87,11 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
               myViewHolder.tvQty.setText(String.format("%.00f",totalUnit)+" "+unitArray[1]);
             }
             myViewHolder.tvMrp.setText(Utility.numberFormat(item.getMrp()));
-            myViewHolder.tvRate.setText(Utility.numberFormat(item.getRate()));
-            myViewHolder.tvSgst.setText(String.format("%.02f",item.getSgst())+"%");
-            myViewHolder.tvCgst.setText(String.format("%.02f",item.getCgst())+"%");
+            myViewHolder.tvDisAmt.setText(Utility.numberFormat(item.getDisAmt()));
+            myViewHolder.tvSgst.setText(String.format("%.02f",item.getSgst()));
+            myViewHolder.tvCgst.setText(String.format("%.02f",item.getCgst()));
             float amt = item.getQty() * item.getRate();
+            myViewHolder.tvTaxAmt.setText(Utility.numberFormat(item.getQty() * (item.getSp() - item.getRate())));
             myViewHolder.tvAmt.setText(Utility.numberFormat(amt));
 
             if(item.getFreeItems() > 0){
@@ -99,6 +103,12 @@ public class InvoiceItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
 
                 }
+            }
+
+            if(position % 2 == 0){
+                myViewHolder.rlContainer.setBackgroundColor(context.getResources().getColor(R.color.indigo_20));
+            }else{
+                myViewHolder.rlContainer.setBackgroundColor(context.getResources().getColor(R.color.white));
             }
 
         }

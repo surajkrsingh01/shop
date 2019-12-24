@@ -3,6 +3,7 @@ package com.shoppursshop.adapters;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +14,16 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.shoppursshop.R;
 import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
@@ -34,7 +40,7 @@ import java.util.List;
 public class ReturnProductListAdapter extends RecyclerView.Adapter<ReturnProductListAdapter.MyViewHolder> {
     private List<SaleReturn> itemList = new ArrayList<>();
     private Context context;
-    private int coloTheme;
+    private int coloTheme,counter;
     private String shopCode;
     private boolean isDarkTheme;
     private Typeface typeface;
@@ -111,6 +117,21 @@ public class ReturnProductListAdapter extends RecyclerView.Adapter<ReturnProduct
                 myViewHolder.textMrp.setVisibility(View.GONE);
                 myViewHolder.textOffPer.setVisibility(View.GONE);
             }
+
+            String initials = "";
+            if(item.getProdName().contains(" ")){
+                String[] name = item.getProdName().split(" ");
+                if(name[1].startsWith("(")){
+                    initials = name[0].substring(0,1)+name[1].substring(1,2);
+                }else{
+                    initials = name[0].substring(0,1)+name[1].substring(0,1);
+                }
+            }else{
+                initials = item.getProdName().substring(0,2);
+            }
+
+            myViewHolder.tvInitials.setText(initials);
+
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
             // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
@@ -120,7 +141,27 @@ public class ReturnProductListAdapter extends RecyclerView.Adapter<ReturnProduct
             Glide.with(context)
                     .load(item.getProdImage1())
                     .apply(requestOptions)
-                    .error(R.drawable.ic_photo_black_192dp)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            myViewHolder.tvInitials.setVisibility(View.VISIBLE);
+                            myViewHolder.imageView.setVisibility(View.GONE);
+                            //  myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+                            Utility.setColorFilter(myViewHolder.tvInitials.getBackground(),getTvColor(counter));
+
+                            counter++;
+                            if(counter == 12){
+                                counter = 0;
+                            }
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            //on load success
+                            return false;
+                        }
+                    })
                     .into(myViewHolder.imageView);
 
 
@@ -136,7 +177,7 @@ public class ReturnProductListAdapter extends RecyclerView.Adapter<ReturnProduct
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private TextView textName,textMrp, textSp, textOffPer, text_return_status;
+        private TextView textName,textMrp, textSp, textOffPer, text_return_status,tvInitials;
         private ImageView imageView;
         private View rootView;
         private RelativeLayout relative_return_product;
@@ -149,6 +190,7 @@ public class ReturnProductListAdapter extends RecyclerView.Adapter<ReturnProduct
             textMrp=itemView.findViewById(R.id.text_mrp);
             textSp=itemView.findViewById(R.id.text_sp);
             textOffPer=itemView.findViewById(R.id.text_off_percentage);
+            tvInitials=itemView.findViewById(R.id.tvInitial);
             imageView=itemView.findViewById(R.id.image_view);
             text_return_status = itemView.findViewById(R.id.text_return_status);
             relative_return_product = itemView.findViewById(R.id.relative_return_product);
@@ -173,5 +215,22 @@ public class ReturnProductListAdapter extends RecyclerView.Adapter<ReturnProduct
              //   ((ReturnProductsActivity)context).acceptRequest(item);
             }
         }
+    }
+
+    private int getTvColor(int position){
+
+        if(position >= 12){
+            position = 0;
+        }
+
+        int[] tvColor={context.getResources().getColor(R.color.light_blue500),
+                context.getResources().getColor(R.color.yellow500),context.getResources().getColor(R.color.green500),
+                context.getResources().getColor(R.color.orange500),context.getResources().getColor(R.color.red_500),
+                context.getResources().getColor(R.color.teal_500),context.getResources().getColor(R.color.cyan500),
+                context.getResources().getColor(R.color.deep_orange500),context.getResources().getColor(R.color.blue500),
+                context.getResources().getColor(R.color.purple500),context.getResources().getColor(R.color.amber500),
+                context.getResources().getColor(R.color.light_green500)};
+
+        return tvColor[position];
     }
 }

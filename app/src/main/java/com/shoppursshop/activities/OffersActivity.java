@@ -141,8 +141,8 @@ public class OffersActivity extends NetworkBaseActivity implements MyItemTypeCli
                 for(MyProductItem item : cartList){
                     for(Object ob : itemList){
                         if(ob instanceof MyProductItem){
+                            myProductItem = (MyProductItem)ob;
                             if(item.getProdId() == myProductItem.getProdId()){
-                                myProductItem = (MyProductItem)ob;
                                 Log.i(TAG,"Qty Before"+myProductItem.getQty());
                                 myProductItem.setQty(item.getQty());
                                 Log.i(TAG,"Qty After"+myProductItem.getQty());
@@ -565,7 +565,7 @@ public class OffersActivity extends NetworkBaseActivity implements MyItemTypeCli
         params.put("code", shopCode);
         // params.put("dbName",shopCode);
         Log.d(TAG, params.toString());
-        String url=getResources().getString(R.string.url)+"/api/customers/products/ret_products_details";
+        String url=getResources().getString(R.string.cust_url)+"/api/customers/products/ret_products_details";
         jsonObjectApiRequest(Request.Method.POST, url,new JSONObject(params),"productDetails");
     }
 

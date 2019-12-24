@@ -275,8 +275,8 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
                     if(cartItem.getComboProductIds() != null)
                         productObject.put("comboProdIds", cartItem.getComboProductIds());
                     if(cartItem.getIsBarCodeAvailable().equals("Y")){
-                        productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
-                        productObject.put("barcodeList",  tempbarcodeArray);
+                        productObject.put("prodBarCode", cartItem.getProdBarCode());
+                      //  productObject.put("barcodeList",  tempbarcodeArray);
                     }
                     productObject.put("qty", cartItem.getQty());
                     productObject.put("prodName",cartItem.getProdName());
@@ -309,8 +309,8 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
                     if(cartItem.getComboProductIds() != null)
                         productObject.put("comboProdIds", cartItem.getComboProductIds());
                     if(cartItem.getIsBarCodeAvailable().equals("Y")){
-                        productObject.put("prodBarCode", cartItem.getBarcodeList().get(0).getBarcode());
-                        productObject.put("barcodeList",  tempbarcodeArray);
+                        productObject.put("prodBarCode", cartItem.getProdBarCode());
+                      //  productObject.put("barcodeList",  tempbarcodeArray);
                     }
                     productObject.put("qty", cartItem.getQty());
                     productObject.put("prodName",cartItem.getProdName());
@@ -358,9 +358,10 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
                     for (MyProductItem cartItem : cartItemList) {
                         dbHelper.setQoh(cartItem.getProdId(),cartItem.getQty());
                         if(cartItem.getIsBarCodeAvailable().equals("Y")){
-                            for(Barcode barcode : cartItem.getBarcodeList()){
+                            dbHelper.removeBarCode(cartItem.getProdBarCode());
+                           /* for(Barcode barcode : cartItem.getBarcodeList()){
                                 dbHelper.removeBarCode(barcode.getBarcode());
-                            }
+                            }*/
                         }
                     }
                     dbHelper.deleteTable(DbHelper.CART_TABLE);

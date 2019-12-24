@@ -1,4 +1,4 @@
-package com.shoppursshop;
+package com.shoppursshop.activities;
 
 import org.junit.Test;
 

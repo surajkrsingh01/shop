@@ -18,7 +18,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 7
-        versionName "1.2.0"
+        versionName "1.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -105,6 +105,7 @@ dependencies {
     implementation group: 'org.bouncycastle', name: 'bcprov-ext-jdk15on', version: '1.54'
     implementation files('libs/mpaysdk_release_2_0_6.aar')
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:1.10.19'
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
 }
 

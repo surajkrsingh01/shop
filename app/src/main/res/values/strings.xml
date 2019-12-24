@@ -26,8 +26,8 @@
 
     <!-- Error. -->
     <string name="no_internet">Internet connection is not available.</string>
-    <string name="connection_error">There is some problem in connecting server.</string>
-    <string name="json_parser_error">Json parsing errror.</string>
+    <string name="connection_error">Unable to establish connection to the server. Please retry again and if the problem still persists, please contact to Shoppurs technical support team for further assistance.</string>
+    <string name="json_parser_error">Json parsing error.</string>
     <string name="full_name_required">Please enter full name.</string>
     <string name="shop_name_required">Please enter Shop name.</string>
     <string name="address_required">Please enter your address.</string>

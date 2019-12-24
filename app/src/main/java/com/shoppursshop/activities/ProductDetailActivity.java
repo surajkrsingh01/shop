@@ -379,8 +379,8 @@ public class ProductDetailActivity extends NetworkBaseActivity {
             initUnitColorSizeList();
             initUnitList();
 
-            setReviews();
-            //getOffers();
+             // setReviews();
+            // getOffers();
             getSaleData();
 
             getRatingsData();
@@ -396,7 +396,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
         Map<String,String> params=new HashMap<>();
         params.put("code",getIntent().getStringExtra("code"));
         params.put("dbName",shopCode);
-        String url=getResources().getString(R.string.url)+"/api/customers/products/ret_products_details";
+        String url=getResources().getString(R.string.cust_url)+"/api/customers/products/ret_products_details";
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"productDetails");
     }

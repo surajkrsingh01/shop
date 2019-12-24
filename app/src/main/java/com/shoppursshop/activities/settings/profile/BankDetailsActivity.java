@@ -136,4 +136,10 @@ public class BankDetailsActivity extends BaseImageActivity implements OnFragment
         bankFragment.setImageBase64(convertToBase64(new File(imagePath)),imagePath);
         imagePath = null;
     }
+
+    @Override
+    protected void imageDownloadedFailed() {
+        super.imageDownloadedFailed();
+        bankFragment.imageDownloadFailed();
+    }
 }
