@@ -2,9 +2,25 @@ package com.shoppursshop.models;
 
 public class OrderItem {
     private String id,orderNumber,custCode,customerName,mobile,deliveryType,customerImage,status,dateTime,orderImage,deliveryAddress,
-                   orderPayStatus;
+            deliveryLat,deliveryLong,orderPayStatus;
     private int localImage,type;
     private float amount,rating;
+
+    public String getDeliveryLat() {
+        return deliveryLat;
+    }
+
+    public void setDeliveryLat(String deliveryLat) {
+        this.deliveryLat = deliveryLat;
+    }
+
+    public String getDeliveryLong() {
+        return deliveryLong;
+    }
+
+    public void setDeliveryLong(String deliveryLong) {
+        this.deliveryLong = deliveryLong;
+    }
 
     public String getOrderNumber() {
         return orderNumber;

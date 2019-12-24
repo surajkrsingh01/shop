@@ -391,6 +391,10 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                         orderItem.setAmount(Float.parseFloat(jsonObject.getString("toalAmount")));
                         orderItem.setDeliveryType(jsonObject.getString("orderDeliveryMode"));
                         orderItem.setDeliveryAddress(jsonObject.getString("deliveryAddress"));
+                        if(jsonObject.has("deliveryLat")){
+                            orderItem.setDeliveryLat(jsonObject.getString("deliveryLat"));
+                            orderItem.setDeliveryLong(jsonObject.getString("deliveryLong"));
+                        }
                         orderItem.setOrderImage(jsonObject.getString("orderImage"));
                         orderItem.setStatus(jsonObject.getString("orderStatus"));
                         orderItem.setOrderPayStatus(jsonObject.getString("oderPaymentStatus"));

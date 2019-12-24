@@ -27,7 +27,7 @@
     <color name="ternary_text_color">@color/grey400</color>
 
     <color name="accent_color_1">@color/blue700</color>
-    <color name="accent_color_2">@color/orange700</color>
+    <color name="accent_color_2">@color/amber600</color>
     <color name="accent_color_3">@color/orange700</color>
     <color name="accent_color_4">@color/green600</color>
     <color name="input_color_1">@color/orange700</color>
