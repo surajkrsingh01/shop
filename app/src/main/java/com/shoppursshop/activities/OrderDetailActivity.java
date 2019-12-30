@@ -16,10 +16,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
+import com.google.gson.Gson;
 import com.pnsol.sdk.auth.AccountValidator;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.payment.mPos.MPayActivity;
@@ -33,6 +35,8 @@ import com.shoppursshop.fragments.AcceptOrderDialogFragment;
 import com.shoppursshop.fragments.CancelDialogFragment;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.models.ShoppursPartner;
+import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
@@ -54,11 +58,12 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
     private String PARTNER_API_KEY = "2C869B63DD4E";
     private String MERCHANT_API_KEY = "2C869B63DD4E";
 
-    private TextView textViewId,textViewCustomerName,textViewOrderDate,
-            textViewSelfDelivery,textViewDeliveryAddress,textViewTotalAmount,textViewOrderStatus;
+    private TextView tvLabel1,textViewId,textViewCustomerName,textViewOrderDate,
+            textViewSelfDelivery,textViewDeliveryAddress,textViewTotalAmount,textViewOrderStatus,tvPartnerName,tvPartnerMobile;
     private RelativeLayout relativeLayoutDeliveryContainer;
-    private Button buttonAccept,buttonCancel,buttonOrderDelivered,btnViewInvoice;
-    private RelativeLayout relativeLayoutPayOptionLayout;
+    private Button buttonAccept,buttonCancel,buttonOrderDelivered,btnViewInvoice,btnAssign,btnCancelAssign;
+    private ProgressBar progressBar;
+    private RelativeLayout relativeLayoutPayOptionLayout,rlPartnerDetails;
     private TextView tvCash,tvCard;
     private View view1,view2;
     private TextView textView1,textView2,textView4;
@@ -100,7 +105,16 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         buttonCancel = findViewById(R.id.btn_cancel);
         buttonOrderDelivered = findViewById(R.id.btn_order_delivered);
         btnViewInvoice = findViewById(R.id.btn_view_invoice);
+        btnAssign = findViewById(R.id.btnAssign);
+        btnCancelAssign = findViewById(R.id.btnCancelAssign);
+        tvLabel1 = findViewById(R.id.tvLabel1);
+        rlPartnerDetails = findViewById(R.id.rlPartnerDetails);
+        tvPartnerName = findViewById(R.id.tvPartnerName);
+        tvPartnerMobile = findViewById(R.id.tvPartnerMobile);
+        progressBar = findViewById(R.id.progressBar);
         btnViewInvoice.setBackgroundColor(colorTheme);
+        btnAssign.setBackgroundColor(colorTheme);
+        btnCancelAssign.setBackgroundColor(colorTheme);
         relativeLayoutDeliveryContainer = findViewById(R.id.relative_delivery_container);
         relativeLayoutPayOptionLayout = findViewById(R.id.relative_pay_layout);
 
@@ -151,7 +165,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                 "yyyy-MM-dd HH:mm:ss","HH:mm, MMM dd, yyyy").split(",");
         textViewOrderDate.setText(orderDate[0]+" hrs,"+orderDate[1]+orderDate[2]);
         textViewTotalAmount.setText(Utility.numberFormat(intent.getFloatExtra("totalAmount",0f)));
-        String deliveryMode = intent.getStringExtra("deliveryMode");
+        final String deliveryMode = intent.getStringExtra("deliveryMode");
         if(deliveryMode.equals("Self") || deliveryMode.equals("self")){
 
         }else{
@@ -176,6 +190,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                 acceptOrderDialogFragment.setTotalAmount("Rs "+String.format("%.02f",intent.getFloatExtra("totalAmount",0f)));
                 acceptOrderDialogFragment.setOrdPayStatus(ordPayStatus);
                 acceptOrderDialogFragment.setMyItemClickListener(OrderDetailActivity.this);
+                acceptOrderDialogFragment.setOrdDeliveryMode(deliveryMode);
                 acceptOrderDialogFragment.show(getSupportFragmentManager(), "Accept Bottom Sheet");
                 //acceptOrder();
             }
@@ -220,6 +235,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         });
 
         getProducts();
+        assignStatus();
         tv_top_parent = findViewById(R.id.text_left_label);
         tv_parent = findViewById(R.id.text_right_label);
         tv_top_parent.setOnClickListener(new View.OnClickListener() {
@@ -234,6 +250,37 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
             public void onClick(View v) {
                 startActivity(new Intent(OrderDetailActivity.this, MyOrdersActivity.class));
                 finish();
+            }
+        });
+
+        btnAssign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 if(ConnectionDetector.isNetworkAvailable(OrderDetailActivity.this)){
+                     progressBar.setVisibility(View.VISIBLE);
+                     btnAssign.setVisibility(View.GONE);
+                     btnCancelAssign.setVisibility(View.VISIBLE);
+                     tvLabel1.setText("We wait while we assign a delivery partner. We will notify you once a partner is assigned");
+                     assignDelivery();
+                 }else{
+                     DialogAndToast.showDialog(getResources().getString(R.string.no_internet),OrderDetailActivity.this);
+                 }
+
+            }
+        });
+
+        btnCancelAssign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ConnectionDetector.isNetworkAvailable(OrderDetailActivity.this)){
+                    btnAssign.setVisibility(View.VISIBLE);
+                    btnCancelAssign.setVisibility(View.GONE);
+                    buttonOrderDelivered.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    tvLabel1.setText("Assign delivery to Shoppurs Partner");
+                }else{
+                    DialogAndToast.showDialog(getResources().getString(R.string.no_internet),OrderDetailActivity.this);
+                }
             }
         });
     }
@@ -306,6 +353,35 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         String url=getResources().getString(R.string.url)+Constants.ORDER_DELIVERED;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"orderDelivered");
+    }
+
+    private void assignStatus(){
+        Map<String,String> params=new HashMap<>();
+        params.put("orderNumber", getIntent().getStringExtra("orderNumber"));
+        params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
+        String url=getResources().getString(R.string.partner_url)+Constants.ASSIGN_STATUS;
+        //showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"assignStatus");
+    }
+
+    private void assignDelivery(){
+        Map<String,String> params=new HashMap<>();
+        params.put("orderNumber", getIntent().getStringExtra("orderNumber"));
+        params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
+        params.put("shopName",sharedPreferences.getString(Constants.SHOP_NAME,""));
+        params.put("shopMobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
+        params.put("shopAddress",sharedPreferences.getString(Constants.ADDRESS,""));
+        params.put("shopLat",sharedPreferences.getString(Constants.USER_LAT,""));
+        params.put("shopLong",sharedPreferences.getString(Constants.USER_LONG,""));
+        params.put("custCode",intent.getStringExtra("cusstCode"));
+        params.put("custAddress",intent.getStringExtra("deliveryAddress"));
+        params.put("custName",intent.getStringExtra("custName"));
+        params.put("custMobile",intent.getStringExtra("custMobile"));
+        params.put("custLat",intent.getStringExtra("custLat"));
+        params.put("custLong",intent.getStringExtra("custLong"));
+        String url=getResources().getString(R.string.partner_url)+Constants.ASSIGN_DELIVERY;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"assignDelivery");
     }
 
     @Override
@@ -408,6 +484,36 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                     setTrackStatus("delivered");
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
+                }
+            }else if (apiName.equals("assignDelivery")) {
+                if (response.getBoolean("status")) {
+                     buttonOrderDelivered.setVisibility(View.GONE);
+                }else{
+                    btnAssign.setVisibility(View.VISIBLE);
+                    btnCancelAssign.setVisibility(View.GONE);
+                    buttonOrderDelivered.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    tvLabel1.setText("Assign delivery to Shoppurs Partner");
+                }
+            }else if (apiName.equals("assignStatus")) {
+                if (response.getBoolean("status")) {
+                    int responseCode = response.getInt("statusCode");
+                    if(responseCode == 0){
+                        progressBar.setVisibility(View.VISIBLE);
+                        btnAssign.setVisibility(View.GONE);
+                        btnCancelAssign.setVisibility(View.VISIBLE);
+                        buttonOrderDelivered.setVisibility(View.GONE);
+                        tvLabel1.setText("We wait while we assign a delivery partner. We will notify you once a partner is assigned");
+                    }else if(responseCode == 1){
+                        Gson gson = new Gson();
+                        ShoppursPartner partner = gson.fromJson(response.getString("result"),ShoppursPartner.class);
+                        btnAssign.setVisibility(View.GONE);
+                        btnCancelAssign.setVisibility(View.VISIBLE);
+                        buttonOrderDelivered.setVisibility(View.GONE);
+                        rlPartnerDetails.setVisibility(View.VISIBLE);
+                        tvPartnerName.setText(partner.getName());
+                        tvPartnerMobile.setText(partner.getMobile());
+                    }
                 }
             }
         }catch (JSONException e) {

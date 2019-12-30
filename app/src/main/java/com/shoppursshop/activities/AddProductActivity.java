@@ -1632,6 +1632,36 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
         imagePath = null;
     }
 
+    @Override
+    protected void browseGoogleImageSelected() {
+        super.browseGoogleImageSelected();
+
+        if(imagePosition == 1){
+            imageView1.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(imagePath)
+                    .apply(requestOptions)
+                    .into(imageView1);
+            imageUrl1 = imagePath;
+        }else if(imagePosition == 2){
+            imageView2.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(imagePath)
+                    .apply(requestOptions)
+                    .into(imageView2);
+            imageUrl2 = imagePath;
+        }else{
+            imageView3.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(imagePath)
+                    .apply(requestOptions)
+                    .into(imageView3);
+            imageUrl3 = imagePath;
+        }
+        imagePath = null;
+
+    }
+
     private void initUnitColorSizeList(){
         unitList = new ArrayList<>();
         if(flag.equals("editProduct")){

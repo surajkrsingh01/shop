@@ -222,6 +222,7 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
         final Button btnGallery=(Button) alertDialog.findViewById(R.id.btn_gallery);
         final Button btnCamera=(Button) alertDialog.findViewById(R.id.btn_camera);
         final Button btn_browse=(Button) alertDialog.findViewById(R.id.btn_browse);
+        final Button btn_google_search=(Button) alertDialog.findViewById(R.id.btn_google_browse);
 
         imageCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,7 +256,18 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
             public void onClick(View view) {
                 Intent intent = new Intent(BaseImageActivity.this,BrowseImagesActivity.class);
                 intent.putExtra("cat",cat);
+                intent.putExtra("flag","firebase");
                 startActivityForResult(intent,5);
+            }
+        });
+
+        btn_google_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BaseImageActivity.this,BrowseImagesActivity.class);
+                intent.putExtra("cat",cat);
+                intent.putExtra("flag","google");
+                startActivityForResult(intent,6);
             }
         });
 
@@ -499,6 +511,15 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
                     alertDialog.dismiss();
                 }
             }
+        }else if (requestCode == 6){
+
+            if(data != null){
+                //imagePath = data.getStringExtra("imagePath");
+                downloadImage(1,data.getStringExtra("imagePath"),this);
+                if(alertDialog != null && alertDialog.isShowing()){
+                    alertDialog.dismiss();
+                }
+            }
         }
     }
 
@@ -728,6 +749,10 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
 
     }
 
+    protected void browseGoogleImageSelected(){
+
+    }
+
     protected void downloadImage(int type,String imageUrl, Context context){
         Glide.with(context)
                 .asBitmap()
@@ -737,7 +762,7 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         if(resource != null){
                             saveBitmap(resource);
-                            imageDownloaded();
+                            imageAdded();
                         }else{
                             imageDownloadedFailed();
                         }

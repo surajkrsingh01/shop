@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -33,9 +35,16 @@ import com.shoppursshop.R;
 import com.shoppursshop.adapters.BrowseImageAdapter;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyImage;
+import com.shoppursshop.utilities.DialogAndToast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class BrowseImagesActivity extends NetworkBaseActivity implements MyItemClickListener {
 
@@ -46,6 +55,8 @@ public class BrowseImagesActivity extends NetworkBaseActivity implements MyItemC
     private ProgressBar progress_bar;
     private TextView text_no_files;
     private MyImage myImage;
+    private String flag,query;
+    private int start = 1,count=10;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +66,7 @@ public class BrowseImagesActivity extends NetworkBaseActivity implements MyItemC
     }
 
     private void init(){
+        flag = getIntent().getStringExtra("flag");
         cat = getIntent().getStringExtra("cat");
         itemList = new ArrayList<>();
         itemOriginalList = new ArrayList<>();
@@ -64,15 +76,39 @@ public class BrowseImagesActivity extends NetworkBaseActivity implements MyItemC
         progress_bar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.recycler_view);
        // recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager=new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false);
+        final RecyclerView.LayoutManager layoutManager=new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         itemAdapter=new BrowseImageAdapter(this,itemList);
         itemAdapter.setMyItemClickListener(this);
         recyclerView.setAdapter(itemAdapter);
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (isScroll) {
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    Log.i(TAG,"visible "+visibleItemCount+" total "+totalItemCount);
+                    pastVisibleItems = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+                    Log.i(TAG,"past visible "+(pastVisibleItems));
+
+                    if(!loading){
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            loading = true;
+                            start = start + count;
+                            searchGoogleImages();
+                        }
+                    }
+                }
+            }
+        });
+
         EditText editTextSearch = findViewById(R.id.edit_search);
         editTextSearch.addTextChangedListener(new TextWatcher() {
+            private Timer timer=new Timer();
+            private final long DELAY = 1000; // milliseconds
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -84,13 +120,98 @@ public class BrowseImagesActivity extends NetworkBaseActivity implements MyItemC
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-               filterImages(s.toString());
+            public void afterTextChanged(final Editable s) {
+                query = s.toString();
+                if(flag.equals("google")){
+                    timer.cancel();
+                    timer = new Timer();
+                    timer.schedule(
+                            new TimerTask() {
+                                @Override
+                                public void run() {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            progress_bar.setVisibility(View.VISIBLE);
+                                            searchGoogleImages();
+                                        }
+                                    });
+
+                                }
+                            },
+                            DELAY
+                    );
+
+                }else{
+                    filterImages(s.toString());
+                }
+
             }
         });
 
-        progress_bar.setVisibility(View.VISIBLE);
-        browseCategoryImages();
+        if(flag.equals("firebase")){
+            progress_bar.setVisibility(View.VISIBLE);
+            browseCategoryImages();
+        }
+
+    }
+
+    protected void browseCategoryImages(){
+        listFiles("cat/"+cat,null);
+    }
+
+    private void searchGoogleImages(){
+        loading = true;
+        String url = "https://www.googleapis.com/customsearch/v1?cx=008036340262493879777:bd2bp42gndc" +
+                "&q="+query+"&key=AIzaSyB-GKvcnqqzEBxT6OvmVPfNs7FBppblo-s&start="+start+"&searchType=image&imgSize=medium" +
+                "&fields=searchInformation,items(title,link)";
+        googleApiRequest(Request.Method.GET,url,new JSONObject(),"searchGoogle");
+    }
+
+    @Override
+    public void onJsonObjectResponse(JSONObject jsonObject, String apiName) {
+        try {
+                if(apiName.equals("searchGoogle")){
+                    progress_bar.setVisibility(View.GONE);
+                    loading = false;
+                    if(jsonObject.has("searchInformation")){
+                            if(jsonObject.getJSONObject("searchInformation").getInt("totalResults") > 0){
+                                JSONArray jsonArray = jsonObject.getJSONArray("items");
+                                JSONObject dataObject = null;
+                                int len = jsonArray.length();
+                                for(int i=0; i<len; i++){
+                                    dataObject = jsonArray.getJSONObject(i);
+                                    myImage = new MyImage();
+                                    myImage.setUrl(dataObject.getString("link"));
+                                    myImage.setName(dataObject.getString("title"));
+                                    itemList.add(myImage);
+                                    int itemPosition = itemList.size()-1;
+                                    Log.i(TAG,"list size "+itemPosition);
+                                    itemAdapter.notifyItemInserted(itemPosition);
+                                }
+
+                                if(itemList.size() == 0){
+                                    showError();
+                                }
+
+                            }else{
+                                showError();
+                            }
+                        }else{
+                          showError();
+                       }
+                  }
+                }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onServerErrorResponse(VolleyError error, String apiName) {
+        super.onServerErrorResponse(error, apiName);
+        progress_bar.setVisibility(View.GONE);
+        DialogAndToast.showToast("You are not authorize to perform this action",this);
     }
 
     private void filterImages(String query){
@@ -109,10 +230,6 @@ public class BrowseImagesActivity extends NetworkBaseActivity implements MyItemC
         }
 
 
-    }
-
-    protected void browseCategoryImages(){
-        listFiles("cat/"+cat,null);
     }
 
     public void listFiles(final String dir,String pageToken){

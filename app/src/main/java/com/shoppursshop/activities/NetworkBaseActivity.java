@@ -210,6 +210,37 @@ public class NetworkBaseActivity extends BaseActivity {
         AppController.getInstance().addToRequestQueue(jsonObjectRequest);
     }
 
+    protected void googleApiRequest(int method,String url, JSONObject jsonObject, final String apiName){
+        Log.i(TAG,url);
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(method,url,jsonObject,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                AppController.getInstance().getRequestQueue().getCache().clear();
+                Log.i(TAG,response.toString());
+                showProgress(false);
+                onJsonObjectResponse(response,apiName);
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // TODO Auto-generated method stub
+                AppController.getInstance().getRequestQueue().getCache().clear();
+                Log.i(TAG,"Json Error "+error.toString());
+                if(!apiName.contains("customer"))
+                    showProgress(false);
+                onServerErrorResponse(error,apiName);
+                // DialogAndToast.showDialog(getResources().getString(R.string.connection_error),BaseActivity.this);
+            }
+        });
+
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(jsonObjectRequest);
+    }
+
     public void onJsonArrayResponse(JSONArray jsonArray, String apiName) {
 
     }
@@ -233,7 +264,9 @@ public class NetworkBaseActivity extends BaseActivity {
                 DialogAndToast.showDialog(getResources().getString(R.string.connection_error),NetworkBaseActivity.this);
             }else if(error.networkResponse.statusCode == 400 ||
                     error.networkResponse.statusCode == 401 || error.networkResponse.statusCode == 403){
-                showMyDialog("You are not authorized to perform this action.");
+                if(!apiName.equals("searchGoogle")){
+                    showMyDialog("You are not authorized to perform this action.");
+                }
             }else{
                 DialogAndToast.showDialog(getResources().getString(R.string.connection_error),NetworkBaseActivity.this);
             }

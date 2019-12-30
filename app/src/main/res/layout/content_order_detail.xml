@@ -134,6 +134,76 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:background="?attr/borderBackground"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_below="@+id/text_delivery_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tvLabel1"
+                        android:text="Assign delivery to Shoppurs Partner"
+                        android:textColor="?attr/primaryTextColor"
+                        android:textSize="@dimen/small_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <RelativeLayout
+                        android:id="@+id/rlPartnerDetails"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tvPartnerName"
+                            android:textColor="?attr/primaryTextColor"
+                            android:textSize="@dimen/small_text_size"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/tvPartnerMobile"
+                            android:layout_below="@+id/tvPartnerName"
+                            android:clickable="true"
+                            android:textColor="?attr/primaryTextColor"
+                            android:textSize="@dimen/small_text_size"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </RelativeLayout>
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:visibility="gone"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/btnAssign"
+                        android:layout_marginTop="8dp"
+                        android:text="Assign"
+                        android:textColor="@color/white"
+                        android:background="@drawable/accent_solid_small_round_corner_background"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/regular_btn_size"/>
+
+                    <Button
+                        android:id="@+id/btnCancelAssign"
+                        android:visibility="gone"
+                        android:layout_marginTop="8dp"
+                        android:text="Cancel"
+                        android:textColor="@color/white"
+                        android:background="@drawable/accent_solid_small_round_corner_background"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/regular_btn_size"/>
+
+                </LinearLayout>
+
             </RelativeLayout>
 
             <View

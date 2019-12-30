@@ -50,6 +50,7 @@ public class AcceptOrderDialogFragment extends BottomSheetDialogFragment {
 
         textViewAmount.setText(totalAmount);
         textViewPayStatus.setText(ordPayStatus);
+        textViewDeliveryMode.setText(ordDeliveryMode);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
