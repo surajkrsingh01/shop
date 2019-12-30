@@ -482,6 +482,13 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                     editor.putString("type",getIntent().getStringExtra("type"));
                     editor.commit();
                     setTrackStatus("delivered");
+
+                    Intent intent = new Intent(OrderDetailActivity.this,RateAndReviewActivity.class);
+                    intent.putExtra("orderNumber",intent.getStringExtra("orderNumber"));
+                    intent.putExtra("custCode",intent.getStringExtra("custCode"));
+                    intent.putExtra("flag", "online");
+                    startActivity(intent);
+
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }

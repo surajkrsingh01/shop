@@ -43,6 +43,7 @@ import com.pnsol.sdk.vo.response.ICCTransactionResponse;
 import com.pnsol.sdk.vo.response.TransactionStatusResponse;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.BaseActivity;
+import com.shoppursshop.activities.RateAndReviewActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
 import com.shoppursshop.interfaces.OnLocationReceivedListener;
 import com.shoppursshop.location.GpsLocationProvider;

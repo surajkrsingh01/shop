@@ -410,10 +410,6 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     tvDiscountedItems.setText("Discounted Items: "+disItems);
                     itemAdapter.notifyDataSetChanged();
 
-                    if(jsonObject.getString("invShopRemarks").equals("null")){
-                        llFeedback.setVisibility(View.GONE);
-                    }
-
                 }
             }if (apiName.equals("submitFeedback")) {
                 if (response.getBoolean("status")) {

@@ -843,6 +843,7 @@
                 android:id="@+id/llFeedback"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:padding="1dp"
+                android:visibility="gone"
                 android:background="@drawable/feedback_border_background"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
