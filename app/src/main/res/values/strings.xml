@@ -13,6 +13,7 @@
     <!-- Remote-->
     <string name="url">http://api.shoppurs.in:8085/ShoppursShopApp</string>
     <string name="cust_url">http://api.shoppurs.in:8085/ShoppursCustomerApp</string>
+    <string name="partner_url">http://api.shoppurs.in:8085/ShoppursPartnerApp</string>
     <string name="base_url">http://api.shoppurs.in:8085</string>
     <string name="base_image_url">http://www.shoppurs.in/images</string>
 

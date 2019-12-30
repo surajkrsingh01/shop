@@ -359,7 +359,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         Map<String,String> params=new HashMap<>();
         params.put("orderNumber", getIntent().getStringExtra("orderNumber"));
         params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
-        String url=getResources().getString(R.string.url)+Constants.ASSIGN_STATUS;
+        String url=getResources().getString(R.string.partner_url)+Constants.ASSIGN_STATUS;
         //showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"assignStatus");
     }
@@ -379,7 +379,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         params.put("custMobile",intent.getStringExtra("custMobile"));
         params.put("custLat",intent.getStringExtra("custLat"));
         params.put("custLong",intent.getStringExtra("custLong"));
-        String url=getResources().getString(R.string.url)+Constants.ASSIGN_DELIVERY;
+        String url=getResources().getString(R.string.partner_url)+Constants.ASSIGN_DELIVERY;
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"assignDelivery");
     }

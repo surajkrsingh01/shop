@@ -15,7 +15,9 @@ import com.shoppursshop.activities.NetworkBaseActivity;
 import com.shoppursshop.activities.ShoppursProductListActivity;
 import com.shoppursshop.adapters.SettingsAdapter;
 import com.shoppursshop.database.DbHelper;
+import com.shoppursshop.fragments.ReferAppDialogFragment;
 import com.shoppursshop.interfaces.MyItemClickListener;
+import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 
@@ -27,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SettingActivity extends NetworkBaseActivity implements MyItemClickListener {
+public class SettingActivity extends NetworkBaseActivity implements MyItemClickListener, MyItemTypeClickListener {
 
     private RecyclerView recyclerView;
     private List<String> itemList;
@@ -152,7 +154,7 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
         }else if(name.equals("Invite to Shoppurs")){
-            referToFriend();
+            openReferDialog();
         } else if(name.equals("Store Categories")){
             Intent intent = new Intent(this, MyCategoriesActivity.class);
             startActivity(intent);
@@ -216,13 +218,33 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         }
     }
 
-    private void referToFriend(){
+    private void openReferDialog(){
+        ReferAppDialogFragment bottomSearchFragment = ReferAppDialogFragment.newInstance(colorTheme);
+        bottomSearchFragment.setMyItemClickListener(this);
+        bottomSearchFragment.show(getSupportFragmentManager(), "Refer App dialog fragment");
+    }
+
+    private void referToShop(){
         try {
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.app_name));
             String sAux = "\n Download "+getResources().getString(R.string.app_name)+" app from below link \n\n";
             sAux = sAux + "https://play.google.com/store/apps/details?id=com.shoppursshop \n\n";
+            i.putExtra(Intent.EXTRA_TEXT, sAux);
+            startActivity(Intent.createChooser(i, "Choose one"));
+        } catch(Exception e) {
+            //e.toString();
+        }
+    }
+
+    private void referToCustomer(){
+        try {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, "Shoppurs Customer");
+            String sAux = "\n Download Shoppurs Customer app from below link \n\n";
+            sAux = sAux + "https://play.google.com/store/apps/details?id=com.shoppurs \n\n";
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             startActivity(Intent.createChooser(i, "Choose one"));
         } catch(Exception e) {
@@ -244,5 +266,14 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClicked(int position, int type) {
+        if(type == R.id.rbCustomer){
+            referToCustomer();
+        }else{
+            referToShop();
+        }
     }
 }
