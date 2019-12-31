@@ -841,6 +841,46 @@ public class InvoiceActivity extends NetworkBaseActivity {
 
                 document.add(lineSeparator);
 
+                if(findViewById(R.id.rlDelivery).getVisibility() == View.VISIBLE){
+                    PdfPTable deliveryPdfPTable = new PdfPTable(3);
+                    deliveryPdfPTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                    deliveryPdfPTable.setSpacingBefore(10);
+                    deliveryPdfPTable.setSpacingAfter(10);
+                    deliveryPdfPTable.setWidthPercentage(100);
+
+                    detailsBlankCell = new PdfPCell();
+                    detailsBlankCell.setBorder(Rectangle.NO_BORDER);
+                    detailsBlankCell.setVerticalAlignment(Element.ALIGN_TOP);
+                    detailsBlankCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                    detailsBlankCell.addElement(new Chunk());
+                    deliveryPdfPTable.addCell(detailsBlankCell);
+
+                    Chunk deliveryLabelChunk = new Chunk("Delivery Charges", descDarkGrayFont);
+                    PdfPCell deliveryLabelCell = new PdfPCell();
+                    Paragraph deliveryLabelParagraph = new Paragraph(deliveryLabelChunk);
+                    deliveryLabelParagraph.setAlignment(Element.ALIGN_RIGHT);
+                    deliveryLabelCell.setBorder(Rectangle.NO_BORDER);
+                    deliveryLabelCell.setUseAscender(true);
+                    deliveryLabelCell.setVerticalAlignment(Element.ALIGN_TOP);
+                    deliveryLabelCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                    deliveryLabelCell.addElement(deliveryLabelParagraph);
+                    deliveryPdfPTable.addCell(deliveryLabelCell);
+
+                    Chunk deliveryChunk = new Chunk(textDeliveryAmount.getText().toString(), descDarkGrayFont);
+                    PdfPCell deliveryCell = new PdfPCell();
+                    Paragraph deliveryParagraph = new Paragraph(deliveryChunk);
+                    deliveryParagraph.setAlignment(Element.ALIGN_RIGHT);
+                    deliveryCell.setBorder(Rectangle.NO_BORDER);
+                    deliveryCell.setUseAscender(true);
+                    deliveryCell.setVerticalAlignment(Element.ALIGN_TOP);
+                    deliveryCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                    deliveryCell.addElement(deliveryParagraph);
+                    deliveryPdfPTable.addCell(deliveryCell);
+                    document.add(deliveryPdfPTable);
+
+                    document.add(lineSeparator);
+                }
+
                 PdfPTable amtDetailsPdfPTable = new PdfPTable(3);
                 amtDetailsPdfPTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 amtDetailsPdfPTable.setSpacingBefore(10);
