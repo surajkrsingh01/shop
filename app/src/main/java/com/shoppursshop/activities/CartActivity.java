@@ -882,8 +882,10 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             addingCart = false;
             openScannar();
         }else{
-            Intent intent = new Intent(CartActivity.this,InvoiceActivity.class);
+            Intent intent = new Intent(CartActivity.this,RateAndReviewActivity.class);
             intent.putExtra("orderNumber",orderNumber);
+            intent.putExtra("custCode",intent.getStringExtra("custCode"));
+            intent.putExtra("flag", "cash");
             startActivity(intent);
             finish();
         }

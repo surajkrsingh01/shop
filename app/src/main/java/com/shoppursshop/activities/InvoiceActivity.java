@@ -129,7 +129,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
     private TextView tvShopName,tvShopAddress,tvShopEmail,tvShopPhone,tvShopGSTIN,tvInvoiceNo,tvDate,tvCustomerName,
                       textCustomerMobile,textBarcodeNo,
                       tvSubTotAmt,tvGrossTotAmt,tvTotSgst,tvTotCgst,tvTotIgst,textTotalAmount,tvDiscountedItems,
-                      textBaseCgstAmount,textBaseSgstAmount,textBaseIgstAmount,
+                      textBaseCgstAmount,textBaseSgstAmount,textBaseIgstAmount,textDeliveryAmount,
                       tvPaidAmt,tvTotQty,tvDiscount,tvPaymentMethod,tvPaymentBrand,tvTransId,tvPaymentAmount,tvTotSavings;
     private LinearLayout llFeedback;
     private EditText etFeedback;
@@ -189,6 +189,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
         tvCustomerName = findViewById(R.id.text_customer_name);
         textCustomerMobile = findViewById(R.id.textCustomerMobile);
         tvSubTotAmt = findViewById(R.id.text_sub_total_amount);
+        textDeliveryAmount = findViewById(R.id.textDeliveryAmount);
         tvGrossTotAmt = findViewById(R.id.text_gross_total_amount);
         tvTotSgst = findViewById(R.id.text_sgst_tax_amt);
         tvTotCgst = findViewById(R.id.text_cgst_tax_amt);
@@ -367,6 +368,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     int len = invoiceDetailsArray.length();
                   //  InvoiceDetail invoiceDetail= null;
                     int totQty = 0;
+                    float totSp = 0;
                     for (int i = 0; i < len; i++) {
                         jsonObject = invoiceDetailsArray.getJSONObject(i);
                         //invoiceDetail = new InvoiceDetail();
@@ -390,6 +392,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                         rate = rate - ((rate * (cgst+sgst))/(100 + (cgst+sgst)));
                         item.setRate(rate);
                         totalAmount = totalAmount + (rate * item.getQty());
+                        totSp = totSp + (item.getQty() * item.getSp());
                         item.setFreeItems(jsonObject.getInt("invDFreeItems"));
                         item.setOfferId(jsonObject.getString("invdOfferId"));
                         item.setOfferType(jsonObject.getString("invdOfferType"));
@@ -406,13 +409,10 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     textBaseCgstAmount.setText(Utility.numberFormat(totalAmount));
                     textBaseSgstAmount.setText(Utility.numberFormat(totalAmount));
                     textBaseIgstAmount.setText(Utility.numberFormat(totalAmount));
+                    textDeliveryAmount.setText(Utility.numberFormat((netPayable-totSp)));
                     tvTotQty.setText(""+totQty);
                     tvDiscountedItems.setText("Discounted Items: "+disItems);
                     itemAdapter.notifyDataSetChanged();
-
-                    if(jsonObject.getString("invShopRemarks").equals("null")){
-                        llFeedback.setVisibility(View.GONE);
-                    }
 
                 }
             }if (apiName.equals("submitFeedback")) {
@@ -485,11 +485,12 @@ public class InvoiceActivity extends NetworkBaseActivity {
             /***
              * Variables for further use....
              */
-            BaseColor baseOragnge = new BaseColor(255, 87, 34, 255);
-            BaseColor baseLightOragnge = new BaseColor(251, 233, 231, 255);
-            BaseColor baseVeryLightBlue = new BaseColor(242, 243, 248, 255);
-            BaseColor baseLightBlue  = new BaseColor(232, 234, 246, 255);
+            BaseColor baseOragnge = new BaseColor(30, 136, 229, 255);
+            BaseColor baseLightOragnge = new BaseColor(227, 242, 253, 255);
+            BaseColor baseLightBlue  = new BaseColor(245, 245, 245, 255);
+            BaseColor baseVeryLightBlue = new BaseColor(250, 250, 250, 255);
             BaseColor baseBlue  = new BaseColor(30, 136, 229, 255);
+
             float mHeadingFontSize = 22.0f;
             float mSubHeadingFontSize = 18.0f;
             float mValueFontSize = 15.0f;

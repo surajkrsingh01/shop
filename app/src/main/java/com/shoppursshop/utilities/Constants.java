@@ -90,7 +90,6 @@ public class Constants {
     public static String STORE_CLOSE_DATE="storeCloseDate";
 
     public static String ANDROID_DEVICE_TYPE="androidDeviceType";
-
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
     public static final String PACKAGE_NAME =

@@ -28,6 +28,8 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.CustomerInfoActivity;
 import com.shoppursshop.activities.InvoiceActivity;
 import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.OrderDetailActivity;
+import com.shoppursshop.activities.RateAndReviewActivity;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.Invoice;
@@ -374,6 +376,11 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
                 if (response.getBoolean("status")) {
                     isDelivered = true;
                     tvFooter.setText("View Invoice");
+                    Intent intent = new Intent(MPayTransactionDetailsActivity.this, RateAndReviewActivity.class);
+                    intent.putExtra("orderNumber",intent.getStringExtra("orderNumber"));
+                    intent.putExtra("custCode",intent.getStringExtra("custCode"));
+                    intent.putExtra("flag", "mPay");
+                    startActivity(intent);
                 }else{
                     DialogAndToast.showDialog(response.getString("message"),this);
                 }

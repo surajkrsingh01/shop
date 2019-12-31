@@ -318,24 +318,19 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
     public void onResume(){
         super.onResume();
 
-        editor.putInt("orderPosition",-1);
+       /* editor.putInt("orderPosition",-1);
         editor.putString("type","");
         editor.putString("orderStatus","");
-        editor.commit();
+        editor.commit();*/
 
         int position = sharedPreferences.getInt("orderPosition",-1);
 
         Log.i(TAG,"position "+position);
         if(position > -1){
-            String type = sharedPreferences.getString("type","");
             String status = sharedPreferences.getString("orderStatus","");
-            Log.i(TAG,"type "+type);
             Log.i(TAG,"status "+status);
-            if(type.equals("today")){
-                ((OrderItem)itemList.get(position)).setStatus(status);
-                myItemAdapter.notifyItemChanged(position);
-            }
-
+            ((OrderItem)itemList.get(position)).setStatus(status);
+            myItemAdapter.notifyItemChanged(position);
             editor.putInt("orderPosition",-1);
             editor.putString("type","");
             editor.putString("orderStatus","");

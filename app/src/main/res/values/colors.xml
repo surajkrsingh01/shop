@@ -39,6 +39,11 @@
     <color name="bottom_nav_fore_color">@color/grey600</color>
     <color name="bottom_nav_back_color">@color/colorPrimary</color>
 
+    <color name="invoice_primary_color">@color/blue600</color>
+    <color name="invoice_light_color_1">@color/blue50</color>
+    <color name="invoice_light_color_2">@color/grey100</color>
+    <color name="invoice_light_color_3">@color/grey50</color>
+
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="blackT">#26000000</color>
