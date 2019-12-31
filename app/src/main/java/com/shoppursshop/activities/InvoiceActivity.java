@@ -353,7 +353,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                    // tvPaymentAmount.setText(Utility.numberFormat(netPayable));
                     tvTotSavings.setText(Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
                     tvDiscount.setText(Utility.numberFormat(jsonObject.getDouble("invTotDisAmount")));
-
+                    String deliveryMode = jsonObject.getString("deliveryMode");
                    // totDiscount = (float) jsonObject.getDouble("invTotDisAmount");
                    // tvDiscount.setText("-"+Utility.numberFormat(totDiscount));
                    /* int couponId = jsonObject.getInt("invCoupenId");
@@ -409,7 +409,16 @@ public class InvoiceActivity extends NetworkBaseActivity {
                     textBaseCgstAmount.setText(Utility.numberFormat(totalAmount));
                     textBaseSgstAmount.setText(Utility.numberFormat(totalAmount));
                     textBaseIgstAmount.setText(Utility.numberFormat(totalAmount));
-                    textDeliveryAmount.setText(Utility.numberFormat((netPayable-totSp)));
+                    if(deliveryMode.equals("home")){
+                        float deliveryCharges = netPayable-totSp;
+                        if(deliveryCharges > 0){
+                            findViewById(R.id.rlDelivery).setVisibility(View.VISIBLE);
+                            findViewById(R.id.separator_delivery).setVisibility(View.VISIBLE);
+                            textDeliveryAmount.setText(Utility.numberFormat(deliveryCharges));
+                        }
+
+                    }
+
                     tvTotQty.setText(""+totQty);
                     tvDiscountedItems.setText("Discounted Items: "+disItems);
                     itemAdapter.notifyDataSetChanged();
