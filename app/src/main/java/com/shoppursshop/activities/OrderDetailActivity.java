@@ -373,7 +373,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         params.put("shopAddress",sharedPreferences.getString(Constants.ADDRESS,""));
         params.put("shopLat",sharedPreferences.getString(Constants.USER_LAT,""));
         params.put("shopLong",sharedPreferences.getString(Constants.USER_LONG,""));
-        params.put("custCode",intent.getStringExtra("cusstCode"));
+        params.put("custCode",intent.getStringExtra("custCode"));
         params.put("custAddress",intent.getStringExtra("deliveryAddress"));
         params.put("custName",intent.getStringExtra("custName"));
         params.put("custMobile",intent.getStringExtra("custMobile"));
@@ -482,10 +482,9 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                     editor.putString("type",getIntent().getStringExtra("type"));
                     editor.commit();
                     setTrackStatus("delivered");
-
                     Intent intent = new Intent(OrderDetailActivity.this,RateAndReviewActivity.class);
-                    intent.putExtra("orderNumber",intent.getStringExtra("orderNumber"));
-                    intent.putExtra("custCode",intent.getStringExtra("custCode"));
+                    intent.putExtra("orderNumber",getIntent().getStringExtra("orderNumber"));
+                    intent.putExtra("custCode",getIntent().getStringExtra("custCode"));
                     intent.putExtra("flag", "online");
                     startActivity(intent);
 

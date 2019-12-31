@@ -243,8 +243,13 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_SUBJECT, "Shoppurs Customer");
-            String sAux = "\n Download Shoppurs Customer app from below link \n\n";
+            String sAux = "\n Dear Valued Customer \n\n";
+            sAux = sAux + "\n Greetings";
+            sAux = sAux + "\n Please download the Shoppurs App from the link below and avail the spectacular offers, discounts etc  \n\n";
             sAux = sAux + "https://play.google.com/store/apps/details?id=com.shoppurs \n\n";
+            sAux = sAux + "\n Have a great Shopping experience \n\n";
+            sAux = sAux + "\n "+sharedPreferences.getString(Constants.SHOP_NAME,"");
+            sAux = sAux + "\n "+sharedPreferences.getString(Constants.ADDRESS,"")+" \n";
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             startActivity(Intent.createChooser(i, "Choose one"));
         } catch(Exception e) {

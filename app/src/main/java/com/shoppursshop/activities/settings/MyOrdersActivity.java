@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -126,6 +128,24 @@ public class MyOrdersActivity extends NetworkBaseActivity implements MyImageClic
         }
         showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),api);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        int position = sharedPreferences.getInt("orderPosition",-1);
+
+        Log.i(TAG,"position "+position);
+        if(position > -1){
+            String status = sharedPreferences.getString("orderStatus","");
+            Log.i(TAG,"status "+status);
+            ((OrderItem)itemList.get(position)).setStatus(status);
+            myItemAdapter.notifyItemChanged(position);
+            editor.putInt("orderPosition",-1);
+            editor.putString("type","");
+            editor.putString("orderStatus","");
+            editor.commit();
+        }
     }
 
     @Override
