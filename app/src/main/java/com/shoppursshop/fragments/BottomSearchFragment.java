@@ -59,6 +59,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by suraj kumar singh on 18-04-2019.
@@ -155,6 +157,8 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
         }
 
         etSearch.addTextChangedListener(new TextWatcher() {
+            private Timer timer=new Timer();
+            private final long DELAY = 1000; // milliseconds
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -166,12 +170,30 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-                if(callingActivityName.equals("customerList") || callingActivityName.equals("customerInfoActivity")){
-                    filterCustomerSearch(editable.toString());
-                }else{
-                    filterProductSearch(editable.toString());
-                }
+            public void afterTextChanged(final Editable editable) {
+                timer.cancel();
+                timer = new Timer();
+                timer.schedule(
+                        new TimerTask() {
+                            @Override
+                            public void run() {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(callingActivityName.equals("customerList") ||
+                                                callingActivityName.equals("customerInfoActivity")){
+                                            filterCustomerSearch(editable.toString());
+                                        }else{
+                                            filterProductSearch(editable.toString());
+                                        }
+
+                                    }
+                                });
+
+                            }
+                        },
+                        DELAY
+                );
 
             }
         });

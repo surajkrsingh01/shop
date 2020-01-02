@@ -679,6 +679,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     }
 
                     shopObject.put("shopCode", shopCode);
+                    shopObject.put("orderType", "normal");
                     shopObject.put("orderDate", Utility.getTimeStamp());
                     shopObject.put("orderDeliveryNote","Note");
                     shopObject.put("paymentMode",paymentMode);
@@ -884,7 +885,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         }else{
             Intent intent = new Intent(CartActivity.this,RateAndReviewActivity.class);
             intent.putExtra("orderNumber",orderNumber);
-            intent.putExtra("custCode",intent.getStringExtra("custCode"));
+            intent.putExtra("custCode",getIntent().getStringExtra("custCode"));
             intent.putExtra("flag", "cash");
             startActivity(intent);
             finish();
