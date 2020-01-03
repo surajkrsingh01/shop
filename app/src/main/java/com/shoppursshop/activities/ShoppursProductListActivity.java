@@ -186,6 +186,8 @@ public class ShoppursProductListActivity extends NetworkBaseActivity implements 
         shopProductAdapter.setMyItemTypeClickListener(this);
         recyclerViewProduct.setAdapter(shopProductAdapter);
 
+
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
