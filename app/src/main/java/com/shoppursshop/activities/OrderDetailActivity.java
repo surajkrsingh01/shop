@@ -77,7 +77,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
     CancelDialogFragment cancelBottomSheetDialog;
     AcceptOrderDialogFragment acceptOrderDialogFragment;
 
-    private String orderStatus,ordPayStatus;
+    private String orderStatus,ordPayStatus,partnerOrderId;
     private TextView tv_top_parent, tv_parent;
 
     @Override
@@ -127,6 +127,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         imageView2 = findViewById(R.id.image_2);
         imageView4 = findViewById(R.id.image_4);
 
+        partnerOrderId = getIntent().getStringExtra("partnerOrderId");
         orderStatus = getIntent().getStringExtra("status");
         ordPayStatus = getIntent().getStringExtra("ordPaymentStatus");
         setTrackStatus(orderStatus);
@@ -235,7 +236,10 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         });
 
         getProducts();
+
+        if(!partnerOrderId.equals("0"))
         assignStatus();
+
         tv_top_parent = findViewById(R.id.text_left_label);
         tv_parent = findViewById(R.id.text_right_label);
         tv_top_parent.setOnClickListener(new View.OnClickListener() {
@@ -259,8 +263,8 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                  if(ConnectionDetector.isNetworkAvailable(OrderDetailActivity.this)){
                      progressBar.setVisibility(View.VISIBLE);
                      btnAssign.setVisibility(View.GONE);
-                     btnCancelAssign.setVisibility(View.VISIBLE);
-                     tvLabel1.setText("We wait while we assign a delivery partner. We will notify you once a partner is assigned");
+                   //  btnCancelAssign.setVisibility(View.VISIBLE);
+                     tvLabel1.setText("Please wait while we assign a delivery partner. We will notify you once a partner is assigned");
                      assignDelivery();
                  }else{
                      DialogAndToast.showDialog(getResources().getString(R.string.no_internet),OrderDetailActivity.this);
@@ -357,7 +361,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
 
     private void assignStatus(){
         Map<String,String> params=new HashMap<>();
-        params.put("orderNumber", getIntent().getStringExtra("orderNumber"));
+        params.put("orderId", partnerOrderId);
         params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
         String url=getResources().getString(R.string.partner_url)+Constants.ASSIGN_STATUS;
         //showProgress(true);
@@ -380,8 +384,15 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         params.put("custLat",intent.getStringExtra("custLat"));
         params.put("custLong",intent.getStringExtra("custLong"));
         String url=getResources().getString(R.string.partner_url)+Constants.ASSIGN_DELIVERY;
-        showProgress(true);
         jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"assignDelivery");
+    }
+
+    private void updatePartnerId(){
+        Map<String,String> params=new HashMap<>();
+        params.put("orderNumber", getIntent().getStringExtra("orderNumber"));
+        params.put("partnerOrderId",partnerOrderId);
+        String url=getResources().getString(R.string.url)+Constants.UPDATE_PARTNER_ORDER_ID;
+        jsonObjectApiRequest(Request.Method.POST,url,new JSONObject(params),"updatePartnerOrderId");
     }
 
     @Override
@@ -494,6 +505,8 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
             }else if (apiName.equals("assignDelivery")) {
                 if (response.getBoolean("status")) {
                      buttonOrderDelivered.setVisibility(View.GONE);
+                     partnerOrderId = response.getJSONObject("result").getString("id");
+                     updatePartnerId();
                 }else{
                     btnAssign.setVisibility(View.VISIBLE);
                     btnCancelAssign.setVisibility(View.GONE);
@@ -507,18 +520,25 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                     if(responseCode == 0){
                         progressBar.setVisibility(View.VISIBLE);
                         btnAssign.setVisibility(View.GONE);
-                        btnCancelAssign.setVisibility(View.VISIBLE);
+                      //  btnCancelAssign.setVisibility(View.VISIBLE);
                         buttonOrderDelivered.setVisibility(View.GONE);
-                        tvLabel1.setText("We wait while we assign a delivery partner. We will notify you once a partner is assigned");
+                        tvLabel1.setText("Please wait while we assign a delivery partner. We will notify you once a partner is assigned");
                     }else if(responseCode == 1){
                         Gson gson = new Gson();
                         ShoppursPartner partner = gson.fromJson(response.getString("result"),ShoppursPartner.class);
                         btnAssign.setVisibility(View.GONE);
-                        btnCancelAssign.setVisibility(View.VISIBLE);
+                      //  btnCancelAssign.setVisibility(View.VISIBLE);
                         buttonOrderDelivered.setVisibility(View.GONE);
                         rlPartnerDetails.setVisibility(View.VISIBLE);
                         tvPartnerName.setText(partner.getName());
                         tvPartnerMobile.setText(partner.getMobile());
+                    }else if(responseCode == 2){
+                        progressBar.setVisibility(View.GONE);
+                        btnAssign.setVisibility(View.VISIBLE);
+                        //  btnCancelAssign.setVisibility(View.VISIBLE);
+                        buttonOrderDelivered.setVisibility(View.VISIBLE);
+                        tvLabel1.setText("Assign delivery to Shoppurs Partner");
+                       // tvLabel1.setText(response.getString("message"));
                     }
                 }
             }

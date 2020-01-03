@@ -236,6 +236,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
                     shopObject.put("shopCode", shopCode);
                     shopObject.put("transactionId", transId);
                     shopObject.put("orderDate", Utility.getTimeStamp());
+                    shopObject.put("orderType", "normal");
                     shopObject.put("orderDeliveryNote","Note");
                     shopObject.put("orderDeliveryMode","Self");
                     shopObject.put("paymentMode",paymentMode);

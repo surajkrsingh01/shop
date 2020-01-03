@@ -91,7 +91,7 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
                     item.setSelected(true);
                     selectedIndex = getAdapterPosition();
                    // DialogAndToast.showToast(item.getName(), context);
-                    ((ShoppursProductListActivity) (context)).getProducts(String.valueOf(item.getId()), "onSubCategorySelected");
+                    ((ShoppursProductListActivity) (context)).getProducts(String.valueOf(item.getId()));
                     notifyDataSetChanged();
                 }
             }

@@ -17,7 +17,6 @@
 
         <ImageView
             android:id="@+id/image_view"
-            app:srcCompat="@drawable/thumb_12"
             android:scaleType="centerCrop"
             android:layout_width="@dimen/home_list_image_width_4"
             android:layout_height="@dimen/home_list_image_height_4" />
@@ -60,7 +59,6 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image_icon"
-                android:src="@drawable/icon_1"
                 android:layout_centerVertical="true"
                 android:layout_width="@dimen/home_list_icon_size"
                 android:layout_height="@dimen/home_list_icon_size" />

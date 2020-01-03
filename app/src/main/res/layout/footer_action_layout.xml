@@ -9,6 +9,7 @@
     <TextView
         android:id="@+id/text_action"
         android:text="Add Customer"
+        android:textColor="@color/white"
         android:gravity="center_horizontal"
         android:padding="16dp"
         android:textSize="@dimen/footer_action_text_size"

@@ -259,7 +259,6 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
         orderItem.setMobile("9718181697");
         orderItem.setAmount(2000);
         orderItem.setDeliveryType("Cash On Delivery");
-        orderItem.setLocalImage(R.drawable.thumb_11);
         orderItemList.add(orderItem);
 
         orderItem = new OrderItem();
@@ -272,7 +271,6 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
         orderItem.setMobile("9718181698");
         orderItem.setAmount(24000);
         orderItem.setDeliveryType("Pick Up");
-        orderItem.setLocalImage(R.drawable.thumb_12);
         orderItemList.add(orderItem);
 
         orderItem = new OrderItem();
@@ -285,7 +283,6 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
         orderItem.setMobile("9718181699");
         orderItem.setAmount(34000);
         orderItem.setDeliveryType("In Store");
-        orderItem.setLocalImage(R.drawable.thumb_13);
         orderItemList.add(orderItem);
 
         orderItem = new OrderItem();
@@ -298,7 +295,6 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
         orderItem.setMobile("9718181610");
         orderItem.setAmount(4000);
         orderItem.setDeliveryType("In Store");
-        orderItem.setLocalImage(R.drawable.thumb_11);
         orderItemList.add(orderItem);
 
         orderItem = new OrderItem();
@@ -311,7 +307,6 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
         orderItem.setMobile("9718181611");
         orderItem.setAmount(10000);
         orderItem.setDeliveryType("Cash On Delivery");
-        orderItem.setLocalImage(R.drawable.thumb_12);
         orderItemList.add(orderItem);
 
         orderAdapter.notifyDataSetChanged();
@@ -463,7 +458,6 @@ public class CustomerProfileActivity extends NetworkBaseActivity {
                         orderItem.setMobile(jsonObject.getString("mobileNo"));
                         orderItem.setAmount(jsonObject.getInt("toalAmount"));
                         orderItem.setDeliveryType(jsonObject.getString("orderDeliveryMode"));
-                        orderItem.setLocalImage(R.drawable.thumb_12);
                         orderItemList.add(orderItem);
                     }
 
