@@ -548,13 +548,34 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 Font descBlueFont = new Font(baseFont, mValueFontSize, Font.NORMAL, baseBlue);
                 Font subHeaderOrangeFont = new Font(baseFont, mSubHeadingFontSize, Font.NORMAL, baseOragnge);
 
-                Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.pdf_logo);
+                Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 logo.compress(Bitmap.CompressFormat.JPEG, 100 , stream);
                 Image myImg = Image.getInstance(stream.toByteArray());
-                myImg.setWidthPercentage(50);
                 myImg.setAlignment(Image.MIDDLE);
-                //document.add(myImg);
+               // document.add(myImg);
+
+                PdfPTable pdfImageTable = new PdfPTable(3);
+                pdfImageTable.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfImageTable.setWidthPercentage(100);
+
+                PdfPCell pdfPCell = new PdfPCell();
+                pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(Rectangle.NO_BORDER);
+                pdfImageTable.addCell(pdfPCell);
+                pdfPCell = new PdfPCell();
+                pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(Rectangle.NO_BORDER);
+                pdfPCell.addElement(myImg);
+                pdfImageTable.addCell(pdfPCell);
+                pdfPCell = new PdfPCell();
+                pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(Rectangle.NO_BORDER);
+                pdfImageTable.addCell(pdfPCell);
+                document.add(pdfImageTable);
 
                 Chunk chunkVerticalMark = new Chunk(new VerticalPositionMark());
                 Chunk chunk2 = new Chunk(tvDate.getText().toString(), descFont);
@@ -761,7 +782,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                             float amt = item.getQty() * item.getRate();
                             chunk20.append(Utility.numberFormat(amt));
                         }
-                        chunk20.setFont(descGrayFont);
+                        chunk20.setFont(descDarkGrayFont);
                         cell3.addElement(chunk20);
                         pdfPTable2.addCell(cell3);
                     }
@@ -792,7 +813,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
                         }else if(header.equals("Tax Amt")){
                             chunk20.append(Utility.numberFormat(item.getQty() * (item.getSp() - item.getRate())));
                         }
-                        chunk20.setFont(descDarkGrayFont);
+                        chunk20.setFont(descGrayFont);
                         cell3.addElement(chunk20);
                         pdfPTable2.addCell(cell3);
                     }

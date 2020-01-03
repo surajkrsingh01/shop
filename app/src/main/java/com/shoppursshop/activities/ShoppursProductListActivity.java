@@ -205,7 +205,7 @@ public class ShoppursProductListActivity extends NetworkBaseActivity implements 
             subCategory.setName(selectedSubCatName);
             subCategoryList.add(subCategory);
             categoriesAdapter.notifyDataSetChanged();
-            getProducts(selectdSubCatId,"offersProduct");
+            getProducts(selectdSubCatId);
         }else if(flag.equals("shoppursProducts")){
             getsubCategories();
         }else if(flag.equals("shoppursOfferProducts")){
@@ -278,7 +278,7 @@ public class ShoppursProductListActivity extends NetworkBaseActivity implements 
         jsonObjectApiRequest(Request.Method.POST,url, new JSONObject(params),"shopDetails");
     }
 
-    public void getProducts(String subCatId, String action){
+    public void getProducts(String subCatId){
         selectdSubCatId = subCatId;
         myProductList.clear();
 
@@ -290,7 +290,7 @@ public class ShoppursProductListActivity extends NetworkBaseActivity implements 
         params.put("offset",""+offset);
         Log.d(TAG, params.toString());
         String url="";
-        if(action.equals("")){
+        if(flag.equals("shoppursProducts")){
             url=getResources().getString(R.string.cust_url)+"/api/customers/products/ret_productslist";
         }else{
             url=getResources().getString(R.string.cust_url)+"/api/customers/products/ret_productslist_with_offers_by_cat";
@@ -702,7 +702,7 @@ public class ShoppursProductListActivity extends NetworkBaseActivity implements 
                         categoriesAdapter.notifyDataSetChanged();
                         Log.d("selectdSubCatPosition", ""+selectdSubCatPosition);
                         recyclerViewCategory.scrollToPosition(selectdSubCatPosition);
-                        getProducts(selectdSubCatId, "");
+                        getProducts(selectdSubCatId);
                     }
                 }else {
                     DialogAndToast.showToast(response.getString("message"),ShoppursProductListActivity.this);

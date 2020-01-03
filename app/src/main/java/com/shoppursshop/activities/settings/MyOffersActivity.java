@@ -195,7 +195,6 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
                         offerItem.setOfferId(dataObject.getString("id"));
                         offerItem.setOfferName(dataObject.getString("offerName"));
                         offerItem.setProductName("Free Product Offer");
-                        offerItem.setProductLocalImage(R.drawable.thumb_12);
                         offerItem.setOfferType("free");
                         offerItem.setOfferStatus(dataObject.getString("status"));
                         productDiscountOffer.setId(dataObject.getInt("id"));
@@ -224,7 +223,6 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
                         offerItem.setOfferId(dataObject.getString("id"));
                         offerItem.setOfferName(dataObject.getString("offerName"));
                         offerItem.setProductName("Combo Product Offer");
-                        offerItem.setProductLocalImage(R.drawable.thumb_12);
                         offerItem.setOfferType("combo");
                         offerItem.setOfferStatus(dataObject.getString("status"));
                         productComboOffer = new ProductComboOffer();
@@ -265,7 +263,6 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
                         offerItem.setOfferId(dataObject.getString("id"));
                         offerItem.setOfferName(dataObject.getString("offerName"));
                         offerItem.setProductName("Product Price Offer");
-                        offerItem.setProductLocalImage(R.drawable.thumb_12);
                         offerItem.setOfferType("price");
                         offerItem.setOfferStatus(dataObject.getString("status"));
 
@@ -305,7 +302,6 @@ public class MyOffersActivity extends NetworkBaseActivity implements MyItemTypeC
                         offerItem.setOfferId(dataObject.getString("id"));
                         offerItem.setOfferName(dataObject.getString("name"));
                         offerItem.setProductName("Coupon Offer");
-                        offerItem.setProductLocalImage(R.drawable.thumb_12);
                         offerItem.setOfferType("coupon");
                         offerItem.setOfferStatus(dataObject.getString("status"));
                         coupon = new Coupon();

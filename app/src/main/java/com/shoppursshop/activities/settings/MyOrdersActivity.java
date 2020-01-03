@@ -165,6 +165,7 @@ public class MyOrdersActivity extends NetworkBaseActivity implements MyImageClic
                         orderItem.setType(1);
                         orderItem.setId(jsonObject.getString("orderId"));
                         orderItem.setOrderNumber(jsonObject.getString("orderNumber"));
+                        orderItem.setPartnerOrderId(jsonObject.getString("partnerOrderId"));
                         orderItem.setDateTime(jsonObject.getString("orderDate"));
                         orderItem.setCustomerName(jsonObject.getString("custName"));
                         orderItem.setCustCode(jsonObject.getString("custCode"));
@@ -176,7 +177,6 @@ public class MyOrdersActivity extends NetworkBaseActivity implements MyImageClic
                         orderItem.setOrderImage(jsonObject.getString("orderImage"));
                         orderItem.setStatus(jsonObject.getString("orderStatus"));
                         orderItem.setOrderPayStatus(jsonObject.getString("oderPaymentStatus"));
-                        orderItem.setLocalImage(R.drawable.thumb_12);
 
                         itemList.add(orderItem);
                     }

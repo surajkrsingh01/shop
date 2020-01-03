@@ -1,10 +1,18 @@
 package com.shoppursshop.models;
 
 public class OrderItem {
-    private String id,orderNumber,custCode,customerName,mobile,deliveryType,customerImage,status,dateTime,orderImage,deliveryAddress,
+    private String id,partnerOrderId,orderNumber,custCode,customerName,mobile,deliveryType,customerImage,status,dateTime,orderImage,deliveryAddress,
             deliveryLat,deliveryLong,orderPayStatus;
     private int localImage,type;
     private float amount,rating;
+
+    public String getPartnerOrderId() {
+        return partnerOrderId;
+    }
+
+    public void setPartnerOrderId(String partnerOrderId) {
+        this.partnerOrderId = partnerOrderId;
+    }
 
     public String getDeliveryLat() {
         return deliveryLat;

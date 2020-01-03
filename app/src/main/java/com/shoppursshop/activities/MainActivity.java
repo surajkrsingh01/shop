@@ -378,6 +378,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                         orderItem = new OrderItem();
                         orderItem.setType(1);
                         orderItem.setId(jsonObject.getString("orderId"));
+                        orderItem.setPartnerOrderId(jsonObject.getString("partnerOrderId"));
                         orderItem.setOrderNumber(jsonObject.getString("orderNumber"));
                         orderItem.setDateTime(jsonObject.getString("orderDate"));
                         orderItem.setCustomerName(jsonObject.getString("custName"));
@@ -393,7 +394,6 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                         orderItem.setOrderImage(jsonObject.getString("orderImage"));
                         orderItem.setStatus(jsonObject.getString("orderStatus"));
                         orderItem.setOrderPayStatus(jsonObject.getString("oderPaymentStatus"));
-                        orderItem.setLocalImage(R.drawable.thumb_12);
 
                         Log.i(TAG,"order date "+Utility.getTimeStamp("yyyy-MM-dd")+
                                 " "+orderItem.getDateTime().split(" ")[0]);

@@ -149,6 +149,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                         Intent intent = new Intent(context, OrderDetailActivity.class);
                         intent.putExtra("id",item.getId());
                         intent.putExtra("orderNumber",item.getOrderNumber());
+                        intent.putExtra("partnerOrderId",item.getPartnerOrderId());
                         intent.putExtra("custName",item.getCustomerName());
                         intent.putExtra("custMobile",item.getMobile());
                         intent.putExtra("custCode",item.getCustCode());
