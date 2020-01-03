@@ -34,7 +34,8 @@
     <dimen name="small_text_size">12sp</dimen>
     <dimen name="very_small_text_size">10sp</dimen>
 
-    <dimen name="invoice_logo_size">100dp</dimen>
+    <dimen name="invoice_logo_width">300dp</dimen>
+    <dimen name="invoice_logo_height">100dp</dimen>
 
     <dimen name="dialog_margin">32dp</dimen>
     <dimen name="dialog_corners">4dp</dimen>

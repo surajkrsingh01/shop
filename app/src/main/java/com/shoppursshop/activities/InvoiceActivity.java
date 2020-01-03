@@ -232,7 +232,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
             @Override
             public void onClick(View v) {
                 actionType = SHARE;
-                createPdf();
+                createNewPdf();
             }
         });
 
@@ -548,14 +548,14 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 Font descBlueFont = new Font(baseFont, mValueFontSize, Font.NORMAL, baseBlue);
                 Font subHeaderOrangeFont = new Font(baseFont, mSubHeadingFontSize, Font.NORMAL, baseOragnge);
 
-                Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+                Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.pdf_logo_new);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 logo.compress(Bitmap.CompressFormat.JPEG, 100 , stream);
                 Image myImg = Image.getInstance(stream.toByteArray());
                 myImg.setAlignment(Image.MIDDLE);
                // document.add(myImg);
 
-                PdfPTable pdfImageTable = new PdfPTable(3);
+                PdfPTable pdfImageTable = new PdfPTable(1);
                 pdfImageTable.setHorizontalAlignment(Element.ALIGN_CENTER);
                 pdfImageTable.setWidthPercentage(100);
 
@@ -563,17 +563,9 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
                 pdfPCell.setBorder(Rectangle.NO_BORDER);
-                pdfImageTable.addCell(pdfPCell);
-                pdfPCell = new PdfPCell();
-                pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
-                pdfPCell.setBorder(Rectangle.NO_BORDER);
+                pdfPCell.setPaddingLeft(30);
+                pdfPCell.setPaddingRight(30);
                 pdfPCell.addElement(myImg);
-                pdfImageTable.addCell(pdfPCell);
-                pdfPCell = new PdfPCell();
-                pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
-                pdfPCell.setBorder(Rectangle.NO_BORDER);
                 pdfImageTable.addCell(pdfPCell);
                 document.add(pdfImageTable);
 
