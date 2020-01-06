@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Bundle;
@@ -122,7 +123,17 @@ public class SplashActivity extends NetworkBaseActivity {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            String IMEI = teleManager.getDeviceId();
+            String IMEI = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                IMEI =  teleManager.getImei();
+            } else {
+                IMEI = teleManager.getDeviceId();
+            }
+
+            if (IMEI == null || IMEI.isEmpty()) {
+                IMEI = android.os.Build.SERIAL;
+            }
+
             editor.putString(Constants.IMEI_NO,IMEI);
             editor.commit();
             Log.i(TAG,"Mac id "+IMEI);
