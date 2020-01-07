@@ -31,7 +31,8 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:icon,android:theme">
-        <activity android:name=".activities.RateAndReviewActivity"></activity>
+        <activity android:name=".activities.settings.TechincalSupportActivity"></activity>
+        <activity android:name=".activities.RateAndReviewActivity" />
         <activity
             android:name=".activities.settings.RlevelAndExpiredProductActivity"
             android:label="@string/title_activity_rlevel_and_expired_product"

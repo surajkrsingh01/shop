@@ -67,6 +67,7 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         itemList.add("User License");
         itemList.add("Sync Data");
         itemList.add("Chat");
+        itemList.add("Technical Support");
         itemList.add("Display");
         itemList.add("Logout");
         recyclerView = findViewById(R.id.recycler_view);
@@ -202,6 +203,9 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
             startActivity(intent);
         }else if(name.equals("Chat")){
             Intent intent = new Intent(this, UserListForChatActivity.class);
+            startActivity(intent);
+        }else if(name.equals("Technical Support")){
+            Intent intent = new Intent(this, TechincalSupportActivity.class);
             startActivity(intent);
         }else if(name.equals("Display")){
             Intent intent = new Intent(this, DisplaySettingsActivity.class);

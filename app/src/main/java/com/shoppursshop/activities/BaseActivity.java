@@ -250,11 +250,11 @@ public class BaseActivity extends AppCompatActivity {
             backColor = getResources().getColor(R.color.white);
             textColor = getResources().getColor(R.color.primary_text_color);
         }
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+       /* toolbar = (Toolbar) findViewById(R.id.toolbar);
         appBarLayout = findViewById(R.id.app_bar);
         appBarLayout.setBackgroundColor(backColor);
         toolbar.setBackgroundColor(backColor);
-        toolbar.setTitleTextColor(textColor);
+        toolbar.setTitleTextColor(textColor);*/
 
         findViewById(R.id.linear_footer).setBackgroundColor(backColor);
         findViewById(R.id.separator_footer_1).setBackgroundColor(backColor);

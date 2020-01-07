@@ -77,8 +77,9 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
     CancelDialogFragment cancelBottomSheetDialog;
     AcceptOrderDialogFragment acceptOrderDialogFragment;
 
-    private String orderStatus,ordPayStatus,partnerOrderId;
+    private String deliveryMode,orderStatus,ordPayStatus,partnerOrderId;
     private TextView tv_top_parent, tv_parent;
+    private float deliveryCharges;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,7 +167,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                 "yyyy-MM-dd HH:mm:ss","HH:mm, MMM dd, yyyy").split(",");
         textViewOrderDate.setText(orderDate[0]+" hrs,"+orderDate[1]+orderDate[2]);
         textViewTotalAmount.setText(Utility.numberFormat(intent.getFloatExtra("totalAmount",0f)));
-        final String deliveryMode = intent.getStringExtra("deliveryMode");
+        deliveryMode = intent.getStringExtra("deliveryMode");
         if(deliveryMode.equals("Self") || deliveryMode.equals("self")){
 
         }else{
@@ -369,8 +370,10 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
     }
 
     private void assignDelivery(){
+        String commission = String.format("%.00f",deliveryCharges - deliveryCharges * 5/100);
         Map<String,String> params=new HashMap<>();
         params.put("orderNumber", getIntent().getStringExtra("orderNumber"));
+        params.put("commission",commission);
         params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
         params.put("shopName",sharedPreferences.getString(Constants.SHOP_NAME,""));
         params.put("shopMobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
@@ -406,6 +409,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                     int len = dataArray.length();
                     MyProductItem productItem = null;
                     itemList.clear();
+                    double  totSp = 0;
                     for (int i = 0; i < len; i++) {
                         jsonObject = dataArray.getJSONObject(i);
                         productItem = new MyProductItem();
@@ -431,6 +435,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                         productItem.setProdImage3(jsonObject.getString("prodImage3"));
                         productItem.setProdMrp(Float.parseFloat(jsonObject.getString("prodMrp")));
                         productItem.setProdSp(Float.parseFloat(jsonObject.getString("prodSp")));
+                        totSp = totSp + (productItem.getQty() * productItem.getProdSp());
                        /* productItem.setCreatedBy(jsonObject.getString("createdBy"));
                         productItem.setUpdatedBy(jsonObject.getString("updatedBy"));
                         productItem.setCreatedDate(jsonObject.getString("createdDate"));
@@ -438,6 +443,13 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                        // productItem.setStatus(jsonObject.getString("status"));
                         itemList.add(productItem);
                     }
+
+                    if(deliveryMode.toLowerCase().equals("home")){
+                        double netPay = intent.getFloatExtra("totalAmount",0f);
+                        deliveryCharges = (float) (netPay - totSp);
+                        Log.i(TAG,"delivery charges "+deliveryCharges);
+                    }
+
 
                     myItemAdapter.notifyDataSetChanged();
                 }else{

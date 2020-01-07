@@ -213,7 +213,10 @@ public class Constants {
     public static String RETURN_PRODUCT="/api/return/send_return_request";
 
     public static String ASSIGN_DELIVERY="/api/user/order/assign_order_to_delivery_partner";
+    public static String ASSIGN_TECH_PARTNER="/api/tech/order/assign_order_to_tech_partner";
     public static String UPDATE_PARTNER_ORDER_ID="/api/shop/order/partner_order";
     public static String ASSIGN_STATUS="/api/user/order/get_shop_order_Status";
+
+    public static String GET_COMMISSION_RATE="/api/user/commission/commission_list";
 
 }
