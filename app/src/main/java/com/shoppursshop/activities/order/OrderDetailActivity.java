@@ -291,6 +291,9 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                 intent.putExtra("partner",partner);
                 intent.putExtra("custLat",getIntent().getStringExtra("custLat"));
                 intent.putExtra("custLong",getIntent().getStringExtra("custLong"));
+                intent.putExtra("custName",getIntent().getStringExtra("custName"));
+                intent.putExtra("custAddress",getIntent().getStringExtra("deliveryAddress"));
+                intent.putExtra("custMobile",getIntent().getStringExtra("custMobile"));
                 startActivity(intent);
             }
         });
