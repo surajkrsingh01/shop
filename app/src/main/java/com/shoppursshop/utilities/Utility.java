@@ -331,6 +331,8 @@ public class Utility {
 
     public static String getInitials(String name){
         String initials = null;
+        name = name.trim();
+        name = name.replaceAll("  "," ");
         if(name.contains(" ")){
             String[] nameArray = name.split(" ");
             if(nameArray[1].startsWith("(")){
