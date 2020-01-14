@@ -17,7 +17,6 @@ import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.base.NetworkBaseActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
-import com.shoppursshop.activities.settings.SyncProductActivity;
 import com.shoppursshop.adapters.ProductAdapter;
 import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;

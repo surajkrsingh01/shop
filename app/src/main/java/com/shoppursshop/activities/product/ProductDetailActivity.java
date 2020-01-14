@@ -498,6 +498,7 @@ public class ProductDetailActivity extends NetworkBaseActivity {
     private void getSaleData(){
         Map<String,String> params=new HashMap<>();
         params.put("id",""+myProductItem.getProdId());
+        params.put("code",myProductItem.getProdCode());
         params.put("dbName",sharedPreferences.getString(Constants.DB_NAME,""));
         params.put("dbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
         params.put("dbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));

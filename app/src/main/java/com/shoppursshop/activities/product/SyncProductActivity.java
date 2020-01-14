@@ -1,4 +1,4 @@
-package com.shoppursshop.activities.settings;
+package com.shoppursshop.activities.product;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.base.NetworkBaseActivity;
-import com.shoppursshop.activities.product.MyProductListActivity;
+import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.adapters.SimpleItemAdapter;
 import com.shoppursshop.interfaces.MyLevelItemClickListener;
 import com.shoppursshop.models.Barcode;

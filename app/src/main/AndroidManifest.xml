@@ -232,7 +232,7 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.settings.SyncProductActivity"
+            android:name=".activities.product.SyncProductActivity"
             android:label="@string/title_activity_sync_product"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />

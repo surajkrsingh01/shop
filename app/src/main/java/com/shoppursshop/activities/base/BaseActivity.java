@@ -45,7 +45,7 @@ import com.shoppursshop.activities.offers.ProductPriceOfferActivity;
 import com.shoppursshop.activities.product.ReturnProductActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.activities.settings.SyncDataActivity;
-import com.shoppursshop.activities.settings.SyncProductActivity;
+import com.shoppursshop.activities.product.SyncProductActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
 import com.shoppursshop.activities.settings.profile.BasicProfileActivity;
 import com.shoppursshop.activities.settings.profile.DeliveryActivity;
