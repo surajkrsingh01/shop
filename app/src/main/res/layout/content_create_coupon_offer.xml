@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.settings.CreateCouponOfferActivity"
+    tools:context=".activities.offers.CreateCouponOfferActivity"
     tools:showIn="@layout/activity_create_coupon_offer">
 
     <LinearLayout

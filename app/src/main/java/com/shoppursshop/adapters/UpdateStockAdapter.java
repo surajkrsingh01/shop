@@ -2,6 +2,7 @@ package com.shoppursshop.adapters;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.shoppursshop.R;
 import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
@@ -35,6 +41,7 @@ public class UpdateStockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<MyProductItem> itemList;
     private Context context;
     private boolean isDarkTheme;
+    private int counter;
 
     public void setDarkTheme(boolean darkTheme) {
         isDarkTheme = darkTheme;
@@ -59,7 +66,7 @@ public class UpdateStockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView textName,textMrp,textSp,textOffPer,textCounter,textStock;
+        private TextView textName,textMrp,textSp,textOffPer,textCounter,textStock,tvInitials;
         private ImageView imageView,imageViewMinus,imageViewAdd;
         private RelativeLayout relativeLayoutUnit;
         private Spinner spinnerUnit;
@@ -80,6 +87,7 @@ public class UpdateStockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             viewSeparator=itemView.findViewById(R.id.view_separator);
             relativeLayoutUnit=itemView.findViewById(R.id.relative_unit);
             spinnerUnit=itemView.findViewById(R.id.spinner_unit);
+            tvInitials=itemView.findViewById(R.id.tvInitial);
 
             textMrp.setPaintFlags(textMrp.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
@@ -136,7 +144,7 @@ public class UpdateStockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final MyProductItem item = (MyProductItem) itemList.get(position);
         if(holder instanceof MyViewHolder){
-            MyViewHolder myViewHolder = (MyViewHolder)holder;
+            final MyViewHolder myViewHolder = (MyViewHolder)holder;
             //  myViewHolder.textBarCode.setText(item.getProdBarCode());
             myViewHolder.textName.setText(item.getProdName());
             //myViewHolder.textAmount.setText("Rs. "+String.format("%.02f",item.getMrp()));
@@ -232,6 +240,8 @@ public class UpdateStockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 myViewHolder.relativeLayoutUnit.setVisibility(View.GONE);
             }
 
+            myViewHolder.tvInitials.setText(Utility.getInitials(item.getProdName()));
+
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
             // requestOptions.override(Utility.dpToPx(150, context), Utility.dpToPx(150, context));
@@ -241,7 +251,28 @@ public class UpdateStockAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             Glide.with(context)
                     .load(item.getProdImage1())
                     .apply(requestOptions)
-                    .error(R.drawable.ic_photo_black_192dp)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            myViewHolder.tvInitials.setVisibility(View.VISIBLE);
+                            myViewHolder.imageView.setVisibility(View.GONE);
+                            //  myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
+                            Utility.setColorFilter(myViewHolder.tvInitials.getBackground(),
+                                    Utility.getTvColor(context,counter));
+
+                            counter++;
+                            if(counter == 12){
+                                counter = 0;
+                            }
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            //on load success
+                            return false;
+                        }
+                    })
                     .into(myViewHolder.imageView);
 
         }

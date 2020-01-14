@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.settings.RlevelAndExpiredProductActivity"
+    tools:context=".activities.product.RlevelAndExpiredProductActivity"
     tools:showIn="@layout/activity_rlevel_and_expired_product">
 
     <ImageView

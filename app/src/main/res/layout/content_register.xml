@@ -8,6 +8,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_register"
-    tools:context=".activities.RegisterActivity">
+    tools:context=".activities.auth.RegisterActivity">
 
 </FrameLayout>

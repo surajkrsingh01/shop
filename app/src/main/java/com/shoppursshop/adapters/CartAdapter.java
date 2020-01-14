@@ -288,19 +288,7 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 myViewHolder.relativeLayoutUnit.setVisibility(View.GONE);
             }
 
-            String initials = "";
-            if(item.getProdName().contains(" ")){
-                String[] name = item.getProdName().split(" ");
-                if(name[1].startsWith("(")){
-                    initials = name[0].substring(0,1)+name[1].substring(1,2);
-                }else{
-                    initials = name[0].substring(0,1)+name[1].substring(0,1);
-                }
-            }else{
-                initials = item.getProdName().substring(0,2);
-            }
-
-            myViewHolder.tvInitials.setText(initials);
+            myViewHolder.tvInitials.setText(Utility.getInitials(item.getProdName()));
 
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);

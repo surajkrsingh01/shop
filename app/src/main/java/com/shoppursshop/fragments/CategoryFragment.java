@@ -1,7 +1,6 @@
 package com.shoppursshop.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -14,11 +13,10 @@ import android.widget.Button;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.RegisterActivity;
+import com.shoppursshop.activities.auth.RegisterActivity;
 import com.shoppursshop.adapters.SimpleItemAdapter;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.OnFragmentInteraction;
-import com.shoppursshop.models.Category;
 import com.shoppursshop.models.MySimpleItem;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;

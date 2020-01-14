@@ -31,18 +31,19 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:icon,android:theme">
-        <activity android:name=".activities.settings.TechincalSupportActivity"></activity>
-        <activity android:name=".activities.RateAndReviewActivity" />
+        <activity android:name=".activities.order.TrackOrderActivity"></activity>
+        <activity android:name=".activities.settings.TechincalSupportActivity" />
+        <activity android:name=".activities.order.RateAndReviewActivity" />
         <activity
-            android:name=".activities.settings.RlevelAndExpiredProductActivity"
+            android:name=".activities.product.RlevelAndExpiredProductActivity"
             android:label="@string/title_activity_rlevel_and_expired_product"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.BrowseImagesActivity"
+            android:name=".activities.product.BrowseImagesActivity"
             android:label="@string/title_activity_browse_images"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.settings.ReturnProductActivity"
+            android:name=".activities.product.ReturnProductActivity"
             android:label="@string/title_activity_return_product"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
@@ -74,7 +75,7 @@
             android:label="@string/title_activity_payment"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.ResetPasswordActivity"
+            android:name=".activities.auth.ResetPasswordActivity"
             android:label="@string/title_activity_reset_password"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
@@ -90,19 +91,19 @@
             android:label="@string/title_activity_add_user"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.ShopCartActivity"
+            android:name=".activities.order.ShopCartActivity"
             android:label="@string/title_activity_shop_cart"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.ShoppursProductListActivity"
+            android:name=".activities.product.ShoppursProductListActivity"
             android:label="@string/title_activity_shoppurs_product_list"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.BannerDetailsActivity"
+            android:name=".activities.offers.BannerDetailsActivity"
             android:label="@string/title_activity_banner_details"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.UpdateStockActivity"
+            android:name=".activities.product.UpdateStockActivity"
             android:label="@string/title_activity_update_stock"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
@@ -114,7 +115,7 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.CustomerAddressActivity"
+            android:name=".activities.customers.CustomerAddressActivity"
             android:label="@string/title_activity_customer_address"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
@@ -128,60 +129,60 @@
             android:label="@string/title_activity_CCAvenueWebViewActivity"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.settings.ApplyOffersActivity"
+            android:name=".activities.offers.ApplyOffersActivity"
             android:label="@string/title_activity_apply_offers"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.CouponOffersActivity"
+            android:name=".activities.offers.CouponOffersActivity"
             android:label="@string/title_activity_coupon_offers"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activities.settings.CreateCouponOfferActivity"
+            android:name=".activities.offers.CreateCouponOfferActivity"
             android:label="@string/title_activity_create_coupon_offer"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.settings.ProductPriceOfferActivity"
+            android:name=".activities.offers.ProductPriceOfferActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activities.settings.ComboProductOfferActivity"
+            android:name=".activities.offers.ComboProductOfferActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activities.settings.FreeProductOfferActivity"
+            android:name=".activities.offers.FreeProductOfferActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activities.settings.CreateOfferActivity"
+            android:name=".activities.offers.CreateOfferActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activities.DeliveryAddressActivity"
+            android:name=".activities.order.DeliveryAddressActivity"
             android:launchMode="singleTask" />
         <activity
-            android:name=".activities.TransactionDetailsActivity"
+            android:name=".activities.order.TransactionDetailsActivity"
             android:label="@string/title_activity_transaction_details"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.settings.MyOrderDetailsActivity"
+            android:name=".activities.order.MyOrderDetailsActivity"
             android:label="@string/title_activity_my_order_details"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.settings.MyProductListActivity"
+            android:name=".activities.product.MyProductListActivity"
             android:label="@string/title_activity_my_product_list"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.settings.MySubCategoriesActivity"
+            android:name=".activities.categories.MySubCategoriesActivity"
             android:label="@string/title_activity_my_sub_categories"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.settings.MyCategoriesActivity"
+            android:name=".activities.categories.MyCategoriesActivity"
             android:label="@string/title_activity_my_categories"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
@@ -201,7 +202,7 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.CartActivity"
+            android:name=".activities.order.CartActivity"
             android:label="@string/title_activity_cart"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
@@ -221,12 +222,12 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.settings.MyOrdersActivity"
+            android:name=".activities.order.MyOrdersActivity"
             android:label="@string/title_activity_my_orders"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.settings.MyOffersActivity"
+            android:name=".activities.offers.MyOffersActivity"
             android:label="@string/title_activity_my_orders"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
@@ -236,12 +237,12 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.settings.AddSubCatActivity"
+            android:name=".activities.categories.AddSubCatActivity"
             android:label="@string/title_activity_add_sub_cat"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.settings.AddCategoryActivity"
+            android:name=".activities.categories.AddCategoryActivity"
             android:label="@string/title_activity_add_category"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
@@ -290,22 +291,22 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.BaseImageActivity"
+            android:name=".activities.base.BaseImageActivity"
             android:label="@string/title_activity_base_image"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.OrderSelectProductListActivity"
+            android:name=".activities.order.OrderSelectProductListActivity"
             android:label="@string/title_activity_order_select_product_list"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.OrderDetailActivity"
+            android:name=".activities.order.OrderDetailActivity"
             android:label="@string/title_activity_order_detail"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".activities.CustomerInfoActivity"
+            android:name=".activities.customers.CustomerInfoActivity"
             android:label="@string/title_activity_customer_info"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
@@ -319,13 +320,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.RegisterActivity"
+            android:name=".activities.auth.RegisterActivity"
             android:label="@string/title_activity_register"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".activities.auth.LoginActivity"
             android:label="@string/title_activity_login"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
@@ -335,62 +336,62 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.BaseActivity" />
+        <activity android:name=".activities.base.BaseActivity" />
         <activity
             android:name=".activities.settings.SettingActivity"
             android:label="@string/title_activity_setting"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.NetworkBaseActivity" />
+        <activity android:name=".activities.base.NetworkBaseActivity" />
         <activity
-            android:name=".activities.OffersActivity"
+            android:name=".activities.offers.OffersActivity"
             android:label="@string/title_activity_offers"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.CategoryListActivity"
+            android:name=".activities.categories.CategoryListActivity"
             android:label="@string/title_activity_products"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.CustomerListActivity"
+            android:name=".activities.customers.CustomerListActivity"
             android:label="@string/title_activity_customer_list"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.SubCatListActivity"
+            android:name=".activities.categories.SubCatListActivity"
             android:label="@string/title_activity_sub_cat_list"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.ProductListActivity"
+            android:name=".activities.product.ProductListActivity"
             android:label="@string/title_activity_product_list"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activities.ForgotPasswordActivity"
+            android:name=".activities.auth.ForgotPasswordActivity"
             android:label="@string/title_activity_forgot_password"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.ProductDetailActivity"
+            android:name=".activities.product.ProductDetailActivity"
             android:label="@string/title_activity_product_detail"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.CustomerProfileActivity"
+            android:name=".activities.customers.CustomerProfileActivity"
             android:label="@string/title_activity_customer_profile"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.AddProductActivity"
+            android:name=".activities.product.AddProductActivity"
             android:label="@string/title_activity_add_product"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activities.AddCustomerActivity"
+            android:name=".activities.customers.AddCustomerActivity"
             android:label="@string/title_activity_add_customer"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />

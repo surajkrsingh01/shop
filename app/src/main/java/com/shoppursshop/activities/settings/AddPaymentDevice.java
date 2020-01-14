@@ -13,12 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.google.android.gms.maps.model.Marker;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.MainActivity;
-import com.shoppursshop.activities.NetworkBaseActivity;
-import com.shoppursshop.activities.SplashActivity;
-import com.shoppursshop.activities.payment.PaymentActivity;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
 import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.adapters.MyDeviceAdapter;

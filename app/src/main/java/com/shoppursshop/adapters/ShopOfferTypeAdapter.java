@@ -10,10 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
-import com.shoppursshop.activities.settings.ComboProductOfferActivity;
-import com.shoppursshop.activities.settings.CreateCouponOfferActivity;
-import com.shoppursshop.activities.settings.FreeProductOfferActivity;
-import com.shoppursshop.activities.settings.ProductPriceOfferActivity;
+import com.shoppursshop.activities.offers.ComboProductOfferActivity;
+import com.shoppursshop.activities.offers.CreateCouponOfferActivity;
+import com.shoppursshop.activities.offers.FreeProductOfferActivity;
+import com.shoppursshop.activities.offers.ProductPriceOfferActivity;
 
 import java.util.ArrayList;
 import java.util.List;

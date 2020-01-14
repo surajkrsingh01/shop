@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.shoppursshop.R;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -326,5 +328,55 @@ public class Utility {
 
         return formattedAmount;
     }
+
+    public static String getInitials(String name){
+        String initials = null;
+        if(name.contains(" ")){
+            String[] nameArray = name.split(" ");
+            if(nameArray[1].startsWith("(")){
+                if(nameArray[1].length() > 1){
+                    initials = nameArray[0].substring(0,1)+nameArray[1].substring(1,2);
+                }else{
+                    initials = nameArray[0].substring(0,2);
+                }
+
+            }else if(nameArray[1].startsWith("-") || nameArray[1].startsWith(" ")){
+                if(nameArray.length > 2){
+                    initials = nameArray[0].substring(0,1)+nameArray[2].substring(0,1);
+                }else{
+                    initials = nameArray[0].substring(0,2);
+                }
+
+            }else{
+                if(nameArray[1].length() > 1){
+                    initials = nameArray[0].substring(0,1)+nameArray[1].substring(0,1);
+                }else{
+                    initials = nameArray[0].substring(0,2);
+                }
+            }
+        }else{
+            initials = name.substring(0,2);
+        }
+
+        return initials;
+    }
+
+    public static int getTvColor(Context context,int position){
+
+        if(position >= 12){
+            position = 0;
+        }
+
+        int[] tvColor={context.getResources().getColor(R.color.light_blue500),
+                context.getResources().getColor(R.color.yellow500),context.getResources().getColor(R.color.green500),
+                context.getResources().getColor(R.color.orange500),context.getResources().getColor(R.color.red_500),
+                context.getResources().getColor(R.color.teal_500),context.getResources().getColor(R.color.cyan500),
+                context.getResources().getColor(R.color.deep_orange500),context.getResources().getColor(R.color.blue500),
+                context.getResources().getColor(R.color.purple500),context.getResources().getColor(R.color.amber500),
+                context.getResources().getColor(R.color.light_green500)};
+
+        return tvColor[position];
+    }
+
 
 }

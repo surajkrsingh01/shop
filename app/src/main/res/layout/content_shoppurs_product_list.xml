@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
-    tools:context=".activities.ShoppursProductListActivity"
+    tools:context=".activities.product.ShoppursProductListActivity"
     tools:showIn="@layout/activity_shoppurs_product_list"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 

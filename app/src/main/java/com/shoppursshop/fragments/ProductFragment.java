@@ -2,7 +2,6 @@ package com.shoppursshop.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -16,7 +15,6 @@ import android.widget.Button;
 import com.android.volley.Request;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.MainActivity;
-import com.shoppursshop.activities.RegisterActivity;
 import com.shoppursshop.adapters.SimpleItemAdapter;
 import com.shoppursshop.interfaces.MyLevelItemClickListener;
 import com.shoppursshop.interfaces.OnFragmentInteraction;

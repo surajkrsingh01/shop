@@ -17,13 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.BaseImageActivity;
-import com.shoppursshop.activities.NetworkBaseActivity;
-import com.shoppursshop.activities.ProductDetailActivity;
+import com.shoppursshop.activities.base.BaseImageActivity;
+import com.shoppursshop.activities.product.ProductDetailActivity;
 import com.shoppursshop.adapters.ChatAdapter;
 import com.shoppursshop.fragments.BottomSearchFragment;
 import com.shoppursshop.interfaces.FirebaseImageUploadListener;
@@ -40,7 +36,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -1,7 +1,6 @@
 package com.shoppursshop.activities;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -19,13 +18,9 @@ import androidx.core.app.ActivityCompat;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.payment.PaymentActivity;
-import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
+import com.shoppursshop.activities.auth.LoginActivity;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
-import com.shoppursshop.activities.payment.mPos.MPayActivity;
-import com.shoppursshop.activities.payment.mPos.MPayTransactionDetailsActivity;
-import com.shoppursshop.database.DbHelper;
-import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;

@@ -1,35 +1,25 @@
 package com.shoppursshop.activities.settings;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.NetworkBaseActivity;
-import com.shoppursshop.activities.payment.PaymentActivity;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
 import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
 import com.shoppursshop.adapters.MySubscriptionAdapter;
 import com.shoppursshop.adapters.PaymentSchemeAdapter;
-import com.shoppursshop.adapters.SettingsAdapter;
 import com.shoppursshop.interfaces.MyItemClickListener;
-import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.ShoppursLicense;
 import com.shoppursshop.models.UserLicense;
 import com.shoppursshop.utilities.ConnectionDetector;

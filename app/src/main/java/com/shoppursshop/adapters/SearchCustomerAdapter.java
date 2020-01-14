@@ -27,7 +27,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.CustomerProfileActivity;
+import com.shoppursshop.activities.customers.CustomerProfileActivity;
 import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;

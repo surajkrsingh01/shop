@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.google.gson.Gson;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
 import com.shoppursshop.adapters.TechnicalSupportAdapter;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.CommissionRate;

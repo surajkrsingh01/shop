@@ -3,9 +3,7 @@ package com.shoppursshop.activities.settings;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +24,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.BaseActivity;
+import com.shoppursshop.activities.base.BaseActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
 import com.shoppursshop.activities.settings.profile.BankDetailsActivity;
 import com.shoppursshop.activities.settings.profile.BasicProfileActivity;

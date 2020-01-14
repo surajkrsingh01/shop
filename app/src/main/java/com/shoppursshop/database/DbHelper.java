@@ -10,14 +10,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.shoppursshop.activities.CategoryListActivity;
-import com.shoppursshop.activities.LoginActivity;
+import com.shoppursshop.activities.categories.CategoryListActivity;
+import com.shoppursshop.activities.auth.LoginActivity;
 import com.shoppursshop.models.Barcode;
 import com.shoppursshop.models.CatListItem;
 import com.shoppursshop.models.Category;
 import com.shoppursshop.models.Coupon;
 import com.shoppursshop.models.MyCustomer;
-import com.shoppursshop.models.MyProduct;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.MySimpleItem;
 import com.shoppursshop.models.ProductColor;

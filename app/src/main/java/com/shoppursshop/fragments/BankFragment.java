@@ -1,11 +1,9 @@
 package com.shoppursshop.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +19,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.RegisterActivity;
+import com.shoppursshop.activities.auth.RegisterActivity;
 import com.shoppursshop.interfaces.OnFragmentInteraction;
 import com.shoppursshop.models.MyUser;
-import com.shoppursshop.services.FirebaseImageUploadService;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;

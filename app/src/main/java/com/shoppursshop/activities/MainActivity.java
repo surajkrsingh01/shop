@@ -1,12 +1,10 @@
 package com.shoppursshop.activities;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.widget.PopupMenu;
@@ -26,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -35,8 +32,10 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.settings.RlevelAndExpiredProductActivity;
-import com.shoppursshop.adapters.MyItemAdapter;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
+import com.shoppursshop.activities.customers.CustomerInfoActivity;
+import com.shoppursshop.activities.product.UpdateStockActivity;
+import com.shoppursshop.activities.product.RlevelAndExpiredProductActivity;
 import com.shoppursshop.adapters.OrderAdapter;
 import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.models.HomeListItem;
@@ -197,7 +196,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
         fabNewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,CustomerInfoActivity.class);
+                Intent intent = new Intent(MainActivity.this, CustomerInfoActivity.class);
                 startActivity(intent);
             }
         });
@@ -224,7 +223,7 @@ public class MainActivity extends NetworkBaseActivity implements MyImageClickLis
                         }else if(item.getTitle().equals("Close Store")){
                             changeStoreStatus("0");
                         }else if(item.getTitle().equals("Update Stock")){
-                            Intent intent = new Intent(MainActivity.this,UpdateStockActivity.class);
+                            Intent intent = new Intent(MainActivity.this, UpdateStockActivity.class);
                             startActivity(intent);
                         }
 

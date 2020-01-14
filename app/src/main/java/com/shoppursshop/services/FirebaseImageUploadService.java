@@ -11,18 +11,13 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.shoppursshop.activities.AddProductActivity;
 import com.shoppursshop.interfaces.FirebaseImageUploadListener;
-import com.shoppursshop.utilities.Constants;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FirebaseImageUploadService {

@@ -1,13 +1,11 @@
 package com.shoppursshop.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Paint;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
+
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,16 +19,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.settings.FreeProductOfferActivity;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.ProductComboOffer;
 import com.shoppursshop.models.ProductDiscountOffer;
 import com.shoppursshop.models.ProductUnit;
-import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

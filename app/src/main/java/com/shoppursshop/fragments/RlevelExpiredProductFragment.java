@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.settings.RlevelAndExpiredProductActivity;
+import com.shoppursshop.activities.product.RlevelAndExpiredProductActivity;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
 

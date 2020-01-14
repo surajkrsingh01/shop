@@ -3,15 +3,11 @@ package com.shoppursshop.activities;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.text.TextUtils;
+
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.android.volley.Request;
 import com.google.zxing.ResultPoint;
@@ -20,19 +16,15 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.shoppursshop.R;
-import com.shoppursshop.models.MyCustomer;
-import com.shoppursshop.models.MyProductItem;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
+import com.shoppursshop.activities.product.ProductDetailActivity;
 import com.shoppursshop.utilities.Constants;
-import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -113,7 +105,7 @@ public class ScannarActivity extends NetworkBaseActivity {
                  //  DialogAndToast.showToast("Product does not exist in database.",this);
                 //   finish();
                }else{
-                   Intent intent = new Intent(this,ProductDetailActivity.class);
+                   Intent intent = new Intent(this, ProductDetailActivity.class);
                    intent.putExtra("id",id);
                    intent.putExtra("subCatName","");
                    intent.putExtra("flag","scan");

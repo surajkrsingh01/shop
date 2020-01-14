@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.BaseActivity;
+import com.shoppursshop.activities.base.BaseActivity;
 import com.shoppursshop.utilities.Constants;
 
 public class DisplaySettingsActivity extends BaseActivity implements View.OnClickListener {

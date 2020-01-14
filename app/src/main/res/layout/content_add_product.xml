@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.AddProductActivity"
+    tools:context=".activities.product.AddProductActivity"
     tools:showIn="@layout/activity_add_product">
 
     <TextView

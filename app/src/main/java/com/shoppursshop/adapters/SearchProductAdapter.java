@@ -26,15 +26,13 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.AddProductActivity;
-import com.shoppursshop.activities.ProductDetailActivity;
+import com.shoppursshop.activities.product.AddProductActivity;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.Utility;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -117,19 +115,7 @@ public class SearchProductAdapter extends RecyclerView.Adapter<SearchProductAdap
                 }
             }
 
-            String initials = "";
-            if(item.getProdName().contains(" ")){
-                String[] name = item.getProdName().split(" ");
-                if(name[1].startsWith("(")){
-                    initials = name[0].substring(0,1)+name[1].substring(1,2);
-                }else{
-                    initials = name[0].substring(0,1)+name[1].substring(0,1);
-                }
-            }else{
-                initials = item.getProdName().substring(0,2);
-            }
-
-            myViewHolder.tvInitials.setText(initials);
+            myViewHolder.tvInitials.setText(Utility.getInitials(item.getProdName()));
 
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);

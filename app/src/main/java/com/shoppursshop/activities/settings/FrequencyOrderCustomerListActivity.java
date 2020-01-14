@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
-import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
 import com.shoppursshop.adapters.CustomerAdapter;
 import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
