@@ -553,6 +553,12 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
                         rlPartnerDetails.setVisibility(View.VISIBLE);
                         tvPartnerName.setText(partner.getName());
                         tvPartnerMobile.setText(partner.getMobile());
+                    }else if(responseCode == 3){
+                        progressBar.setVisibility(View.GONE);
+                        btnAssign.setVisibility(View.GONE);
+                        btnTrackOrder.setVisibility(View.GONE);
+                       // buttonOrderDelivered.setVisibility(View.VISIBLE);
+                        tvLabel1.setText("Partner has delivered the order");
                     }else if(responseCode == 2){
                         progressBar.setVisibility(View.GONE);
                         btnAssign.setVisibility(View.VISIBLE);

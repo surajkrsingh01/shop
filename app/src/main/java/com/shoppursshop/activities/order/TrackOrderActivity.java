@@ -4,8 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -25,11 +29,15 @@ import com.shoppursshop.R;
 import com.shoppursshop.activities.MainActivity;
 import com.shoppursshop.activities.base.NetworkBaseActivity;
 import com.shoppursshop.activities.customers.CustomerAddressActivity;
+import com.shoppursshop.location.GpsLocationProvider;
 import com.shoppursshop.models.ShoppursPartner;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class TrackOrderActivity extends NetworkBaseActivity implements OnMapReadyCallback {
 
@@ -38,7 +46,7 @@ public class TrackOrderActivity extends NetworkBaseActivity implements OnMapRead
 
     private LatLng shopLatLng,custLatLng,orderLatLng;
     private String shopName,shopAddress,shopMobile,custName,
-            custAddress,custMobile;
+            custAddress,custMobile,orderAddress;
 
     private TextView tvPartnerName,tvPartnerMobile;
     private ShoppursPartner partner;
@@ -63,6 +71,12 @@ public class TrackOrderActivity extends NetworkBaseActivity implements OnMapRead
         double longitude = Double.parseDouble(getIntent().getStringExtra("custLong"));
         if(latitude != 0d){
             custLatLng = new LatLng(latitude,longitude);
+        }
+
+        latitude = Double.parseDouble(partner.getLatitude());
+        longitude = Double.parseDouble(partner.getLongitude());
+        if(latitude != 0d){
+            orderLatLng = new LatLng(latitude,longitude);
         }
 
         latitude = Double.parseDouble(sharedPreferences.getString(Constants.USER_LAT,""));
@@ -143,7 +157,10 @@ public class TrackOrderActivity extends NetworkBaseActivity implements OnMapRead
             }
         });
 
-        trackOrder();
+        showProgress(true);
+        FetchAddress fetchAddress = new FetchAddress();
+        // Start downloading json data from Google Directions API
+        fetchAddress.execute("");
     }
 
 
@@ -155,6 +172,12 @@ public class TrackOrderActivity extends NetworkBaseActivity implements OnMapRead
         options.title(shopName);
         options.snippet(shopAddress+"/n"+shopMobile);
         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        mMap.addMarker(options);
+
+        options.position(orderLatLng);
+        options.title("Order Location");
+        options.snippet(orderAddress);
+        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mMap.addMarker(options);
 
         options.position(custLatLng);
@@ -175,5 +198,72 @@ public class TrackOrderActivity extends NetworkBaseActivity implements OnMapRead
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height,padding);
         // mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70));
         mMap.moveCamera(cu);
+    }
+
+
+    // Fetches data from url passed
+    private class FetchAddress extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... url) {
+
+            try {
+                Geocoder geocoder = new Geocoder(TrackOrderActivity.this, Locale.getDefault());
+                String errorMessage = "";
+
+                List<Address> addresses = null;
+
+                try {
+                    addresses = geocoder.getFromLocation(
+                            orderLatLng.latitude,
+                            orderLatLng.longitude,
+                            // In this sample, get just a single address.
+                            1);
+                    //showToast("LocationAddress is gotten..");
+                } catch (IOException ioException) {
+                    // Catch network or other I/O problems.
+                    errorMessage = getResources().getString(R.string.service_not_available)+ioException.toString();
+                    //  Log.e(TAG, errorMessage, ioException);
+                } catch (IllegalArgumentException illegalArgumentException) {
+                    // Catch invalid latitude or longitude values.
+                    errorMessage = getResources().getString(R.string.invalid_lat_long_used);
+                }
+
+                // Handle case where no address was found.
+                if (addresses == null || addresses.size() == 0) {
+                    if (errorMessage.isEmpty()) {
+                        errorMessage = getResources().getString(R.string.no_address_found);
+                        Log.d(TAG, "Address no found "+errorMessage);
+                    }
+                    orderAddress = "";
+                } else {
+                    Address address = addresses.get(0);
+                    ArrayList<String> addressFragments = new ArrayList<String>();
+
+                    // Fetch the address lines using getAddressLine,
+                    // join them, and send them to the thread.
+                    for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                        addressFragments.add(address.getAddressLine(i));
+                    }
+
+                    // addressFragments have no values but address has
+                    Log.d(TAG , "Address found "+address.getAddressLine(0));
+                    orderAddress = address.getAddressLine(0);
+
+                }
+
+            } catch (Exception e) {
+                Log.d(TAG, e.toString());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            showProgress(false);
+            trackOrder();
+        }
     }
 }
