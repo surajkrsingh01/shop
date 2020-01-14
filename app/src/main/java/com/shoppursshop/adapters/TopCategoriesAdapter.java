@@ -8,15 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
-import com.shoppursshop.activities.ShoppursProductListActivity;
-import com.shoppursshop.models.Category;
+import com.shoppursshop.activities.product.ShoppursProductListActivity;
 import com.shoppursshop.models.SubCategory;
-import com.shoppursshop.utilities.DialogAndToast;
 
 import java.util.List;
 

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.CustomerProfileActivity"
+    tools:context=".activities.customers.CustomerProfileActivity"
     tools:showIn="@layout/activity_customer_profile">
 
     <androidx.core.widget.NestedScrollView

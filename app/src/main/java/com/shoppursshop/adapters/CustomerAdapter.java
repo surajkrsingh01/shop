@@ -5,10 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,10 +31,9 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.AddCustomerActivity;
-import com.shoppursshop.activities.CustomerProfileActivity;
+import com.shoppursshop.activities.customers.AddCustomerActivity;
+import com.shoppursshop.activities.customers.CustomerProfileActivity;
 import com.shoppursshop.interfaces.MyImageClickListener;
-import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTouchListener;
 import com.shoppursshop.interfaces.MyItemTypeClickListener;
 import com.shoppursshop.models.MyCustomer;
@@ -45,9 +41,6 @@ import com.shoppursshop.models.MyHeader;
 import com.shoppursshop.models.MyItem;
 import com.shoppursshop.utilities.Utility;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;

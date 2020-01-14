@@ -5,19 +5,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.bumptech.glide.Glide;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,7 +20,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.text.Html;
 import android.util.Log;
@@ -56,11 +49,9 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.itextpdf.text.pdf.draw.VerticalPositionMark;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -78,10 +69,9 @@ import com.pnsol.sdk.payment.PaymentInitialization;
 import com.pnsol.sdk.vo.response.POSReceipt;
 import com.pnsol.sdk.vo.response.TransactionStatusResponse;
 import com.shoppursshop.R;
+import com.shoppursshop.activities.base.BaseImageActivity;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
 import com.shoppursshop.adapters.InvoiceItemAdapter;
-import com.shoppursshop.models.Coupon;
-import com.shoppursshop.models.Invoice;
-import com.shoppursshop.models.InvoiceDetail;
 import com.shoppursshop.models.InvoiceItem;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
@@ -101,13 +91,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -232,7 +216,7 @@ public class InvoiceActivity extends NetworkBaseActivity {
             @Override
             public void onClick(View v) {
                 actionType = SHARE;
-                createPdf();
+                createNewPdf();
             }
         });
 
@@ -548,14 +532,14 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 Font descBlueFont = new Font(baseFont, mValueFontSize, Font.NORMAL, baseBlue);
                 Font subHeaderOrangeFont = new Font(baseFont, mSubHeadingFontSize, Font.NORMAL, baseOragnge);
 
-                Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+                Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.pdf_logo_new);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 logo.compress(Bitmap.CompressFormat.JPEG, 100 , stream);
                 Image myImg = Image.getInstance(stream.toByteArray());
                 myImg.setAlignment(Image.MIDDLE);
                // document.add(myImg);
 
-                PdfPTable pdfImageTable = new PdfPTable(3);
+                PdfPTable pdfImageTable = new PdfPTable(1);
                 pdfImageTable.setHorizontalAlignment(Element.ALIGN_CENTER);
                 pdfImageTable.setWidthPercentage(100);
 
@@ -563,17 +547,9 @@ public class InvoiceActivity extends NetworkBaseActivity {
                 pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
                 pdfPCell.setBorder(Rectangle.NO_BORDER);
-                pdfImageTable.addCell(pdfPCell);
-                pdfPCell = new PdfPCell();
-                pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
-                pdfPCell.setBorder(Rectangle.NO_BORDER);
+                pdfPCell.setPaddingLeft(30);
+                pdfPCell.setPaddingRight(30);
                 pdfPCell.addElement(myImg);
-                pdfImageTable.addCell(pdfPCell);
-                pdfPCell = new PdfPCell();
-                pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
-                pdfPCell.setBorder(Rectangle.NO_BORDER);
                 pdfImageTable.addCell(pdfPCell);
                 document.add(pdfImageTable);
 

@@ -1,48 +1,34 @@
 package com.shoppursshop.fragments;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-import android.telephony.TelephonyManager;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.MainActivity;
-import com.shoppursshop.activities.RegisterActivity;
+import com.shoppursshop.activities.auth.RegisterActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
 import com.shoppursshop.interfaces.OnFragmentInteraction;
-import com.shoppursshop.models.MySimpleItem;
 import com.shoppursshop.models.MyUser;
-import com.shoppursshop.models.SpinnerItem;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
-import com.shoppursshop.utilities.Utility;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

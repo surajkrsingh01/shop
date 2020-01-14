@@ -1,12 +1,12 @@
 package com.shoppursshop.activities;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Bundle;
@@ -18,13 +18,9 @@ import androidx.core.app.ActivityCompat;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.payment.PaymentActivity;
-import com.shoppursshop.activities.payment.ccavenue.activities.CCAvenueWebViewActivity;
+import com.shoppursshop.activities.auth.LoginActivity;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
 import com.shoppursshop.activities.payment.ccavenue.utility.AvenuesParams;
-import com.shoppursshop.activities.payment.mPos.MPayActivity;
-import com.shoppursshop.activities.payment.mPos.MPayTransactionDetailsActivity;
-import com.shoppursshop.database.DbHelper;
-import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
@@ -122,7 +118,17 @@ public class SplashActivity extends NetworkBaseActivity {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            String IMEI = teleManager.getDeviceId();
+            String IMEI = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                IMEI =  teleManager.getImei();
+            } else {
+                IMEI = teleManager.getDeviceId();
+            }
+
+            if (IMEI == null || IMEI.isEmpty()) {
+                IMEI = android.os.Build.SERIAL;
+            }
+
             editor.putString(Constants.IMEI_NO,IMEI);
             editor.commit();
             Log.i(TAG,"Mac id "+IMEI);

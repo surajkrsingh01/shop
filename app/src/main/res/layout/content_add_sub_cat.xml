@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.settings.AddSubCatActivity"
+    tools:context=".activities.categories.AddSubCatActivity"
     tools:showIn="@layout/activity_add_sub_cat">
 
     <TextView

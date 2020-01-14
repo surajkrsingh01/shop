@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.settings.ReturnProductActivity"
+    tools:context=".activities.product.ReturnProductActivity"
     tools:showIn="@layout/activity_return_product">
 
     <TextView

@@ -1,7 +1,6 @@
 package com.shoppursshop.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -15,13 +14,12 @@ import android.widget.Button;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.RegisterActivity;
+import com.shoppursshop.activities.auth.RegisterActivity;
 import com.shoppursshop.adapters.SimpleItemAdapter;
 import com.shoppursshop.interfaces.MyLevelItemClickListener;
 import com.shoppursshop.interfaces.OnFragmentInteraction;
 import com.shoppursshop.models.CatListItem;
 import com.shoppursshop.models.MySimpleItem;
-import com.shoppursshop.models.SubCategory;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
@@ -34,7 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.CheckedOutputStream;
 
 /**
  * A simple {@link Fragment} subclass.

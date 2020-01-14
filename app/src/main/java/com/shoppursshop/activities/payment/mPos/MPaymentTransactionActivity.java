@@ -5,51 +5,25 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.pnsol.sdk.interfaces.DeviceCommunicationMode;
-import com.pnsol.sdk.interfaces.DeviceType;
 import com.pnsol.sdk.interfaces.PaymentTransactionConstants;
-import com.pnsol.sdk.miura.emv.tlv.ISOUtil;
 import com.pnsol.sdk.payment.PaymentInitialization;
 import com.pnsol.sdk.vo.AcquirerEmiDetailsVO;
-import com.pnsol.sdk.vo.HostResponse;
 import com.pnsol.sdk.vo.TransactionVO;
 import com.pnsol.sdk.vo.response.ICCTransactionResponse;
 import com.pnsol.sdk.vo.response.TransactionStatusResponse;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.BaseActivity;
-import com.shoppursshop.activities.RateAndReviewActivity;
-import com.shoppursshop.activities.settings.profile.AddressActivity;
-import com.shoppursshop.interfaces.OnLocationReceivedListener;
-import com.shoppursshop.location.GpsLocationProvider;
-import com.shoppursshop.location.NetworkSensor;
+import com.shoppursshop.activities.base.BaseActivity;
 import com.shoppursshop.utilities.Constants;
-import com.shoppursshop.utilities.Utility;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -58,7 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MPaymentTransactionActivity extends BaseActivity implements PaymentTransactionConstants,

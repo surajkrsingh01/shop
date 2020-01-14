@@ -1,6 +1,8 @@
 package com.shoppursshop.models;
 
-public class ShoppursPartner {
+import java.io.Serializable;
+
+public class ShoppursPartner implements Serializable {
 
     private int id;
     private String name, email, mobile,password, affilateCode, address, country, state, city, zip, latitude, longitude,

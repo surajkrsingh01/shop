@@ -2,13 +2,9 @@ package com.shoppursshop.activities.settings.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -16,7 +12,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
 import com.shoppursshop.activities.settings.ProfileActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.utilities.Constants;

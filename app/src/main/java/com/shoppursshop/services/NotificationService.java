@@ -4,20 +4,16 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Vibrator;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.shoppursshop.R;
-import com.shoppursshop.activities.LoginActivity;
 import com.shoppursshop.activities.SplashActivity;
 import com.shoppursshop.activities.settings.ChatActivity;
 

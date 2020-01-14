@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.CustomerInfoActivity"
+    tools:context=".activities.customers.CustomerInfoActivity"
     tools:showIn="@layout/activity_customer_info">
 
     <ImageView

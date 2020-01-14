@@ -1,9 +1,7 @@
 package com.shoppursshop.activities.payment.mPos;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,42 +9,27 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.Request;
-import com.google.gson.Gson;
 import com.pnsol.sdk.interfaces.PaymentTransactionConstants;
-import com.pnsol.sdk.miura.emv.tlv.ISOUtil;
-import com.pnsol.sdk.payment.PaymentInitialization;
 import com.pnsol.sdk.vo.HostResponse;
-import com.pnsol.sdk.vo.TransactionVO;
-import com.pnsol.sdk.vo.response.ICCTransactionResponse;
 import com.pnsol.sdk.vo.response.TransactionStatusResponse;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.CustomerInfoActivity;
 import com.shoppursshop.activities.InvoiceActivity;
-import com.shoppursshop.activities.NetworkBaseActivity;
-import com.shoppursshop.activities.OrderDetailActivity;
-import com.shoppursshop.activities.RateAndReviewActivity;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
+import com.shoppursshop.activities.order.RateAndReviewActivity;
 import com.shoppursshop.database.DbHelper;
-import com.shoppursshop.models.Barcode;
-import com.shoppursshop.models.Invoice;
-import com.shoppursshop.models.InvoiceDetail;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 import com.shoppursshop.utilities.Utility;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

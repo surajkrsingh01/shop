@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.OrderDetailActivity"
+    tools:context=".activities.order.OrderDetailActivity"
     tools:showIn="@layout/activity_order_detail">
 
     <TextView
@@ -197,6 +197,16 @@
                         android:visibility="gone"
                         android:layout_marginTop="8dp"
                         android:text="Cancel"
+                        android:textColor="@color/white"
+                        android:background="@drawable/accent_solid_small_round_corner_background"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/regular_btn_size"/>
+
+                    <Button
+                        android:id="@+id/btnTrackOrder"
+                        android:visibility="gone"
+                        android:layout_marginTop="8dp"
+                        android:text="Track Order"
                         android:textColor="@color/white"
                         android:background="@drawable/accent_solid_small_round_corner_background"
                         android:layout_width="wrap_content"

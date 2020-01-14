@@ -225,20 +225,7 @@ public class ReorderLevelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 myViewHolder.relativeLayoutUnit.setVisibility(View.GONE);
             }
 
-            String initials = "";
-            if(item.getProdName().contains(" ")){
-                String[] name = item.getProdName().split(" ");
-                if(name[1].startsWith("(")){
-                    initials = name[0].substring(0,1)+name[1].substring(1,2);
-                }else{
-                    initials = name[0].substring(0,1)+name[1].substring(0,1);
-                }
-
-            }else{
-                initials = item.getProdName().substring(0,2);
-            }
-
-            myViewHolder.tvInitials.setText(initials);
+            myViewHolder.tvInitials.setText(Utility.getInitials(item.getProdName()));
 
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
@@ -255,7 +242,8 @@ public class ReorderLevelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             myViewHolder.tvInitials.setVisibility(View.VISIBLE);
                             myViewHolder.imageView.setVisibility(View.GONE);
                             //  myViewHolder.textInitial.setBackgroundColor(getTvColor(counter));
-                            Utility.setColorFilter(myViewHolder.tvInitials.getBackground(),getTvColor(counter));
+                            Utility.setColorFilter(myViewHolder.tvInitials.getBackground(),
+                                    Utility.getTvColor(context,counter));
 
                             counter++;
                             if(counter == 12){
@@ -279,20 +267,4 @@ public class ReorderLevelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return itemList.size();
     }
 
-    private int getTvColor(int position){
-
-        if(position >= 12){
-            position = 0;
-        }
-
-        int[] tvColor={context.getResources().getColor(R.color.light_blue500),
-                context.getResources().getColor(R.color.yellow500),context.getResources().getColor(R.color.green500),
-                context.getResources().getColor(R.color.orange500),context.getResources().getColor(R.color.red_500),
-                context.getResources().getColor(R.color.teal_500),context.getResources().getColor(R.color.cyan500),
-                context.getResources().getColor(R.color.deep_orange500),context.getResources().getColor(R.color.blue500),
-                context.getResources().getColor(R.color.purple500),context.getResources().getColor(R.color.amber500),
-                context.getResources().getColor(R.color.light_green500)};
-
-        return tvColor[position];
-    }
 }

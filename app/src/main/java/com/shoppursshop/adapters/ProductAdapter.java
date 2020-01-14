@@ -37,11 +37,11 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.AddProductActivity;
-import com.shoppursshop.activities.ProductDetailActivity;
-import com.shoppursshop.activities.ProductListActivity;
+import com.shoppursshop.activities.product.AddProductActivity;
+import com.shoppursshop.activities.product.ProductDetailActivity;
+import com.shoppursshop.activities.product.ProductListActivity;
 import com.shoppursshop.activities.ScannarActivity;
-import com.shoppursshop.activities.SubCatListActivity;
+import com.shoppursshop.activities.categories.SubCatListActivity;
 import com.shoppursshop.interfaces.MyImageClickListener;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyItemTouchListener;
@@ -50,12 +50,10 @@ import com.shoppursshop.models.FrequencyProduct;
 import com.shoppursshop.models.HomeListItem;
 import com.shoppursshop.models.MyHeader;
 import com.shoppursshop.models.MyItem;
-import com.shoppursshop.models.MyProduct;
 import com.shoppursshop.models.MyProductItem;
 import com.shoppursshop.models.SubCategory;
 import com.shoppursshop.models.CatListItem;
 import com.shoppursshop.utilities.Utility;
-import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 import java.util.List;
@@ -869,28 +867,16 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     myViewHolder.textStatus.setVisibility(View.GONE);
 
                 }
-            }else{
-                if(item.getProdQoh() == 0){
+            }else {
+                if (item.getProdQoh() == 0) {
                     myViewHolder.textStatus.setText("Out of stock");
                     myViewHolder.textStatus.setVisibility(View.GONE);
-                }else{
+                } else {
                     myViewHolder.textStatus.setVisibility(View.GONE);
                 }
             }
-
-            String initials = "";
-            if(item.getProdName().contains(" ")){
-                String[] name = item.getProdName().split(" ");
-                if(name[1].startsWith("(")){
-                    initials = name[0].substring(0,1)+name[1].substring(1,2);
-                }else{
-                    initials = name[0].substring(0,1)+name[1].substring(0,1);
-                }
-            }else{
-                initials = item.getProdName().substring(0,2);
-            }
-
-            myViewHolder.tvInitials.setText(initials);
+            Log.i("Adapter","name "+item.getProdName()+"name");
+            myViewHolder.tvInitials.setText(Utility.getInitials(item.getProdName()));
 
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);

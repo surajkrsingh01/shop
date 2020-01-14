@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.settings.AddCategoryActivity">
+    tools:context=".activities.categories.AddCategoryActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:visibility="gone"

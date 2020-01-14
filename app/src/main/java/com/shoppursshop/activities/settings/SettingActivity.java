@@ -10,9 +10,16 @@ import android.view.MenuItem;
 
 import com.android.volley.Request;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.LoginActivity;
-import com.shoppursshop.activities.NetworkBaseActivity;
-import com.shoppursshop.activities.ShoppursProductListActivity;
+import com.shoppursshop.activities.auth.LoginActivity;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
+import com.shoppursshop.activities.categories.MyCategoriesActivity;
+import com.shoppursshop.activities.categories.MySubCategoriesActivity;
+import com.shoppursshop.activities.offers.MyOffersActivity;
+import com.shoppursshop.activities.order.MyOrdersActivity;
+import com.shoppursshop.activities.product.MyProductListActivity;
+import com.shoppursshop.activities.product.ReturnProductActivity;
+import com.shoppursshop.activities.product.RlevelAndExpiredProductActivity;
+import com.shoppursshop.activities.product.ShoppursProductListActivity;
 import com.shoppursshop.adapters.SettingsAdapter;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.fragments.ReferAppDialogFragment;
@@ -67,6 +74,7 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         itemList.add("User License");
         itemList.add("Sync Data");
         itemList.add("Chat");
+        itemList.add("Technical Support");
         itemList.add("Display");
         itemList.add("Logout");
         recyclerView = findViewById(R.id.recycler_view);
@@ -202,6 +210,9 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
             startActivity(intent);
         }else if(name.equals("Chat")){
             Intent intent = new Intent(this, UserListForChatActivity.class);
+            startActivity(intent);
+        }else if(name.equals("Technical Support")){
+            Intent intent = new Intent(this, TechincalSupportActivity.class);
             startActivity(intent);
         }else if(name.equals("Display")){
             Intent intent = new Intent(this, DisplaySettingsActivity.class);

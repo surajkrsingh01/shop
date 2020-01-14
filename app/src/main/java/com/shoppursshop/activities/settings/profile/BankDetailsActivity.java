@@ -3,11 +3,7 @@ package com.shoppursshop.activities.settings.profile;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.bumptech.glide.Glide;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
@@ -15,8 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
-import com.shoppursshop.activities.BaseImageActivity;
-import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.base.BaseImageActivity;
 import com.shoppursshop.activities.settings.ProfileActivity;
 import com.shoppursshop.activities.settings.SettingActivity;
 import com.shoppursshop.fragments.BankFragment;

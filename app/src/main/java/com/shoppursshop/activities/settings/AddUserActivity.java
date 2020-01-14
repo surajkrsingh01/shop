@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.android.volley.Request;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.text.TextUtils;
@@ -16,13 +13,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.shoppursshop.R;
-import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
 import com.shoppursshop.models.MyUser;
 import com.shoppursshop.services.NotificationService;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
-import com.shoppursshop.utilities.Utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;

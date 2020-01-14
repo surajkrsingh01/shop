@@ -35,7 +35,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.ProductDetailActivity;
+import com.shoppursshop.activities.product.ProductDetailActivity;
 import com.shoppursshop.adapters.SearchProductAdapter;
 import com.shoppursshop.adapters.SearchCustomerAdapter;
 import com.shoppursshop.database.DbHelper;

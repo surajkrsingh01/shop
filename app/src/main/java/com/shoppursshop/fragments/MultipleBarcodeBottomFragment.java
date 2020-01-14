@@ -19,10 +19,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -30,12 +28,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.shoppursshop.R;
-import com.shoppursshop.activities.AddProductActivity;
 import com.shoppursshop.activities.ScannarActivity;
 import com.shoppursshop.adapters.BarCodeAdapter;
 import com.shoppursshop.database.DbHelper;
 import com.shoppursshop.utilities.AppController;
-import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 
@@ -43,7 +39,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

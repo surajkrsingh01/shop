@@ -4,26 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.android.volley.Request;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.NetworkOnMainThreadException;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.shoppursshop.R;
-import com.shoppursshop.activities.CartActivity;
-import com.shoppursshop.activities.CustomerInfoActivity;
-import com.shoppursshop.activities.NetworkBaseActivity;
+import com.shoppursshop.activities.base.NetworkBaseActivity;
 import com.shoppursshop.adapters.ChatUserAdapter;
-import com.shoppursshop.adapters.MyUserAdapter;
 import com.shoppursshop.fragments.BottomSearchFragment;
 import com.shoppursshop.interfaces.MyItemClickListener;
 import com.shoppursshop.interfaces.MyListItemClickListener;
