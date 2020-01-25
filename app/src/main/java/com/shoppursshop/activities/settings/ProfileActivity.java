@@ -87,8 +87,8 @@ public class ProfileActivity extends BaseActivity implements MyItemClickListener
         itemList.add("Store Details");
         itemList.add("Address");
         itemList.add("Delivery");
-        //itemList.add("KYC Details");
         itemList.add("Bank Details");
+        itemList.add("KYC Details");
         //itemList.add("Invite on Shoppurs");
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);

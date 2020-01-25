@@ -17,10 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -54,6 +56,7 @@ public class BrowseImagesActivity extends NetworkBaseActivity implements MyItemC
     private MyImage myImage;
     private String flag,query;
     private int start = 1,count=10;
+    private ImageView ivSearch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +72,7 @@ public class BrowseImagesActivity extends NetworkBaseActivity implements MyItemC
         itemOriginalList = new ArrayList<>();
        // itemList.add("1");
       //  itemList.add("2");
+        ivSearch = findViewById(R.id.ivSearch);
         text_no_files = findViewById(R.id.text_no_files);
         progress_bar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.recycler_view);
@@ -102,8 +106,8 @@ public class BrowseImagesActivity extends NetworkBaseActivity implements MyItemC
             }
         });
 
-        EditText editTextSearch = findViewById(R.id.edit_search);
-        editTextSearch.addTextChangedListener(new TextWatcher() {
+        final EditText editTextSearch = findViewById(R.id.edit_search);
+        /*editTextSearch.addTextChangedListener(new TextWatcher() {
             private Timer timer=new Timer();
             private final long DELAY = 1000; // milliseconds
             @Override
@@ -143,6 +147,27 @@ public class BrowseImagesActivity extends NetworkBaseActivity implements MyItemC
                     filterImages(s.toString());
                 }
 
+            }
+        });*/
+
+        ivSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                query = editTextSearch.getText().toString();
+
+                if(flag.equals("google")){
+                    if(!TextUtils.isEmpty(query)){
+                        itemList.clear();
+                        itemAdapter.notifyDataSetChanged();
+                        start = 0;
+                        progress_bar.setVisibility(View.VISIBLE);
+                        searchGoogleImages();
+                    }else{
+
+                    }
+                }else{
+                    filterImages(query);
+                }
             }
         });
 
