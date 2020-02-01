@@ -209,12 +209,12 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
         alertDialog = alertDialogBuilder.create();
         alertDialog.show();
 
-      //  itemList.add("https://firebasestorage.googleapis.com/v0/b/shoppurs-2a1ac.appspot.com/o/images%2Fcat%2Fgrc%2Fgrocery.jpg?alt=media&token=3f72a1a9-fc00-4fb5-863b-c148ba0a2975");
+        //  itemList.add("https://firebasestorage.googleapis.com/v0/b/shoppurs-2a1ac.appspot.com/o/images%2Fcat%2Fgrc%2Fgrocery.jpg?alt=media&token=3f72a1a9-fc00-4fb5-863b-c148ba0a2975");
         // final TextView textHeader=(TextView) alertDialog.findViewById(R.id.text_header);
         final ImageView imageCancel=(ImageView) alertDialog.findViewById(R.id.image_close);
         final Button btnGallery=(Button) alertDialog.findViewById(R.id.btn_gallery);
         final Button btnCamera=(Button) alertDialog.findViewById(R.id.btn_camera);
-        final Button btn_browse=(Button) alertDialog.findViewById(R.id.btn_browse);
+        //  final Button btn_browse=(Button) alertDialog.findViewById(R.id.btn_browse);
         final Button btn_google_search=(Button) alertDialog.findViewById(R.id.btn_google_browse);
 
         imageCancel.setOnClickListener(new View.OnClickListener() {
@@ -244,7 +244,7 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
             }
         });
 
-        btn_browse.setOnClickListener(new View.OnClickListener() {
+       /* btn_browse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(BaseImageActivity.this, BrowseImagesActivity.class);
@@ -252,7 +252,7 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
                 intent.putExtra("flag","firebase");
                 startActivityForResult(intent,5);
             }
-        });
+        });*/
 
         btn_google_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -316,7 +316,7 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
                 bitmap = compressImage(getRealPathFromURI(filePath.toString()));
             }
 
-           // bitmap=getBitmapFromUri(filePath);
+            // bitmap=getBitmapFromUri(filePath);
             saveBitmap(bitmap);
             //convertToBase64(new File(imagePath));
             imageAdded();
@@ -330,7 +330,7 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
     public void onCaptureImageResult(){
         //convertToBase64(new File(imagePath));
         try {
-           // File file = new File(imagePath);
+            // File file = new File(imagePath);
             //Bitmap b = BitmapFactory.decodeFile(file.getAbsolutePath());
             Bitmap compressedBitmap = compressImage(imagePath);
             saveBitmap(compressedBitmap);
@@ -734,9 +734,9 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
 
     @Override
     public void onItemClicked(int position) {
-      imagePath = itemList.get(position);
-      browseImageSelected();
-      alertDialog.dismiss();
+        imagePath = itemList.get(position);
+        browseImageSelected();
+        alertDialog.dismiss();
     }
 
     protected void browseImageSelected(){
