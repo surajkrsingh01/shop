@@ -1973,7 +1973,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             showProgress(true);
             String shopCode = sharedPreferences.getString(Constants.SHOP_CODE,"");
             firebaseImageUploadService.setFirebaseImageUploadListener(this);
-            if(shopCode.equals("SHP1")){
+           /* if(shopCode.equals("SHP1")){
                 String name = categoryListObject.get(spinnerCategory.getSelectedItemPosition()-1).getName();
                 name = name.substring(0,3).toLowerCase();
                 firebaseImageUploadService.uploadProdImage(name,
@@ -1981,7 +1981,13 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             }else{
                 firebaseImageUploadService.uploadProdImage(prodId,
                         shopCode,imageList);
-            }
+            }*/
+
+           String name = Utility.getTimeStamp("yyyyddMMHHmmss")+".jpg";
+
+            firebaseImageUploadService.uploadProdImage(name,prodId,
+                    shopCode,imageList);
+
         }else{
             if(flag.equals("editProduct")){
                 updateLocalProduct();

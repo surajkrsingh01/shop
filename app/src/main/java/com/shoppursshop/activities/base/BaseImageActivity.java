@@ -459,6 +459,7 @@ public class BaseImageActivity extends NetworkBaseActivity implements MyItemClic
                         galleryIntent();
                     else if(userChoosenTask.equals("savingBitmap")){
                         saveBitmap(tempBitmap);
+                        imageAdded();
                     }
 
                 } else {

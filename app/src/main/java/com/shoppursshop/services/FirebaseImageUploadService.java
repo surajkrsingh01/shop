@@ -92,22 +92,22 @@ public class FirebaseImageUploadService {
 
     }
 
-    public void uploadProdImage(String prodId,String shopCode, List<String> imageList){
+    public void uploadProdImage(String name,String prodId,String shopCode, List<String> imageList){
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         Log.i(TAG,"uploading images to firebase..");
         int i = 1;
-        String name = null;
+        //String name = null;
         for(String imagePath : imageList){
 
             if(!imagePath.equals("no")){
-                if(i==1){
+                /*if(i==1){
                     name="1.jpg";
                 }else if(i==2){
                     name="2.jpg";
                 }else if(i==3){
                     name="3.jpg";
-                }
+                }*/
                 new UploadFile().execute(""+i,imagePath,name,prodId,shopCode);
             }
 
