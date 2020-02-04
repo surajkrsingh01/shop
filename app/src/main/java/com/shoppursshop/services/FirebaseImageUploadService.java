@@ -16,6 +16,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.shoppursshop.interfaces.FirebaseImageUploadListener;
+import com.shoppursshop.utilities.Utility;
 
 import java.io.File;
 import java.util.List;
@@ -92,7 +93,7 @@ public class FirebaseImageUploadService {
 
     }
 
-    public void uploadProdImage(String name,String prodId,String shopCode, List<String> imageList){
+    public void uploadProdImage(String prodId,String shopCode, List<String> imageList){
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         Log.i(TAG,"uploading images to firebase..");
@@ -108,7 +109,7 @@ public class FirebaseImageUploadService {
                 }else if(i==3){
                     name="3.jpg";
                 }*/
-                new UploadFile().execute(""+i,imagePath,name,prodId,shopCode);
+                new UploadFile().execute(""+i,imagePath,prodId,shopCode);
             }
 
             i++;
@@ -121,9 +122,9 @@ public class FirebaseImageUploadService {
         protected Void doInBackground(String... strings) {
             final String position = strings[0];
             String path = strings[1];
-            final String fileName = strings[2];
-            final String prodId = strings[3];
-            final String shopCode = strings[4];
+            final String fileName = Utility.getTimeStamp("yyyyddMMHHmmss")+position+".jpg";
+            final String prodId = strings[2];
+            final String shopCode = strings[3];
             Uri uri = Uri.fromFile(new File(path));
             String dir = null;
             /*if(shopCode.equals("SHP1")){
