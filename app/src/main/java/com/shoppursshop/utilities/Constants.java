@@ -48,7 +48,7 @@ public class Constants {
     public static String LOCATION="location";
     public static String FULL_NAME="fullName";
     public static String USERNAME="username";
-    public static String ROLE="role";
+    public static String KYC_STATUS="kycStatus";
     public static String GOOGLE_MAP_API_KEY="googleMapApiKey";
     public static String GUID="guid";
     public static String TOKEN="token";
@@ -218,5 +218,9 @@ public class Constants {
     public static String ASSIGN_STATUS="/api/delivery/order/get_shop_order_Status";
 
     public static String GET_COMMISSION_RATE="/api/user/commission/commission_list";
+
+    public static String UPDATE_KYC_DETAILS="/api/shop/profile/update_kyc_details";
+    public static String ADD_KYC_DETAILS="/api/shop/profile/add_kyc_details";
+    public static String GET_KYC_DETAILS="/api/shop/profile/kyc_list";
 
 }

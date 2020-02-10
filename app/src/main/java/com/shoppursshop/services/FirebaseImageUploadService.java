@@ -16,6 +16,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.shoppursshop.interfaces.FirebaseImageUploadListener;
+import com.shoppursshop.utilities.Utility;
 
 import java.io.File;
 import java.util.List;
@@ -97,18 +98,18 @@ public class FirebaseImageUploadService {
         storageRef = storage.getReference();
         Log.i(TAG,"uploading images to firebase..");
         int i = 1;
-        String name = null;
+        //String name = null;
         for(String imagePath : imageList){
 
             if(!imagePath.equals("no")){
-                if(i==1){
+                /*if(i==1){
                     name="1.jpg";
                 }else if(i==2){
                     name="2.jpg";
                 }else if(i==3){
                     name="3.jpg";
-                }
-                new UploadFile().execute(""+i,imagePath,name,prodId,shopCode);
+                }*/
+                new UploadFile().execute(""+i,imagePath,prodId,shopCode);
             }
 
             i++;
@@ -121,16 +122,18 @@ public class FirebaseImageUploadService {
         protected Void doInBackground(String... strings) {
             final String position = strings[0];
             String path = strings[1];
-            final String fileName = strings[2];
-            final String prodId = strings[3];
-            final String shopCode = strings[4];
+            final String fileName = Utility.getTimeStamp("yyyyddMMHHmmss")+position+".jpg";
+            final String prodId = strings[2];
+            final String shopCode = strings[3];
             Uri uri = Uri.fromFile(new File(path));
             String dir = null;
-            if(shopCode.equals("SHP1")){
+            /*if(shopCode.equals("SHP1")){
                 dir = "cat/"+prodId+"/"+fileName;
             }else{
                 dir = "shops/"+shopCode+"/products/"+prodId+"/"+fileName;
-            }
+            }*/
+
+            dir = "shops/"+shopCode+"/products/"+prodId+"/"+fileName;
 
             final StorageReference imageRef = storageRef.child("images/"+dir);
             UploadTask uploadTask = imageRef.putFile(uri);

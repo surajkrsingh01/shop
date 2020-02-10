@@ -204,7 +204,7 @@ public class LoginActivity extends NetworkBaseActivity {
                 if(response.getBoolean("status")){
                     JSONObject dataObject=response.getJSONObject("result");
                     editor.putString(Constants.USER_ID,dataObject.getString("id"));
-                   // editor.putString(Constants.MERCHANT_ID,dataObject.getString("merchantId"));
+                    editor.putString(Constants.MERCHANT_ID,dataObject.getString("merchantId"));
                     editor.putString(Constants.PARTNER_ID,dataObject.getString("partnerId"));
                     editor.putString(Constants.FULL_NAME,dataObject.getString("username"));
                     editor.putString(Constants.EMAIL,dataObject.getString("userEmail"));

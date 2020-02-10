@@ -401,6 +401,7 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
 
     private void updatePartnerId(){
         Map<String,String> params=new HashMap<>();
+        params.put("custCode", getIntent().getStringExtra("custCode"));
         params.put("orderNumber", getIntent().getStringExtra("orderNumber"));
         params.put("partnerOrderId",partnerOrderId);
         String url=getResources().getString(R.string.url)+Constants.UPDATE_PARTNER_ORDER_ID;

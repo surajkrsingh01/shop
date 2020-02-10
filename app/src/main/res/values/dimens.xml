@@ -8,6 +8,7 @@
     <dimen name="view_related_vertical_margin">5dp</dimen>
     <dimen name="container_view_vertical_margin">20dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="icon_size">36dp</dimen>
     <dimen name="drawable_padding">10dp</dimen>
     <dimen name="btn_size">45dp</dimen>
     <dimen name="regular_btn_size">35dp</dimen>

@@ -331,18 +331,13 @@ public class Utility {
 
     public static String getInitials(String name){
         String initials = null;
+        name = name.trim();
+        name = name.replaceAll("  "," ");
         if(name.contains(" ")){
             String[] nameArray = name.split(" ");
             if(nameArray[1].startsWith("(")){
                 if(nameArray[1].length() > 1){
                     initials = nameArray[0].substring(0,1)+nameArray[1].substring(1,2);
-                }else{
-                    initials = nameArray[0].substring(0,2);
-                }
-
-            }else if(nameArray[1].startsWith("-") || nameArray[1].startsWith(" ")){
-                if(nameArray.length > 2){
-                    initials = nameArray[0].substring(0,1)+nameArray[2].substring(0,1);
                 }else{
                     initials = nameArray[0].substring(0,2);
                 }

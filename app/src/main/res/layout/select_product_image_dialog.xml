@@ -78,31 +78,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/btn_browse"
-            android:layout_below="@+id/text_or_1"
-            android:text="BROWSE IMAGES"
-            android:textColor="@color/white"
-            android:background="@drawable/accent_color_4_solid_small_round_corner_background"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-
-        <TextView
-            android:id="@+id/text_or_2"
-            android:layout_below="@+id/btn_browse"
-            android:text="OR"
-            android:textAllCaps="true"
-            android:textSize="16sp"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/btn_google_browse"
-            android:layout_below="@+id/text_or_2"
+            android:layout_below="@+id/text_or_1"
             android:text="GOOGLE SEARCH"
             android:textColor="@color/white"
             android:background="@drawable/accent_1_solid_round_corner_background"

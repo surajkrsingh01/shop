@@ -557,7 +557,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             if(myProductItem.getProdImage1().contains("http")){
                 imageUrl1 = myProductItem.getProdImage1();
                 imageView1.setVisibility(View.VISIBLE);
-                requestOptions.signature(new ObjectKey(sharedPreferences.getString("product_signature"+myProductItem.getProdId()+"_1","")));
+               // requestOptions.signature(new ObjectKey(sharedPreferences.getString("product_signature"+myProductItem.getProdId()+"_1","")));
                 Glide.with(this)
                         .load(myProductItem.getProdImage1())
                         .apply(requestOptions)
@@ -567,7 +567,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             if(myProductItem.getProdImage2().contains("http")){
                 imageUrl2 = myProductItem.getProdImage2();
                 imageView2.setVisibility(View.VISIBLE);
-                requestOptions.signature(new ObjectKey(sharedPreferences.getString("product_signature"+myProductItem.getProdId()+"_2","")));
+             //   requestOptions.signature(new ObjectKey(sharedPreferences.getString("product_signature"+myProductItem.getProdId()+"_2","")));
                 Glide.with(this)
                         .load(myProductItem.getProdImage2())
                         .apply(requestOptions)
@@ -578,7 +578,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             if(myProductItem.getProdImage3().contains("http")){
                 imageUrl3 = myProductItem.getProdImage3();
                 imageView3.setVisibility(View.VISIBLE);
-                requestOptions.signature(new ObjectKey(sharedPreferences.getString("product_signature"+myProductItem.getProdId()+"_3","")));
+               // requestOptions.signature(new ObjectKey(sharedPreferences.getString("product_signature"+myProductItem.getProdId()+"_3","")));
                 Glide.with(this)
                         .load(myProductItem.getProdImage3())
                         .apply(requestOptions)
@@ -1392,19 +1392,19 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             String timestamp = Utility.getTimeStamp();
             if(!imageList.get(0).equals("no")){
                 timestamp = timestamp + "_1";
-                editor.putString("product_signature"+productItem.getProdId()+"_1",timestamp);
+              //  editor.putString("product_signature"+productItem.getProdId()+"_1",timestamp);
             }
 
             if(!imageList.get(1).equals("no")){
                 timestamp = Utility.getTimeStamp();
                 timestamp = timestamp + "_2";
-                editor.putString("product_signature"+productItem.getProdId()+"_2",timestamp);
+              //  editor.putString("product_signature"+productItem.getProdId()+"_2",timestamp);
             }
 
             if(!imageList.get(2).equals("no")){
                 timestamp = Utility.getTimeStamp();
                 timestamp = timestamp + "_3";
-                editor.putString("product_signature"+productItem.getProdId()+"_3",timestamp);
+             //   editor.putString("product_signature"+productItem.getProdId()+"_3",timestamp);
             }
 
             ProductUnit unit = null;
@@ -1973,7 +1973,7 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             showProgress(true);
             String shopCode = sharedPreferences.getString(Constants.SHOP_CODE,"");
             firebaseImageUploadService.setFirebaseImageUploadListener(this);
-            if(shopCode.equals("SHP1")){
+           /* if(shopCode.equals("SHP1")){
                 String name = categoryListObject.get(spinnerCategory.getSelectedItemPosition()-1).getName();
                 name = name.substring(0,3).toLowerCase();
                 firebaseImageUploadService.uploadProdImage(name,
@@ -1981,7 +1981,11 @@ public class AddProductActivity extends BaseImageActivity implements View.OnClic
             }else{
                 firebaseImageUploadService.uploadProdImage(prodId,
                         shopCode,imageList);
-            }
+            }*/
+
+            firebaseImageUploadService.uploadProdImage(prodId,
+                    shopCode,imageList);
+
         }else{
             if(flag.equals("editProduct")){
                 updateLocalProduct();
