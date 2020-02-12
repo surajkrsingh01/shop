@@ -52,12 +52,14 @@
         <RadioButton
             android:id="@+id/rbCustomer"
             android:text="Invite Customer"
+            android:textColor="?attr/primaryTextColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <RadioButton
             android:id="@+id/rbShop"
             android:text="Invite Shop"
+            android:textColor="?attr/primaryTextColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

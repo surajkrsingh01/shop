@@ -384,6 +384,9 @@ public class OrderDetailActivity extends NetworkBaseActivity implements MyItemCl
         params.put("orderNumber", getIntent().getStringExtra("orderNumber"));
         params.put("commission",commission);
         params.put("shopCode",sharedPreferences.getString(Constants.SHOP_CODE,""));
+        params.put("shopDbName",sharedPreferences.getString(Constants.DB_NAME,""));
+        params.put("shopDbUserName",sharedPreferences.getString(Constants.DB_USER_NAME,""));
+        params.put("shopDbPassword",sharedPreferences.getString(Constants.DB_PASSWORD,""));
         params.put("shopName",sharedPreferences.getString(Constants.SHOP_NAME,""));
         params.put("shopMobile",sharedPreferences.getString(Constants.MOBILE_NO,""));
         params.put("shopAddress",sharedPreferences.getString(Constants.ADDRESS,""));
