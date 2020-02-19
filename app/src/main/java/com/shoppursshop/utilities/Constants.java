@@ -223,4 +223,6 @@ public class Constants {
     public static String ADD_KYC_DETAILS="/api/shop/profile/add_kyc_details";
     public static String GET_KYC_DETAILS="/api/shop/profile/kyc_list";
 
+    public static String GET_MARKETS="/market/searchByQuery";
+
 }
