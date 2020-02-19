@@ -324,7 +324,7 @@
             android:label="@string/title_activity_register"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
             android:name=".activities.auth.LoginActivity"
             android:label="@string/title_activity_login"

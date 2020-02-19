@@ -23,14 +23,31 @@
             android:layout_height="wrap_content"
             android:text="@string/personal_info" />
 
+        <AutoCompleteTextView
+            android:id="@+id/edit_market"
+            android:hint="Market Place"
+            android:textSize="@dimen/edit_text_small_text_size"
+            android:layout_below="@+id/text_personal_info_label"
+            android:gravity="center_vertical"
+            android:inputType="text"
+            android:imeOptions="actionNext"
+            android:theme="@style/MySelectViewTheme"
+            android:layout_marginTop="@dimen/register_container_margin_top"
+            android:paddingBottom="@dimen/edit_text_small_vertical_padding"
+            android:paddingTop="@dimen/edit_text_small_vertical_padding"
+            android:paddingLeft="@dimen/edit_text_horizontal_padding"
+            android:paddingRight="@dimen/edit_text_horizontal_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <EditText
             android:id="@+id/edit_full_name"
-            android:layout_below="@+id/text_personal_info_label"
+            android:layout_below="@+id/edit_market"
             android:hint="@string/name"
             android:inputType="textPersonName|textCapWords"
             android:imeOptions="actionNext"
             android:theme="@style/MySelectViewTheme"
-            android:layout_marginTop="@dimen/register_container_margin_top"
+            android:layout_marginTop="@dimen/edit_text_margin"
             android:textSize="@dimen/edit_text_small_text_size"
             android:paddingBottom="@dimen/edit_text_small_vertical_padding"
             android:paddingTop="@dimen/edit_text_small_vertical_padding"
@@ -46,7 +63,7 @@
             android:inputType="textPersonName|textCapWords"
             android:imeOptions="actionNext"
             android:theme="@style/MySelectViewTheme"
-            android:layout_marginTop="@dimen/register_container_margin_top"
+            android:layout_marginTop="@dimen/edit_text_margin"
             android:textSize="@dimen/edit_text_small_text_size"
             android:paddingBottom="@dimen/edit_text_small_vertical_padding"
             android:paddingTop="@dimen/edit_text_small_vertical_padding"
