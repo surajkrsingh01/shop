@@ -2,6 +2,7 @@ package com.shoppursshop.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -11,24 +12,35 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 
 import com.android.volley.Request;
+import com.google.gson.Gson;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.auth.RegisterActivity;
 import com.shoppursshop.activities.settings.profile.AddressActivity;
+import com.shoppursshop.adapters.CartAdapter;
+import com.shoppursshop.adapters.MarketAdapter;
 import com.shoppursshop.interfaces.OnFragmentInteraction;
+import com.shoppursshop.models.Market;
 import com.shoppursshop.models.MyUser;
 import com.shoppursshop.utilities.ConnectionDetector;
 import com.shoppursshop.utilities.Constants;
 import com.shoppursshop.utilities.DialogAndToast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,6 +62,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
     private String mParam2;
     private EditText editFullName,edit_shop_name, editAddress, editEmail, editMobile, editPassword,
             editConfPassword, editPanCard, editAadharCard, editGstNo,edit_affilate_code;
+    private AutoCompleteTextView actMarket;
     private CheckBox checkBoxTerms;
     private Button btnRegister, btnBack;
     private String fullName,shopName, address,country,state,city, pincode, email, mobile,
@@ -57,6 +70,9 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
     private double latitude,longitude;
     private MyUser myUser;
     private View rootView;
+    private MarketAdapter adapter;
+    private List<Market> marketList;
+    private int marketSelected = -1;
 
     private OnFragmentInteraction mListener;
 
@@ -118,6 +134,7 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
         editAadharCard = rootView.findViewById(R.id.edit_aadhar_card);
         editGstNo = rootView.findViewById(R.id.edit_gst_no);
         edit_affilate_code = rootView.findViewById(R.id.edit_affilate_code);
+        actMarket =  rootView.findViewById(R.id.edit_market);
         checkBoxTerms = (CheckBox) rootView.findViewById(R.id.checkbox_terms_condition);
 
         editAddress.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +145,8 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
                 startActivityForResult(intent,10);
             }
         });
+
+        marketList = new ArrayList<>();
 
         btnRegister = (Button) rootView.findViewById(R.id.btn_register);
         btnBack = (Button) rootView.findViewById(R.id.btn_back);
@@ -146,6 +165,19 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
                 getActivity().onBackPressed();
             }
         });
+
+        if(ConnectionDetector.isNetworkAvailable(getActivity())){
+            getMarkets();
+        }
+    }
+
+    private void getMarkets(){
+        Map<String, String> params = new HashMap<>();
+        params.put("city", city);
+        params.put("query", "");
+        String url = getResources().getString(R.string.cust_url) + Constants.GET_MARKETS;
+        showProgress(true);
+        jsonObjectApiRequest(Request.Method.POST, url, new JSONObject(params), "getMarkets");
     }
 
     private void attemptRegister() {
@@ -256,6 +288,10 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
                     params.put("userType", "Seller");
                     params.put("isActive", "1");
 
+                    if(marketSelected > -1){
+                        params.put("marketId", ""+marketList.get(marketSelected).getMrkId());
+                    }
+
                     String url = getResources().getString(R.string.url) + Constants.MANAGE_REGISTRATION;
                     showProgress(true);
                     jsonObjectApiRequest(Request.Method.POST, url, new JSONObject(params), "manageRegistration");
@@ -352,6 +388,31 @@ public class PersonalInfoFragment extends NetworkBaseFragment {
                     mListener.onFragmentInteraction(myUser, RegisterActivity.PERSONAL);
                 } else {
                     DialogAndToast.showDialog(response.getString("message"), getActivity());
+                }
+            }else if (apiName.equals("getMarkets")) {
+                if (response.getBoolean("status")) {
+                    JSONArray jsonArray = response.getJSONObject("result").getJSONArray("data");
+                    Market market = null;
+                    Gson gson = new Gson();
+                    for(int i=0;i<jsonArray.length();i++){
+                        market = gson.fromJson(jsonArray.getString(i),Market.class);
+                        marketList.add(market);
+                        Log.i(TAG,"market "+market.getMrkName()+" added");
+                    }
+
+                    adapter = new MarketAdapter(getActivity(),android.R.layout.select_dialog_item,
+                            android.R.id.text1,marketList);
+                    actMarket.setThreshold(1);//will start working from first character
+                    actMarket.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+                    // actMarket.setTextColor(Color.RED);
+
+                    actMarket.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            marketSelected = position;
+                            Log.i(TAG,"market selected "+position+" ");
+                        }
+                    });
                 }
             }
         } catch (JSONException e) {
