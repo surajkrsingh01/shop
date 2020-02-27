@@ -43,7 +43,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
     EditText void_ref_no;
     private Button send, voidBt, saleCompletion;
     private TextView transactionresponse;
-    String data,ptype,cardLevel,merchantRefNo,transId,invoiceJson;
+    String data,flag,ptype,cardLevel,merchantRefNo,transId,invoiceJson;
     boolean approved;
     private RelativeLayout rlFooter;
     private TextView tvFooter;
@@ -66,6 +66,8 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        flag = getIntent().getStringExtra("flag");
+
         Button details = (Button) findViewById(R.id.details);
         text = (TextView) findViewById(R.id.text);
         void_ref_no=(EditText)findViewById(R.id.void_ref_no);
@@ -73,6 +75,10 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
         rlFooter = (RelativeLayout) findViewById(R.id.relative_footer_action);
         tvFooter = (TextView) findViewById(R.id.text_action);
         initFooterAction(this);
+
+        if(flag != null && flag.equals("KhataTransaction")){
+            rlFooter.setVisibility(View.GONE);
+        }
 
         transactionresponse.setText(data);
         Log.i(TAG,"Response "+data);
@@ -86,11 +92,13 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
             transId = dataObject.getString("transactionId");
           //  invNo = dataObject.getString("invoiceNo");
 
-            if(approved){
-                updatePaymentStatus(dataObject,"Done");
-                //generateJson("Credit/Debit Card");
-            }else{
-                updatePaymentStatus(dataObject,"Failed");
+            if(flag == null && !flag.equals("KhataTransaction")){
+                if(approved){
+                    updatePaymentStatus(dataObject,"Done");
+                    //generateJson("Credit/Debit Card");
+                }else{
+                    updatePaymentStatus(dataObject,"Failed");
+                }
             }
 
         } catch (JSONException e) {
@@ -400,7 +408,7 @@ public class MPayTransactionDetailsActivity extends NetworkBaseActivity implemen
             }else{
                 dataObject.put("status_message", "FAILED");
             }
-            dataObject.put("paymentMode", "DevicePay");
+            dataObject.put("paymentMode", getIntent().getStringExtra("deviceType"));
             //  dataObject.put("approved", approved);
             //  dataObject.put("cardLevel", cardLevel);
             //   dataObject.put("merchantRefInvoiceNo", merchantRefNo);

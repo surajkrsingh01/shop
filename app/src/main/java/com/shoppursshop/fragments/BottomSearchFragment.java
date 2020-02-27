@@ -339,6 +339,7 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
                           myCustomer.setEmail(jsonObject.getString("email"));
                           myCustomer.setImage(jsonObject.getString("photo"));
                           myCustomer.setIsFav(jsonObject.getString("isFav"));
+                          myCustomer.setKhataNo(jsonObject.getString("kbNo"));
                           myCustomer.setCustUserCreateStatus(jsonObject.getString("userCreateStatus"));
                           myCustomer.setRatings((float)jsonObject.getDouble("ratings"));
                           myCustomerList.add(myCustomer);
@@ -387,6 +388,7 @@ public class BottomSearchFragment extends BottomSheetDialogFragment implements M
             bundle.putInt("custId", Integer.parseInt(customer.getId()));
             bundle.putString("custCode",customer.getCode());
             bundle.putString("custImage",customer.getImage());
+            bundle.putString("khataNo",customer.getKhataNo());
             bundle.putString("custUserCreateStatus",customer.getCustUserCreateStatus());
             myListItemClickListener.onItemClicked(bundle);
             this.dismiss();

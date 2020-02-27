@@ -62,11 +62,11 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     private List<MyProductItem> itemList;
 
     private RelativeLayout relativeLayoutCartFooter;
-    private LinearLayout rlAddressBilling;
+    private LinearLayout rlAddressBilling,relativeLayoutPayOptionLayout;
     private EditText editTextAdditionDisAmt;
     private TextView tvItemCount,tvItemPrice,tvCheckout,tvItemTotal,tvTotalTaxes,tvSgst,tvTotalDiscount,
-            tvDeliveryCharges,tvNetPayable,tvOfferName;
-    private RelativeLayout relativeLayoutPayOptionLayout,rlDiscount,rlDelivery,rl_offer_applied_layout,rlOfferLayout;
+            tvDeliveryCharges,tvNetPayable,tvOfferName,tvKhata;
+    private RelativeLayout rlDiscount,rlDelivery,rl_offer_applied_layout,rlOfferLayout;
     private TextView tvCash,tvCard,tvMPos,tvAndroidPos;
 
     private ImageView imageViewScan,imageViewSearch,imageViewRemoveOffer;
@@ -95,6 +95,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
     private String state;
     private String city;
     private String zip;
+    private String khataNo;
     private boolean addingCart;
 
     private BottomSearchFragment bottomSearchFragment;
@@ -123,6 +124,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         tvCash = findViewById(R.id.tv_pay_cash);
         tvMPos = findViewById(R.id.tv_mpos);
         tvAndroidPos = findViewById(R.id.tv_android_pos);
+        tvKhata = findViewById(R.id.tv_khata);
         linearLayoutScanCenter = findViewById(R.id.linear_action);
 
         tvApplyCoupon = findViewById(R.id.tv_coupon_label);
@@ -161,6 +163,8 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
         recyclerView.setAdapter(myItemAdapter);
         recyclerView.setNestedScrollingEnabled(false);
 
+        khataNo = getIntent().getStringExtra("khataNo");
+
         tvCheckout.setText("Make Payment");
 
 
@@ -176,6 +180,10 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
 
                 tvCard.setVisibility(View.GONE);
                 tvAndroidPos.setVisibility(View.GONE);
+
+                if(!TextUtils.isEmpty(khataNo) && !khataNo.equals("null")){
+                    tvKhata.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -210,6 +218,15 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
             public void onClick(View view) {
                 paymentMode = "Credit/Debit Card";
                 deviceType = "ME30S";
+                generateJson(paymentMode);
+            }
+        });
+
+        tvKhata.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                paymentMode = "Khata";
+                deviceType = "Khata";
                 generateJson(paymentMode);
             }
         });
@@ -702,6 +719,11 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                     if(paymentMode.equals("Cash")){
                         shopObject.put("orderStatus","Delivered");
                         shopObject.put("orderPaymentStatus", "Done");
+                    }else if(paymentMode.equals("Khata")){
+                        shopObject.put("khataNo",khataNo);
+                        shopObject.put("transactionType","Credit");
+                        shopObject.put("orderStatus","Delivered");
+                        shopObject.put("orderPaymentStatus", "pending");
                     }else{
                         shopObject.put("orderStatus","pending");
                         shopObject.put("orderPaymentStatus", "pending");
@@ -823,7 +845,7 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                    // dbHelper.deleteTable(DbHelper.CART_TABLE);
                     itemList.clear();
                     myItemAdapter.notifyDataSetChanged();
-                    if(paymentMode.equals("Cash")){
+                    if(paymentMode.equals("Cash") || paymentMode.equals("Khata")){
                         for (MyProductItem cartItem : cartItemList) {
                             dbHelper.setQoh(cartItem.getProdId(),-cartItem.getQty());
                             if(cartItem.getIsBarCodeAvailable().equals("Y")){
@@ -833,7 +855,13 @@ public class CartActivity extends NetworkBaseActivity implements MyItemTypeClick
                                 }*/
                             }
                         }
-                        showMyDialog("Take Cash Rs "+Utility.numberFormat(totalPrice));
+                        if(paymentMode.equals("Cash")){
+                            showMyDialog("Take Cash Rs "+Utility.numberFormat(totalPrice));
+                        }else{
+                            showMyDialog("Rs "+Utility.numberFormat(totalPrice)+" has been added to khata no "
+                                    +khataNo);
+                        }
+
                     }else{
                         Log.d(TAG, "orderId "+orderNumber );
                         Intent intent = new Intent(CartActivity.this, MPayActivity.class);

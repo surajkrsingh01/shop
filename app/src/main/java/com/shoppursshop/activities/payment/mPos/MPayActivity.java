@@ -158,11 +158,12 @@ public class MPayActivity extends NetworkBaseActivity implements MyItemClickList
         }*/
 
         Intent i = new Intent(MPayActivity.this, MPaymentTransactionActivity.class);
-        i.putExtra("devicetype", deviceType);
+        i.putExtra("deviceType", deviceType);
         i.putExtra(PAYMENT_TYPE, SALE);
         i.putExtra("deviceName", deviceName);
         i.putExtra("deviceCommMode", deviceCommMode);
         i.putExtra("deviceMACAddress", deviceMACAddress);
+        i.putExtra("flag",getIntent().getStringExtra("flag"));
         i.putExtra("orderNumber",getIntent().getStringExtra("orderNumber"));
         i.putExtra("custCode", getIntent().getStringExtra("custCode"));
         i.putExtra("custId", getIntent().getIntExtra("custId",0));

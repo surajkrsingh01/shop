@@ -21,4 +21,10 @@
         android:title="Location"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_khatabook"
+        android:orderInCategory="100"
+        android:title="Khatabook"
+        app:showAsAction="always" />
+
 </menu>

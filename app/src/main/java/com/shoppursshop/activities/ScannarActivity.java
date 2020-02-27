@@ -146,6 +146,7 @@ public class ScannarActivity extends NetworkBaseActivity {
                     intent.putExtra("custId", dataObject.getInt("id"));
                     intent.putExtra("custCode",dataObject.getString("code"));
                     intent.putExtra("custImage",dataObject.getString("photo"));
+                    intent.putExtra("khataNo",dataObject.getString("kbNo"));
                     setResult(-1,intent);
                     finish();
                 }else{

@@ -3,11 +3,18 @@ package com.shoppursshop.models;
 import java.io.Serializable;
 
 public class MyCustomer implements Serializable {
-    private String id,code,name,email,image,localImage,mobile,address,country,locality,latitude,longitude,state,city,custUserCreateStatus,status;
+    private String id,code,name,email,image,localImage,mobile,address,country,locality,latitude,
+            longitude,state,city,custUserCreateStatus,status,khataNo;
     private String isFav;
     private float ratings;
 
+    public String getKhataNo() {
+        return khataNo;
+    }
 
+    public void setKhataNo(String khataNo) {
+        this.khataNo = khataNo;
+    }
 
     public String getLocality() {
         return locality;

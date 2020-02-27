@@ -379,6 +379,7 @@ public class SyncDataActivity extends NetworkBaseActivity {
                         myCustomer.setLocality(dataObject.getString("locality"));
                         myCustomer.setState(dataObject.getString("state"));
                         myCustomer.setCity(dataObject.getString("city"));
+                        myCustomer.setKhataNo(dataObject.getString("kbNo"));
                         myCustomer.setLatitude(dataObject.getString("latitude"));
                         myCustomer.setLongitude(dataObject.getString("longitude"));
                         myCustomer.setImage(dataObject.getString("photo"));

@@ -31,6 +31,8 @@ import com.shoppursshop.activities.MainActivity;
 import com.shoppursshop.activities.auth.LoginActivity;
 import com.shoppursshop.activities.customers.CustomerInfoActivity;
 import com.shoppursshop.activities.customers.CustomerListActivity;
+import com.shoppursshop.activities.khatabook.KhatabookActivity;
+import com.shoppursshop.activities.khatabook.RecievePaymentActivity;
 import com.shoppursshop.activities.offers.OffersActivity;
 import com.shoppursshop.activities.order.DeliveryAddressActivity;
 import com.shoppursshop.activities.order.TransactionDetailsActivity;
@@ -225,6 +227,8 @@ public class BaseActivity extends AppCompatActivity {
             tv.setText("Sync Data");
         }else if(context instanceof ReturnProductActivity){
             tv.setText("Search Invoice");
+        }else if(context instanceof KhatabookActivity || context instanceof RecievePaymentActivity){
+            tv.setText("Receive Payment");
         }
 
         /*findViewById(R.id.relative_footer_action).setOnClickListener(new View.OnClickListener() {

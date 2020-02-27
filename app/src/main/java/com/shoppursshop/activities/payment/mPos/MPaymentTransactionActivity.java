@@ -234,7 +234,9 @@ public class MPaymentTransactionActivity extends BaseActivity implements Payment
                     i.putExtra("paymentResponseObject", detailObject.toString());
                     i.putExtra("txnResponse", transactionStatusResponse.get(0));
                     i.putExtra("orderNumber", getIntent().getStringExtra("orderNumber"));
+                    i.putExtra("deviceType", getIntent().getStringExtra("deviceType"));
                     i.putExtra("totalAmount", amount);
+                    i.putExtra("flag",getIntent().getStringExtra("flag"));
                     i.putExtra("ordCouponId",getIntent().getStringExtra("ordCouponId"));
                     i.putExtra("totalTax",getIntent().getFloatExtra("totalTax",0f));
                     i.putExtra("deliveryCharges",getIntent().getFloatExtra("deliveryCharges",0f));

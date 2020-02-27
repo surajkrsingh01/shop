@@ -531,7 +531,8 @@
     </androidx.core.widget.NestedScrollView>
 
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:id="@+id/relative_pay_layout"
         android:visibility="gone"
         android:background="?attr/solidPrimaryStrokeBorderBackground"
@@ -597,8 +598,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <TextView
+            android:id="@+id/tv_khata"
+            android:layout_below="@id/tv_pay_cash"
+            android:text="Khata"
+            android:clickable="true"
+            android:visibility="gone"
+            android:textColor="?attr/primaryTextColor"
+            android:padding="@dimen/activity_vertical_margin"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"

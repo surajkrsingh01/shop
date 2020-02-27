@@ -496,6 +496,7 @@ public class DbHelper extends SQLiteOpenHelper {
             " "+CITY+" TEXT, " +
             " "+LATITUDE+" TEXT, " +
             " "+LONGITUDE+" TEXT, " +
+            "KHATA_NO TEXT, " +
             " "+PHOTO+" TEXT, " +
             " "+IMAGE_LOCAL+" TEXT, " +
             " "+IS_FAV+" TEXT, " +
@@ -509,7 +510,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context)
     {
-        super(context, DATABASE_NAME, null, 32);
+        super(context, DATABASE_NAME, null, 33);
         this.context=context;
     }
 
@@ -1119,6 +1120,7 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put(LOCALITY, item.getLocality());
         contentValues.put(LATITUDE, item.getLatitude());
         contentValues.put(LONGITUDE, item.getLongitude());
+        contentValues.put("KHATA_NO", item.getKhataNo());
         contentValues.put(IS_FAV, item.getIsFav());
         contentValues.put(RATINGS, item.getRatings());
         contentValues.put(USER_CREATE_STATUS, item.getCustUserCreateStatus());
@@ -1144,6 +1146,7 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put(LOCALITY, item.getLocality());
         contentValues.put(LATITUDE, item.getLatitude());
         contentValues.put(LONGITUDE, item.getLongitude());
+        contentValues.put("KHATA_NO", item.getKhataNo());
         contentValues.put(IS_FAV, item.getIsFav());
         contentValues.put(RATINGS, item.getRatings());
         contentValues.put(USER_CREATE_STATUS, item.getCustUserCreateStatus());
@@ -2954,6 +2957,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 myCustomer.setEmail(res.getString(res.getColumnIndex(EMAIL)));
                 myCustomer.setAddress(res.getString(res.getColumnIndex(ADDRESS)));
                 myCustomer.setCountry(res.getString(res.getColumnIndex(COUNTRY)));
+                myCustomer.setKhataNo(res.getString(res.getColumnIndex("KHATA_NO")));
                 myCustomer.setState(res.getString(res.getColumnIndex(STATE)));
                 myCustomer.setCity(res.getString(res.getColumnIndex(CITY)));
                 myCustomer.setLocality(res.getString(res.getColumnIndex(LOCALITY)));
@@ -2996,6 +3000,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 myCustomer.setLongitude(res.getString(res.getColumnIndex(LONGITUDE)));
                 myCustomer.setImage(res.getString(res.getColumnIndex(PHOTO)));
                 myCustomer.setLocalImage(res.getString(res.getColumnIndex(IMAGE_LOCAL)));
+                myCustomer.setKhataNo(res.getString(res.getColumnIndex("KHATA_NO")));
                 myCustomer.setIsFav(res.getString(res.getColumnIndex(IS_FAV)));
                 myCustomer.setRatings(res.getFloat(res.getColumnIndex(RATINGS)));
                 myCustomer.setStatus(res.getString(res.getColumnIndex(STATUS)));
