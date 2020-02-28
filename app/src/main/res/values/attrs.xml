@@ -27,6 +27,7 @@
 	<attr name="navBarMenuBackgroundSelector" format="reference"/>
 	<attr name="editTextBackground" format="reference"/>
 	<attr name="borderBackground" format="reference"/>
+	<attr name="borderRoundBackground" format="reference"/>
 	<attr name="solidPrimaryStrokeBorderBackground" format="reference"/>
 	<attr name="solidBorderBackground" format="reference"/>
 	<attr name="summaryPrimaryBackground" format="reference"/>

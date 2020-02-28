@@ -3015,7 +3015,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public List<Object> getAllCustomerList(int limit,int offset){
         SQLiteDatabase db = this.getReadableDatabase();
-        final String query="select * from "+CUSTOMER_INFO_TABLE+" where KHATA_NO == '' and KHATA_NO == 'null'";
+        final String query="select * from "+CUSTOMER_INFO_TABLE+" where KHATA_NO == '' or KHATA_NO == 'null'";
         Cursor res =  db.rawQuery(query, null);
         List<Object> myCustomerList = new ArrayList<>();
         MyCustomer myCustomer = null;
@@ -3383,6 +3383,18 @@ public class DbHelper extends SQLiteOpenHelper {
                 new String[]{code});
 
         Log.i("dbhelper","status updated "+status+" code "+code);
+
+    }
+
+    public void updateKhataStatus(String khataNo,String custCode){
+        SQLiteDatabase db = this.getReadableDatabase();
+        // query="UPDATE "+PRODUCT_TABLE+" SET "+PROD_QOH+" = ? where "+PROD_CODE+" = ?";
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("KHATA_NO", khataNo);
+        db.update(CUSTOMER_INFO_TABLE,contentValues,CODE+" = ?",
+                new String[]{custCode});
+
+        Log.i("dbhelper","status updated "+khataNo+" code "+custCode);
 
     }
 

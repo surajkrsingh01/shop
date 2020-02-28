@@ -64,7 +64,8 @@ public class KhatabookActivity extends NetworkBaseActivity implements MyItemClic
         textCustomerName = findViewById(R.id.textCustomerName);
         textCustMobile = findViewById(R.id.textCustMobile);
         rlFooter = findViewById(R.id.relative_footer_action);
-        textCustomerName.setText(getIntent().getStringExtra("name"));
+        textCustomerName.setText(getIntent().getStringExtra("name")
+                +" "+getIntent().getStringExtra("mobile"));
         textCustMobile.setText(getIntent().getStringExtra("mobile"));
 
         itemList = new ArrayList<>();
@@ -146,6 +147,7 @@ public class KhatabookActivity extends NetworkBaseActivity implements MyItemClic
                     khataNo = dataObject.getString("kbNo");
                     textKhataNo.setText("Khata No - "+khataNo);
                     textKhataOpenDate.setText("Open Date - "+dataObject.getString("createdDate"));
+                    dbHelper.updateKhataStatus(khataNo,getIntent().getStringExtra("custCode"));
                     getTransactions();
                 }
             }if(apiName.equals("khataTransaction")) {
