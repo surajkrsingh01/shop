@@ -38,7 +38,7 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
 
     private ImageView imageViewScan,imageViewSearch;
 
-    private String mobile,name,custCode,custImage,custUserCreateStatus;
+    private String mobile,name,custCode,custImage,custUserCreateStatus,khataNo;
     private int custId;
     private  BottomSearchFragment bottomSearchFragment;
 
@@ -196,6 +196,7 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
                     custImage = dataObject.getString("photo");
                     name = dataObject.getString("name");
                     custId = dataObject.getInt("id");
+                    khataNo = dataObject.getString("kbNo");
                     custUserCreateStatus = dataObject.getString("userCreateStatus");
                      isCustomerRegistered = true;
                      infoChecked = true;
@@ -277,6 +278,7 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
         intent.putExtra("custId", custId);
         intent.putExtra("custCode",custCode);
         intent.putExtra("custImage",custImage);
+        intent.putExtra("khataNo",khataNo);
         intent.putExtra("custUserCreateStatus","S");
         startActivity(intent);
     }
@@ -291,6 +293,7 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
         intent.putExtra("custId", bundle.getInt("custId"));
         intent.putExtra("custCode",bundle.getString("custCode"));
         intent.putExtra("custImage",bundle.getString("custImage"));
+        intent.putExtra("khataNo",bundle.getString("khataNo"));
         intent.putExtra("custUserCreateStatus",bundle.getString("custUserCreateStatus"));
         startActivity(intent);
     }
@@ -310,6 +313,7 @@ public class CustomerInfoActivity extends NetworkBaseActivity implements MyListI
                 intent.putExtra("custId", data.getIntExtra("custId",0));
                 intent.putExtra("custCode",data.getStringExtra("custCode"));
                 intent.putExtra("custImage",data.getStringExtra("custImage"));
+                intent.putExtra("khataNo",data.getStringExtra("khataNo"));
                 intent.putExtra("custUserCreateStatus",data.getStringExtra("custUserCreateStatus"));
                 startActivity(intent);
             }

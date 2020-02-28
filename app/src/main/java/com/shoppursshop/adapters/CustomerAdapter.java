@@ -185,6 +185,12 @@ public class CustomerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 myItemClickListener.onItemClicked(getAdapterPosition(),6);
                             }
                             Log.i("Adapter","Location Customer"+customer.getName());
+                        }else if(item.getTitle().equals("Khatabook")){
+                            if(customer.getIsFav().equals("Y")){
+                                myItemClickListener.onItemClicked(getAdapterPosition(),7);
+                            }else{
+                                myItemClickListener.onItemClicked(getAdapterPosition(),8);
+                            }
                         }
                         return true;
                     }

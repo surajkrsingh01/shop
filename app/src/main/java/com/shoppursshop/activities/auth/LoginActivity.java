@@ -507,6 +507,7 @@ public class LoginActivity extends NetworkBaseActivity {
                         myCustomer.setLatitude(dataObject.getString("latitude"));
                         myCustomer.setLongitude(dataObject.getString("longitude"));
                         myCustomer.setImage(dataObject.getString("photo"));
+                        myCustomer.setKhataNo(dataObject.getString("kbNo"));
                         myCustomer.setIsFav(dataObject.getString("isFav"));
                         myCustomer.setRatings((float)dataObject.getDouble("ratings"));
                         myCustomer.setStatus(dataObject.getString("isActive"));

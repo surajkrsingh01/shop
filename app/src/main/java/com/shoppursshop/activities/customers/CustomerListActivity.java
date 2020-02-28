@@ -12,6 +12,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.shoppursshop.R;
 import com.shoppursshop.activities.base.NetworkBaseActivity;
+import com.shoppursshop.activities.khatabook.KhatabookActivity;
 import com.shoppursshop.adapters.CustomerAdapter;
 import com.shoppursshop.fragments.BottomSearchFragment;
 import com.shoppursshop.interfaces.MyImageClickListener;
@@ -56,6 +59,7 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
     private ProgressBar progressBar;
     private boolean isCustomerLoaded,isFavCustomerLoaded;
     private String mobile;
+    private int position,type;
 
     private ImageView imageViewSearch;
 
@@ -299,7 +303,9 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
                         myCustomer.setRatings((float)jsonObject.getDouble("ratings"));
                         myCustomer.setStatus(jsonObject.getString("isActive"));
                         myCustomer.setCustUserCreateStatus(jsonObject.getString("userCreateStatus"));
-
+                        if(jsonObject.has("kbNo")){
+                            myCustomer.setKhataNo(jsonObject.getString("kbNo"));
+                        }
                         if(!myCustomer.getIsFav().equals("Y")){
                             myCustomer.setIsFav("N");
                         }
@@ -432,6 +438,8 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
     @Override
     public void onItemClicked(int position,int type) {
         MyCustomer customer = null;
+        this.position = position;
+        this.type = type;
         if(type == 1 || type == 2 || type == 5){
             customer = (MyCustomer)itemListFav.get(position);
             if(type == 1){
@@ -460,10 +468,26 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
                     startCustomerAddressActivity(customer);
                 }
             }
+        }else if(type == 7 || type == 8){
+            if(type == 7){
+                customer = (MyCustomer)itemListFav.get(position);
+            }else{
+                customer = (MyCustomer)itemList.get(position);
+            }
+
+            if(TextUtils.isEmpty(customer.getKhataNo()) || customer.getKhataNo().equals("null")){
+                showMyBothDialog("Are you sure want to open khata for this customer?","Cancel","Proceed");
+            }else{
+                startKhatbook();
+            }
         }
         Log.i(TAG,"Customer clicked "+customer.getName());
     }
 
+    @Override
+    public void onDialogPositiveClicked() {
+        startKhatbook();
+    }
 
     public void makeCall(String mobile){
         this.mobile = mobile;
@@ -502,6 +526,29 @@ public class CustomerListActivity extends NetworkBaseActivity implements MyItemT
         catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void startKhatbook(){
+        MyCustomer customer = null;
+        if(type == 7){
+            customer = (MyCustomer)itemListFav.get(position);
+        }else{
+            customer = (MyCustomer)itemList.get(position);
+        }
+        Intent intent = new Intent(this, KhatabookActivity.class);
+        intent.putExtra("name",customer.getName());
+        intent.putExtra("address",customer.getAddress());
+        intent.putExtra("mobile",customer.getMobile());
+        intent.putExtra("country",customer.getCountry());
+        intent.putExtra("stateCity",customer.getState()+", "+customer.getCity());
+        intent.putExtra("locality",customer.getLocality());
+        intent.putExtra("longitude",customer.getLongitude());
+        intent.putExtra("latitude",customer.getLatitude());
+        intent.putExtra("customerImage",customer.getImage());
+        intent.putExtra("isFav",customer.getIsFav());
+        intent.putExtra("custCode",customer.getCode());
+        intent.putExtra("custId",customer.getId());
+        startActivity(intent);
     }
 
     public void startCustomerAddressActivity(MyCustomer item){

@@ -225,4 +225,7 @@ public class Constants {
 
     public static String GET_MARKETS="/market/searchByQuery";
 
+    public static String OPEN_KHATA="/api/khata/open";
+    public static String KHATA_TRANSACTIONS="/api/khata/transactions";
+
 }
