@@ -14,6 +14,7 @@ import com.shoppursshop.activities.auth.LoginActivity;
 import com.shoppursshop.activities.base.NetworkBaseActivity;
 import com.shoppursshop.activities.categories.MyCategoriesActivity;
 import com.shoppursshop.activities.categories.MySubCategoriesActivity;
+import com.shoppursshop.activities.khatabook.CustomerListWithKhataActivity;
 import com.shoppursshop.activities.offers.MyOffersActivity;
 import com.shoppursshop.activities.order.MyOrdersActivity;
 import com.shoppursshop.activities.product.MyProductListActivity;
@@ -58,7 +59,7 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
     private void init(){
         itemList = new ArrayList<>();
         itemList.add("Store Profile");
-        itemList.add("Invite to Shoppurs");
+        itemList.add("Khatabook");
         itemList.add("Store Categories");
         itemList.add("Store Sub Category");
         itemList.add("Add Products to Store");
@@ -75,6 +76,7 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         itemList.add("Sync Data");
         itemList.add("Chat");
         itemList.add("Technical Support");
+        itemList.add("Invite to Shoppurs");
         itemList.add("Display");
         itemList.add("Logout");
         recyclerView = findViewById(R.id.recycler_view);
@@ -160,6 +162,9 @@ public class SettingActivity extends NetworkBaseActivity implements MyItemClickL
         String name = itemList.get(position);
         if(name.equals("Store Profile")){
             Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+        }else if(name.equals("Khatabook")){
+            Intent intent = new Intent(this, CustomerListWithKhataActivity.class);
             startActivity(intent);
         }else if(name.equals("Invite to Shoppurs")){
             openReferDialog();
