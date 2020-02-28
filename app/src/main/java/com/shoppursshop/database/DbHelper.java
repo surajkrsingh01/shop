@@ -2977,6 +2977,78 @@ public class DbHelper extends SQLiteOpenHelper {
         return myCustomerList;
     }
 
+    public List<Object> getCustomerListWithKhata(int limit,int offset){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+CUSTOMER_INFO_TABLE+" where KHATA_NO != '' and KHATA_NO != 'null'";
+        Cursor res =  db.rawQuery(query, null);
+        List<Object> myCustomerList = new ArrayList<>();
+        MyCustomer myCustomer = null;
+        if(res.moveToFirst()){
+            do{
+                myCustomer = new MyCustomer();
+                myCustomer.setId(res.getString(res.getColumnIndex(ID)));
+                myCustomer.setCode(res.getString(res.getColumnIndex(CODE)));
+                myCustomer.setName(res.getString(res.getColumnIndex(NAME)));
+                myCustomer.setMobile(res.getString(res.getColumnIndex(MOBILE_NO)));
+                myCustomer.setEmail(res.getString(res.getColumnIndex(EMAIL)));
+                myCustomer.setAddress(res.getString(res.getColumnIndex(ADDRESS)));
+                myCustomer.setCountry(res.getString(res.getColumnIndex(COUNTRY)));
+                myCustomer.setKhataNo(res.getString(res.getColumnIndex("KHATA_NO")));
+                myCustomer.setState(res.getString(res.getColumnIndex(STATE)));
+                myCustomer.setCity(res.getString(res.getColumnIndex(CITY)));
+                myCustomer.setLocality(res.getString(res.getColumnIndex(LOCALITY)));
+                myCustomer.setLatitude(res.getString(res.getColumnIndex(LATITUDE)));
+                myCustomer.setLongitude(res.getString(res.getColumnIndex(LONGITUDE)));
+                myCustomer.setImage(res.getString(res.getColumnIndex(PHOTO)));
+                myCustomer.setLocalImage(res.getString(res.getColumnIndex(IMAGE_LOCAL)));
+                myCustomer.setIsFav(res.getString(res.getColumnIndex(IS_FAV)));
+                myCustomer.setRatings(res.getFloat(res.getColumnIndex(RATINGS)));
+                myCustomer.setStatus(res.getString(res.getColumnIndex(STATUS)));
+                myCustomer.setCustUserCreateStatus(res.getString(res.getColumnIndex(USER_CREATE_STATUS)));
+                myCustomerList.add(myCustomer);
+            }while (res.moveToNext());
+
+        }
+
+        return myCustomerList;
+    }
+
+    public List<Object> getAllCustomerList(int limit,int offset){
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query="select * from "+CUSTOMER_INFO_TABLE+" where KHATA_NO == '' and KHATA_NO == 'null'";
+        Cursor res =  db.rawQuery(query, null);
+        List<Object> myCustomerList = new ArrayList<>();
+        MyCustomer myCustomer = null;
+        if(res.moveToFirst()){
+            do{
+                myCustomer = new MyCustomer();
+                myCustomer.setId(res.getString(res.getColumnIndex(ID)));
+                myCustomer.setCode(res.getString(res.getColumnIndex(CODE)));
+                myCustomer.setName(res.getString(res.getColumnIndex(NAME)));
+                myCustomer.setMobile(res.getString(res.getColumnIndex(MOBILE_NO)));
+                myCustomer.setEmail(res.getString(res.getColumnIndex(EMAIL)));
+                myCustomer.setAddress(res.getString(res.getColumnIndex(ADDRESS)));
+                myCustomer.setCountry(res.getString(res.getColumnIndex(COUNTRY)));
+                myCustomer.setKhataNo(res.getString(res.getColumnIndex("KHATA_NO")));
+                myCustomer.setState(res.getString(res.getColumnIndex(STATE)));
+                myCustomer.setCity(res.getString(res.getColumnIndex(CITY)));
+                myCustomer.setLocality(res.getString(res.getColumnIndex(LOCALITY)));
+                myCustomer.setLatitude(res.getString(res.getColumnIndex(LATITUDE)));
+                myCustomer.setLongitude(res.getString(res.getColumnIndex(LONGITUDE)));
+                myCustomer.setImage(res.getString(res.getColumnIndex(PHOTO)));
+                myCustomer.setLocalImage(res.getString(res.getColumnIndex(IMAGE_LOCAL)));
+                myCustomer.setIsFav(res.getString(res.getColumnIndex(IS_FAV)));
+                myCustomer.setRatings(res.getFloat(res.getColumnIndex(RATINGS)));
+                myCustomer.setStatus(res.getString(res.getColumnIndex(STATUS)));
+                myCustomer.setCustUserCreateStatus(res.getString(res.getColumnIndex(USER_CREATE_STATUS)));
+                myCustomerList.add(myCustomer);
+            }while (res.moveToNext());
+
+        }
+
+        return myCustomerList;
+    }
+
     public List<Object> getFavCustomerList(String isFav,int limit,int offset){
         SQLiteDatabase db = this.getReadableDatabase();
         final String query="select * from "+CUSTOMER_INFO_TABLE+" where "+IS_FAV+" = ?";
