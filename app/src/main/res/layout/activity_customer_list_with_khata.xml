@@ -65,7 +65,7 @@
         android:paddingRight="@dimen/view_horizontal_margin"
         android:layout_below="@+id/llHeader"
         android:textColor="?attr/primaryTextColor"
-        android:text="Store Customers"
+        android:text="Khatabook Customers"
         android:textStyle="bold"
         android:textSize="@dimen/product_list_very_large_text_size"
         android:layout_width="wrap_content"

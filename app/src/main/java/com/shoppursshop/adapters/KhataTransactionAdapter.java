@@ -38,7 +38,8 @@ public class KhataTransactionAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public class MyHomeHeaderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView tvAmt,tvDate,tvView;
+        private TextView tvAmt,tvDate;
+        private ImageView tvView;
 
         public MyHomeHeaderViewHolder(View itemView) {
             super(itemView);
@@ -46,7 +47,7 @@ public class KhataTransactionAdapter extends RecyclerView.Adapter<RecyclerView.V
             tvDate=itemView.findViewById(R.id.tvDate);
             tvView=itemView.findViewById(R.id.tvView);
             RelativeLayout relative_message_layout = itemView.findViewById(R.id.relative_message_layout);
-            Utility.setColorFilter(relative_message_layout.getBackground(),context.getResources().getColor(R.color.red_500));
+           // Utility.setColorFilter(relative_message_layout.getBackground(),context.getResources().getColor(R.color.red_500));
             tvView.setOnClickListener(this);
         }
 
@@ -67,7 +68,7 @@ public class KhataTransactionAdapter extends RecyclerView.Adapter<RecyclerView.V
             tvPaymentMode=itemView.findViewById(R.id.tvPaymentMode);
             tvTransaction=itemView.findViewById(R.id.tvTransaction);
             RelativeLayout relative_message_layout = itemView.findViewById(R.id.relative_message_layout);
-            Utility.setColorFilter(relative_message_layout.getBackground(),context.getResources().getColor(R.color.green500));
+           // Utility.setColorFilter(relative_message_layout.getBackground(),context.getResources().getColor(R.color.green500));
         }
 
     }

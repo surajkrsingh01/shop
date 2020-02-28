@@ -579,7 +579,7 @@
             android:clickable="true"
             android:visibility="gone"
             android:layout_below="@id/tv_pay_cash"
-            android:text="ME30S"
+            android:text="Credit/Debit Card"
             android:textColor="?attr/primaryTextColor"
             android:padding="@dimen/activity_vertical_margin"
             android:gravity="center_horizontal"
@@ -601,7 +601,7 @@
         <TextView
             android:id="@+id/tv_khata"
             android:layout_below="@id/tv_pay_cash"
-            android:text="Khata"
+            android:text="Khatabook"
             android:clickable="true"
             android:visibility="gone"
             android:textColor="?attr/primaryTextColor"
